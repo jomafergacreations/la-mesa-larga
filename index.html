@@ -747,29 +747,37 @@ const LIFT=[50,100,250,500,2500,5000], MOVE=[6,7.5,9,12,18,24], DIE=['d4','d6','
 /* ---------- cuentas locales, cifradas con la contraseña ---------- */
 const AKEY='fichas-scadrial-cuentas-v1',SKEY='fichas-scadrial-sesion-v1',LEGACY='fichas-scadrial-v1',ITER=150000;
 let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTab='login',authBusy=false,fails=0,booting=true;
-const ADMIN='alpha';
-const isAdmin=()=>!!session&&session.user===ADMIN;
+const isAdmin=()=>!!session&&!!session.owner;
 const myRole=()=>isAdmin()?3:(session&&session.role)|0;
 const canAdm=()=>!!session&&myRole()>=1;
 const ROLEN=['Sin permisos','Ver cuentas','Administrador','Propietario'];
-/* registro global de cuentas (Firestore por REST, solo nombres y roles; nunca contraseñas ni fichas) */
-const FB={projectId:'',apiKey:''};
+/* ---------- cuentas en la nube: Firebase Auth + Firestore (REST) ---------- */
+const FB={projectId:'lamesalarga-c9518',apiKey:'AIzaSyATrJ2mZmTidyubsdEkz8Z7c13wAh2qTig'};
+const OWNER='felixtorrestejero.96@gmail.com';
 const fbOn=()=>!!(FB.projectId&&FB.apiKey);
+let cand=null,pend=null,regCache=null;
+const S=()=>cand||session;
 const fbU=(p,q)=>`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents/${p}?key=${FB.apiKey}${q||''}`;
 const fbEnc=o=>{const f={};for(const k in o){const v=o[k];f[k]=typeof v==='string'?{stringValue:v}:typeof v==='boolean'?{booleanValue:v}:{integerValue:String(Math.round(v))}}return{fields:f}};
 const fbDec=d=>{const o={id:decodeURIComponent((d.name||'').split('/').pop())};for(const k in(d.fields||{})){const v=d.fields[k];o[k]=v.stringValue!==undefined?v.stringValue:v.booleanValue!==undefined?v.booleanValue:+v.integerValue}return o};
-async function fbReq(m,p,body,q){const r=await fetch(fbU(p,q),{method:m,headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});if(r.status===404)return null;if(!r.ok)throw new Error('fb'+r.status);return m==='DELETE'?{}:r.json()}
-const fbGet=async k=>{const d=await fbReq('GET','cuentas/'+encodeURIComponent(k));return d?fbDec(d):null};
-async function fbList(){let out=[],tok='';do{const d=await fbReq('GET','cuentas',null,'&pageSize=300'+(tok?'&pageToken='+encodeURIComponent(tok):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tok=d&&d.nextPageToken||''}while(tok);return out}
-const fbPatch=(k,o)=>fbReq('PATCH','cuentas/'+encodeURIComponent(k),fbEnc(o),'&'+Object.keys(o).map(x=>'updateMask.fieldPaths='+x).join('&'));
-let regCache=null;
-async function regSync(){ // al entrar: registra la cuenta, lee el rol y detecta si la han eliminado
- if(!fbOn()||!session)return;const k=session.user;
- try{loadAccounts();const rec=accounts.users[k];if(!rec)return;const d=await fbGet(k);
-  if(d&&d.deleted&&d.created===rec.created){delete accounts.users[k];storeAccounts();skClear();session=null;store={chars:[],cur:null};scr='menu';authTab='login';render();toast('Un administrador ha eliminado esta cuenta');return}
-  if(!d||d.deleted){await fbPatch(k,{name:rec.name,created:rec.created||Date.now(),role:0,deleted:false,seen:Date.now()});if(session)session.role=0}
-  else{if(session)session.role=k===ADMIN?3:(d.role|0);fbPatch(k,{seen:Date.now()}).catch(()=>{})}
-  if(session)render(1)}catch(e){}}
+const maskQ=o=>'&'+Object.keys(o).map(x=>'updateMask.fieldPaths='+x).join('&');
+const AERR={EMAIL_EXISTS:'Ya hay una cuenta con ese correo. Entra con ella o recupera la contraseña.',INVALID_EMAIL:'Ese correo no parece válido.',WEAK_PASSWORD:'La contraseña es demasiado débil: usa al menos 6 caracteres.',INVALID_LOGIN_CREDENTIALS:'Correo o contraseña incorrectos.',INVALID_PASSWORD:'Correo o contraseña incorrectos.',EMAIL_NOT_FOUND:'Correo o contraseña incorrectos.',USER_DISABLED:'Esta cuenta está desactivada.',TOO_MANY_ATTEMPTS_TRY_LATER:'Demasiados intentos. Espera unos minutos y vuelve a probar.',OPERATION_NOT_ALLOWED:'El acceso por correo no está activado en Firebase.',MISSING_PASSWORD:'Escribe tu contraseña.',API_KEY_INVALID:'La clave de Firebase de la app no es válida.',CONFIGURATION_NOT_FOUND:'Falta activar Authentication en Firebase.'};
+const aMsg=e=>AERR[e&&e.code]||(e&&e.code==='NET'?'No hay conexión con el servidor. Comprueba tu conexión e inténtalo de nuevo.':'Algo ha fallado. Inténtalo de nuevo.');
+async function aCall(ep,body){let r;try{r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:'+ep+'?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/json','X-Firebase-Locale':'es'},body:JSON.stringify(body)})}catch(e){throw{code:'NET'}}
+ const j=await r.json().catch(()=>({}));if(!r.ok){const m=String((j.error&&j.error.message)||'').split(/[ :]/)[0];throw{code:m||'ERR'}}return j}
+async function tok(){const s=S();if(!s)throw{code:'AUTH'};
+ if(Date.now()>s.exp-60000){let r;try{r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(s.rt)})}catch(e){throw{code:'NET'}}
+  if(!r.ok)throw{code:'AUTH'};const j=await r.json();s.idToken=j.id_token;s.rt=j.refresh_token||s.rt;s.exp=Date.now()+(+j.expires_in||3600)*1000;skSet({rt:s.rt},s.rem)}
+ return s.idToken}
+async function fs(m,p,body,q){const t=await tok();let r;
+ try{r=await fetch(fbU(p,q),{method:m,headers:Object.assign({Authorization:'Bearer '+t},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined})}catch(e){throw{code:'NET'}}
+ if(r.status===404)return null;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
+async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
+const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
+async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;fs('PATCH','users/'+S().uid,fbEnc({seen:Date.now()}),maskQ({seen:1})).catch(()=>{});return 'ok'}
+async function claimProfile(name){const s=S();
+ try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
+ await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
 let admState=null;
 const hasCrypto=!!(window.crypto&&crypto.subtle);
 const b64=u=>{let t='';for(let i=0;i<u.length;i+=8192)t+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(t)};
@@ -784,9 +792,21 @@ async function kdf(pw,salt,iter){const km=await crypto.subtle.importKey('raw',ne
 const aesKey=raw=>crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt','decrypt']);
 async function enc(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(obj))));return {iv:b64(iv),ct:b64(ct)}}
 async function dec(key,d){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(d.iv)},key,unb64(d.ct));return JSON.parse(new TextDecoder().decode(pt))}
-let saveT=null;
-function save(){if(!session)return;clearTimeout(saveT);saveT=setTimeout(flush,250)}
-async function flush(){if(!session)return;clearTimeout(saveT);try{const d=await enc(session.key,{chars:store.chars,avatar:store.avatar||''});loadAccounts();const rec=accounts.users[session.user];if(!rec)return;rec.data=d;rec.updated=Date.now();storeAccounts()}catch(e){}}
+let saveT=null,dirty=false,flushing=null;
+const FKEY=u=>'mesa-larga-fichas-'+u;
+function save(){if(!session||session.owner)return;clearTimeout(saveT);saveT=setTimeout(flush,1200)}
+function flush(){if(!session||session.owner)return Promise.resolve();clearTimeout(saveT);if(flushing)return flushing.then(()=>{if(dirty)return flush()});
+ const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||''});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
+ if(data.length>900000){toast('Tus fichas ocupan demasiado: borra alguna o quita la imagen de usuario');dirty=false;return Promise.resolve()}
+ flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
+async function loadFichas(s){let cloud=null,err=null;
+ try{const d=await fs('GET','fichas/'+s.uid);if(d){const f=fbDec(d);cloud={t:f.updated|0,d:f.data}}}catch(e){err=e}
+ let loc=null;try{loc=JSON.parse(lsGet(FKEY(s.uid))||'null')}catch(e){}
+ if(err&&!loc)throw err;
+ const use=loc&&(!cloud||loc.t>cloud.t)?loc:cloud;if(use===loc&&loc)dirty=true;
+ try{return use?JSON.parse(use.d):{chars:[],avatar:''}}catch(e){return{chars:[],avatar:''}}}
+window.addEventListener('online',()=>{if(dirty)flush()});
+setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
 function ckGet(k){try{const m=document.cookie.split('; ').find(x=>x.indexOf(k+'=')===0);return m?decodeURIComponent(m.slice(k.length+1)):''}catch(e){return ''}}
 function ckSet(k,v){try{document.cookie=k+'='+encodeURIComponent(v)+'; max-age=31536000; path=/; SameSite=None; Secure'}catch(e){}}
 function ckDel(k){try{document.cookie=k+'=; max-age=0; path=/; SameSite=None; Secure'}catch(e){}}
@@ -800,133 +820,148 @@ function skRem(){return !!(lsGet(SKEY)||ckGet(SKEY))}
 let wantRem=false;
 const UKEY='mesa-larga-usuario';
 function lastUser(){return lsGet(UKEY)||ckGet(UKEY)||''}
-function startSession(k,rec,key,raw,chars,av){session={user:k,name:rec.name,key,raw,role:0};setTimeout(regSync,60);scr='menu';store={chars:chars,cur:null,avatar:avOk(av)};const rem=wantRem;const okS=skSet({user:k,raw:b64(raw)},rem);wantRem=false;
- if(rem){lsSet(UKEY,rec.name);ckSet(UKEY,rec.name)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
- if(rem&&(!okS||!lastUser()))setTimeout(()=>{try{toast('Tu navegador no permite recordar el usuario en este dispositivo.')}catch(x){}},700)}
-async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);const rec=accounts.users[o.user];if(!rec)return false;
- const raw=unb64(o.raw);const key=await aesKey(raw);const d=await dec(key,rec.data);wantRem=skRem();startSession(o.user,rec,key,raw,Array.isArray(d.chars)?d.chars:[],d.avatar);return true}
- catch(e){skClear();setTimeout(()=>{try{toast('No se pudo recuperar la sesión guardada. Entra de nuevo.')}catch(x){}},800);return false}}
+async function enter(a,rem){ // a: respuesta de signIn/refresh. Devuelve ok | unverified | deleted | name
+ const lk=await aCall('lookup',{idToken:a.idToken});const u=(lk.users||[])[0]||{};const email=String(u.email||a.email||'').toLowerCase();
+ if(!u.emailVerified){pend=Object.assign(pend||{},{email,idToken:a.idToken,rem:!!rem});return 'unverified'}
+ cand={uid:u.localId||a.localId,user:u.localId||a.localId,email,name:u.displayName||email.split('@')[0],idToken:a.idToken,rt:a.refreshToken,exp:Date.now()+(+a.expiresIn||3600)*1000,role:0,owner:email===OWNER,rem:!!rem};
+ return finishSess()}
+async function finishSess(){const s=cand;
+ if(!s.owner){const st=await loadProfile();if(st==='deleted'){cand=null;skClear();return 'deleted'}
+  if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
+ let data={chars:[],avatar:''};if(!s.owner)data=await loadFichas(s);
+ session=s;cand=null;pend=null;dirty=dirty&&!s.owner;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar)};scr='menu';regCache=null;
+ skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
+ if(dirty)setTimeout(flush,800);return 'ok'}
+async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
+ let r;try{r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(o.rt)})}catch(e){throw{code:'NET'}}
+ if(!r.ok){skClear();return false}const j=await r.json();
+ const res=await enter({idToken:j.id_token,refreshToken:j.refresh_token,expiresIn:j.expires_in,localId:j.user_id},skRem());
+ if(res==='deleted'){setTimeout(()=>toast('Esta cuenta ha sido eliminada'),600)}if(res==='unverified'){authTab='verify';vPoll()}if(res==='name')authTab='name';return res==='ok'}
+ catch(e){setTimeout(()=>{try{toast(e&&e.code==='NET'?'Sin conexión: no se pudo recuperar la sesión.':'No se pudo recuperar la sesión guardada. Entra de nuevo.')}catch(x){}},800);return false}}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-
+let vT=null;
+function flash(t,k){const m=$('#amsg');if(m){m.textContent=t;m.className='msg '+(k||'')}}
+async function afterEnter(res){
+ if(res==='ok'){pend=null;clearInterval(vT);authTab='login';render();toast('Sesión iniciada');return}
+ if(res==='unverified'){if(authTab!=='verify'){authTab='verify';render();vPoll()}else flash('Todavía no hemos recibido la verificación. Abre el enlace del correo y vuelve aquí.','err');return}
+ if(res==='deleted'){authTab='login';render();flash('Esta cuenta ha sido eliminada por un administrador.','err');return}
+ if(res==='name'){authTab='name';render();return}}
+async function vContinue(){const p=pend;if(!p)return;const a=await aCall('signInWithPassword',{email:p.email,password:p.pw,returnSecureToken:true});await afterEnter(await enter(a,p.rem))}
+function vPoll(){clearInterval(vT);let busy=0;vT=setInterval(async()=>{if(authTab!=='verify'||!pend||session||busy){if(authTab!=='verify'||session)clearInterval(vT);return}busy=1;
+ try{let ok=false;try{const lk=await aCall('lookup',{idToken:pend.idToken});ok=!!((lk.users||[])[0]||{}).emailVerified}catch(e){if(e.code!=='NET'){const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken}}
+  if(ok){clearInterval(vT);await vContinue()}}catch(e){}finally{busy=0}},4000)}
 function authView(){
- const leg=legacyChars().length;
  const tabs=[['login','Entrar'],['new','Crear cuenta']].map(([k,n])=>`<button type="button" data-act="atab" data-v="${k}" aria-pressed="${authTab===k}"><b>${n}</b></button>`).join('');
  const pwf=(id,label,auto)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required><button type="button" class="btn sm" data-act="showpw" aria-pressed="false">Ver</button></span></label>`;
- let form='';
- if(authTab==='restore')form=`<form id="authform" novalidate class="grid"><p class="hint">Pega aquí una copia de seguridad que hayas copiado desde otro dispositivo. Después entra con la contraseña de esa cuenta.</p>
-  <label class="f">Copia de seguridad<textarea name="bk" id="bk" rows="5" placeholder="FSC1:…"></textarea></label><div id="amsg" class="msg" role="alert" aria-live="polite"></div>
-  <div class="row"><button class="btn pri" type="submit">Restaurar cuenta</button><button type="button" class="btn ghost" data-act="atab" data-v="login">Volver</button></div></form>`;
- else form=`<form id="authform" novalidate class="grid">
-  <label class="f">Usuario<input type="text" id="au" name="au" autocomplete="username" autocapitalize="none" spellcheck="false" value="${esc(authTab==='login'?lastUser():'')}" required></label>
+ const emf=v=>`<label class="f">Correo electrónico<input type="email" id="em" name="em" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email" value="${esc(v||'')}" required></label>`;
+ let form='',sub='Inicia sesión para continuar.';
+ if(authTab==='verify'){sub='Verifica tu correo';
+  form=`<div class="grid"><p class="hint" style="margin:0">Hemos enviado un enlace de verificación a <b>${esc(pend?pend.email:'tu correo')}</b>. Ábrelo y vuelve aquí: entrarás automáticamente. Si no lo ves, mira en la carpeta de spam.</p><div id="amsg" class="msg" role="status" aria-live="polite"></div>
+  <div class="row"><button class="btn pri" data-act="vcheck">Ya lo he verificado</button><button class="btn" data-act="vresend" id="vrs">Reenviar correo</button></div><div class="row"><button class="btn ghost sm" data-act="atab" data-v="login">Volver</button></div></div>`}
+ else if(authTab==='reset'){sub='Recuperar la contraseña';
+  form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Escribe el correo de tu cuenta y te enviaremos un enlace para elegir una contraseña nueva. Tus fichas no se pierden.</p>${emf(lastUser())}<div id="amsg" class="msg" role="alert" aria-live="polite"></div>
+  <div class="row"><button class="btn pri" type="submit">Enviar enlace</button><button type="button" class="btn ghost" data-act="atab" data-v="login">Volver</button></div></form>`}
+ else if(authTab==='name'){sub='Elige tu nombre de usuario';
+  form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">El nombre que elegiste ya está en uso. Escribe otro: es el que verán los demás.</p>
+  <label class="f">Nombre de usuario<input type="text" id="au" name="au" autocomplete="nickname" autocapitalize="none" spellcheck="false" required></label><div id="amsg" class="msg" role="alert" aria-live="polite"></div>
+  <div class="row"><button class="btn pri" type="submit">Continuar</button><button type="button" class="btn ghost" data-act="atab" data-v="login">Cancelar</button></div></form>`}
+ else{
+  if(authTab==='new')sub='Crea tu cuenta para guardar tus partidas y fichas.';
+  form=`<form id="authform" novalidate class="grid">
+  ${authTab==='new'?`<label class="f">Nombre de usuario<input type="text" id="au" name="au" autocomplete="nickname" autocapitalize="none" spellcheck="false" required></label>`:''}
+  ${emf(authTab==='login'?lastUser():'')}
   ${pwf('ap','Contraseña',authTab==='new'?'new-password':'current-password')}
   ${authTab==='new'?pwf('ap2','Repite la contraseña','new-password'):''}
-  ${authTab==='new'&&leg?`<label class="chk"><input type="checkbox" name="leg" checked><span>Traer a esta cuenta las ${leg} ficha${leg===1?'':'s'} que ya tenías guardada${leg===1?'':'s'} en este dispositivo. Se quitarán del almacenamiento sin cifrar.</span></label>`:''}
-  <label class="chk rem"><input type="checkbox" name="rem" id="rem" ${authTab==='login'&&lastUser()?'checked':''}><span><b>Recordar en este dispositivo</b><br>Seguirás con la sesión abierta al volver. Úsalo solo en un dispositivo tuyo.</span></label>
+  ${authTab==='login'?`<label class="chk rem"><input type="checkbox" name="rem" id="rem" ${lastUser()?'checked':''}><span><b>Recordar en este dispositivo</b><br>Seguirás con la sesión abierta al volver. Úsalo solo en un dispositivo tuyo.</span></label>`:''}
   <div id="amsg" class="msg" role="alert" aria-live="polite"></div>
-  <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Entrar'}</button></form>`;
- return `${BGD}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${DIEI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Tus partidas, tus fichas</div><p class="hs">${authTab==='new'?'Crea tu cuenta para guardar tus partidas y fichas.':authTab==='restore'?'Recupera una cuenta desde una copia de seguridad.':'Inicia sesión para continuar.'}</p></div>
+  <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Entrar'}</button></form>
+  ${authTab==='login'?`<div class="row"><button type="button" class="btn ghost sm" data-act="atab" data-v="reset">¿Has olvidado tu contraseña?</button></div>`:''}
+  ${authTab==='new'?'<p class="hint">Te enviaremos un correo para verificar la dirección. Hasta que lo abras no podrás entrar. Tus fichas se guardan en la nube, ligadas a tu correo, y puedes verlas desde cualquier dispositivo.</p>':'<p class="hint">¿Tenías una cuenta de antes en este dispositivo? Crea la cuenta nueva y, una vez dentro, usa «Cuenta → Importar cuenta antigua».</p>'}`}
+ return `${BGD}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${DIEI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Tus partidas, tus fichas</div><p class="hs">${sub}</p></div>
  <section class="authhub">
- ${hasCrypto?'':'<p class="warn-t">Este navegador no permite crear cuentas seguras. Abre la app en un navegador actual (Safari, Chrome, Firefox).</p>'}
- ${authTab==='restore'?'':`<div class="seg">${tabs}</div>`}${form}
- ${authTab==='new'?'<p class="hint">El usuario ALPHA está reservado para el administrador de este dispositivo: la primera persona que lo crea elige su contraseña. Cada cuenta tiene sus propias fichas, cifradas con tu contraseña. Si la olvidas, no hay forma de recuperarlas.</p>':''}
- ${authTab==='login'?`<div class="row"><button type="button" class="btn ghost sm" data-act="atab" data-v="restore">Tengo una copia de seguridad</button></div><p class="hint">Las cuentas se guardan solo en este dispositivo y navegador. Para usar la tuya en otro, haz una copia de seguridad desde Cuenta.</p>`:''}</section>`}
+ ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
+ ${authTab==='login'||authTab==='new'?`<div class="seg">${tabs}</div>`:''}${form}</section>`}
 
 async function doAuth(f){
- if(authBusy||!hasCrypto)return;const msg=$('#amsg');const set=(t,k)=>{msg.textContent=t;msg.className='msg '+(k||'')};const btn=f.querySelector('button[type=submit]');const el=n=>f.elements[n];
+ if(authBusy)return;const msg=$('#amsg');const set=(t,k)=>{msg.textContent=t;msg.className='msg '+(k||'')};const btn=f.querySelector('button[type=submit]');const el=n=>f.elements[n];
  authBusy=true;btn.disabled=true;
  try{
-  if(authTab==='restore'){
-   const t=(el('bk').value||'').trim();if(!t.startsWith('FSC1:')){set('Ese texto no es una copia de seguridad.','err');return}
-   let rec;try{rec=JSON.parse(new TextDecoder().decode(unb64(t.slice(5))))}catch(e){set('La copia de seguridad está dañada o incompleta.','err');return}
-   if(!rec||!rec.name||!rec.salt||!rec.auth||!rec.data||!rec.data.ct||!rec.iter){set('La copia de seguridad está dañada o incompleta.','err');return}
-   loadAccounts();const k=nameK(rec.name);if(accounts.users[k]){set('Ya hay una cuenta con ese nombre en este dispositivo.','err');return}
-   accounts.users[k]={name:rec.name,salt:rec.salt,iter:rec.iter,auth:rec.auth,data:rec.data,created:rec.created||Date.now()};if(!storeAccounts())return;
-   authTab='login';render();const m=$('#amsg');m.textContent='Cuenta restaurada. Entra con tu usuario y contraseña.';m.className='msg ok';return}
-  const name=nameN(el('au').value),pw=el('ap').value,k=name.toLowerCase();wantRem=!!(el('rem')&&el('rem').checked);
-  if(authTab==='new'){
-   if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
-   loadAccounts();if(accounts.users[k]){set('Ese usuario ya existe en este dispositivo.','err');return}
+  if(authTab==='reset'){const em=String(el('em').value||'').trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
+   set('Enviando…');try{await aCall('sendOobCode',{requestType:'PASSWORD_RESET',email:em})}catch(e){if(e.code==='NET'||e.code==='INVALID_EMAIL'){set(aMsg(e),'err');return}}
+   set('Si ese correo tiene cuenta, te hemos enviado un enlace para cambiar la contraseña. Revisa también el spam.','ok');return}
+  if(authTab==='name'){const name=nameN(el('au').value);if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
+   if(!cand){authTab='login';render();return}cand.name=name;set('Comprobando…');aCall('update',{idToken:cand.idToken,displayName:name,returnSecureToken:false}).catch(()=>{});
+   const res=await finishSess();if(res==='name'){set('Ese nombre también está en uso. Prueba con otro.','err');return}await afterEnter(res);return}
+  const em=String(el('em').value||'').trim().toLowerCase(),pw=el('ap').value;wantRem=!!(el('rem')&&el('rem').checked);
+  if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
+  if(authTab==='new'){const name=nameN(el('au').value);
+   if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
    if(pw.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
    if(pw!==el('ap2').value){set('Las contraseñas no coinciden.','err');return}
-   if(fbOn()){set('Comprobando el nombre…');try{const g=await fbGet(k);if(g&&!g.deleted){set('Ese usuario ya existe en la app. Elige otro nombre.','err');return}}catch(e){}}
-   set('Creando la cuenta…');
-   const salt=crypto.getRandomValues(new Uint8Array(16));const dk=await kdf(pw,salt,ITER);const key=await aesKey(dk.raw);
-   const takeLeg=el('leg')&&el('leg').checked;const chars=takeLeg?legacyChars().map(normalize):[];
-   const rec={name,salt:b64(salt),iter:ITER,auth:b64(dk.auth),data:await enc(key,{chars}),created:Date.now()};
-   accounts.users[k]=rec;if(!storeAccounts()){delete accounts.users[k];return}
-   if(takeLeg){try{localStorage.removeItem(LEGACY)}catch(e){}}
-   startSession(k,rec,key,dk.raw,chars);render();toast('Cuenta creada');return}
-  loadAccounts();const rec=accounts.users[k];set('Comprobando…');
+   set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,returnSecureToken:true})}catch(e){set(aMsg(e),'err');return}
+   try{await aCall('update',{idToken:a.idToken,displayName:name,returnSecureToken:false})}catch(e){}
+   try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}
+   pend={email:em,pw,idToken:a.idToken,rem:false,name};authTab='verify';render();vPoll();return}
   if(fails>0)await wait(Math.min(fails*700,5000));
-  let ok=false;
-  if(rec){try{const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)===rec.auth){const key=await aesKey(dk.raw);const d=await dec(key,rec.data);startSession(k,rec,key,dk.raw,Array.isArray(d.chars)?d.chars:[],d.avatar);ok=true}}catch(e){}}
-  if(!ok){fails++;set(rec?'La contraseña no es correcta para ese usuario. Pulsa «Ver» para comprobar lo que escribes.':'No hay ninguna cuenta con ese usuario en este navegador y dirección. Si tu cuenta está en otra dirección o dispositivo, usa «Tengo una copia de seguridad».','err');return}
-  fails=0;render();
- }catch(e){set('Algo ha fallado. Inténtalo de nuevo.','err')}
+  set('Comprobando…');let a;try{a=await aCall('signInWithPassword',{email:em,password:pw,returnSecureToken:true})}catch(e){if(e.code!=='NET')fails++;set(aMsg(e),'err');return}
+  pend={email:em,pw,idToken:a.idToken,rem:wantRem};fails=0;
+  const res=await enter(a,wantRem);if(res==='unverified'){try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}}
+  await afterEnter(res);
+ }catch(e){const m=$('#amsg');if(m){m.textContent=e&&e.code==='NET'?aMsg(e):(e&&e.code&&String(e.code).startsWith('FS')?'No se pudieron cargar tus datos ('+e.code+'). Inténtalo de nuevo.':aMsg(e));m.className='msg err'}}
  finally{authBusy=false;const b=f.querySelector('button[type=submit]');if(b)b.disabled=false}}
 
 const fdate=t=>t?new Date(t).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'—';
-function admDlg(){
- if(!canAdm())return;loadAccounts();
- if(!fbOn()){admLocal();return}
- if(!regCache){showDlg('Administración','<p class="hint">Cargando las cuentas de la app…</p>',true);admLoad();return}
- admView()}
-async function admLoad(){try{regCache=await fbList()}catch(e){regCache=null;showDlg('Administración','<p class="hint warn-t">No se pudo conectar con la base de datos compartida. Revisa tu conexión e inténtalo de nuevo.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div>',true);return}
- if(isAdmin()||canAdm())admView()}
+function admShow(html){const o=$('#owl');if(o&&session&&session.owner)o.innerHTML=html;else showDlg('Administración',html,true)}
+function admDlg(){if(!canAdm())return;if(!regCache){admShow('<p class="hint">Cargando las cuentas de la app…</p>');admLoad();return}admView()}
+async function admLoad(){try{regCache=await fsList('users')}catch(e){regCache=null;admShow('<div class="grid"><p class="hint warn-t">No se pudo cargar la lista ('+esc(e.code||'error')+'). Revisa tu conexión y los permisos.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div></div>');return}admView()}
 function admView(){
  const me=myRole(),all=(regCache||[]).filter(x=>!x.deleted),n=all.length;
- const list=all.sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
- const rows=list.map(r=>{const k=r.id,self=k===session.user,rl=k===ADMIN?3:(r.role|0);
+ const list=all.slice().sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
+ const rows=list.map(r=>{const k=r.id,self=k===session.uid,rl=r.role|0;
   const act=admState&&admState.u===k?admState.mode:'';
-  const can=!self&&k!==ADMIN&&me>=2&&rl<me;
+  const can=!self&&me>=2&&rl<me;
   let ctl='',extra='';
-  if(isAdmin()&&!self&&k!==ADMIN)ctl+=`<div class="seg" role="group" aria-label="Permisos de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" class="${rl===v?'on':''}" data-act="admrole" data-u="${esc(k)}" data-r="${v}" ${rl===v?'aria-pressed="true"':'aria-pressed="false"'}>${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
+  if(isAdmin()&&!self)ctl+=`<div class="seg" role="group" aria-label="Permisos de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
   if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
-  if(act==='del')extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Dejará de existir en la app y se borrará de su dispositivo la próxima vez que entre. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`;
-  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
- showDlg('Administración',`<div class="grid"><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede ver las fichas de otros: están cifradas con la contraseña de cada usuario.</p>
+  if(act==='del')extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`;
+  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>${isAdmin()&&r.email?esc(r.email)+' · ':''}Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
+ admShow(`<div class="grid"><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede leer las fichas de otros desde aquí.</p>
  <p class="hint" style="margin:0">${isAdmin()?'Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>). Un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Tienes permiso para ver las cuentas.'}</p>
- <div class="list">${rows||'<p class="hint">Todavía no hay cuentas.</p>'}</div><div class="row"><button class="btn sm ghost" data-act="admre">Actualizar lista</button></div></div>`,true)}
-function admLocal(){
- const others=Object.entries(accounts.users).filter(([k])=>k!==session.user).sort((a,b)=>a[1].name.localeCompare(b[1].name,'es'));
- const rows=others.map(([k,r])=>{
-  const act=admState&&admState.u===k?admState.mode:'';
-  const meta=`<span>Creada ${fdate(r.created)} · Último guardado ${fdate(r.updated||r.created)}</span>`;
-  let ctl=isAdmin()?`<button class="btn sm" data-act="admrst" data-u="${esc(k)}">Restablecer</button><button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Borrar</button>`:'';
-  let extra='';
-  if(act==='del'){ctl='';extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Borrar la cuenta ${esc(r.name)} y todas sus fichas?</b> No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, borrar</button><button class="btn ghost" data-act="admno">No</button></div></div>`}
-  if(act==='rst'){ctl='';extra=`<form id="rstform" data-u="${esc(k)}" class="grid" style="width:100%" novalidate><p class="warn-t"><b>Se borrarán las fichas de ${esc(r.name)}.</b> La cuenta quedará vacía con la contraseña nueva que escribas.</p><label class="f">Contraseña nueva<input type="text" name="np" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Confirmar restablecimiento</button><button type="button" class="btn ghost" data-act="admno">Cancelar</button></div></form>`}
-  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${meta}</div><div class="row">${ctl}</div>${extra}</div>`}).join('');
- showDlg('Administración',`<div class="grid"><p class="warn-t"><b>Registro global sin conectar.</b> Falta enlazar la base de datos compartida, así que ahora solo se ven las cuentas de este dispositivo (${others.length+1}).</p>
- <div class="list">${rows||'<p class="hint">No hay otras cuentas en este dispositivo.</p>'}</div></div>`,true)}
-async function doRst(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
- try{const np=f.elements.np.value;if(np.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
-  loadAccounts();const u=f.dataset.u;const rec=accounts.users[u];if(!rec||u===session.user){set('Esa cuenta ya no existe.','err');return}
-  set('Restableciendo…');const salt=crypto.getRandomValues(new Uint8Array(16));const dk=await kdf(np,salt,ITER);const key=await aesKey(dk.raw);
-  Object.assign(rec,{salt:b64(salt),iter:ITER,auth:b64(dk.auth),data:await enc(key,{chars:[]}),updated:Date.now()});
-  if(!storeAccounts())return;admState=null;admDlg();toast('Cuenta restablecida')}catch(x){set('Algo ha fallado. Inténtalo de nuevo.','err')}}
+ <div class="list">${rows||'<p class="hint">Todavía no hay cuentas.</p>'}</div><div class="row"><button class="btn sm ghost" data-act="admre">Actualizar lista</button></div></div>`)}
+function ownerView(){setTimeout(()=>{if(session&&session.owner){if(regCache)admView();else admLoad()}},0);return hubBar(null)+`<h1 class="hh">Administración</h1><p class="hs">Cuentas de la app y permisos.</p><section class="authhub" id="owl"><p class="hint">Cargando…</p></section>`}
 function acctDlg(){
  const pwf=(id,l,a)=>`<label class="f">${l}<input type="password" name="${id}" autocomplete="${a}" required></label>`;
  showDlg('Cuenta de '+esc(session.name),`<div class="grid">
- <div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Se recorta en círculo y se guarda cifrada con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button>${store.avatar?'<button class="btn sm ghost" data-act="avdel">Quitar</button>':''}</div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div>
+ <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
+ ${session.owner?'':`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Se recorta en círculo y se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button>${store.avatar?'<button class="btn sm ghost" data-act="avdel">Quitar</button>':''}</div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div>`}
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
- <div class="grid"><b>Copia de seguridad</b><p class="hint">Copia un texto cifrado con tu contraseña. Pégalo en "Tengo una copia de seguridad" en otro dispositivo para llevarte la cuenta con todas sus fichas.</p><div class="row"><button class="btn" data-act="backup">Copiar copia de seguridad</button></div></div>
- <form id="pwform" class="grid" novalidate><b>Cambiar contraseña</b>${pwf('p0','Contraseña actual','current-password')}${pwf('p1','Contraseña nueva','new-password')}${pwf('p2','Repite la nueva','new-password')}<div id="pmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar contraseña</button></div></form>
- <form id="delform" class="grid" novalidate><b>Borrar la cuenta</b><p class="hint">Se borran la cuenta y todas sus fichas de este dispositivo. No se puede deshacer.</p>${pwf('d0','Tu contraseña','current-password')}<div id="dmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Borrar cuenta y fichas</button></div></form></div>`,true);
+ ${session.owner?'':`<form id="impform" class="grid" novalidate><b>Importar cuenta antigua</b><p class="hint" style="margin:0">Si tenías una cuenta de antes (usuario y contraseña) en este dispositivo, escríbelos y sus fichas pasarán a esta cuenta. Si estaba en otro dispositivo, pega su copia de seguridad.</p>
+ <label class="f">Usuario antiguo<input type="text" name="iu" autocomplete="off" autocapitalize="none" spellcheck="false"></label>${pwf('ip','Contraseña antigua','off')}<label class="f">Copia de seguridad (opcional)<textarea name="ib" rows="2" placeholder="FSC1:…"></textarea></label><div id="imsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Importar fichas</button></div></form>`}
+ <form id="pwform" class="grid" novalidate><b>Cambiar contraseña</b>${pwf('p0','Contraseña actual','current-password')}${pwf('p1','Contraseña nueva','new-password')}${pwf('p2','Repite la nueva','new-password')}<div id="pmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar contraseña</button></div><p class="hint" style="margin:0">Si no te acuerdas de la actual, cierra sesión y usa «¿Has olvidado tu contraseña?».</p></form>
+ ${session.owner?'':`<form id="delform" class="grid" novalidate><b>Borrar la cuenta</b><p class="hint">Se borran la cuenta y todas sus fichas, también de la nube. No se puede deshacer.</p>${pwf('d0','Tu contraseña','current-password')}<div id="dmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Borrar cuenta y fichas</button></div></form>`}</div>`,true);
  const d=$('#dlg');d.classList.add('acctd');const b=document.createElement('button');b.type='button';b.className='cbub';b.setAttribute('data-act','closedlg');b.setAttribute('aria-label','Cerrar cuenta');b.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';d.appendChild(b)}
-async function checkPw(pw){const rec=accounts.users[session.user];const dk=await kdf(pw,unb64(rec.salt),rec.iter);return b64(dk.auth)===rec.auth}
+async function reauth(pw){const a=await aCall('signInWithPassword',{email:session.email,password:pw,returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem)}
 async function doPw(f){const m=$('#pmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const e=n=>f.elements[n].value;
- try{loadAccounts();if(!(await checkPw(e('p0')))){set('La contraseña actual no es correcta.','err');return}
-  if(e('p1').length<6){set('La contraseña nueva debe tener al menos 6 caracteres.','err');return}if(e('p1')!==e('p2')){set('Las contraseñas nuevas no coinciden.','err');return}
-  set('Cambiando…');const salt=crypto.getRandomValues(new Uint8Array(16));const dk=await kdf(e('p1'),salt,ITER);const key=await aesKey(dk.raw);
-  const data=await enc(key,{chars:store.chars,avatar:store.avatar||''});const rec=accounts.users[session.user];Object.assign(rec,{salt:b64(salt),iter:ITER,auth:b64(dk.auth),data,updated:Date.now()});
-  if(!storeAccounts())return;session.key=key;session.raw=dk.raw;skSet({user:session.user,raw:b64(dk.raw)},skRem());
-  f.reset();set('Contraseña cambiada. La copia de seguridad anterior sigue usando la contraseña anterior.','ok')}catch(x){set('Algo ha fallado. Inténtalo de nuevo.','err')}}
+ try{if(e('p1').length<6){set('La contraseña nueva debe tener al menos 6 caracteres.','err');return}if(e('p1')!==e('p2')){set('Las contraseñas nuevas no coinciden.','err');return}
+  set('Cambiando…');try{await reauth(e('p0'))}catch(x){set(x.code==='NET'?aMsg(x):'La contraseña actual no es correcta.','err');return}
+  const a=await aCall('update',{idToken:session.idToken,password:e('p1'),returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken||session.rt;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem);
+  f.reset();set('Contraseña cambiada.','ok')}catch(x){set(aMsg(x),'err')}}
 async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
- try{loadAccounts();if(!(await checkPw(f.elements.d0.value))){set('La contraseña no es correcta.','err');return}
-  clearTimeout(saveT);if(fbOn())fbPatch(session.user,{deleted:true,role:0}).catch(()=>{});delete accounts.users[session.user];storeAccounts();session=null;store={chars:[],cur:null};skClear();
-  try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}authTab='login';render();toast('Cuenta borrada')}catch(x){set('Algo ha fallado. Inténtalo de nuevo.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,rstform:doRst}[f.id];if(fn)fn(f)});
+ try{set('Comprobando…');try{await reauth(f.elements.d0.value)}catch(x){set(x.code==='NET'?aMsg(x):'La contraseña no es correcta.','err');return}
+  clearTimeout(saveT);const u=session.uid,nm=session.name;
+  try{await fs('DELETE','fichas/'+u)}catch(x){}try{await fs('DELETE',nameDoc(nm))}catch(x){}try{await fs('DELETE','users/'+u)}catch(x){}
+  await aCall('delete',{idToken:session.idToken});lsDel(FKEY(u));dirty=false;
+  session=null;store={chars:[],cur:null};skClear();lsDel(UKEY);ckDel(UKEY);
+  try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}authTab='login';render();toast('Cuenta borrada')}catch(x){set(aMsg(x),'err')}}
+async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
+ try{loadAccounts();const bk=(f.elements.ib.value||'').trim(),pw=f.elements.ip.value;let rec=null;
+  if(bk){if(!bk.startsWith('FSC1:')){set('Ese texto no es una copia de seguridad.','err');return}try{rec=JSON.parse(new TextDecoder().decode(unb64(bk.slice(5))))}catch(x){set('La copia de seguridad está dañada.','err');return}}
+  else rec=accounts.users[nameK(f.elements.iu.value)];
+  if(!rec||!rec.salt){set('No hay ninguna cuenta antigua con ese usuario en este navegador. Si estaba en otro dispositivo, pega su copia de seguridad.','err');return}
+  set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
+  const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
+  store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -1069,8 +1104,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='55';
-const APPN='Orígenes, Camino e Historia se bloquean al finalizar la ficha, nueva pantalla de actualización translúcida y panel de administración con roles.';
+const APPV='56';
+const APPN='Nuevo sistema de cuentas: inicia sesión con tu correo (con verificación), recupera tu contraseña y guarda tus fichas en la nube. Entra con una cuenta nueva; tus fichas antiguas se importan desde Cuenta.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1129,11 +1164,11 @@ const OUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.50
 const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5.500c0 4.500 3.200 7.800 7.500 9.500 4.300-1.700 7.500-5 7.500-9.500V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 let dockSig='';
 function fdockUpdate(c){let d=document.getElementById('fdock');if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';return}
- const sig=[scr,c?(c.done?'d':'e'):'',session.user,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ const sig=[scr,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
  d.classList.toggle('above',!!c&&!c.done);
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
-  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
+  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()&&!isAdmin()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
  t.classList.toggle('above',!!c&&!c.done)}
@@ -1154,6 +1189,7 @@ const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 
 function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
+ if(session&&session.owner)return ownerView();
  if(scr==='nb')return home();
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
   ${hubTile('t2',BOOK,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb')}
@@ -1557,20 +1593,18 @@ document.addEventListener('click',e=>{
   case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');if(r){const x=r.querySelector('[data-act=avdel]');if(x)x.remove()}}break;
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
-  case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas. Para volver a entrar necesitarás tu usuario y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{await flush();session=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
+  case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admDlg()}break;
-  case 'admrst':if(isAdmin()){admState={u:b.dataset.u,mode:'rst'};admDlg()}break;
   case 'admno':admState=null;admDlg();break;
   case 'admre':regCache=null;admDlg();break;
-  case 'admrole':if(isAdmin()&&fbOn()){const u=b.dataset.u,r=+b.dataset.r;if(u!==ADMIN&&u!==session.user&&r>=0&&r<=2){fbPatch(u,{role:r}).then(()=>{const x=regCache&&regCache.find(y=>y.id===u);if(x)x.role=r;admView();toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break;
-  case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;
-    if(fbOn()){const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.user||u===ADMIN||(x.role|0)>=myRole())break;
-     fbPatch(u,{deleted:true,role:0}).then(()=>{x.deleted=true;loadAccounts();if(accounts.users[u]&&u!==session.user){delete accounts.users[u];storeAccounts()}admView();toast('Cuenta eliminada')}).catch(()=>toast('No se pudo eliminar'))}
-    else if(isAdmin()){loadAccounts();if(u!==session.user){delete accounts.users[u];storeAccounts()}admDlg();toast('Cuenta borrada')}}break;
-  case 'backup':(async()=>{await flush();loadAccounts();const rec=accounts.users[session.user];copy('FSC1:'+b64(new TextEncoder().encode(JSON.stringify(rec))),'Copia de seguridad copiada')})();break;
+  case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r;if(u!==session.uid&&r>=0&&r<=2){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{const x=regCache&&regCache.find(y=>y.id===u);if(x)x.role=r;admView();toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break;
+  case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
+    (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admView();toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
+  case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
+  case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
   case 'new':{const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
   case 'sheet':sheetOpen(b.dataset.id);break;
   case 'help':b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');helpDlg(b.dataset.k);break;
