@@ -944,6 +944,52 @@ html[data-dev=desktop] .hs{max-width:none}
 @keyframes mcIn{to{transform:scale(1)}}@keyframes mlIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}@keyframes mfOut{to{opacity:0}}}
 .ro .row,.ro .lvlbox,.ro .finbox,.ro [data-act]{display:none!important}.ro{pointer-events:none;user-select:text}
 .npcc .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.npcc .stat{min-width:0;padding-inline:4px}.npcc .stat b{font-size:1.25rem;white-space:nowrap}
+
+/* v71 */
+#npcpop{font-family:var(--sans,system-ui,sans-serif);position:fixed;z-index:80;top:calc(14px + env(safe-area-inset-top,0px));right:16px;width:min(380px,calc(100vw - 32px));display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:20px;background:color-mix(in srgb,var(--h-card,#fff) 94%,transparent);color:var(--h-ink,#121B2E);border:1.5px solid #B5472F;box-shadow:0 22px 48px -16px rgba(90,20,10,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html[data-dev=desktop] #npcpop{top:86px}
+#npcpop .ppi{width:44px;height:44px;flex:none;color:#B5472F}#npcpop .ppi svg{width:100%;height:100%}
+#npcpop .ppt{display:grid;gap:3px;min-width:0;flex:1}#npcpop .ppt span{font-size:.9rem;opacity:.85}#npcpop .row{margin-top:8px}
+#npcpop .ppx{border:0;background:transparent;color:inherit;font-size:1rem;opacity:.6;padding:2px 4px;cursor:pointer}
+@media(prefers-reduced-motion:no-preference){#npcpop{animation:ppin .7s cubic-bezier(.2,1.5,.4,1) both}#npcpop.out{animation:ppout .26s ease-in both}}
+.reqbox{display:grid;gap:4px;margin:8px 0;padding:10px 12px;border-radius:14px;background:rgba(217,119,6,.16);border:1px solid rgba(217,119,6,.5)}.reqbox span{font-style:italic}
+/* modo Game Master: otro fondo y otra interfaz */
+.gmribbon{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:8px 14px;border-radius:14px;background:linear-gradient(90deg,#B5472F,#6E1F3A);color:#fff;font-family:var(--sans,system-ui);box-shadow:0 10px 24px -12px rgba(110,31,58,.9)}
+.gmribbon span svg{width:22px;height:22px;display:block}.gmribbon b{letter-spacing:.08em;text-transform:uppercase;font-size:.85rem}.gmribbon small{opacity:.85;margin-left:auto}
+html[data-mode=gm]::before,html[data-mode=gm]::after{content:'';position:fixed;top:0;bottom:0;width:7px;z-index:70;pointer-events:none;background:linear-gradient(#D9603F,#6E1F3A)}
+html[data-mode=gm]::before{left:0}html[data-mode=gm]::after{right:0}
+html[data-mode=gm]:root body.hub{--h-bg:#1A0D12;--h-card:#2B1620;--h-ink:#FDF0E8;--h-mut:#DDB9AB;--h-line:#6A3038;background:var(--h-bg);color:var(--h-ink)}
+html[data-mode=gm] #hbg .au{filter:blur(44px);opacity:.85}
+html[data-mode=gm] #hbg .a1{background:radial-gradient(closest-side,rgba(217,96,63,.5),transparent)}
+html[data-mode=gm] #hbg .a2{background:radial-gradient(closest-side,rgba(168,40,70,.45),transparent)}
+html[data-mode=gm] #hbg .a3{background:radial-gradient(closest-side,rgba(245,158,11,.3),transparent)}
+html[data-mode=gm] #hbg .bgd{opacity:.1;color:#FDBA9B}
+html[data-mode=gm] body.hub .hh,html[data-mode=gm] body.hub .hn b{color:#FFE9DD}
+html[data-mode=gm] body.hub .hs,html[data-mode=gm] body.hub .hint,html[data-mode=gm] body.hub .hback{color:#DDB9AB}
+html[data-mode=gm] body.hub .hh2{border-left-color:#E8643F;color:#FFE9DD}
+html[data-mode=gm] body.hub .glass,html[data-mode=gm] body.hub .gmb,html[data-mode=gm] body.hub .card,html[data-mode=gm] body.hub .npcpanel{background:rgba(58,24,36,.82);border-color:rgba(232,100,63,.5);color:#FDF0E8}
+html[data-mode=gm] body.hub .glass h3,html[data-mode=gm] body.hub .glass .f,html[data-mode=gm] body.hub .gmb b,html[data-mode=gm] body.hub .card h3{color:#FFE9DD}
+html[data-mode=gm] body.hub .gmb small,html[data-mode=gm] body.hub .card .meta,html[data-mode=gm] body.hub .card .hint{color:#E2C4B8}
+html[data-mode=gm] body.hub .glass input[type=text],html[data-mode=gm] body.hub .glass select,html[data-mode=gm] body.hub .glass textarea{background:rgba(255,255,255,.1);color:#FFF4EE;border-color:rgba(232,100,63,.5)}
+html[data-mode=gm] body.hub .card:not(.chapter) h3{background:none;color:#FFE9DD}
+html[data-mode=gm] body.hub .stat{background:rgba(255,255,255,.1);color:#FFE9DD}
+html[data-mode=gm] body.hub .gmi{background:#C2502F}
+html[data-mode=gm] body.hub .gmg[aria-pressed=true]{background:#C2502F}
+html[data-mode=gm] body.hub .psh .btn.pri,html[data-mode=gm] body.hub .btn.pri{background:#D9603F;border-color:#D9603F;color:#fff}
+html[data-mode=gm] body.hub .btn:not(.pri):not(.danger){background:rgba(255,255,255,.1);color:#FFE9DD;border-color:rgba(232,100,63,.55)}
+html[data-mode=gm] body.hub .btn.ghost{background:transparent}
+html[data-mode=gm] body.hub .apb.ok{color:#86EFAC}html[data-mode=gm] body.hub .apb.wait{color:#FCD34D}
+html[data-mode=gm] .tbin{background:rgba(48,20,30,.92)!important;border-color:#E8643F!important}
+html[data-mode=gm] #topbar .tbbrand,html[data-mode=gm] #topbar .tbi{color:#FFE9DD}
+html[data-mode=gm] #topbar .tbi.cur{color:#FDBA9B;background:rgba(232,100,63,.22)}
+html[data-mode=gm] #topbar .tbd{background:#3A1824;border-color:#E8643F}html[data-mode=gm] #topbar .tbd button{color:#FFE9DD}
+html[data-mode=gm] #fdock{background-color:rgba(48,20,30,.92)}html[data-mode=gm] #fdock .fd{color:#FFE9DD}
+html[data-mode=gm] .invrow{color:#FFE9DD}
+html[data-mode=gm] body.hub .stat b{color:#FFD9C7}html[data-mode=gm] body.hub .stat span{color:#E2C4B8}
+html[data-mode=gm] body.hub .tag:not(.rv),html[data-mode=gm] body.hub .era{color:#F5D5C6;border-color:rgba(245,213,198,.5)}
+html[data-mode=gm] body.hub .btn.danger{color:#FFB8A0;border-color:#E8643F;background:transparent}
+html[data-mode=gm] body.hub .card h3{font-family:var(--sans,system-ui)}
+html[data-dev=phone] .gmribbon small{display:none}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1271,7 +1317,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,invform:doPartInv,linkform:doLink,authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,reqform:doReq,invform:doPartInv,linkform:doLink,authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -1415,8 +1461,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='70';
-const APPN='Los NPC se crean dentro de cada partida y el Game Master decide cuándo meterlos; cambio de modo más suave; fichas sin aprobar en solo lectura.';
+const APPV='71';
+const APPN='Cambio de personaje con permiso del Game Master, personajes vetados tras un cambio forzado, interfaz propia del modo Game Master y NPC revelados al instante con aviso.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1532,7 +1578,7 @@ const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
  if(scr==='npc')return npcEditor();
@@ -1628,8 +1674,12 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
 function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
 function revealedHTML(){if(!revealed.length)return '';const seen=revealedHTML.seen||(revealedHTML.seen=new Set());
  const h=`<section class="rvl"><h2 class="hh2">NPC de tus partidas</h2><div class="npcgrid">${revealed.map((n,i)=>{const nw=revSig&&!seen.has(n._id);seen.add(n._id);return `<article class="card npcc${nw?' flash':''}" style="--i:${i}"><h3>${esc(n.name||'NPC')}</h3><div class="meta"><span>${NPCKIND[n.kind]||''} · ${esc(n.role||'')} · nivel ${n.level}</span></div>${npcSummary(npcNorm(n))}<div class="row"><button class="btn pri" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div><small class="hint">${esc(n._by||'El GM')} · ${esc(n._pn||'partida')}</small></article>`}).join('')}</div></section>`;return h}
-async function fetchRevealed(){if(!session)return;try{const l=await fsList('reveladas');revealed=l.filter(r=>r.pid&&myParts.some(q=>q.id===r.pid)).map(r=>{try{return Object.assign(JSON.parse(r.data),{_by:r.owner,_id:r.id,_pid:r.pid,_pn:(myParts.find(q=>q.id===r.pid)||{}).name||''})}catch(e){return null}}).filter(Boolean);const sg=JSON.stringify(revealed.map(r=>[r._id,r._pid,r.name,r.level,JSON.stringify(r.attrs),JSON.stringify(r.skills),r.notes,r.traits]));if(sg!==revSig){const first=revSig==='';revSig=sg;if(first)revealedHTML.seen=new Set(revealed.map(r=>r._id));if(scr==='menu'&&!store.cur&&store.mode!=='gm')render(1)}}catch(e){}}
-setInterval(()=>{if(session&&!document.hidden&&scr==='menu'&&!store.cur&&store.mode!=='gm')fetchRevealed()},15000);
+async function fetchRevealed(){if(!session)return;try{const l=await fsList('reveladas');revealed=l.filter(r=>r.pid&&myParts.some(q=>q.id===r.pid)).map(r=>{try{return Object.assign(JSON.parse(r.data),{_by:r.owner,_id:r.id,_pid:r.pid,_pn:(myParts.find(q=>q.id===r.pid)||{}).name||''})}catch(e){return null}}).filter(Boolean);const sg=JSON.stringify(revealed.map(r=>[r._id,r._pid,r.name,r.level,JSON.stringify(r.attrs),JSON.stringify(r.skills),r.notes,r.traits]));{const prev=fetchRevealed.ids;fetchRevealed.ids=revealed.map(r=>r._id);if(prev){const nw=revealed.find(r=>!prev.includes(r._id));if(nw)npcPop(nw)}}
+  if(sg!==revSig){const first=revSig==='';revSig=sg;if(first)revealedHTML.seen=new Set(revealed.map(r=>r._id));if(scr==='menu'&&!store.cur&&store.mode!=='gm')render(1)}}catch(e){}}
+setInterval(()=>{if(session&&!document.hidden&&!store.cur&&store.mode!=='gm')fetchRevealed()},8000);
+function npcPop(n){const o=document.getElementById('npcpop');if(o)o.remove();const d=document.createElement('aside');d.id='npcpop';d.setAttribute('role','status');
+ d.innerHTML=`<div class="ppi">${DIEI}</div><div class="ppt"><b>El Game Master revela a un NPC</b><span>${esc(n.name||'NPC')} entra en «${esc(n._pn||'la partida')}»</span><div class="row"><button class="btn pri sm" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div></div><button class="ppx" data-act="npcpx" aria-label="Cerrar aviso">✕</button>`;
+ document.body.appendChild(d);try{if(navigator.vibrate)navigator.vibrate(40)}catch(e){}d._t=setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),260)},12000)}
 async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){if(!n.shared||!n.pid)continue;const js=JSON.stringify(Object.assign({},n,{notes:'',shared:true}));if(npcPushed[n.id]===js)continue;try{await fs('PATCH','reveladas/'+n.id,fbEnc({uid:session.uid,owner:session.name,pid:n.pid||'',data:js,updated:Date.now()}));npcPushed[n.id]=js}catch(e){}}}
 function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
  const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
@@ -1641,7 +1691,7 @@ function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.
 
 /* ---------- Partidas ---------- */
 let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
-let apState={};const pjDirty=new Set(),partSeen={},invSeen=new Set();
+let apState={},reqState={},banMap={};const pjDirty=new Set(),partSeen={},invSeen=new Set();
 const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
 async function fsQuery(col,field,val){const t=await tok();let r;
  try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
@@ -1664,11 +1714,11 @@ async function loadParts(){if(!session)return;
   const mem=await fsQuery('miembros','uid',session.uid);const mp=[];for(const m of mem){const d=await fs('GET','partidas/'+m.pid);if(d)mp.push(Object.assign(fbDec(d),{cid:m.cid,mid:m.id}));else fs('DELETE','miembros/'+m.id).catch(()=>{})}myParts=mp;
   invs=(await fsQuery('invitaciones','to',session.uid)).filter(i=>i.status==='pending');
   for(const c of store.chars){if(!c.pid)continue;if(!myParts.some(p=>p.id===c.pid)){delete c.pid;delete c.rev;delete c._ph;save()}}
-  try{const mj=await fsQuery('pjs','uid',session.uid);apState={};mj.forEach(x=>{apState[x.pid]=x.ap||'y'});
+  try{const mj=await fsQuery('pjs','uid',session.uid);apState={};reqState={};banMap={};mj.forEach(x=>{apState[x.pid]=x.ap||'y';reqState[x.pid]=x.req||'';banMap[x.pid]=x.ban||''});
    for(const c of store.chars){if(c.pid&&apState[c.pid]==='n'){const pn=(myParts.find(q=>q.id===c.pid)||{}).name||'la partida';delete c.pid;delete c.rev;delete c._ph;save();toast('El Game Master de «'+pn+'» pide cambiar o crear otro personaje')}}}catch(e){}
   await syncLinked();
   invPop();if(store.mode!=='gm')fetchRevealed();
-  const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id]]),invs.map(i=>i.id)]);
+  const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id],reqState[p.id]]),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
 async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
   try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if(r.ap==='n')continue;if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
@@ -1688,10 +1738,11 @@ function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(
  const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
  return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:`<p class="hint" style="margin:0">${ap==='n'?'Esperando que elija otro personaje.':'Todavía no ha elegido personaje.'}</p>`}
  ${ch?`<span class="apb ${ap==='p'?'wait':'ok'}">${ap==='p'?'Pendiente de tu aprobación':'Aprobado'}</span>`:''}
+ ${ch&&ap==='y'&&x.raw.req==='1'?`<div class="reqbox"><b>Solicita cambiar de personaje</b><span>«${esc(x.raw.reason||'')}»</span><div class="row"><button class="btn pri sm" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">Autorizar cambio</button><button class="btn sm" data-act="pjdeny" data-p="${p.id}" data-u="${esc(m.uid)}">Denegar</button></div></div>`:''}
  <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Ver ficha':'Ver y editar ficha'}</button>`:''}${ch&&ap==='p'?`<button class="btn" data-act="pjap" data-v="y" data-p="${p.id}" data-u="${esc(m.uid)}">Aprobar</button>`:''}${ch?`<button class="btn" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Rechazar':'Pedir otro personaje'}</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
 
 function partTags(p){return `<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
-function pjOk(c,P,pid){if(!c.done)return 'Ficha sin terminar';if(c.pid&&c.pid!==pid)return 'Ya participa en otra partida';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
+function pjOk(c,P,pid){if(!c.done)return 'Ficha sin terminar';if(c.pid&&c.pid!==pid)return 'Ya participa en otra partida';if(pid&&(banMap[pid]||'').split(',').includes(c.id))return 'El Game Master pidió cambiarlo: no puede volver a elegirse';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
 function pjViewScreen(){const v=store.pjv;if(!v){scr='part';return partScreen()}const c=v.c;let h='';try{h=sHoja(c)}catch(e){}
  return hubBar(['pjback','Volver a la partida'])+`<h1 class="hh">${esc(c.name||'Personaje')}</h1><p class="hs">Ficha de ${esc((c._pj&&c._pj.owner)||'jugador')} · solo lectura hasta que la apruebes</p>
  <div class="pjb"><span>Ficha pendiente de aprobación: puedes ver todos sus parámetros, pero no modificarlos.</span></div>
@@ -1704,7 +1755,7 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
  <p class="hint">Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
  ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Invita a tus jugadores por su nombre de usuario.</p>'}
  ${inv.length?`<h3>Invitaciones pendientes</h3><div class="alist">${inv.map(i=>`<div class="arow"><div class="ahead" style="cursor:default"><span class="aav">✉</span><span class="anm"><b>${esc(i.toName||'Jugador')}</b><small>Esperando respuesta</small></span><button class="btn sm ghost" data-act="invcancel" data-id="${i.id}">Cancelar</button></div></div>`).join('')}</div>`:''}</section>
- <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Siguen siendo privados hasta que los metas en la partida, cuando tú decidas.</p>
+ <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Son privados hasta que los metas en la partida: en ese momento se revelan automáticamente a tus jugadores, y seguirán visibles hasta que los retires.</p>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
  <section class="glass" style="margin-top:16px"><div class="row"><button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
@@ -1712,7 +1763,7 @@ function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
  if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><div class="meta ptags">${partTags(i)}</div><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
- if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':apState[p.id]==='n'?'El Game Master ha pedido otro personaje.':'Sin personaje elegido.'}</p>${c?`<span class="apb ${apState[p.id]==='p'?'wait':'ok'}">${apState[p.id]==='p'?'Pendiente de aprobación del GM':'Aprobado por el GM'}</span>`:''}<div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
+ if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':apState[p.id]==='n'?'El Game Master ha pedido otro personaje: no puedes volver a elegir el anterior.':'Sin personaje elegido.'}</p>${c?`<span class="apb ${apState[p.id]==='p'?'wait':'ok'}">${apState[p.id]==='p'?'Pendiente de aprobación del GM':'Aprobado por el GM'}</span>`:''}<div class="row">${c&&apState[p.id]==='y'?(reqState[p.id]==='1'?'<span class="apb wait">Cambio solicitado · esperando al GM</span>':`<button class="btn" data-act="pjreq" data-p="${p.id}">Solicitar cambio de personaje</button>`):`<button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button>`}<button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
  return h}
 function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const ok=store.chars.filter(c=>!pjOk(c,P,pid)),no=store.chars.filter(c=>pjOk(c,P,pid));
  const opts=ok.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
@@ -1721,14 +1772,17 @@ function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||in
  ${ok.length?'':`<div class="hint nolink" style="background:rgba(79,70,229,.1)"><b>Ahora mismo no tienes ningún personaje que pueda jugar esta partida.</b> Crea uno nuevo${P.era?' (Era '+P.era+')':''}: cuando lo termines, elígelo desde tu inicio.<div class="row" style="margin-top:8px"><button type="button" class="btn pri" data-act="pjnew" data-e="${P.era||1}">Crear personaje nuevo</button></div></div>`}<label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
+  {const cu=store.chars.find(x=>x.pid===pid);if(apState[pid]==='y'&&cu&&cid!==cu.id){set('Para cambiar de personaje necesitas la autorización del Game Master.','err');return}}
   {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
    }
   if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
-  if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
+  if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',req:'',reason:'',updated:Date.now()}),maskQ({pid:1,uid:1,cid:1,owner:1,data:1,rev:1,ap:1,req:1,reason:1,updated:1}));c.pid=pid;c.rev=0;c._ph=h}
    try{await fs('PATCH','miembros/'+key,fbEnc({cid}),maskQ({cid:1}))}catch(e){}}
   else if(!accept){try{await fs('DELETE','pjs/'+key)}catch(e){}}
   save();try{$('#dlg').close()}catch(x){}envFx(accept?'¡Te has unido a la partida!':'Personaje actualizado','open');partSig='';await loadParts();render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo completar. Inténtalo de nuevo.','err')}}
+async function doReq(f){const m=$('#rmsg'),pid=f.dataset.p,rs=String(f.elements.rs.value||'').trim();if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
+ try{await fs('PATCH','pjs/'+pid+'_'+session.uid,fbEnc({req:'1',reason:rs.slice(0,200)}),maskQ({req:1,reason:1}));try{$('#dlg').close()}catch(x){}toast('Solicitud enviada al Game Master');partSig='';await loadParts();render(1)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
  try{const id=uid()+uid();const E=f.elements,era=+E.pe.value===2?2:1,maxlvl=Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,desc:String(E.pd.value||'').slice(0,300)}));try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const name=nameN(f.elements.un.value);if(name.length<3){set('Escribe el nombre de usuario completo.','err');return}
@@ -2179,7 +2233,9 @@ document.addEventListener('click',e=>{
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});store.npcs.filter(n=>n.pid===id).forEach(n=>{if(n.shared)fs('DELETE','reveladas/'+n.id).catch(()=>{})});store.npcs=store.npcs.filter(n=>n.pid!==id);save();await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
   case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
   case 'pjnew':{try{$('#dlg').close()}catch(x){}const n=blank();n.era=+b.dataset.e===2?2:1;store.chars.push(n);store.cur=n.id;scr='nb';save();render();toast('Crea tu personaje y, al terminarlo, elígelo desde tu inicio');break}
-  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({ap:b.dataset.v}),maskQ({ap:1})).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
+  case 'pjreq':{const p=myParts.find(x=>x.id===b.dataset.p);if(!p)break;showDlg('Solicitar cambio de personaje',`<form id="reqform" class="grid" data-p="${esc(p.id)}" novalidate><p class="hint" style="margin:0">Tu personaje ya fue aprobado en <b>${esc(p.name)}</b>. Para cambiarlo, el Game Master tiene que autorizarlo. Cuéntale el motivo (por ejemplo: «lo escogí por error»).</p><label class="f">Motivo<textarea name="rs" rows="3" maxlength="200" required></textarea></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar solicitud</button></div></form>`,true);break}
+  case 'pjdeny':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({req:'',reason:''}),maskQ({req:1,reason:1})).then(()=>{toast('Solicitud denegada');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
+  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;const raw=((partPJ[pid]||{})[b.dataset.u]||{}).raw||{};const f=b.dataset.v==='n'?{ap:'n',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:''}:{ap:'y',req:'',reason:''};fs('PATCH','pjs/'+k,fbEnc(f),maskQ(Object.fromEntries(Object.keys(f).map(q=>[q,1])))).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
   case 'fbub':break
   case 'ppx':closePop();break
   case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
@@ -2216,7 +2272,8 @@ document.addEventListener('click',e=>{
   case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k,mg=maxGrade({level:n.level});n.skills[k]=Math.max(0,Math.min(mg,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
   case 'npcatkadd':{const n=npcCur();if(!n)break;n.attacks.push({n:'',b:'',d:''});save();render(1);{const i=document.querySelectorAll('.npcatk .item');const l=i[i.length-1];if(l){const f=l.querySelector('input');if(f)f.focus()}}break}
   case 'npcatkdel':{const n=npcCur();if(!n)break;n.attacks.splice(+b.dataset.i,1);save();render(1);break}
-  case 'rvopen':{const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;showDlg(esc(n.name||'NPC'),npcSheet(npcNorm(n),true),true);break}
+  case 'npcpx':{const pp=document.getElementById('npcpop');if(pp)pp.remove();break}
+  case 'rvopen':{{const pp=document.getElementById('npcpop');if(pp)pp.remove()}const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;showDlg(esc(n.name||'NPC'),npcSheet(npcNorm(n),true),true);break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
