@@ -778,9 +778,10 @@ async function fs(m,p,body,q){const t=await tok();let r;
  try{r=await fetch(fbU(p,q),{method:m,headers:Object.assign({Authorization:'Bearer '+t},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined})}catch(e){throw{code:'NET'}}
  if(r.status===404)return null;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
 async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
+const RESERVED=n=>nameK(n)==='alpha';
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
 async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n,ping:n}),maskQ({seen:1,ping:1})).catch(()=>{})}return 'ok'}
-async function claimProfile(name){const s=S();
+async function claimProfile(name){const s=S();if(RESERVED(name))return false;
  try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
  await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
 let admState=null;
@@ -813,7 +814,7 @@ async function loadFichas(s){let cloud=null,err=null;
 window.addEventListener('online',()=>{if(dirty)flush()});
 const ONLINE_MS=150000;
 const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
-function beat(){if(!session||session.owner||document.hidden)return;fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}),maskQ({ping:1})).catch(()=>{})}
+function beat(){if(!session||document.hidden)return;fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}),maskQ({ping:1})).catch(()=>{})}
 setInterval(beat,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()});
 setInterval(()=>{if(!session||!canAdm()||document.hidden||admState)return;if(document.querySelector('#owl .admw,#dlg[open] .admw'))fsList('users').then(l=>{regCache=l;if(!admState)admView()}).catch(()=>{})},30000);
 setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
@@ -833,11 +834,12 @@ function lastUser(){return lsGet(UKEY)||ckGet(UKEY)||''}
 async function enter(a,rem){ // a: respuesta de signIn/refresh. Devuelve ok | unverified | deleted | name
  const lk=await aCall('lookup',{idToken:a.idToken});const u=(lk.users||[])[0]||{};const email=String(u.email||a.email||'').toLowerCase();
  if(!u.emailVerified){pend=Object.assign(pend||{},{email,idToken:a.idToken,rem:!!rem});return 'unverified'}
- cand={uid:u.localId||a.localId,user:u.localId||a.localId,email,name:u.displayName||email.split('@')[0],idToken:a.idToken,rt:a.refreshToken,exp:Date.now()+(+a.expiresIn||3600)*1000,role:0,owner:email===OWNER,rem:!!rem};
+ cand={uid:u.localId||a.localId,user:u.localId||a.localId,email,name:email===OWNER?'ALPHA':(u.displayName||email.split('@')[0]),idToken:a.idToken,rt:a.refreshToken,exp:Date.now()+(+a.expiresIn||3600)*1000,role:0,owner:email===OWNER,rem:!!rem};
  return finishSess()}
 async function finishSess(){const s=cand;
  if(!s.owner){const st=await loadProfile();if(st==='deleted'){cand=null;skClear();return 'deleted'}
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
+ if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data={chars:[],avatar:''};if(!s.owner)data=await loadFichas(s);
  session=s;cand=null;pend=null;dirty=dirty&&!s.owner;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar)};scr='menu';regCache=null;
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
@@ -900,12 +902,14 @@ async function doAuth(f){
    set('Enviando…');try{await aCall('sendOobCode',{requestType:'PASSWORD_RESET',email:em})}catch(e){if(e.code==='NET'||e.code==='INVALID_EMAIL'){set(aMsg(e),'err');return}}
    set('Si ese correo tiene cuenta, te hemos enviado un enlace para cambiar la contraseña. Revisa también el spam.','ok');return}
   if(authTab==='name'){const name=nameN(el('au').value);if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
+   if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
    if(!cand){authTab='login';render();return}cand.name=name;set('Comprobando…');aCall('update',{idToken:cand.idToken,displayName:name,returnSecureToken:false}).catch(()=>{});
    const res=await finishSess();if(res==='name'){set('Ese nombre también está en uso. Prueba con otro.','err');return}await afterEnter(res);return}
   const em=String(el('em').value||'').trim().toLowerCase(),pw=el('ap').value;wantRem=!!(el('rem')&&el('rem').checked);
   if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
   if(authTab==='new'){const name=nameN(el('au').value);
    if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
+   if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
    if(pw.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
    if(pw!==el('ap2').value){set('Las contraseñas no coinciden.','err');return}
    set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,returnSecureToken:true})}catch(e){set(aMsg(e),'err');return}
@@ -925,7 +929,7 @@ function admShow(html){const o=$('#owl');if(o&&session&&session.owner)o.innerHTM
 function admDlg(){if(!canAdm())return;if(!regCache){admShow('<p class="hint">Cargando las cuentas de la app…</p>');admLoad();return}admView()}
 async function admLoad(){try{regCache=await fsList('users')}catch(e){regCache=null;admShow('<div class="grid"><p class="hint warn-t">No se pudo cargar la lista ('+esc(e.code||'error')+'). Revisa tu conexión y los permisos.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div></div>');return}admView()}
 function admView(){
- const me=myRole(),all=(regCache||[]).filter(x=>!x.deleted),n=all.length;
+ const me=myRole(),allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filter(x=>(x.role|0)<3),n=all.length;
  const list=all.slice().sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
  const rows=list.map(r=>{const k=r.id,self=k===session.uid,rl=r.role|0;
   const act=admState&&admState.u===k?admState.mode:'';
@@ -935,8 +939,8 @@ function admView(){
   if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
   if(act==='del')extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`;
   return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>${isOn(r)?'<i class="dot-on"></i>En línea · ':''}${isAdmin()&&r.email?esc(r.email)+' · ':''}Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
- const onl=all.filter(isOn).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
- admShow(`<div class="grid admw"><div class="onl"><b>En línea ahora: ${onl.length}</b>${onl.length?`<div class="onc">${onl.map(r=>`<span class="onp"><i></i>${esc(r.name)}</span>`).join('')}</div>`:'<p class="hint" style="margin:4px 0 0">Ahora mismo no hay nadie conectado.</p>'}<p class="hint" style="margin:4px 0 0">Cuenta a quien tiene la app abierta y a la vista. Se actualiza solo cada 30 s.</p></div><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede leer las fichas de otros desde aquí.</p>
+ const onl=allU.filter(isOn).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
+ admShow(`<div class="grid admw"><div class="onl"><b>En línea ahora: ${onl.length}</b>${onl.length?`<div class="onc">${onl.map(r=>`<span class="onp"><i></i>${esc(r.name)}${(r.role|0)>=3?' <small>(propietario)</small>':''}</span>`).join('')}</div>`:'<p class="hint" style="margin:4px 0 0">Ahora mismo no hay nadie conectado.</p>'}<p class="hint" style="margin:4px 0 0">Cuenta a quien tiene la app abierta y a la vista. Se actualiza solo cada 30 s.</p></div><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede leer las fichas de otros desde aquí.</p>
  <p class="hint" style="margin:0">${isAdmin()?'Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>). Un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Tienes permiso para ver las cuentas.'}</p>
  <div class="list">${rows||'<p class="hint">Todavía no hay cuentas.</p>'}</div><div class="row"><button class="btn sm ghost" data-act="admre">Actualizar lista</button></div></div>`)}
 function ownerView(){setTimeout(()=>{if(session&&session.owner){if(regCache)admView();else admLoad()}},0);return hubBar(null)+`<h1 class="hh">Administración</h1><p class="hs">Cuentas de la app y permisos.</p><section class="authhub" id="owl"><p class="hint">Cargando…</p></section>`}
@@ -944,6 +948,7 @@ function acctDlg(){
  const pwf=(id,l,a)=>`<label class="f">${l}<input type="password" name="${id}" autocomplete="${a}" required></label>`;
  showDlg('Cuenta de '+esc(session.name),`<div class="grid">
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
+ ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>ALPHA</b>: está bloqueado y solo lo ven los administradores.</p>':''}
  ${session.owner?'':`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Se recorta en círculo y se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button>${store.avatar?'<button class="btn sm ghost" data-act="avdel">Quitar</button>':''}</div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div>`}
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
 ${session.owner?'':`<form id="renform" class="grid" novalidate><b>Nombre de usuario</b><label class="f">Nombre<input type="text" name="rn" value="${esc(session.name)}" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar nombre</button></div></form>`}
@@ -968,6 +973,7 @@ async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.c
 async function doRen(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  const name=nameN(f.elements.rn.value);
  if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
+   if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
  if(name===session.name){set('Ese ya es tu nombre.','ok');return}
  try{set('Comprobando…');const old=session.name,same=nameK(name)===nameK(old);
   if(!same){try{await fs('PATCH',nameDoc(name),fbEnc({uid:session.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code)){set('Ese nombre ya está escogido por otra persona.','err');return}throw e}}
@@ -1127,8 +1133,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='57';
-const APPN='Ahora puedes cambiar tu nombre de usuario desde Cuenta, y los administradores ven quién está en línea.';
+const APPV='58';
+const APPN='El propietario usa el nombre bloqueado ALPHA, reservado y visible solo para administradores.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1617,7 +1623,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session&&!session.owner)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admDlg()}break;
