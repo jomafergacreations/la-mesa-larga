@@ -810,6 +810,71 @@ dialog#updf::backdrop{background:rgba(14,20,38,.35);-webkit-backdrop-filter:blur
 .qbig button:disabled{opacity:.3;cursor:not-allowed}
 @media(max-width:959px){.qside{display:none}}
 @media(prefers-reduced-motion:no-preference){.panel{animation:in .18s ease-out}@keyframes in{from{opacity:.5}}}
+
+/* ===== v66: invitaciones, conectados, aviso emergente, NPC, tablet y escritorio ===== */
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9AA0AC;flex:none;vertical-align:middle;margin-right:6px}
+.dot.on{background:#22C55E;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.invdlg{display:grid;gap:12px}
+.invq{font:inherit;padding:10px 14px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.6);color:inherit;width:100%;box-sizing:border-box}
+.invsum{font-size:.88rem;font-weight:700;opacity:.85}.invsum .dot{margin-left:6px}.invsum .dot:first-child{margin-left:0}
+.invlist{display:grid;gap:6px;max-height:min(46vh,380px);overflow:auto;padding-right:2px}
+.invrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(120,125,140,.3);background:rgba(120,125,140,.08);cursor:pointer;transition:background .15s,transform .15s}
+.invrow:hover{background:rgba(79,70,229,.1)}.invrow:has(input:checked){background:rgba(79,70,229,.16);border-color:#4F46E5}
+.invrow.dis{opacity:.55;cursor:default}.invrow input{width:20px;height:20px;accent-color:#4F46E5;flex:none}
+.invrow .dot{margin:0}.invrow b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.invrow small{opacity:.75;font-weight:600}
+#invpop{font-family:var(--sans,system-ui,sans-serif);position:fixed;z-index:80;top:calc(14px + env(safe-area-inset-top,0px));right:16px;width:min(380px,calc(100vw - 32px));display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:20px;background:color-mix(in srgb,var(--h-card,#fff) 94%,transparent);color:var(--h-ink,#121B2E);border:1.5px solid #4F46E5;box-shadow:0 22px 48px -16px rgba(30,20,90,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html[data-dev=desktop] #invpop{top:86px}
+#invpop .ppi{width:46px;height:46px;flex:none;color:#4F46E5}#invpop .ppi svg{width:100%;height:100%}
+#invpop .ppt{display:grid;gap:3px;min-width:0;flex:1}#invpop .ppt b{font-size:1rem}#invpop .ppt span{font-size:.9rem;opacity:.85}
+#invpop .row{margin-top:8px;display:flex;gap:8px}#invpop .btn{min-height:38px}
+#invpop .ppx{border:0;background:transparent;color:inherit;font-size:1rem;opacity:.6;padding:2px 4px;cursor:pointer}
+@media(prefers-reduced-motion:no-preference){#invpop{animation:ppin .7s cubic-bezier(.2,1.5,.4,1) both}#invpop.out{animation:ppout .26s ease-in both}
+@keyframes ppin{0%{transform:translateY(-30px) scale(.9);opacity:0}60%{transform:translateY(6px) scale(1.02);opacity:1}100%{transform:none}}
+@keyframes ppout{to{transform:translateX(40px);opacity:0}}}
+.npctop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 14px}.npctop small{opacity:.7}
+.btn.npcsv.ok{background:#15803D;border-color:#15803D;color:#fff}
+/* tablet: menú arriba a la derecha en inicio; burbuja en el resto de pantallas */
+html[data-dev=tablet] #fdock.tabtr{top:calc(14px + env(safe-area-inset-top,0px));bottom:auto;left:auto;right:16px;transform:none}
+html[data-dev=tablet] body.hub .wrap{padding-top:104px}
+html[data-dev=tablet] #fdock.tabcoll{bottom:calc(92px + env(safe-area-inset-bottom,0px));left:auto;right:18px;transform:translateY(12px) scale(.94);transform-origin:bottom right;opacity:0;pointer-events:none;flex-direction:column;border-radius:22px;padding:8px;transition:transform .22s cubic-bezier(.2,1.2,.4,1),opacity .18s}
+html[data-dev=tablet] #fdock.tabcoll.open{opacity:1;pointer-events:auto;transform:none}
+html[data-dev=tablet] #fdock.tabcoll .fd{flex-direction:row;justify-content:flex-start;gap:12px;min-width:190px;min-height:50px;padding:6px 14px;font-size:.95rem}
+html[data-dev=tablet] #fdock.tabcoll .fd span:not(.avs){font-size:.95rem}
+html[data-dev=tablet] #tpop{left:auto;right:18px;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(0,12px) scale(.94)}
+html[data-dev=tablet] #tpop.open{transform:none}
+#fbub{display:none}
+html[data-dev=tablet] #fbub{display:grid;place-items:center;position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:60px;height:60px;border-radius:50%;border:0;z-index:52;color:#fff;background:linear-gradient(145deg,#6366F1,#4338CA);box-shadow:0 14px 28px -8px rgba(55,48,163,.7),inset 0 2px 4px rgba(255,255,255,.35);cursor:pointer;transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+html[data-dev=tablet] #fbub svg{width:28px;height:28px}html[data-dev=tablet] #fbub.on{transform:rotate(90deg) scale(1.06)}
+html[data-dev=tablet] #fbub:active{transform:scale(.92)}
+html[data-mode=gm][data-dev=tablet] #fbub{background:linear-gradient(145deg,#D9603F,#9A3A22)}
+/* escritorio: más visual y claro */
+html[data-dev=desktop] body.hub .wrap{max-width:1180px}
+html[data-dev=desktop] .bubbles{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:24px;padding-bottom:60px;align-items:stretch}
+html[data-dev=desktop] .bubbles .bub:nth-child(n){--d:auto;width:auto;height:auto;min-height:230px;margin:0;align-self:stretch;border-radius:30px;padding:30px 34px;flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;gap:14px}
+html[data-dev=desktop] .bub .tt{display:grid;gap:8px;text-align:left}
+html[data-dev=desktop] .bub .tt b{font-size:1.9rem;line-height:1.1}
+html[data-dev=desktop] .bub .tt span{font-size:1.05rem;line-height:1.4;opacity:.95}
+html[data-dev=desktop] .bub .ti{position:absolute;top:26px;left:30px;width:68px;height:68px;border-radius:20px}
+html[data-dev=desktop] .bub .ti svg{width:38px;height:38px}
+html[data-dev=desktop] .bub .go{position:absolute;right:28px;top:30px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:1.5rem;transition:transform .2s,background .2s}
+html[data-dev=desktop] .bub:hover .go{transform:translateX(5px);background:rgba(255,255,255,.38)}
+html[data-dev=desktop] .bub:hover{transform:translateY(-6px);box-shadow:0 26px 40px -18px rgba(20,30,90,.7)}
+html[data-dev=desktop] .hh{letter-spacing:-.02em}
+html[data-dev=desktop] .glass,html[data-dev=desktop] .card{border-width:1.5px;box-shadow:0 20px 44px -22px rgba(10,15,40,.55)}
+html[data-dev=desktop] .npcc,html[data-dev=desktop] .invc{transition:transform .18s,box-shadow .18s}
+html[data-dev=desktop] .npcc:hover,html[data-dev=desktop] .invc:hover{transform:translateY(-4px);box-shadow:0 26px 40px -20px rgba(10,15,40,.6)}
+html[data-dev=desktop] .tbin{border-width:1.5px;box-shadow:0 14px 34px -14px rgba(10,15,40,.5)}
+html[data-dev=desktop] #topbar .tbi{font-size:.98rem;padding:8px 14px;border-radius:14px}
+html[data-dev=desktop] #topbar .tbi:hover{background:rgba(79,70,229,.12)}
+html[data-dev=desktop] #topbar .tbmode{background:rgba(79,70,229,.12);font-weight:800}
+html[data-dev=desktop] #topbar .tbmode.gm{background:#B5472F;color:#fff}
+html[data-dev=desktop] .hb{margin-bottom:26px}
+html[data-dev=desktop] .hb .av{width:48px;height:48px;border-radius:16px}
+html[data-dev=desktop] .hb .hn b{font-size:1.25rem}
+html[data-dev=desktop] .hs{font-size:1.25rem}
+html[data-dev=desktop] .hh2{font-size:1.7rem;padding-left:14px;border-left:5px solid #4F46E5}
+html[data-dev=desktop] .npcgrid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+html[data-dev=desktop] .gmb{min-height:150px;font-size:1.05rem}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -928,8 +993,19 @@ async function loadFichas(s){let cloud=null,err=null;
 window.addEventListener('online',()=>{if(dirty)flush()});
 const ONLINE_MS=70000;
 const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
-function beat(){if(!session||document.hidden)return;fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}),maskQ({ping:1})).catch(()=>{})}
-setInterval(beat,25000);document.addEventListener('visibilitychange',()=>{if(!session)return;if(document.hidden)fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{});else beat()});
+function beat(){if(!session||document.hidden)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
+
+/* permisos en vivo: si un administrador cambia tu rol o borra tu cuenta, la app se actualiza sola */
+async function watchMe(){if(!session||document.hidden||session.owner)return;
+ try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
+  if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
+  const nr=u.role|0,old=session.role|0;
+  if(nr!==old){session.role=nr;dockSig='';
+   if(nr<1){const x=document.querySelector('#dlg[open] .admroot');if(x){try{$('#dlg').close()}catch(e){}}}
+   toast(nr>old?'Tus permisos han cambiado: ahora eres '+ROLEN[nr].toLowerCase():'Tus permisos han cambiado: ahora tienes «'+ROLEN[nr]+'»');
+   fdockUpdate(cur());render(1)}}catch(e){}}
+setInterval(watchMe,7000);
+setInterval(beat,25000);document.addEventListener('visibilitychange',()=>{if(!session)return;if(document.hidden){fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{})}else beat()});
 setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
 function ckGet(k){try{const m=document.cookie.split('; ').find(x=>x.indexOf(k+'=')===0);return m?decodeURIComponent(m.slice(k.length+1)):''}catch(e){return ''}}
 function ckSet(k,v){try{document.cookie=k+'='+encodeURIComponent(v)+'; max-age=31536000; path=/; SameSite=None; Secure'}catch(e){}}
@@ -954,7 +1030,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
+ session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1270,8 +1346,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='65';
-const APPN='Nuevas partidas: el Game Master invita a jugadores y puede ver y editar sus fichas.';
+const APPV='66';
+const APPN='Invitaciones a todos con jugadores conectados, aviso emergente, permisos en vivo, guardar en NPC y nuevo menú para tablet.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1331,6 +1407,8 @@ const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5
 let dockSig='';
 const CHEV='<svg class="tbch" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const isDesk=()=>document.documentElement.dataset.dev==='desktop';
+const isTab=()=>document.documentElement.dataset.dev==='tablet';
+const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
  const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
@@ -1357,14 +1435,19 @@ function fdockUpdate(c){let d=document.getElementById('fdock');
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');dockSig='';return}
  if(isDesk()){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb')}
- const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole(),isTab()?'T':''].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
- d.classList.toggle('above',!!c&&!c.done);
+ {const tab=isTab(),hm=(scr==='menu'&&!c);d.classList.toggle('tabtr',tab&&hm);d.classList.toggle('tabcoll',tab&&!hm);if(!(tab&&!hm))d.classList.remove('open');
+  let bb=document.getElementById('fbub');if(tab&&!hm){if(!bb){bb=document.createElement('button');bb.id='fbub';bb.type='button';bb.dataset.act='fbub';bb.setAttribute('aria-label','Abrir menú');bb.setAttribute('aria-expanded','false');bb.innerHTML=MENUI;document.body.appendChild(bb)}}else if(bb)bb.remove()}
+ d.classList.toggle('above',!isTab()&&!!c&&!c.done);
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
   d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd gmbtn${store.mode==='gm'?' cur':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${PENI}<span>${store.mode==='gm'?'Jugador':'GM'}</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
  t.classList.toggle('above',!!c&&!c.done)}
+document.addEventListener('click',e=>{const d=document.getElementById('fdock');if(!d||!d.classList.contains('tabcoll'))return;const bb=document.getElementById('fbub');
+ if(e.target.closest('#fbub')){const o=d.classList.toggle('open');bb.setAttribute('aria-expanded',o);bb.classList.toggle('on',o);return}
+ if(d.classList.contains('open')&&!e.target.closest('#fdock')||e.target.closest('#fdock [data-act]:not([data-act=tpop])')){d.classList.remove('open');if(bb){bb.setAttribute('aria-expanded','false');bb.classList.remove('on')}}});
 function closeTpop(){const t=document.getElementById('tpop');if(t)t.classList.remove('open')}
 document.addEventListener('click',e=>{if(!e.target.closest('#tpop,[data-act=tpop]'))closeTpop()});
 document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#fdock .fd');if(!b)return;b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),600)});
@@ -1375,6 +1458,7 @@ function hubbg(on){let h=document.getElementById('hbg');if(!on){if(h)h.remove();
 let pxT=0;
 document.addEventListener('pointermove',e=>{const h=document.getElementById('hbg');if(!h||pxT)return;pxT=requestAnimationFrame(()=>{pxT=0;h.style.setProperty('--px',((e.clientX/innerWidth-.5)*2).toFixed(3));h.style.setProperty('--py',((e.clientY/innerHeight-.5)*2).toFixed(3))})},{passive:true});
 applyTheme(getTheme());
+const ORB='<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="5.5" fill="currentColor" stroke="none"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-28 24 24)"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(62 24 24)" opacity=".55"/></g><g fill="currentColor"><circle cx="8.500" cy="31.500" r="2.600"/><circle cx="39.500" cy="16.500" r="2.600"/></g></svg>';
 const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 5 9.5A5 5 0 0 1 12 17.5 5 5 0 0 1 7 12.5C7 9.600 9 7 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 20.500c2.300-1.500 4.300-1.500 7 0s4.700 1.500 7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
@@ -1394,7 +1478,7 @@ function screen(){
   ${hubTile('t1',CARDS,'Creación de mazos','Mazos de Nacidos de la Bruma.','deck',1)}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 class="hh">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1',GEM,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}${revealedHTML()}`}
+  ${hubTile('t1',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}${revealedHTML()}`}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -1461,7 +1545,7 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
  const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
  const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
- return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · revelada a los jugadores':''}</p>
+ return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · revelada a los jugadores':''}</p><div class="npctop"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><small>Se guarda también solo mientras escribes.</small></div>
  <section class="npcpanel glass"><div class="grid">
  <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
  <label class="f">Tipo<select data-nf="kind">${Object.entries(NPCKIND).map(([k,v])=>`<option value="${k}"${n.kind===k?' selected':''}>${v}</option>`).join('')}</select></label>
@@ -1473,7 +1557,7 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
  ${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
- <div class="row"><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar a los jugadores':'Revelar a los jugadores'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
+ <div class="row"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar a los jugadores':'Revelar a los jugadores'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
 function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
 function revealedHTML(){if(!revealed.length)return '';const seen=revealedHTML.seen||(revealedHTML.seen=new Set());
  const h=`<section class="rvl"><h2 class="hh2">Revelados por el Game Master</h2><div class="npcgrid">${revealed.map((n,i)=>{const nw=revSig&&!seen.has(n._id);seen.add(n._id);return `<article class="card npcc${nw?' flash':''}" style="--i:${i}"><h3>${esc(n.name||'NPC')}</h3><div class="meta"><span>${NPCKIND[n.kind]||''} · ${esc(n.role||'')} · nivel ${n.level}</span></div>${npcSummary(npcNorm(n))}<div class="row"><button class="btn pri" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div><small class="hint">Revelado por ${esc(n._by||'el GM')}</small></article>`}).join('')}</div></section>`;return h}
@@ -1514,6 +1598,7 @@ async function loadParts(){if(!session)return;
   invs=(await fsQuery('invitaciones','to',session.uid)).filter(i=>i.status==='pending');
   for(const c of store.chars){if(!c.pid)continue;if(!myParts.some(p=>p.id===c.pid)){delete c.pid;delete c.rev;delete c._ph;save()}}
   await syncLinked();
+  invPop();
   const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid]),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
 async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
@@ -1526,7 +1611,7 @@ async function loadPart(pid){if(!session)return;
   partMem[pid]=mem;partInv[pid]=inv;partPJ[pid]=pjm;
   const k=store.cur;if(k&&store.pjc[k]&&store.pjc[k]._pj.pid===pid){const x=pjm[store.pjc[k]._pj.uid];if(x&&x.rev>(store.pjc[k].rev|0)&&!pjDirty.has(k))pullPJ(k,x.raw)}
   if(changed&&scr==='part'&&partId===pid&&!store.cur)render(1)}catch(e){}}
-setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},12000);
+setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},8000);
 const ENVSVG='<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="36" rx="5" fill="currentColor" opacity=".9"/><path class="flap" d="M6 20l26 20 26-20" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';
 function envFx(txt,kind){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red)return;const o=document.createElement('div');o.id='envfx';o.className=kind||'open';o.innerHTML=`<div class="en">${ENVSVG}<div class="ec"></div></div><b>${esc(txt)}</b>`;document.body.appendChild(o);setTimeout(()=>o.classList.add('out'),1250);setTimeout(()=>o.remove(),1600)}
 function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(x){try{ch=normalize(JSON.parse(JSON.stringify(x.ch)));d=derive(ch)}catch(e){}}
@@ -1569,6 +1654,40 @@ async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=
   await fs('PATCH','invitaciones/'+key,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:uidT,toName:name,status:'pending',created:Date.now()}));
   try{$('#dlg').close()}catch(x){}envFx('Invitación enviada','send');toast('Invitación enviada a '+name);await loadPart(p.id);render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo enviar la invitación.','err')}}
 async function kickPlayer(pid,u){for(const col of ['pjs','miembros','invitaciones']){try{await fs('DELETE',col+'/'+pid+'_'+u)}catch(e){}}}
+
+/* ---------- invitar jugadores: lista con conectados y desconectados ---------- */
+let invSel=new Set(),invRows=[],invTm=0,invQ='';
+async function invLoad(){const p=parts.find(x=>x.id===partId);const box=document.querySelector('#dlg[open] .invdlg');if(!p||!box){clearInterval(invTm);invTm=0;return}
+ try{const l=await fsList('presencia');const mem=new Set((partMem[p.id]||[]).map(x=>x.uid)),pen=new Set((partInv[p.id]||[]).filter(i=>i.status==='pending').map(i=>i.to));
+  invRows=l.filter(r=>r.id!==session.uid&&r.name&&!(r.owner&&!canAdm())).map(r=>({uid:r.id,name:r.name,on:isOn(r),st:mem.has(r.id)?'mem':pen.has(r.id)?'pen':''})).sort((a,b)=>(b.on-a.on)||a.name.localeCompare(b.name,'es'));
+  invDraw()}catch(e){box.querySelector('.invlist').innerHTML='<p class="hint">No se pudo cargar la lista. Comprueba la conexión.</p>'}}
+function invDraw(){const box=document.querySelector('#dlg[open] .invdlg');if(!box)return;const q=invQ.toLowerCase();
+ const rows=invRows.filter(r=>!q||r.name.toLowerCase().includes(q));const on=invRows.filter(r=>r.on).length;
+ box.querySelector('.invsum').innerHTML=`<span class="dot on"></span>${on} en línea · <span class="dot"></span>${invRows.length-on} desconectados`;
+ box.querySelector('.invlist').innerHTML=rows.length?rows.map(r=>`<label class="invrow${r.st?' dis':''}"><input type="checkbox" data-iu="${esc(r.uid)}"${r.st?' disabled':''}${invSel.has(r.uid)?' checked':''}><span class="dot${r.on?' on':''}"></span><b>${esc(r.name)}</b><small>${r.st==='mem'?'Ya en la partida':r.st==='pen'?'Invitación enviada':r.on?'En línea':'Desconectado'}</small></label>`).join(''):'<p class="hint" style="margin:6px 0">No hay usuarios que coincidan.</p>';
+ const n=[...invSel].filter(u=>invRows.some(r=>r.uid===u&&!r.st)).length,free=invRows.filter(r=>!r.st).length;
+ const a=box.querySelector('[data-act=invsel]'),b=box.querySelector('[data-act=invall]');a.textContent='Invitar seleccionados ('+n+')';a.disabled=!n;b.textContent='Invitar a todos ('+free+')';b.disabled=!free}
+function openInvite(){invSel=new Set();invQ='';invRows=[];
+ showDlg('Invitar jugadores',`<div class="invdlg"><p class="hint" style="margin:0">Elige a quién invitar. Verás quién está conectado ahora mismo, y recibirán un aviso en su pantalla para aceptar o rechazar.</p><input type="search" class="invq" placeholder="Buscar usuario…" aria-label="Buscar usuario" autocomplete="off"><div class="invsum" aria-live="polite"></div><div class="invlist"><p class="hint">Cargando…</p></div><div class="row"><button class="btn pri" data-act="invsel" disabled>Invitar seleccionados (0)</button><button class="btn" data-act="invall" disabled>Invitar a todos</button></div></div>`,true);
+ invLoad();clearInterval(invTm);invTm=setInterval(invLoad,6000)}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('invq')){invQ=t.value;invDraw()}});
+document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.iu){if(t.checked)invSel.add(t.dataset.iu);else invSel.delete(t.dataset.iu);invDraw()}});
+async function sendInvites(all){const p=parts.find(x=>x.id===partId);if(!p)return;const targets=invRows.filter(r=>!r.st&&(all||invSel.has(r.uid)));if(!targets.length)return;
+ const btns=document.querySelectorAll('.invdlg .row .btn');btns.forEach(x=>x.disabled=true);let ok=0;
+ for(const r of targets){try{await fs('PATCH','invitaciones/'+p.id+'_'+r.uid,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:r.uid,toName:r.name,status:'pending',created:Date.now()}));ok++}catch(e){}}
+ clearInterval(invTm);invTm=0;try{$('#dlg').close()}catch(x){}
+ if(ok){envFx(ok>1?'Invitaciones enviadas':'Invitación enviada','send');toast(ok+(ok>1?' invitaciones enviadas':' invitación enviada'))}else toast('No se pudo enviar. Inténtalo de nuevo.');
+ await loadPart(p.id);render(1)}
+
+/* ---------- aviso emergente de invitación (esquina) ---------- */
+const ppSeen=new Set();
+function invPop(){if(!session||!invs.length)return;if(document.getElementById('invpop'))return;const i=invs.find(x=>!ppSeen.has(x.id));if(!i)return;
+ ppSeen.add(i.id);const d=document.createElement('aside');d.id='invpop';d.setAttribute('role','alertdialog');d.setAttribute('aria-label','Invitación a una partida');
+ d.innerHTML=`<div class="ppi">${ENVSVG}</div><div class="ppt"><b>${esc(i.gmName||'Un Game Master')} te invita</b><span>a la partida «${esc(i.pname||'Partida')}»</span><div class="row"><button class="btn pri sm" data-act="ppyes" data-id="${i.id}">Aceptar</button><button class="btn sm" data-act="ppno" data-id="${i.id}">Rechazar</button></div></div><button class="ppx" data-act="ppx" aria-label="Cerrar aviso">✕</button>`;
+ document.body.appendChild(d);
+ try{if(navigator.vibrate)navigator.vibrate(60)}catch(e){}
+ d._t=setTimeout(()=>closePop(),30000)}
+function closePop(then){const d=document.getElementById('invpop');if(!d){if(then)then();return}clearTimeout(d._t);d.classList.add('out');setTimeout(()=>{d.remove();invPop();if(then)then()},260)}
 let pg='',popSel='',prevPct=null,prevNums=[];
 const DEPTH={part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
@@ -1960,12 +2079,19 @@ document.addEventListener('click',e=>{
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre que verán tus jugadores.</p><label class="f">Nombre de la partida<input type="text" name="pn" maxlength="40" autocomplete="off" required></label><div id="pmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Crear partida</button></div></form>`,true);break
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
-  case 'partinv':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
+  case 'partinv':openInvite();break
+  case 'partinv_old':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
   case 'invcancel':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{loadPart(partId).then(()=>render(1));toast('Invitación cancelada')}).catch(()=>toast('No se pudo cancelar'));break
   case 'kick':{const p=b.dataset.p,u=b.dataset.u;showDlg('¿Quitar de la partida?',`<p class="hint" style="margin:0">El jugador dejará de estar en la partida y se llevará una copia de su ficha. Podrás volver a invitarlo.</p><div class="row"><button class="btn danger" data-act="kick2" data-p="${p}" data-u="${esc(u)}">Sí, quitar</button></div>`,true);break}
   case 'kick2':{const p=b.dataset.p,u=b.dataset.u;try{$('#dlg').close()}catch(x){}kickPlayer(p,u).then(()=>loadPart(p)).then(()=>{render(1);toast('Jugador quitado')});break}
   case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
+  case 'fbub':break
+  case 'ppx':closePop();break
+  case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
+  case 'ppno':{const id=b.dataset.id;closePop();fs('DELETE','invitaciones/'+id).then(()=>{invs=invs.filter(x=>x.id!==id);partSig='';render(1);toast('Invitación rechazada')}).catch(()=>toast('No se pudo rechazar'));break}
+  case 'invsel':sendInvites(false);break
+  case 'invall':sendInvites(true);break
   case 'invyes':{const i=invs.find(x=>x.id===b.dataset.id);if(!i)break;linkDlg(i.pid,i.pname,true,i.id);break}
   case 'invno':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{invs=invs.filter(x=>x.id!==b.dataset.id);partSig='';render(1);toast('Invitación rechazada')}).catch(()=>toast('No se pudo rechazar'));break
   case 'pjlink':{const p=myParts.find(x=>x.id===b.dataset.p);if(p)linkDlg(p.id,p.name,false);break}
@@ -1973,6 +2099,7 @@ document.addEventListener('click',e=>{
   case 'partleave2':{const id=b.dataset.p;try{$('#dlg').close()}catch(x){}(async()=>{await kickPlayer(id,session.uid);store.chars.forEach(c=>{if(c.pid===id){delete c.pid;delete c.rev;delete c._ph}});save();partSig='';await loadParts();render(1);toast('Has salido de la partida')})();break}
   case 'pjopen':{const key=b.dataset.p+'_'+b.dataset.u,x=(partPJ[b.dataset.p]||{})[b.dataset.u];if(!x)break;const p=parts.find(y=>y.id===b.dataset.p);const c=pjMake(x.raw,p&&p.name);if(!c)break;store.pjc[key]=c;store.cur=key;render();break}
   case 'mode':setMode(store.mode==='gm'?'p':'gm');break;
+  case 'npcsave':{const n=npcCur();if(!n)break;document.querySelectorAll('.npcsv').forEach(x=>{x.classList.add('ok');x.textContent='✓ Guardado'});flush().then(()=>toast('NPC «'+(n.name||'sin nombre')+'» guardado')).catch(()=>toast('Guardado en este dispositivo; se subirá al reconectar'));setTimeout(()=>document.querySelectorAll('.npcsv').forEach(x=>{x.classList.remove('ok');x.textContent='Guardar NPC'}),1800);break}
   case 'npcnew':{const n=npcNorm({name:'',role:'',level:1,game:store.gmGame||'nb'});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
   case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Juego: <b>${gameName(store.gmGame)}</b>. Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
     <label class="f">Tipo de personaje<select name="arch"><option value="any">Cualquiera</option>${NPCARCH.map(a=>`<option value="${a.id}">${a.n}</option>`).join('')}</select></label>
@@ -2001,7 +2128,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';render()})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
@@ -2011,7 +2138,7 @@ document.addEventListener('click',e=>{
   case 'admf':admF=b.dataset.v;admView(true);break;
   case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r;if(u!==session.uid&&r>=0&&r<=2){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{const x=regCache&&regCache.find(y=>y.id===u);if(x)x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break;
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
-    (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
+    (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}try{await fs('DELETE','presencia/'+u)}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
   case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
   case 'new':{const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
