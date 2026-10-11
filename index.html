@@ -243,6 +243,46 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 @keyframes flash{0%{background-color:color-mix(in srgb,var(--accent) 28%,var(--field))}100%{background-color:var(--field)}}
 @keyframes pgf{from{opacity:0}to{opacity:1}}
 @keyframes pgb{from{opacity:0}to{opacity:1}}
+/* Game Master y NPC */
+.glass{padding:20px;border-radius:24px;background:rgba(255,255,255,.78);border:1px solid rgba(120,125,140,.28);box-shadow:0 18px 40px -22px rgba(10,15,40,.5);color:var(--h-ink,#121B2E);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glass{background:rgba(24,32,51,.78);color:#EDF0F6}}
+:root[data-theme="dark"] .glass{background:rgba(24,32,51,.78);color:#EDF0F6}
+.glass .f{display:grid;gap:4px;font-weight:700;font-size:.85rem}
+.glass input[type=text],.glass select,.glass textarea{font:inherit;font-weight:400;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.6);color:inherit;min-width:0;width:100%;box-sizing:border-box}
+:root[data-theme="dark"] .glass input[type=text],:root[data-theme="dark"] .glass select,:root[data-theme="dark"] .glass textarea{background:rgba(255,255,255,.06)}
+.glass h3{font-family:var(--sans);font-size:1.15rem;margin:14px 0 4px}.glass h3 small{font-weight:600;opacity:.7;font-size:.8rem;margin-left:6px}
+.glass .step{display:inline-flex;align-items:center;gap:10px}
+.glass .stat{background:rgba(120,125,140,.12);border-radius:14px;padding:10px;text-align:center}.glass .stat b{display:block;font-size:1.5rem}.glass .stat span{font-size:.72rem;opacity:.8}
+.npcpanel{max-width:980px}
+.hb .hn .gmem{display:inline-block;align-self:flex-start;margin-top:3px;padding:1px 9px;border-radius:99px;font-size:.7rem;font-style:normal;font-weight:800;letter-spacing:.04em}
+.gmact{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:0 0 22px}
+.gmb{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:6px;padding:18px;border-radius:22px;background:rgba(255,255,255,.7);border:1px solid rgba(120,125,140,.3);color:var(--h-ink,#121B2E);box-shadow:0 14px 30px -18px rgba(10,15,40,.55);transition:transform .2s,box-shadow .2s}
+.gmb:hover{transform:translateY(-3px);box-shadow:0 20px 36px -16px rgba(79,70,229,.55)}.gmb:focus-visible{outline:2px solid #4F46E5;outline-offset:3px}
+.gmb b{font-size:1.15rem}.gmb small{opacity:.75;font-size:.85rem}.gmi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#4F46E5;color:#fff}.gmi svg{width:26px;height:26px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gmb{background:rgba(24,32,51,.7);color:#EDF0F6}}
+:root[data-theme="dark"] .gmb{background:rgba(24,32,51,.7);color:#EDF0F6}
+.npcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.npcc .tag.rv{background:#4F46E5;color:#fff}.hh2{font-family:var(--sans);font-size:1.4rem;margin:30px 0 14px}
+.npcpanel .npcg2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.npcpanel .npcg3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.npcsk{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:8px}.npcs{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:6px 10px;border:1px solid var(--line);border-radius:12px}.npcs span{flex:1}.npcs em{font-style:normal;font-weight:800;min-width:2.6ch;text-align:right;flex:none}.npcs .step{flex:none;gap:8px}
+.npcatk{display:grid;gap:8px}.npcatk .item{display:flex;gap:8px;flex-wrap:wrap}.npcatk input{flex:1 1 120px;min-width:0}
+.npcd{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.npcro{display:grid;gap:8px}.npcat{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;text-align:center;font-size:.7rem}.npcat b{display:block;font-size:1.3rem}
+.gmem{background:#B5472F!important;color:#fff!important}
+html[data-mode=gm] .tbin{border-color:#B5472F}html[data-mode=gm] #fdock{border-color:#B5472F}
+.tbmode{border:1px solid rgba(120,125,140,.35)}.tbmode.gm{background:#B5472F;color:#fff;border-color:#B5472F}.tbmode.gm:hover{background:#9c3b26}
+.fd.gmbtn.cur{background:color-mix(in srgb,#B5472F 18%,transparent);color:#B5472F}
+#dicefx{position:fixed;inset:0;z-index:99998;display:grid;place-content:center;justify-items:center;gap:16px;background:rgba(14,20,38,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font-family:var(--sans)}
+#dicefx.out{opacity:0;transition:opacity .3s}#dicefx .dr{display:flex;gap:14px}#dicefx .dr span{width:70px;height:70px;color:#fff}#dicefx svg{width:100%;height:100%}#dicefx b{font-size:1.1rem}
+#modefx{position:fixed;inset:0;z-index:99997;display:grid;place-items:center;font:800 clamp(2rem,8vw,4rem) var(--sans);color:#fff;pointer-events:none;clip-path:circle(0% at 85% 6%)}
+#modefx.gm{background:linear-gradient(135deg,#B5472F,#6E1F3A)}#modefx.pl{background:linear-gradient(135deg,#4F46E5,#0F9D9A)}
+#modefx.out{opacity:0;transition:opacity .3s}
+@keyframes npcin{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes dicerot{0%{transform:rotate(0) translateY(0)}25%{transform:rotate(120deg) translateY(-18px)}50%{transform:rotate(250deg) translateY(0)}75%{transform:rotate(330deg) translateY(-10px)}100%{transform:rotate(405deg) translateY(0)}}
+@keyframes modeIn{to{clip-path:circle(150% at 85% 6%)}}
+@keyframes rvfl{0%{box-shadow:0 0 0 0 rgba(197,158,87,.95)}100%{box-shadow:0 0 0 22px rgba(197,158,87,0)}}
+@media(prefers-reduced-motion:no-preference){.npcc.stg{animation:npcin .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*70ms)}
+ #dicefx .dr span{animation:dicerot .55s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}#modefx{animation:modeIn .7s ease-in forwards}.npcc.flash{animation:rvfl 1s ease-out}}
 /* barra superior (PC) */
 body.has-tb{padding-top:74px}
 html[data-dev=desktop] body .wrap{padding-bottom:50px}
@@ -855,9 +895,9 @@ let saveT=null,dirty=false,flushing=null;
 const FKEY=u=>'mesa-larga-fichas-'+u;
 function save(){if(!session)return;clearTimeout(saveT);saveT=setTimeout(flush,1200)}
 function flush(){if(!session)return Promise.resolve();clearTimeout(saveT);if(flushing)return flushing.then(()=>{if(dirty)return flush()});
- const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||''});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
+ const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p'});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
  if(data.length>900000){toast('Tus fichas ocupan demasiado: borra alguna o quita la imagen de usuario');dirty=false;return Promise.resolve()}
- flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
+ flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0;pushShared()}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
 async function loadFichas(s){let cloud=null,err=null;
  try{const d=await fs('GET','fichas/'+s.uid);if(d){const f=fbDec(d);cloud={t:f.updated|0,d:f.data}}}catch(e){err=e}
  let loc=null;try{loc=JSON.parse(lsGet(FKEY(s.uid))||'null')}catch(e){}
@@ -893,7 +933,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar)};scr='menu';regCache=null;
+ session=s;cand=null;pend=null;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';setTimeout(fetchRevealed,400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1051,6 +1091,12 @@ async function doRen(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.c
   aCall('update',{idToken:await tok(),displayName:name,returnSecureToken:false}).catch(()=>{});
   session.name=name;dockSig='';render(1);set('Nombre cambiado.','ok');const t=document.querySelector('#dlg h3');if(t)t.textContent='Cuenta de '+name}
  catch(e){set(e.code==='NET'?aMsg(e):'No se pudo cambiar el nombre. Inténtalo de nuevo.','err')}}
+function doNpcR(f){const o={arch:f.elements.arch.value,kind:f.elements.kind.value,level:f.elements.level.value};try{$('#dlg').close()}catch(x){}
+ diceFx(()=>{const n=npcGen(o);store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
+document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.nf)return;const n=npcCur();if(!n)return;const p=t.dataset.nf.split('.');
+ if(p[0]==='atk'){const a=n.attacks[+p[1]];if(a)a[p[2]]=t.value}else n[p[0]]=t.value;
+ if(p[0]==='name'){const h=document.querySelector('.hh');if(h)h.textContent=t.value||'NPC sin nombre'}save()});
+document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.nf==='kind'){const n=npcCur();if(n){n.kind=t.value;save();render(1)}}});
 async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{loadAccounts();const bk=(f.elements.ib.value||'').trim(),pw=f.elements.ip.value;let rec=null;
   if(bk){if(!bk.startsWith('FSC1:')){set('Ese texto no es una copia de seguridad.','err');return}try{rec=JSON.parse(new TextDecoder().decode(unb64(bk.slice(5))))}catch(x){set('La copia de seguridad está dañada.','err');return}}
@@ -1059,7 +1105,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -1148,7 +1194,7 @@ function anim(c){const a=$('#app');if(!a||booting)return;const nbm=!!(session&&(
    if(el){const t=el.dataset.d!==undefined&&el.closest('.step,.skc')?el.closest('.step,.skc').querySelector('output'):el;if(t){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop')}}}}
  if(prevNums.length){document.querySelectorAll('#side .stat b,.counter .n').forEach((x,i)=>{if(prevNums[i]!==undefined&&prevNums[i]!==x.textContent){x.classList.add('pop')}})}
  pg='';popSel='';fx=false}
-function render(keep){const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
+function render(keep){document.documentElement.dataset.mode=(session&&store.mode==='gm')?'gm':'p';const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
 let fx=false;
 const METALS_FX=['#9FB4C7','#C9CED3','#8B8F96','#C59E57','#B4683B','#A67B3C','#E3C14A','#7F8FA3','#D7B07A'];
 function metalFx(el,cc){try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=el.getBoundingClientRect();if(!r.width)return;
@@ -1202,8 +1248,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='62';
-const APPN='Letra todavía un poco más grande.';
+const APPV='63';
+const APPN='Nuevo modo Game Master: crea NPC aleatorios o personalizados y revélalos a los jugadores.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1265,14 +1311,14 @@ const CHEV='<svg class="tbch" viewBox="0 0 24 24" width="14" height="14" aria-hi
 const isDesk=()=>document.documentElement.dataset.dev==='desktop';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${DIEI}<b>La Mesa Larga</b></button>
  <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi${home?' cur':''}" data-act="gohome" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button>
  ${canAdm()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${it('adm','Panel de administración')}${it('admon','Usuarios en línea')}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
- <div class="tbr"><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
+ <div class="tbr"><button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Game Master':'Jugador'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
  <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
  setTimeout(()=>tbInd(),30);
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
@@ -1289,11 +1335,11 @@ function fdockUpdate(c){let d=document.getElementById('fdock');
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');dockSig='';return}
  if(isDesk()){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb')}
- const sig=[scr,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
  d.classList.toggle('above',!!c&&!c.done);
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
-  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
+  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd gmbtn${store.mode==='gm'?' cur':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${PENI}<span>${store.mode==='gm'?'Jugador':'GM'}</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
  t.classList.toggle('above',!!c&&!c.done)}
@@ -1311,9 +1357,11 @@ const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
+ if(scr==='npc')return npcEditor();
+ if(store.mode==='gm'&&scr==='menu')return gmHome();
  if(scr==='nb')return home();
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
   ${hubTile('t2',BOOK,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb')}
@@ -1323,9 +1371,98 @@ function screen(){
   ${hubTile('t1',CARDS,'Creación de mazos','Mazos de Nacidos de la Bruma.','deck',1)}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 class="hh">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1',GEM,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>`}
+  ${hubTile('t1',GEM,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${revealedHTML()}`}
+
+/* ---------- Game Master y NPC ---------- */
+let revealed=[],revSig='',gmStag=false,npcPushed={};
+const NPCARCH=[
+ {id:'soldado',n:'Soldado o guardia',w:[3,2,0,1,1,0],sk:['armpes','atletismo','percepcion','disciplina','intimidacion'],atk:['Espada','Maza','Lanza'],gear:['Armadura de cuero reforzado','Escudo','Cota ligera','Uniforme de la guardia']},
+ {id:'bruto',n:'Matón o bruto',w:[3,1,0,1,0,1],sk:['atletismo','intimidacion','armpes','supervivencia'],atk:['Puños','Garrote','Hacha'],gear:['Ropa gruesa','Cadena','Cuchillo de carnicero']},
+ {id:'ladron',n:'Ladrón o espía',w:[0,3,1,0,2,0],sk:['hurto','sigilo','agilidad','engano','percepcion','armlig'],atk:['Daga','Estilete','Cuchillo arrojadizo'],gear:['Ganzúas','Capa oscura','Bolsa con monedas sueltas']},
+ {id:'noble',n:'Noble o funcionario',w:[0,0,2,1,1,3],sk:['persuasion','engano','liderazgo','perspicacia','saber'],atk:['Estoque','Bastón de paseo'],gear:['Ropa fina','Anillo con sello','Bolsa de monedas','Carta de recomendación']},
+ {id:'erudito',n:'Erudito o escriba',w:[0,0,3,2,1,1],sk:['saber','deduccion','medicina','manufactura','perspicacia'],atk:['Daga de pluma','Bastón'],gear:['Libros y notas','Tinta y plumas','Lentes','Mapa anotado']},
+ {id:'mercader',n:'Mercader o artesano',w:[0,1,2,0,1,2],sk:['persuasion','manufactura','perspicacia','engano','saber'],atk:['Cuchillo de trabajo','Martillo'],gear:['Herramientas del oficio','Balanza','Libro de cuentas','Carreta']},
+ {id:'tirador',n:'Arquero o tirador',w:[1,3,0,0,2,0],sk:['armlig','percepcion','sigilo','supervivencia','agilidad'],atk:['Arco','Honda','Ballesta ligera'],gear:['Carcaj','Capa de camuflaje','Cuerda']},
+ {id:'lider',n:'Líder o cabecilla',w:[1,0,1,2,1,3],sk:['liderazgo','persuasion','intimidacion','perspicacia','disciplina'],atk:['Espada','Pistola de chispa','Cuchillo'],gear:['Mapa de la zona','Distintivo de la banda','Llave maestra']},
+ {id:'aldeano',n:'Aldeano o trabajador',w:[1,1,1,1,1,1],sk:['supervivencia','manufactura','atletismo','percepcion'],atk:['Herramienta de trabajo','Cuchillo'],gear:['Ropa de faena','Mochila','Pan duro']}];
+const NPCKIND={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss',otro:'Otro'};
+const NPC_PRE=['Ka','Ve','Ras','Tel','Mar','Dox','Ila','Sor','Bren','Cal','Yen','Orv','Lis','Tam','Hal','Quor','Nes','Zeb','Fen','Ur','Tor','Mel','Dar','Ysa'],NPC_MID=['','','an','el','or','in','ar','us','ei'],NPC_END=['a','en','is','ok','ar','el','um','ia','ith','os','ana','ek'];
+const NPC_ALIAS=['el Cojo','la Sombra','Manos Frías','el Viejo','de los Muelles','Ojo Torcido','la Callada','el Contable','Dedos Largos','el Gris','la Zurda','Piedra'];
+const NPC_PERS=['Desconfiado y calculador','Amable pero evasivo','Orgulloso hasta la testarudez','Nervioso, habla de más','Frío y metódico','Chistoso incluso en el peligro','Leal a su gente por encima de todo','Ambicioso y paciente','Cansado de todo','Curioso e imprudente','Devoto de sus costumbres','Rencoroso','Generoso con los débiles','Siempre tiene un plan de reserva'];
+const NPC_MOT=['Quiere ganar lo suficiente para dejar esta vida','Protege a alguien que no puede defenderse','Busca vengarse de una afrenta antigua','Oculta un secreto que lo arruinaría','Quiere ascender dentro de su grupo','Debe un favor peligroso','Persigue información que alguien más también busca','Solo quiere que lo dejen en paz','Cree en una causa más grande que él','Intenta redimirse por algo que hizo'];
+const NPC_LOOK=['Cicatriz que cruza la ceja','Ropa remendada con cuidado','Manos manchadas de tinta o ceniza','Mirada que no se detiene en nadie','Sonrisa fácil y dientes irregulares','Andar rígido, como de militar','Voz ronca','Pelo muy corto o rapado','Siempre huele a humo','Anillos baratos en cada dedo'];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function npcName(){let n=rnd(NPC_PRE)+rnd(NPC_MID)+rnd(NPC_END);return Math.random()<.4?n+' '+rnd(NPC_ALIAS):n}
+function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0,pre:0},o.attrs);
+ return{id:o.id||uid(),name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,
+  skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||'')})):[],
+  traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,created:o.created||Date.now()}}
+const npcCap=l=>Math.min(5,3+Math.floor(l/3));
+function npcDer(n){const t=n.attrs,kol=n.kind==='koloss'?1:0,l=n.level;
+ return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol,grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
+function npcMod(n,k){return (+n.skills[k]||0)+n.attrs[SK[k][2]]}
+function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.id===o.arch):rnd(NPCARCH);const L=Math.min(30,Math.max(1,+o.level||rint(1,4)));
+ const kinds=['humano','humano','humano','humano','kandra','koloss'];const kind=o.kind&&o.kind!=='any'?o.kind:rnd(kinds);
+ const a={fue:0,vel:0,int:0,vol:0,dis:0,pre:0},keys=['fue','vel','int','vol','dis','pre'],cap=npcCap(L);let pts=12+Math.floor(L/3);
+ while(pts>0){const pool=[];keys.forEach((k,i)=>{if(a[k]<cap)for(let j=0;j<arch.w[i]+1;j++)pool.push(k)});if(!pool.length)break;a[rnd(pool)]++;pts--}
+ const mg=maxGrade({level:L}),sk={};let gr=4+2*(L-1);const pref=arch.sk;
+ while(gr>0){const pool=[];SKILLS.forEach(s=>{if((sk[s[0]]||0)<mg)for(let j=0;j<(pref.includes(s[0])?9:1);j++)pool.push(s[0])});if(!pool.length)break;const k=rnd(pool);sk[k]=(sk[k]||0)+1;gr--}
+ const die=L<5?'d6':L<10?'d8':L<15?'d10':'d12';
+ const best=(ks)=>ks.reduce((m,k)=>npcMod({skills:sk,attrs:a},k)>npcMod({skills:sk,attrs:a},m)?k:m,ks[0]);
+ const wk=['armpes','armlig'].filter(k=>pref.includes(k));const bk=wk.length?best(wk):(a.fue>=a.vel?'armpes':'armlig');
+ const n1=rnd(arch.atk);const atk=[{n:n1,b:'+'+npcMod({skills:sk,attrs:a},bk),d:die+' + '+(a.fue>=a.vel?'Fue':'Vel')+' ('+Math.max(a.fue,a.vel)+')'}];
+ if(L>=4&&Math.random()<.5)atk.push({n:'Golpe sin armas',b:'+'+npcMod({skills:sk,attrs:a},'atletismo'),d:'d4 + Fue ('+a.fue+')'});
+ const n=npcNorm({name:npcName(),role:arch.n,kind,level:L,attrs:a,skills:sk,attacks:atk,
+  traits:'Personalidad: '+rnd(NPC_PERS)+'.',look:rnd(NPC_LOOK)+'.',motive:rnd(NPC_MOT)+'.',gear:[rnd(arch.gear),rnd(arch.gear)].filter((x,i,r)=>r.indexOf(x)===i).join(', ')});
+ if(kind==='koloss')n.traits+=' Sangre koloss: robusto y de gran tamaño.';if(kind==='kandra')n.traits+=' Kandra: puede cambiar de forma según tu mesa.';return n}
+function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
+function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
+function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span>${n.shared?'<span class="tag rv">Revelado</span>':''}</div>${npcSummary(n)}
+ <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar':'Revelar'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
+function gmHome(){const l=store.npcs||[];const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Crea y gestiona los personajes no jugadores de tu mesa.</p>
+ <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
+ ${l.length?`<div class="npcgrid">${l.map(npcCard).join('')}</div>`:`<section class="glass"><p class="hint" style="margin:0">Todavía no has creado ningún NPC. Prueba con uno aleatorio para tener un punto de partida.</p></section>`}`;
+ if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
+const PENI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.500 6.500l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
+ const sk=SKILLS.filter(s=>(+n.skills[s[0]]||0)>0).map(s=>`<li><b>${s[1]}</b> ${sg(npcMod(n,s[0]))} <small>(${n.skills[s[0]]} grado${n.skills[s[0]]>1?'s':''})</small></li>`).join('');
+ return `<div class="npcro"><p class="hint" style="margin:0">${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</p>${npcSummary(n)}
+ <div class="npcat">${A.map(([k,nm])=>`<span><b>${n.attrs[k]}</b>${nm}</span>`).join('')}</div>
+ ${sk?`<h4>Habilidades</h4><ul class="hlpl">${sk}</ul>`:''}
+ ${n.attacks.length?`<h4>Ataques</h4><ul class="hlpl">${n.attacks.map(a=>`<li><b>${esc(a.n)}</b> ${esc(a.b)} · ${esc(a.d)}</li>`).join('')}</ul>`:''}
+ ${[['Rasgos y talentos',n.traits],['Aspecto',n.look],['Motivación',n.motive],['Equipo',n.gear],['Notas',n.notes]].filter(x=>x[1]).map(([t,v])=>`<h4>${t}</h4><p class="pre" style="margin:0">${esc(v)}</p>`).join('')}</div>`}
+function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
+ const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
+ const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
+ return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC${n.shared?' · revelada a los jugadores':''}</p>
+ <section class="npcpanel glass"><div class="grid">
+ <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
+ <label class="f">Tipo<select data-nf="kind">${Object.entries(NPCKIND).map(([k,v])=>`<option value="${k}"${n.kind===k?' selected':''}>${v}</option>`).join('')}</select></label>
+ <div class="f">Nivel${stp('npclvl','l',n.level,'nivel')}</div></div>
+ <h3>Atributos</h3><div class="npcg3">${ATT.map(([k,nm])=>`<div class="f">${nm}${stp('npcatt',k,n.attrs[k],nm)}</div>`).join('')}</div>
+ <div id="npcd" class="stats npcd">${npcDerHTML(n)}</div>
+ <div class="f">Ajuste de salud${stp('npchp','h',(n.hpAdj>0?'+':'')+(n.hpAdj||0),'salud')}</div>
+ <h3>Habilidades <small id="npcgr">${d.grades} grados · máximo ${d.maxG} por habilidad</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
+ <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
+ <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
+ ${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
+ <div class="row"><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar a los jugadores':'Revelar a los jugadores'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
+function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
+function revealedHTML(){if(!revealed.length)return '';const seen=revealedHTML.seen||(revealedHTML.seen=new Set());
+ const h=`<section class="rvl"><h2 class="hh2">Revelados por el Game Master</h2><div class="npcgrid">${revealed.map((n,i)=>{const nw=revSig&&!seen.has(n._id);seen.add(n._id);return `<article class="card npcc${nw?' flash':''}" style="--i:${i}"><h3>${esc(n.name||'NPC')}</h3><div class="meta"><span>${NPCKIND[n.kind]||''} · ${esc(n.role||'')} · nivel ${n.level}</span></div>${npcSummary(npcNorm(n))}<div class="row"><button class="btn pri" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div><small class="hint">Revelado por ${esc(n._by||'el GM')}</small></article>`}).join('')}</div></section>`;return h}
+async function fetchRevealed(){if(!session)return;try{const l=await fsList('reveladas');revealed=l.map(r=>{try{return Object.assign(JSON.parse(r.data),{_by:r.owner,_id:r.id})}catch(e){return null}}).filter(Boolean);const sg=JSON.stringify(revealed.map(r=>[r._id,r.name,r.level,JSON.stringify(r.attrs),JSON.stringify(r.skills),r.notes,r.traits]));if(sg!==revSig){const first=revSig==='';revSig=sg;if(first)revealedHTML.seen=new Set(revealed.map(r=>r._id));if(scr==='menu'&&!store.cur&&store.mode!=='gm')render(1)}}catch(e){}}
+setInterval(()=>{if(session&&!document.hidden&&scr==='menu'&&!store.cur&&store.mode!=='gm')fetchRevealed()},15000);
+async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){if(!n.shared)continue;const js=JSON.stringify(Object.assign({},n,{notes:'',shared:true}));if(npcPushed[n.id]===js)continue;try{await fs('PATCH','reveladas/'+n.id,fbEnc({uid:session.uid,owner:session.name,data:js,updated:Date.now()}));npcPushed[n.id]=js}catch(e){}}}
+function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
+ const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
+ setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),300)},1050)}
+function setMode(m){if(m===store.mode)return;const apply=()=>{store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
+ let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
+ const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.innerHTML=`<span>${m==='gm'?'Game Master':'Jugador'}</span>`;document.body.appendChild(o);
+ setTimeout(apply,380);setTimeout(()=>o.classList.add('out'),950);setTimeout(()=>o.remove(),1250)}
 let pg='',popSel='',prevPct=null,prevNums=[];
-const DEPTH={auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
+const DEPTH={npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
  const cards=store.chars.map(c=>{const p=PATHS[c.path];const anc={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss'}[c.ancestry];
   const d=derive(c);const sts=STEPS.slice(0,7).map((n,k)=>[n,status(c,k)]);const okN=sts.filter(x=>x[1]==='ok').length,full=okN===7;const miss=sts.filter(x=>x[1]!=='ok').map(x=>x[0]);
@@ -1711,16 +1848,36 @@ document.addEventListener('click',e=>{
   case 'atab':authTab=v;render();break;
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
+  case 'mode':setMode(store.mode==='gm'?'p':'gm');break;
+  case 'npcnew':{const n=npcNorm({name:'',role:'',level:1});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
+  case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
+    <label class="f">Tipo de personaje<select name="arch"><option value="any">Cualquiera</option>${NPCARCH.map(a=>`<option value="${a.id}">${a.n}</option>`).join('')}</select></label>
+    <label class="f">Origen<select name="kind"><option value="any">Al azar</option>${Object.entries(NPCKIND).filter(x=>x[0]!=='otro').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
+    <label class="f">Nivel (1 a 30, vacío = al azar)<input type="number" name="level" min="1" max="30" inputmode="numeric"></label>
+    <div class="row"><button class="btn pri" type="submit">🎲 Generar</button></div></form>`,true);break}
+  case 'npcopen':{store.npcCur=b.dataset.id;scr='npc';render();break}
+  case 'npcdup':{const o=(store.npcs||[]).find(x=>x.id===b.dataset.id);if(!o)break;const n=npcNorm(JSON.parse(JSON.stringify(o)));n.id=uid();n.shared=false;n.name=(o.name||'NPC')+' (copia)';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC duplicado');break}
+  case 'npcdel':{const o=(store.npcs||[]).find(x=>x.id===b.dataset.id);if(!o)break;showDlg('¿Borrar este NPC?',`<p class="hint" style="margin:0">Se borrará <b>${esc(o.name||'este NPC')}</b>${o.shared?' y dejará de verse para los jugadores':''}. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="npcdel2" data-id="${o.id}">Sí, borrar</button></div>`,true);break}
+  case 'npcdel2':{const id=b.dataset.id,o=store.npcs.find(x=>x.id===id);try{$('#dlg').close()}catch(x){}if(o&&o.shared)fs('DELETE','reveladas/'+id).catch(()=>{});delete npcPushed[id];store.npcs=store.npcs.filter(x=>x.id!==id);if(store.npcCur===id){store.npcCur=null;scr='menu'}save();render();toast('NPC borrado');break}
+  case 'npcrev':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=true;save();pushShared().then(()=>toast('NPC revelado a los jugadores'));render(1);const el=document.querySelector('[data-nid="'+o.id+'"]');if(el){el.classList.add('flash')}break}
+  case 'npchide':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=false;delete npcPushed[o.id];fs('DELETE','reveladas/'+o.id).catch(()=>{});save();render(1);toast('NPC oculto de nuevo');break}
+  case 'npcatt':{const n=npcCur();if(!n)break;const k=b.dataset.k,d=+b.dataset.d;n.attrs[k]=Math.max(0,Math.min(npcCap(n.level)+1,(n.attrs[k]||0)+d));save();render(1);break}
+  case 'npclvl':{const n=npcCur();if(!n)break;n.level=Math.max(1,Math.min(30,n.level+(+b.dataset.d)));const mg=maxGrade({level:n.level});for(const k in n.skills)if(n.skills[k]>mg)n.skills[k]=mg;save();render(1);break}
+  case 'npchp':{const n=npcCur();if(!n)break;n.hpAdj=Math.max(-30,Math.min(60,(+n.hpAdj||0)+(+b.dataset.d)));save();render(1);break}
+  case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k,mg=maxGrade({level:n.level});n.skills[k]=Math.max(0,Math.min(mg,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
+  case 'npcatkadd':{const n=npcCur();if(!n)break;n.attacks.push({n:'',b:'',d:''});save();render(1);{const i=document.querySelectorAll('.npcatk .item');const l=i[i.length-1];if(l){const f=l.querySelector('input');if(f)f.focus()}}break}
+  case 'npcatkdel':{const n=npcCur();if(!n)break;n.attacks.splice(+b.dataset.i,1);save();render(1);break}
+  case 'rvopen':{const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;showDlg(esc(n.name||'NPC'),npcSheet(npcNorm(n),true),true);break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
-  case 'gohome':store.cur=null;scr='menu';try{save()}catch(x){}render();break;
+  case 'gohome':store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render();break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
   case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');if(r){const x=r.querySelector('[data-act=avdel]');if(x)x.remove()}}break;
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
