@@ -26,8 +26,9 @@
   --accent:#C59E57; --accent-ink:#1E2225; --head:#DDBF86; --frame:#C59E57; --plum:#5E484E; --plum-ink:#F3EEEE;
   --gold-ink:#E3C48A; --ok:#86C39F; --warn:#EBA06B; --mist-a:rgba(255,255,255,.10); --mist-b:#464C51; --mist-c:#31363A; --pink:rgba(150,80,90,.30); color-scheme:dark}
 *{box-sizing:border-box}
+html{font-size:112%}
 body{background-color:var(--bg);background-image:radial-gradient(130% 260px at 50% 0,var(--mist),transparent 75%),radial-gradient(120% 220px at 50% 100%,var(--mist),transparent 75%);
-  color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.5;padding-inline:16px;padding-block:0}
+  color:var(--ink);font-family:var(--serif);font-size:1.125rem;line-height:1.5;padding-inline:16px;padding-block:0}
 h1,h2,h3,h4{margin:0;text-wrap:balance}
 h1,h2{font-family:var(--display);font-weight:700}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -1201,8 +1202,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='60';
-const APPN='En PC, el menú pasa a una barra superior con menús desplegables.';
+const APPV='61';
+const APPN='Letra más grande en toda la interfaz.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
