@@ -897,32 +897,41 @@ html[data-dev=phone] .wrap{padding-bottom:40px}
 :root[data-theme="dark"] .apb.ok{color:#4ADE80}:root[data-theme="dark"] .apb.wait{color:#FBBF24}
 /* v68 contraste en oscuro */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #topbar .tbin{background:rgba(34,44,72,.92);border-color:rgba(165,180,252,.5);box-shadow:0 16px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(165,180,252,.12)}
-:root:not([data-theme="light"]) #topbar .tbbrand,#topbar .tbi{color:#F3F5FF}
+:root:not([data-theme="light"]) #topbar .tbbrand,:root:not([data-theme="light"]) #topbar .tbi{color:#F3F5FF}
 :root:not([data-theme="light"]) #topbar .tbi:hover{background:rgba(129,140,248,.28)}
 :root:not([data-theme="light"]) #topbar .tbi.cur{color:#C7D2FE;background:rgba(129,140,248,.2)}
 :root:not([data-theme="light"]) #topbar .tbind{background:#A5B4FC}
 :root:not([data-theme="light"]) #topbar .tbmode{background:rgba(129,140,248,.28)!important;color:#fff}
 :root:not([data-theme="light"]) #topbar .tbmode.gm{background:#C2502F!important}
 :root:not([data-theme="light"]) #topbar .tbd{background:#26324F;border:1.5px solid rgba(165,180,252,.5);box-shadow:0 22px 44px -10px rgba(0,0,0,.85)}
-:root:not([data-theme="light"]) #topbar .tbd button{color:#F3F5FF}#topbar .tbd button:hover{background:rgba(129,140,248,.3)}
+:root:not([data-theme="light"]) #topbar .tbd button{color:#F3F5FF}
+:root:not([data-theme="light"]) #topbar .tbd button:hover{background:rgba(129,140,248,.3)}
 :root:not([data-theme="light"]) #topbar .tbd em{color:#A5B4FC}
+:root:not([data-theme="light"]) html[data-dev=desktop] .glass,:root:not([data-theme="light"]) html[data-dev=desktop] .gmb,:root:not([data-theme="light"]) html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
+:root:not([data-theme="light"]) html[data-dev=desktop] .glass .hint,:root:not([data-theme="light"]) html[data-dev=desktop] .gmb small{color:#C5CCE0}
 }
 :root[data-theme="dark"] #topbar .tbin{background:rgba(34,44,72,.92);border-color:rgba(165,180,252,.5);box-shadow:0 16px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(165,180,252,.12)}
-:root[data-theme="dark"] #topbar .tbbrand,#topbar .tbi{color:#F3F5FF}
+:root[data-theme="dark"] #topbar .tbbrand,:root[data-theme="dark"] #topbar .tbi{color:#F3F5FF}
 :root[data-theme="dark"] #topbar .tbi:hover{background:rgba(129,140,248,.28)}
 :root[data-theme="dark"] #topbar .tbi.cur{color:#C7D2FE;background:rgba(129,140,248,.2)}
 :root[data-theme="dark"] #topbar .tbind{background:#A5B4FC}
 :root[data-theme="dark"] #topbar .tbmode{background:rgba(129,140,248,.28)!important;color:#fff}
 :root[data-theme="dark"] #topbar .tbmode.gm{background:#C2502F!important}
 :root[data-theme="dark"] #topbar .tbd{background:#26324F;border:1.5px solid rgba(165,180,252,.5);box-shadow:0 22px 44px -10px rgba(0,0,0,.85)}
-:root[data-theme="dark"] #topbar .tbd button{color:#F3F5FF}#topbar .tbd button:hover{background:rgba(129,140,248,.3)}
+:root[data-theme="dark"] #topbar .tbd button{color:#F3F5FF}
+:root[data-theme="dark"] #topbar .tbd button:hover{background:rgba(129,140,248,.3)}
 :root[data-theme="dark"] #topbar .tbd em{color:#A5B4FC}
+:root[data-theme="dark"] html[data-dev=desktop] .glass,:root[data-theme="dark"] html[data-dev=desktop] .gmb,:root[data-theme="dark"] html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
+:root[data-theme="dark"] html[data-dev=desktop] .glass .hint,:root[data-theme="dark"] html[data-dev=desktop] .gmb small{color:#C5CCE0}
 html[data-dev=desktop] .bubbles .bub:nth-child(n){padding-top:116px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) html[data-dev=desktop] .glass,html[data-dev=desktop] .gmb,html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
-:root:not([data-theme="light"]) html[data-dev=desktop] .glass .hint,html[data-dev=desktop] .gmb small{color:#C5CCE0}
-}
-:root[data-theme="dark"] html[data-dev=desktop] .glass,html[data-dev=desktop] .gmb,html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
-:root[data-theme="dark"] html[data-dev=desktop] .glass .hint,html[data-dev=desktop] .gmb small{color:#C5CCE0}
+/* v69 escritorio a pantalla completa */
+html[data-dev=desktop] body .wrap,html[data-dev=desktop] body.hub .wrap{max-width:none;width:auto;margin-inline:0;padding-inline:clamp(28px,4vw,88px)}
+html[data-dev=desktop] body.hub #app:has(.authhub){max-width:1100px;margin-inline:auto;padding-inline:24px}
+html[data-dev=desktop] .tbin{max-width:none}
+html[data-dev=desktop] #topbar{padding:10px clamp(16px,2.4vw,40px)}
+html[data-dev=desktop] .bubbles{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+html[data-dev=desktop] .npcgrid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+html[data-dev=desktop] .hs{max-width:none}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1394,8 +1403,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='68';
-const APPN='El Game Master aprueba los personajes de su partida, un personaje solo juega en una partida a la vez, burbuja de menú en el móvil y mejor contraste en escritorio.';
+const APPV='69';
+const APPN='Escritorio a pantalla completa y arreglo al unirse a una partida. Antes: el Game Master aprueba los personajes de su partida, un personaje solo juega en una partida a la vez, burbuja de menú en el móvil y mejor contraste en escritorio.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1695,7 +1704,7 @@ function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||in
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
   {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
-   if(accept&&(P.maxp|0)){const mm=await fsQuery('miembros','pid',pid);if(mm.length>=(P.maxp|0)){set('La partida ya está completa.','err');return}}}
+   }
   if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
   if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
