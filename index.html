@@ -269,6 +269,7 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 .npcd{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
 .npcro{display:grid;gap:8px}.npcat{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;text-align:center;font-size:.7rem}.npcat b{display:block;font-size:1.3rem}
 .gmem{background:#B5472F!important;color:#fff!important}
+.npcc.join .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.npcc.join .stat:last-child{grid-column:1/-1}.npcc.join .stat{min-width:0}
 html[data-mode=gm] .tbin{border-color:#B5472F}html[data-mode=gm] #fdock{border-color:#B5472F}
 .tbmode{border:1px solid rgba(120,125,140,.35)}.tbmode.gm{background:#B5472F;color:#fff;border-color:#B5472F}.tbmode.gm:hover{background:#9c3b26}
 .fd.gmbtn.cur{background:color-mix(in srgb,#B5472F 18%,transparent);color:#B5472F}
@@ -288,6 +289,21 @@ html[data-mode=gm] .tbin{border-color:#B5472F}html[data-mode=gm] #fdock{border-c
 .gmg:hover{transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(10,15,40,.5)}.gmg:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
 .gmg[aria-pressed=true]{background:#4F46E5;color:#fff;border-color:#4F46E5}.gmg[aria-disabled=true]{opacity:.65}.gmg em{font-style:normal;font-size:.7rem;margin-left:4px;opacity:.85}
 :root[data-theme="dark"] .gmg:not([aria-pressed=true]){background:rgba(24,32,51,.7);color:#EDF0F6}
+/* partidas */
+.psh{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}.partsec{margin:0 0 26px}
+.pjb{margin:10px 0;padding:10px 14px;border-radius:12px;background:rgba(181,71,47,.14);border:1px solid #B5472F;font-size:.9rem}
+.invi{width:46px;height:46px;color:#4F46E5}.invi svg{width:100%;height:100%}
+.card.flash,.chapter.flash{animation:rvfl 1.2s ease-out 2}
+#envfx{position:fixed;inset:0;z-index:99996;display:grid;place-content:center;justify-items:center;gap:14px;background:rgba(14,20,38,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-family:var(--sans);text-align:center}
+#envfx.out{opacity:0;transition:opacity .35s}#envfx .en{position:relative;width:110px;height:110px;color:#4F46E5}#envfx .en svg{width:100%;height:100%}#envfx b{font-size:1.15rem}
+#envfx .ec{position:absolute;left:22%;right:22%;top:30%;height:46%;background:#fff;border-radius:6px;opacity:0}
+@keyframes envsend{0%{transform:translateY(40px) scale(.7);opacity:0}30%{transform:none;opacity:1}100%{transform:translateY(-90px) scale(.9);opacity:.1}}
+@keyframes flapopen{0%{transform:scaleY(1)}100%{transform:scaleY(-.9) translateY(-14px)}}
+@keyframes cardup{0%{opacity:0;transform:translateY(0)}60%{opacity:1;transform:translateY(-26px)}100%{opacity:1;transform:translateY(-34px)}}
+@keyframes invb{0%{opacity:0;transform:translateY(-24px) scale(.9)}50%{opacity:1;transform:translateY(6px) scale(1.03)}75%{transform:translateY(-3px)}100%{transform:none}}
+@keyframes joinin{0%{opacity:0;transform:translateX(-40px)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){#envfx.send .en{animation:envsend 1.2s ease-in-out both}#envfx.open .en svg .flap{transform-origin:50% 20px;animation:flapopen .6s .2s ease-out both}#envfx.open .ec{animation:cardup .7s .5s ease-out both}
+ .invnew{animation:invb .8s cubic-bezier(.2,1.2,.4,1) both,rvfl 1.2s .6s ease-out}.npcc.newj{animation:joinin .6s cubic-bezier(.2,.9,.3,1) both,rvfl 1.2s .5s ease-out}}
 /* barra superior (PC) */
 body.has-tb{padding-top:74px}
 html[data-dev=desktop] body .wrap{padding-bottom:50px}
@@ -898,11 +914,11 @@ async function enc(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));
 async function dec(key,d){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(d.iv)},key,unb64(d.ct));return JSON.parse(new TextDecoder().decode(pt))}
 let saveT=null,dirty=false,flushing=null;
 const FKEY=u=>'mesa-larga-fichas-'+u;
-function save(){if(!session)return;clearTimeout(saveT);saveT=setTimeout(flush,1200)}
+function save(){if(!session)return;{const c=cur();if(c&&c._pj)pjDirty.add(c._pj.pid+'_'+c._pj.uid)}clearTimeout(saveT);saveT=setTimeout(flush,1200)}
 function flush(){if(!session)return Promise.resolve();clearTimeout(saveT);if(flushing)return flushing.then(()=>{if(dirty)return flush()});
  const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p',gmGame:store.gmGame||'nb'});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
  if(data.length>900000){toast('Tus fichas ocupan demasiado: borra alguna o quita la imagen de usuario');dirty=false;return Promise.resolve()}
- flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0;pushShared()}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
+ flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0;pushShared();pushLinked();pushPJ()}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
 async function loadFichas(s){let cloud=null,err=null;
  try{const d=await fs('GET','fichas/'+s.uid);if(d){const f=fbDec(d);cloud={t:f.updated|0,d:f.data}}}catch(e){err=e}
  let loc=null;try{loc=JSON.parse(lsGet(FKEY(s.uid))||'null')}catch(e){}
@@ -938,7 +954,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';setTimeout(fetchRevealed,400);
+ session=s;cand=null;pend=null;store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1110,7 +1126,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,invform:doPartInv,linkform:doLink,authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -1121,7 +1137,7 @@ function sample(){const c=blank();Object.assign(c,{mode:'f',metalChoice:'no',nam
  attrs:{fue:3,vel:2,int:1,vol:2,dis:2,pre:2},skills:{armpes:2,atletismo:1,intimidacion:1},kit:'mercenario',weapons:KITS.mercenario.w,armor:KITS.mercenario.a,gear:KITS.mercenario.g,arquillas:7,
  purpose:'Proteger a mi gente de las patrullas del Ministerio.',obstacle:'Me cuesta confiar en nadie fuera de mi cuadrilla.',goals:['Sacar a mi hermana de las minas','']});
  c.talents.ancestry='Segundo talento de un camino heroico (a elegir)';return c}
-const cur=()=>store.chars.find(c=>c.id===store.cur);
+const cur=()=>store.chars.find(c=>c.id===store.cur)||(store.pjc&&store.pjc[store.cur]);
 
 /* ---------- reglas ---------- */
 function attrBudget(c){return c.ancestry==='kandra'?6:12}
@@ -1169,7 +1185,7 @@ function status(c,i){if(c.done&&i<7)return 'ok';const d=derive(c);
   case 5:return c.kit?'ok':'warn';
   case 6:return c.purpose.trim()&&c.obstacle.trim()&&c.goals.some(g=>g.trim())?'ok':'warn';
   default:return ''}}
-const LOCKED=[0,1,6];const isLk=(c,k)=>!!c.done&&LOCKED.includes(k);
+const LOCKED=[0,1,6];const isLk=(c,k)=>!!c.done&&!c._pj&&LOCKED.includes(k);
 const STEPS=['Orígenes','Camino','Atributos','Habilidades','Talentos','Equipo','Historia','Hoja'];
 
 /* ---------- utilidades ---------- */
@@ -1226,6 +1242,7 @@ function delChar(id){
  const red=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
  const card=document.querySelector('.card[data-cid="'+id+'"]');
  const done=()=>{const before={};document.querySelectorAll('.card[data-cid]').forEach(el=>{before[el.dataset.cid]=el.getBoundingClientRect()});
+  {const o=store.chars.find(x=>x.id===id);if(o&&o.pid)fs('DELETE','pjs/'+o.pid+'_'+session.uid).catch(()=>{})}
   store.chars=store.chars.filter(x=>x.id!==id);save();render(1);toast('Ficha borrada');
   if(red)return;
   document.querySelectorAll('.card[data-cid]').forEach(el=>{const o=before[el.dataset.cid];if(!o)return;const n=el.getBoundingClientRect();const dx=o.left-n.left,dy=o.top-n.top;
@@ -1253,8 +1270,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='64';
-const APPN='Elige para qué juego creas cada NPC.';
+const APPV='65';
+const APPN='Nuevas partidas: el Game Master invita a jugadores y puede ver y editar sus fichas.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1366,6 +1383,7 @@ function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
  if(scr==='npc')return npcEditor();
+ if(scr==='part')return partScreen();
  if(store.mode==='gm'&&scr==='menu')return gmHome();
  if(scr==='nb')return home();
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
@@ -1376,7 +1394,7 @@ function screen(){
   ${hubTile('t1',CARDS,'Creación de mazos','Mazos de Nacidos de la Bruma.','deck',1)}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 class="hh">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1',GEM,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${revealedHTML()}`}
+  ${hubTile('t1',GEM,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}${revealedHTML()}`}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -1427,7 +1445,7 @@ function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
 function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">Revelado</span>':''}</div>${npcSummary(n)}
  <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar':'Revelar'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
-function gmHome(){const g=store.gmGame||'nb',l=(store.npcs||[]).filter(x=>x.game===g);const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Crea y gestiona los personajes no jugadores de tu mesa.</p>
+function gmHome(){const g=store.gmGame||'nb',l=(store.npcs||[]).filter(x=>x.game===g);const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Dirige tus partidas y crea los personajes no jugadores de tu mesa.</p>${partsGM()}<h2 class="hh2">Personajes no jugadores (NPC)</h2>
  <div class="gmgames" role="group" aria-label="Juego"><span>Juego</span>${NPCGAMES.map(([k,n,on])=>`<button type="button" class="gmg" data-act="gmgame" data-v="${k}" aria-pressed="${g===k}"${on?'':' aria-disabled="true"'}>${n}${on?'':' <em>Próximamente</em>'}</button>`).join('')}</div>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${l.length?`<div class="npcgrid">${l.map(npcCard).join('')}</div>`:`<section class="glass"><p class="hint" style="margin:0">Todavía no has creado ningún NPC. Prueba con uno aleatorio para tener un punto de partida.</p></section>`}`;
@@ -1465,18 +1483,100 @@ async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){
 function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
  const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
  setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),300)},1050)}
-function setMode(m){if(m===store.mode)return;const apply=()=>{store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
+function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
  const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.innerHTML=`<span>${m==='gm'?'Game Master':'Jugador'}</span>`;document.body.appendChild(o);
  setTimeout(apply,380);setTimeout(()=>o.classList.add('out'),950);setTimeout(()=>o.remove(),1250)}
+
+/* ---------- Partidas ---------- */
+let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
+const pjDirty=new Set(),partSeen={},invSeen=new Set();
+const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
+async function fsQuery(col,field,val){const t=await tok();let r;
+ try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
+ if(!r.ok)throw{code:'FS'+r.status};const j=await r.json();return j.filter(x=>x.document).map(x=>fbDec(x.document))}
+function pullInto(c,r){let nc;try{nc=normalize(JSON.parse(r.data))}catch(e){return}nc.id=c.id;nc.pid=c.pid;nc.rev=r.rev|0;nc.step=c.step;nc.mode=c.mode;nc._ph=pjData(nc);
+ const i=store.chars.findIndex(x=>x.id===c.id);if(i>=0)store.chars[i]=nc;flashId=nc.id;save();toast('El Game Master ha modificado tu ficha «'+(nc.name||'sin nombre')+'»');if(session&&!document.hidden)render(1);flashCard()}
+function flashCard(){setTimeout(()=>{if(!flashId)return;const el=document.querySelector('.card[data-cid="'+flashId+'"]');if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}const t=document.querySelector('.chapter');if(t&&store.cur===flashId){t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash')}flashId=null},60)}
+async function pushLinked(){if(!session)return;for(const c of store.chars){if(!c.pid)continue;const h=pjData(c);if(c._ph===h)continue;
+  try{const key=c.pid+'_'+session.uid;const d=await fs('GET','pjs/'+key);if(!d){delete c.pid;delete c.rev;delete c._ph;toast('Ya no estás en esa partida');save();continue}
+   const r=fbDec(d);if((r.rev|0)>(c.rev|0)){pullInto(c,r);continue}
+   const rev=(c.rev|0)+1;await fs('PATCH','pjs/'+key,fbEnc({pid:c.pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev,updated:Date.now()}));c.rev=rev;c._ph=h}catch(e){}}}
+async function pushPJ(){for(const key of [...pjDirty]){const c=store.pjc&&store.pjc[key];pjDirty.delete(key);if(!c)continue;
+  try{const d=await fs('GET','pjs/'+key);if(!d){toast('Esa ficha ya no existe');continue}const r=fbDec(d);
+   if((r.rev|0)>(c.rev|0)){pullPJ(key,r);continue}
+   const rev=(c.rev|0)+1;await fs('PATCH','pjs/'+key,fbEnc({data:pjData(c),rev,updated:Date.now()}),maskQ({data:1,rev:1,updated:1}));c.rev=rev}catch(e){pjDirty.add(key)}}}
+function pjMake(r,pname){let c;try{c=normalize(JSON.parse(r.data))}catch(e){return null}c.id=r.id;c.rev=r.rev|0;c._pj={pid:r.pid,uid:r.uid,owner:r.owner,pname:pname||''};return c}
+function pullPJ(key,r){const old=store.pjc[key],p=parts.find(x=>x.id===r.pid);const c=pjMake(r,p&&p.name);if(!c)return;if(old){c.step=old.step;c.mode=old.mode}store.pjc[key]=c;toast('El jugador ha modificado su ficha: se ha actualizado');if(store.cur===key)render(1)}
+async function loadParts(){if(!session)return;
+ try{const mine=await fsQuery('partidas','gm',session.uid);parts=mine.sort((a,b)=>(a.created|0)-(b.created|0));
+  const mem=await fsQuery('miembros','uid',session.uid);const mp=[];for(const m of mem){const d=await fs('GET','partidas/'+m.pid);if(d)mp.push(Object.assign(fbDec(d),{cid:m.cid,mid:m.id}));else fs('DELETE','miembros/'+m.id).catch(()=>{})}myParts=mp;
+  invs=(await fsQuery('invitaciones','to',session.uid)).filter(i=>i.status==='pending');
+  for(const c of store.chars){if(!c.pid)continue;if(!myParts.some(p=>p.id===c.pid)){delete c.pid;delete c.rev;delete c._ph;save()}}
+  await syncLinked();
+  const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid]),invs.map(i=>i.id)]);
+  if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
+async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
+  try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
+async function loadPart(pid){if(!session)return;
+ try{const [mem,inv,pj]=await Promise.all([fsQuery('miembros','pid',pid),fsQuery('invitaciones','pid',pid),fsQuery('pjs','pid',pid)]);
+  const pjm={};pj.forEach(x=>{try{pjm[x.uid]={ch:JSON.parse(x.data),rev:x.rev|0,upd:x.updated|0,raw:x}}catch(e){}});
+  const sg=JSON.stringify([mem.map(m=>[m.id,m.cid]),inv.map(i=>[i.id,i.status]),pj.map(x=>[x.uid,x.rev])]);
+  const changed=sg!==(loadPart.sg&&loadPart.sg[pid]);(loadPart.sg=loadPart.sg||{})[pid]=sg;
+  partMem[pid]=mem;partInv[pid]=inv;partPJ[pid]=pjm;
+  const k=store.cur;if(k&&store.pjc[k]&&store.pjc[k]._pj.pid===pid){const x=pjm[store.pjc[k]._pj.uid];if(x&&x.rev>(store.pjc[k].rev|0)&&!pjDirty.has(k))pullPJ(k,x.raw)}
+  if(changed&&scr==='part'&&partId===pid&&!store.cur)render(1)}catch(e){}}
+setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},12000);
+const ENVSVG='<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="36" rx="5" fill="currentColor" opacity=".9"/><path class="flap" d="M6 20l26 20 26-20" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';
+function envFx(txt,kind){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red)return;const o=document.createElement('div');o.id='envfx';o.className=kind||'open';o.innerHTML=`<div class="en">${ENVSVG}<div class="ec"></div></div><b>${esc(txt)}</b>`;document.body.appendChild(o);setTimeout(()=>o.classList.add('out'),1250);setTimeout(()=>o.remove(),1600)}
+function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(x){try{ch=normalize(JSON.parse(JSON.stringify(x.ch)));d=derive(ch)}catch(e){}}
+ const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
+ return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:'<p class="hint" style="margin:0">Todavía no ha elegido personaje.</p>'}
+ <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">Ver y editar ficha</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
+function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
+ const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending');
+ return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master</p>
+ <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3><button class="btn pri" data-act="partinv">Invitar jugador</button></div>
+ <p class="hint">Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
+ ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Invita a tus jugadores por su nombre de usuario.</p>'}
+ ${inv.length?`<h3>Invitaciones pendientes</h3><div class="alist">${inv.map(i=>`<div class="arow"><div class="ahead" style="cursor:default"><span class="aav">✉</span><span class="anm"><b>${esc(i.toName||'Jugador')}</b><small>Esperando respuesta</small></span><button class="btn sm ghost" data-act="invcancel" data-id="${i.id}">Cancelar</button></div></div>`).join('')}</div>`:''}</section>
+ <section class="glass" style="margin-top:16px"><div class="row"><button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
+function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
+ ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta"><span>Game Master: tú</span></div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
+function partsPlayer(){let h='';
+ if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
+ if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta"><span>Game Master: ${esc(p.gmName||'—')}</span></div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':'Sin personaje elegido.'}</p><div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
+ return h}
+function linkDlg(pid,pname,accept,invId){const opts=store.chars.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
+ showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> el Game Master podrá ver y modificar la ficha que elijas mientras estés en la partida. Puedes salir cuando quieras y te quedas con una copia.</p>
+ <label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
+async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
+ try{set('Un momento…');const key=pid+'_'+session.uid;
+  if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
+  for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
+  if(cid){const c=store.chars.find(x=>x.id===cid);if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
+   try{await fs('PATCH','miembros/'+key,fbEnc({cid}),maskQ({cid:1}))}catch(e){}}
+  else if(!accept){try{await fs('DELETE','pjs/'+key)}catch(e){}}
+  save();try{$('#dlg').close()}catch(x){}envFx(accept?'¡Te has unido a la partida!':'Personaje actualizado','open');partSig='';await loadParts();render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo completar. Inténtalo de nuevo.','err')}}
+async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
+ try{const id=uid()+uid();await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now()}));try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const name=nameN(f.elements.un.value);if(name.length<3){set('Escribe el nombre de usuario completo.','err');return}
+ const p=parts.find(x=>x.id===partId);if(!p)return;
+ try{set('Buscando…');const nd=await fs('GET',nameDoc(name));if(!nd){set('No existe ningún usuario con ese nombre.','err');return}const uidT=fbDec(nd).uid;
+  if(uidT===session.uid){set('No puedes invitarte a ti mismo.','err');return}
+  const key=p.id+'_'+uidT;if((partMem[p.id]||[]).some(x=>x.uid===uidT)){set('Ese jugador ya está en la partida.','err');return}
+  if((partInv[p.id]||[]).some(x=>x.to===uidT&&x.status==='pending')){set('Ya tiene una invitación pendiente.','err');return}
+  await fs('PATCH','invitaciones/'+key,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:uidT,toName:name,status:'pending',created:Date.now()}));
+  try{$('#dlg').close()}catch(x){}envFx('Invitación enviada','send');toast('Invitación enviada a '+name);await loadPart(p.id);render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo enviar la invitación.','err')}}
+async function kickPlayer(pid,u){for(const col of ['pjs','miembros','invitaciones']){try{await fs('DELETE',col+'/'+pid+'_'+u)}catch(e){}}}
 let pg='',popSel='',prevPct=null,prevNums=[];
-const DEPTH={npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
+const DEPTH={part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
  const cards=store.chars.map(c=>{const p=PATHS[c.path];const anc={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss'}[c.ancestry];
   const d=derive(c);const sts=STEPS.slice(0,7).map((n,k)=>[n,status(c,k)]);const okN=sts.filter(x=>x[1]==='ok').length,full=okN===7;const miss=sts.filter(x=>x[1]!=='ok').map(x=>x[0]);
   const comp=`<div class="comp ${full?'full':'part'}"><div class="cpH"><span class="cpB">${full?'✓ Completa':'Incompleta'}</span><span class="cpN">${okN}/7 pasos</span></div><div class="pips" aria-hidden="true">${sts.map(x=>`<i class="${x[1]==='ok'?'on':''}"></i>`).join('')}</div>${full?'':`<div class="cpM">Falta: ${miss.map(esc).join(', ')}</div>`}</div>`;
   return `<article class="card" data-cid="${c.id}"><h3>${esc(c.name||'Sin nombre')}</h3>
-  <div class="meta">${eraTag(c.era)}<span>${anc} · ${p?esc(p.n):'sin camino'} · nivel ${c.level}</span></div>
+  <div class="meta">${eraTag(c.era)}<span>${anc} · ${p?esc(p.n):'sin camino'} · nivel ${c.level}</span>${c.pid?'<span class="tag">En partida</span>':''}</div>
   ${comp}
   <div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>
   <div class="row"><button class="btn pri" data-act="open" data-id="${c.id}">Abrir</button><button class="btn" data-act="dup" data-id="${c.id}">Duplicar</button>
@@ -1501,7 +1601,8 @@ function editor(c){
  const i=c.step;
  const chips=STEPS.map((s,k)=>{const st=status(c,k);const lk=isLk(c,k);return `<button class="chip${lk?' lk':''}" data-act="go" data-i="${k}" ${k===i?'aria-current="step"':''} ${lk?'aria-disabled="true" title="Bloqueado al finalizar la ficha"':''}><span class="dot ${st}"></span>${k+1}. ${s}${lk?'<svg class="lkic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>':''}</button>`}).join('');
  const bodies=[sOrig,sCamino,sAttr,sHab,sTal,sEq,sHist,sHoja];
- return `<div class="top"><button class="btn" data-act="home">‹ Mis fichas</button><div class="row">${c.done?'':'<button class="btn sm" data-act="qmode">Modo preguntas</button>'}<button class="btn sm" data-act="export">Exportar</button></div></div>
+ return `<div class="top"><button class="btn" data-act="home">‹ ${c._pj?'Volver a la partida':'Mis fichas'}</button><div class="row">${c.done?'':'<button class="btn sm" data-act="qmode">Modo preguntas</button>'}<button class="btn sm" data-act="export">Exportar</button></div></div>
+ ${c._pj?`<p class="pjb">Estás editando la ficha de <b>${esc(c._pj.owner||'un jugador')}</b> como Game Master de <b>${esc(c._pj.pname||'la partida')}</b>. Los cambios se guardan en su ficha.</p>`:''}
  <header class="chapter"><div class="mist"></div><div class="tab">${c.done?'Ficha · ':'Paso '+(i+1)+' · '}${STEPS[i]}</div><div class="cart"><span class="med">${GLYPH_A}</span><h2 id="ttl">${esc(c.name||'Personaje sin nombre')}</h2><span class="med">${GLYPH_B}</span></div></header>
  <nav class="steps" aria-label="Pasos">${chips}</nav>
  <div class="layout"><div id="body">${bodies[i](c)}</div><div id="side" class="side">${statsPanel(c)}</div></div>
@@ -1857,6 +1958,20 @@ document.addEventListener('click',e=>{
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
+  case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre que verán tus jugadores.</p><label class="f">Nombre de la partida<input type="text" name="pn" maxlength="40" autocomplete="off" required></label><div id="pmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Crear partida</button></div></form>`,true);break
+  case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
+  case 'partinv':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
+  case 'invcancel':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{loadPart(partId).then(()=>render(1));toast('Invitación cancelada')}).catch(()=>toast('No se pudo cancelar'));break
+  case 'kick':{const p=b.dataset.p,u=b.dataset.u;showDlg('¿Quitar de la partida?',`<p class="hint" style="margin:0">El jugador dejará de estar en la partida y se llevará una copia de su ficha. Podrás volver a invitarlo.</p><div class="row"><button class="btn danger" data-act="kick2" data-p="${p}" data-u="${esc(u)}">Sí, quitar</button></div>`,true);break}
+  case 'kick2':{const p=b.dataset.p,u=b.dataset.u;try{$('#dlg').close()}catch(x){}kickPlayer(p,u).then(()=>loadPart(p)).then(()=>{render(1);toast('Jugador quitado')});break}
+  case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
+  case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
+  case 'invyes':{const i=invs.find(x=>x.id===b.dataset.id);if(!i)break;linkDlg(i.pid,i.pname,true,i.id);break}
+  case 'invno':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{invs=invs.filter(x=>x.id!==b.dataset.id);partSig='';render(1);toast('Invitación rechazada')}).catch(()=>toast('No se pudo rechazar'));break
+  case 'pjlink':{const p=myParts.find(x=>x.id===b.dataset.p);if(p)linkDlg(p.id,p.name,false);break}
+  case 'partleave':{const id=b.dataset.p,p=myParts.find(x=>x.id===id);showDlg('¿Salir de la partida?',`<p class="hint" style="margin:0">Saldrás de <b>${esc(p?p.name:'la partida')}</b>. Te quedas con tu ficha, pero el Game Master dejará de verla.</p><div class="row"><button class="btn danger" data-act="partleave2" data-p="${id}">Sí, salir</button></div>`,true);break}
+  case 'partleave2':{const id=b.dataset.p;try{$('#dlg').close()}catch(x){}(async()=>{await kickPlayer(id,session.uid);store.chars.forEach(c=>{if(c.pid===id){delete c.pid;delete c.rev;delete c._ph}});save();partSig='';await loadParts();render(1);toast('Has salido de la partida')})();break}
+  case 'pjopen':{const key=b.dataset.p+'_'+b.dataset.u,x=(partPJ[b.dataset.p]||{})[b.dataset.u];if(!x)break;const p=parts.find(y=>y.id===b.dataset.p);const c=pjMake(x.raw,p&&p.name);if(!c)break;store.pjc[key]=c;store.cur=key;render();break}
   case 'mode':setMode(store.mode==='gm'?'p':'gm');break;
   case 'npcnew':{const n=npcNorm({name:'',role:'',level:1,game:store.gmGame||'nb'});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
   case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Juego: <b>${gameName(store.gmGame)}</b>. Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
@@ -1911,10 +2026,10 @@ document.addEventListener('click',e=>{
   case 'sheetpdf':sheetPdf();break;
   case 'sample':{const n=sample();store.chars.push(n);store.cur=n.id;n.step=7;save();render();break}
   case 'open':store.cur=b.dataset.id;render();break;
-  case 'dup':{const o=store.chars.find(x=>x.id===b.dataset.id);const n=normalize(JSON.parse(JSON.stringify(o)));n.name=(o.name||'Personaje')+' (copia)';store.chars.push(n);save();render();toast('Ficha duplicada');break}
+  case 'dup':{const o=store.chars.find(x=>x.id===b.dataset.id);const n=normalize(JSON.parse(JSON.stringify(o)));delete n.pid;delete n.rev;delete n._ph;n.name=(o.name||'Personaje')+' (copia)';store.chars.push(n);save();render();toast('Ficha duplicada');break}
   case 'askdel':{const ch=store.chars.find(x=>x.id===b.dataset.id);if(!ch)break;const d=$('#dlg');d.className='dlgdel';d.innerHTML=`<div class="grid"><h3>¿Borrar esta ficha?</h3><p class="hint" style="margin:0"><b>${esc(ch.name||'Sin nombre')}</b> se borrará de tu cuenta. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="del" data-id="${ch.id}">Sí, borrar</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'del':delChar(b.dataset.id);break;
-  case 'home':store.cur=null;scr='nb';render();break;
+  case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
   case 'menu':scr='menu';render();break;
   case 'cosmere':store.cur=null;scr='cosmere';render();break;
   case 'rol':store.cur=null;scr='rol';render();break;
