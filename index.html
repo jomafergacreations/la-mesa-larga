@@ -283,7 +283,7 @@ html[data-mode=gm] .tbin{border-color:#B5472F}html[data-mode=gm] #fdock{border-c
 @keyframes modeIn{to{clip-path:circle(150% at 85% 6%)}}
 @keyframes rvfl{0%{box-shadow:0 0 0 0 rgba(197,158,87,.95)}100%{box-shadow:0 0 0 22px rgba(197,158,87,0)}}
 @media(prefers-reduced-motion:no-preference){.npcc.stg{animation:npcin .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*70ms)}
- #dicefx .dr span{animation:dicerot .55s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}#modefx{animation:modeIn .7s ease-in forwards}.npcc.flash{animation:rvfl 1s ease-out}}
+ #dicefx .dr span{animation:dicerot .55s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}.npcc.flash{animation:rvfl 1s ease-out}}
 .gmgames{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 16px}.gmgames>span{font-weight:800;font-size:.85rem;margin-right:4px}
 .gmg{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 16px;border-radius:99px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.55);color:var(--h-ink,#121B2E);font-weight:700;font-size:.9rem;transition:transform .18s,background-color .18s,box-shadow .18s}
 .gmg:hover{transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(10,15,40,.5)}.gmg:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
@@ -932,6 +932,18 @@ html[data-dev=desktop] #topbar{padding:10px clamp(16px,2.4vw,40px)}
 html[data-dev=desktop] .bubbles{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
 html[data-dev=desktop] .npcgrid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
 html[data-dev=desktop] .hs{max-width:none}
+
+/* v70: cambio de modo suave */
+#modefx{position:fixed;inset:0;z-index:99997;pointer-events:none;overflow:hidden;display:block;clip-path:none;background:none}
+#modefx.gm,#modefx.pl{background:none}
+#modefx .mc{position:absolute;display:block;width:max(260vw,260vh);height:max(260vw,260vh);left:calc(85% - max(130vw,130vh));top:calc(6% - max(130vw,130vh));border-radius:50%;transform:scale(0);will-change:transform}
+#modefx.gm .mc{background:radial-gradient(circle at 50% 50%,#6E1F3A,#B5472F 70%)}#modefx.pl .mc{background:radial-gradient(circle at 50% 50%,#0F9D9A,#4F46E5 70%)}
+#modefx .ml{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:14px;color:#fff;text-align:center;opacity:0;font:800 clamp(1.8rem,6vw,3.2rem) var(--sans,system-ui)}
+#modefx .ml svg{width:clamp(56px,11vw,88px);height:clamp(56px,11vw,88px)}
+@media(prefers-reduced-motion:no-preference){#modefx .mc{animation:mcIn .8s cubic-bezier(.65,0,.25,1) forwards}#modefx .ml{animation:mlIn .65s .4s cubic-bezier(.2,1.2,.4,1) forwards}#modefx.out{animation:mfOut .65s ease forwards}
+@keyframes mcIn{to{transform:scale(1)}}@keyframes mlIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}@keyframes mfOut{to{opacity:0}}}
+.ro .row,.ro .lvlbox,.ro .finbox,.ro [data-act]{display:none!important}.ro{pointer-events:none;user-select:text}
+.npcc .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.npcc .stat{min-width:0;padding-inline:4px}.npcc .stat b{font-size:1.25rem;white-space:nowrap}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1246,7 +1258,7 @@ async function doRen(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.c
   session.name=name;dockSig='';render(1);set('Nombre cambiado.','ok');const t=document.querySelector('#dlg h3');if(t)t.textContent='Cuenta de '+name}
  catch(e){set(e.code==='NET'?aMsg(e):'No se pudo cambiar el nombre. Inténtalo de nuevo.','err')}}
 function doNpcR(f){const o={arch:f.elements.arch.value,kind:f.elements.kind.value,level:f.elements.level.value};try{$('#dlg').close()}catch(x){}
- diceFx(()=>{const n=npcGen(o);n.game=store.gmGame||'nb';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
+ diceFx(()=>{const n=npcGen(o);const PP=parts.find(x=>x.id===partId)||{};n.game=PP.game||'nb';n.pid=partId||'';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
 document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.nf)return;const n=npcCur();if(!n)return;const p=t.dataset.nf.split('.');
  if(p[0]==='atk'){const a=n.attacks[+p[1]];if(a)a[p[2]]=t.value}else n[p[0]]=t.value;
  if(p[0]==='name'){const h=document.querySelector('.hh');if(h)h.textContent=t.value||'NPC sin nombre'}save()});
@@ -1403,8 +1415,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='69';
-const APPN='Escritorio a pantalla completa y arreglo al unirse a una partida. Antes: el Game Master aprueba los personajes de su partida, un personaje solo juega en una partida a la vez, burbuja de menú en el móvil y mejor contraste en escritorio.';
+const APPV='70';
+const APPN='Los NPC se crean dentro de cada partida y el Game Master decide cuándo meterlos; cambio de modo más suave; fichas sin aprobar en solo lectura.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1525,6 +1537,7 @@ function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub $
 function screen(){
  if(scr==='npc')return npcEditor();
  if(scr==='part')return partScreen();
+ if(scr==='pjview')return pjViewScreen();
  if(store.mode==='gm'&&scr==='menu')return gmHome();
  if(scr==='nb')return home();
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
@@ -1563,7 +1576,7 @@ function npcName(){let n=rnd(NPC_PRE)+rnd(NPC_MID)+rnd(NPC_END);return Math.rand
 function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0,pre:0},o.attrs);
  return{id:o.id||uid(),game:NPCGAMES.some(x=>x[0]===o.game)?o.game:'nb',name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,
   skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||'')})):[],
-  traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,created:o.created||Date.now()}}
+  traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,pid:String(o.pid||''),created:o.created||Date.now()}}
 const npcCap=l=>Math.min(5,3+Math.floor(l/3));
 function npcDer(n){const t=n.attrs,kol=n.kind==='koloss'?1:0,l=n.level;
  return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol,grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
@@ -1584,12 +1597,9 @@ function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.i
  if(kind==='koloss')n.traits+=' Sangre koloss: robusto y de gran tamaño.';if(kind==='kandra')n.traits+=' Kandra: puede cambiar de forma según tu mesa.';return n}
 function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
-function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">Revelado</span>':''}</div>${npcSummary(n)}
- <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar':'Revelar'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
-function gmHome(){const g=store.gmGame||'nb',l=(store.npcs||[]).filter(x=>x.game===g);const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Dirige tus partidas y crea los personajes no jugadores de tu mesa.</p>${partsGM()}<h2 class="hh2">Personajes no jugadores (NPC)</h2>
- <div class="gmgames" role="group" aria-label="Juego"><span>Juego</span>${NPCGAMES.map(([k,n,on])=>`<button type="button" class="gmg" data-act="gmgame" data-v="${k}" aria-pressed="${g===k}"${on?'':' aria-disabled="true"'}>${n}${on?'':' <em>Próximamente</em>'}</button>`).join('')}</div>
- <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
- ${l.length?`<div class="npcgrid">${l.map(npcCard).join('')}</div>`:`<section class="glass"><p class="hint" style="margin:0">Todavía no has creado ningún NPC. Prueba con uno aleatorio para tener un punto de partida.</p></section>`}`;
+function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">En la partida</span>':''}</div>${npcSummary(n)}
+ <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
+function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
 const PENI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.500 6.500l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
@@ -1602,7 +1612,7 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
  const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
  const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
- return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · revelada a los jugadores':''}</p><div class="npctop"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><small>Se guarda también solo mientras escribes.</small></div>
+ return hubBar([n.pid?'npcback':'menu',n.pid?'Volver a la partida':'Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · en la partida':''}</p><div class="npctop"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><small>Se guarda también solo mientras escribes.</small></div>
  <section class="npcpanel glass"><div class="grid">
  <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
  <label class="f">Tipo<select data-nf="kind">${Object.entries(NPCKIND).map(([k,v])=>`<option value="${k}"${n.kind===k?' selected':''}>${v}</option>`).join('')}</select></label>
@@ -1614,20 +1624,20 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
  ${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
- <div class="row"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar a los jugadores':'Revelar a los jugadores'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
+ <div class="row"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.pid?(n.shared?'npchide':'npcrev'):'npcmove'}" data-id="${n.id}">${n.pid?(n.shared?'Retirar de la partida':'Meter en la partida'):'Mover a una partida'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
 function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
 function revealedHTML(){if(!revealed.length)return '';const seen=revealedHTML.seen||(revealedHTML.seen=new Set());
- const h=`<section class="rvl"><h2 class="hh2">Revelados por el Game Master</h2><div class="npcgrid">${revealed.map((n,i)=>{const nw=revSig&&!seen.has(n._id);seen.add(n._id);return `<article class="card npcc${nw?' flash':''}" style="--i:${i}"><h3>${esc(n.name||'NPC')}</h3><div class="meta"><span>${NPCKIND[n.kind]||''} · ${esc(n.role||'')} · nivel ${n.level}</span></div>${npcSummary(npcNorm(n))}<div class="row"><button class="btn pri" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div><small class="hint">Revelado por ${esc(n._by||'el GM')}</small></article>`}).join('')}</div></section>`;return h}
-async function fetchRevealed(){if(!session)return;try{const l=await fsList('reveladas');revealed=l.map(r=>{try{return Object.assign(JSON.parse(r.data),{_by:r.owner,_id:r.id})}catch(e){return null}}).filter(Boolean);const sg=JSON.stringify(revealed.map(r=>[r._id,r.name,r.level,JSON.stringify(r.attrs),JSON.stringify(r.skills),r.notes,r.traits]));if(sg!==revSig){const first=revSig==='';revSig=sg;if(first)revealedHTML.seen=new Set(revealed.map(r=>r._id));if(scr==='menu'&&!store.cur&&store.mode!=='gm')render(1)}}catch(e){}}
+ const h=`<section class="rvl"><h2 class="hh2">NPC de tus partidas</h2><div class="npcgrid">${revealed.map((n,i)=>{const nw=revSig&&!seen.has(n._id);seen.add(n._id);return `<article class="card npcc${nw?' flash':''}" style="--i:${i}"><h3>${esc(n.name||'NPC')}</h3><div class="meta"><span>${NPCKIND[n.kind]||''} · ${esc(n.role||'')} · nivel ${n.level}</span></div>${npcSummary(npcNorm(n))}<div class="row"><button class="btn pri" data-act="rvopen" data-id="${n._id}">Ver ficha</button></div><small class="hint">${esc(n._by||'El GM')} · ${esc(n._pn||'partida')}</small></article>`}).join('')}</div></section>`;return h}
+async function fetchRevealed(){if(!session)return;try{const l=await fsList('reveladas');revealed=l.filter(r=>r.pid&&myParts.some(q=>q.id===r.pid)).map(r=>{try{return Object.assign(JSON.parse(r.data),{_by:r.owner,_id:r.id,_pid:r.pid,_pn:(myParts.find(q=>q.id===r.pid)||{}).name||''})}catch(e){return null}}).filter(Boolean);const sg=JSON.stringify(revealed.map(r=>[r._id,r._pid,r.name,r.level,JSON.stringify(r.attrs),JSON.stringify(r.skills),r.notes,r.traits]));if(sg!==revSig){const first=revSig==='';revSig=sg;if(first)revealedHTML.seen=new Set(revealed.map(r=>r._id));if(scr==='menu'&&!store.cur&&store.mode!=='gm')render(1)}}catch(e){}}
 setInterval(()=>{if(session&&!document.hidden&&scr==='menu'&&!store.cur&&store.mode!=='gm')fetchRevealed()},15000);
-async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){if(!n.shared)continue;const js=JSON.stringify(Object.assign({},n,{notes:'',shared:true}));if(npcPushed[n.id]===js)continue;try{await fs('PATCH','reveladas/'+n.id,fbEnc({uid:session.uid,owner:session.name,data:js,updated:Date.now()}));npcPushed[n.id]=js}catch(e){}}}
+async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){if(!n.shared||!n.pid)continue;const js=JSON.stringify(Object.assign({},n,{notes:'',shared:true}));if(npcPushed[n.id]===js)continue;try{await fs('PATCH','reveladas/'+n.id,fbEnc({uid:session.uid,owner:session.name,pid:n.pid||'',data:js,updated:Date.now()}));npcPushed[n.id]=js}catch(e){}}}
 function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
  const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
  setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),300)},1050)}
 function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
- const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.innerHTML=`<span>${m==='gm'?'Game Master':'Jugador'}</span>`;document.body.appendChild(o);
- setTimeout(apply,380);setTimeout(()=>o.classList.add('out'),950);setTimeout(()=>o.remove(),1250)}
+ const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.setAttribute('aria-hidden','true');o.innerHTML=`<i class="mc"></i><div class="ml">${m==='gm'?PENI:DIEI}<span>${m==='gm'?'Modo Game Master':'Modo Jugador'}</span></div>`;document.body.appendChild(o);
+ setTimeout(apply,850);setTimeout(()=>o.classList.add('out'),1600);setTimeout(()=>o.remove(),2250)}
 
 /* ---------- Partidas ---------- */
 let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
@@ -1657,7 +1667,7 @@ async function loadParts(){if(!session)return;
   try{const mj=await fsQuery('pjs','uid',session.uid);apState={};mj.forEach(x=>{apState[x.pid]=x.ap||'y'});
    for(const c of store.chars){if(c.pid&&apState[c.pid]==='n'){const pn=(myParts.find(q=>q.id===c.pid)||{}).name||'la partida';delete c.pid;delete c.rev;delete c._ph;save();toast('El Game Master de «'+pn+'» pide cambiar o crear otro personaje')}}}catch(e){}
   await syncLinked();
-  invPop();
+  invPop();if(store.mode!=='gm')fetchRevealed();
   const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id]]),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
 async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
@@ -1682,13 +1692,21 @@ function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(
 
 function partTags(p){return `<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
 function pjOk(c,P,pid){if(!c.done)return 'Ficha sin terminar';if(c.pid&&c.pid!==pid)return 'Ya participa en otra partida';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
+function pjViewScreen(){const v=store.pjv;if(!v){scr='part';return partScreen()}const c=v.c;let h='';try{h=sHoja(c)}catch(e){}
+ return hubBar(['pjback','Volver a la partida'])+`<h1 class="hh">${esc(c.name||'Personaje')}</h1><p class="hs">Ficha de ${esc((c._pj&&c._pj.owner)||'jugador')} · solo lectura hasta que la apruebes</p>
+ <div class="pjb"><span>Ficha pendiente de aprobación: puedes ver todos sus parámetros, pero no modificarlos.</span></div>
+ <div class="row" style="margin:12px 0"><button class="btn pri" data-act="pjap" data-v="y" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Aprobar personaje</button><button class="btn" data-act="pjap" data-v="n" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Rechazar (pedir otro)</button></div>
+ <div class="ro">${h}</div>`}
 function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
- const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending');
+ const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending'),nl=(store.npcs||[]).filter(x=>x.pid===p.id);
  return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master</p><div class="meta ptags">${partTags(p)}</div>${p.desc?`<p class="hint pdesc">${esc(p.desc)}</p>`:''}
  <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3><button class="btn pri" data-act="partinv">Invitar jugador</button></div>
  <p class="hint">Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
  ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Invita a tus jugadores por su nombre de usuario.</p>'}
  ${inv.length?`<h3>Invitaciones pendientes</h3><div class="alist">${inv.map(i=>`<div class="arow"><div class="ahead" style="cursor:default"><span class="aav">✉</span><span class="anm"><b>${esc(i.toName||'Jugador')}</b><small>Esperando respuesta</small></span><button class="btn sm ghost" data-act="invcancel" data-id="${i.id}">Cancelar</button></div></div>`).join('')}</div>`:''}</section>
+ <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Siguen siendo privados hasta que los metas en la partida, cuando tú decidas.</p>
+ <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
+ ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
  <section class="glass" style="margin-top:16px"><div class="row"><button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
@@ -1758,7 +1776,7 @@ function invPop(){if(!session||!invs.length)return;if(document.getElementById('i
  d._t=setTimeout(()=>closePop(),30000)}
 function closePop(then){const d=document.getElementById('invpop');if(!d){if(then)then();return}clearTimeout(d._t);d.classList.add('out');setTimeout(()=>{d.remove();invPop();if(then)then()},260)}
 let pg='',popSel='',prevPct=null,prevNums=[];
-const DEPTH={part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
+const DEPTH={pjview:1,part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
  const cards=store.chars.map(c=>{const p=PATHS[c.path];const anc={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss'}[c.ancestry];
   const d=derive(c);const sts=STEPS.slice(0,7).map((n,k)=>[n,status(c,k)]);const okN=sts.filter(x=>x[1]==='ok').length,full=okN===7;const miss=sts.filter(x=>x[1]!=='ok').map(x=>x[0]);
@@ -2158,10 +2176,10 @@ document.addEventListener('click',e=>{
   case 'kick':{const p=b.dataset.p,u=b.dataset.u;showDlg('¿Quitar de la partida?',`<p class="hint" style="margin:0">El jugador dejará de estar en la partida y se llevará una copia de su ficha. Podrás volver a invitarlo.</p><div class="row"><button class="btn danger" data-act="kick2" data-p="${p}" data-u="${esc(u)}">Sí, quitar</button></div>`,true);break}
   case 'kick2':{const p=b.dataset.p,u=b.dataset.u;try{$('#dlg').close()}catch(x){}kickPlayer(p,u).then(()=>loadPart(p)).then(()=>{render(1);toast('Jugador quitado')});break}
   case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
-  case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
+  case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});store.npcs.filter(n=>n.pid===id).forEach(n=>{if(n.shared)fs('DELETE','reveladas/'+n.id).catch(()=>{})});store.npcs=store.npcs.filter(n=>n.pid!==id);save();await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
   case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
   case 'pjnew':{try{$('#dlg').close()}catch(x){}const n=blank();n.era=+b.dataset.e===2?2:1;store.chars.push(n);store.cur=n.id;scr='nb';save();render();toast('Crea tu personaje y, al terminarlo, elígelo desde tu inicio');break}
-  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({ap:b.dataset.v}),maskQ({ap:1})).then(()=>{toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
+  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({ap:b.dataset.v}),maskQ({ap:1})).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
   case 'fbub':break
   case 'ppx':closePop();break
   case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
@@ -2173,21 +2191,25 @@ document.addEventListener('click',e=>{
   case 'pjlink':{const p=myParts.find(x=>x.id===b.dataset.p);if(p)linkDlg(p.id,p.name,false);break}
   case 'partleave':{const id=b.dataset.p,p=myParts.find(x=>x.id===id);showDlg('¿Salir de la partida?',`<p class="hint" style="margin:0">Saldrás de <b>${esc(p?p.name:'la partida')}</b>. Te quedas con tu ficha, pero el Game Master dejará de verla.</p><div class="row"><button class="btn danger" data-act="partleave2" data-p="${id}">Sí, salir</button></div>`,true);break}
   case 'partleave2':{const id=b.dataset.p;try{$('#dlg').close()}catch(x){}(async()=>{await kickPlayer(id,session.uid);store.chars.forEach(c=>{if(c.pid===id){delete c.pid;delete c.rev;delete c._ph}});save();partSig='';await loadParts();render(1);toast('Has salido de la partida')})();break}
-  case 'pjopen':{const key=b.dataset.p+'_'+b.dataset.u,x=(partPJ[b.dataset.p]||{})[b.dataset.u];if(!x)break;const p=parts.find(y=>y.id===b.dataset.p);const c=pjMake(x.raw,p&&p.name);if(!c)break;store.pjc[key]=c;store.cur=key;render();break}
+  case 'pjopen':{const key=b.dataset.p+'_'+b.dataset.u,x=(partPJ[b.dataset.p]||{})[b.dataset.u];if(!x)break;const p=parts.find(y=>y.id===b.dataset.p);const c=pjMake(x.raw,p&&p.name);if(!c)break;if((x.raw.ap||'y')==='p'){store.pjv={c,pid:b.dataset.p,uid:b.dataset.u};scr='pjview';render();break}store.pjc[key]=c;store.cur=key;render();break}
   case 'mode':setMode(store.mode==='gm'?'p':'gm');break;
   case 'npcsave':{const n=npcCur();if(!n)break;document.querySelectorAll('.npcsv').forEach(x=>{x.classList.add('ok');x.textContent='✓ Guardado'});flush().then(()=>toast('NPC «'+(n.name||'sin nombre')+'» guardado')).catch(()=>toast('Guardado en este dispositivo; se subirá al reconectar'));setTimeout(()=>document.querySelectorAll('.npcsv').forEach(x=>{x.classList.remove('ok');x.textContent='Guardar NPC'}),1800);break}
-  case 'npcnew':{const n=npcNorm({name:'',role:'',level:1,game:store.gmGame||'nb'});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
-  case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Juego: <b>${gameName(store.gmGame)}</b>. Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
+  case 'npcnew':{const PP=parts.find(x=>x.id===partId);if(!PP){toast('Abre una partida para crear NPC');break}const n=npcNorm({name:'',role:'',level:1,game:PP.game||'nb',pid:PP.id});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
+  case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Juego: <b>${gameName((parts.find(x=>x.id===partId)||{}).game)}</b>. Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
     <label class="f">Tipo de personaje<select name="arch"><option value="any">Cualquiera</option>${NPCARCH.map(a=>`<option value="${a.id}">${a.n}</option>`).join('')}</select></label>
     <label class="f">Origen<select name="kind"><option value="any">Al azar</option>${Object.entries(NPCKIND).filter(x=>x[0]!=='otro').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
     <label class="f">Nivel (1 a 30, vacío = al azar)<input type="number" name="level" min="1" max="30" inputmode="numeric"></label>
     <div class="row"><button class="btn pri" type="submit">🎲 Generar</button></div></form>`,true);break}
+  case 'npcback':{const n=npcCur();if(n&&n.pid)partId=n.pid;store.npcCur=null;scr='part';render();loadPart(partId);break}
+  case 'npcmove':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;if(!parts.length){toast('Crea primero una partida');break}showDlg('Mover NPC a una partida',`<p class="hint" style="margin:0">Elige la partida a la que pertenecerá <b>${esc(o.name||'este NPC')}</b>.</p><div class="grid">${parts.map(q=>`<button class="btn" data-act="npcmove2" data-id="${o.id}" data-p="${q.id}">${esc(q.name)}</button>`).join('')}</div>`,true);break}
+  case 'npcmove2':{const o=store.npcs.find(x=>x.id===b.dataset.id),q=parts.find(x=>x.id===b.dataset.p);if(!o||!q)break;o.pid=q.id;o.game=q.game||'nb';o.shared=false;save();try{$('#dlg').close()}catch(x){}render();toast('NPC movido a «'+q.name+'»');break}
+  case 'pjback':store.pjv=null;scr='part';render();loadPart(partId);break
   case 'npcopen':{store.npcCur=b.dataset.id;scr='npc';render();break}
   case 'npcdup':{const o=(store.npcs||[]).find(x=>x.id===b.dataset.id);if(!o)break;const n=npcNorm(JSON.parse(JSON.stringify(o)));n.id=uid();n.shared=false;n.name=(o.name||'NPC')+' (copia)';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC duplicado');break}
   case 'npcdel':{const o=(store.npcs||[]).find(x=>x.id===b.dataset.id);if(!o)break;showDlg('¿Borrar este NPC?',`<p class="hint" style="margin:0">Se borrará <b>${esc(o.name||'este NPC')}</b>${o.shared?' y dejará de verse para los jugadores':''}. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="npcdel2" data-id="${o.id}">Sí, borrar</button></div>`,true);break}
-  case 'npcdel2':{const id=b.dataset.id,o=store.npcs.find(x=>x.id===id);try{$('#dlg').close()}catch(x){}if(o&&o.shared)fs('DELETE','reveladas/'+id).catch(()=>{});delete npcPushed[id];store.npcs=store.npcs.filter(x=>x.id!==id);if(store.npcCur===id){store.npcCur=null;scr='menu'}save();render();toast('NPC borrado');break}
-  case 'npcrev':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=true;save();pushShared().then(()=>toast('NPC revelado a los jugadores'));render(1);const el=document.querySelector('[data-nid="'+o.id+'"]');if(el){el.classList.add('flash')}break}
-  case 'npchide':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=false;delete npcPushed[o.id];fs('DELETE','reveladas/'+o.id).catch(()=>{});save();render(1);toast('NPC oculto de nuevo');break}
+  case 'npcdel2':{const id=b.dataset.id,o=store.npcs.find(x=>x.id===id);try{$('#dlg').close()}catch(x){}if(o&&o.shared)fs('DELETE','reveladas/'+id).catch(()=>{});delete npcPushed[id];store.npcs=store.npcs.filter(x=>x.id!==id);if(store.npcCur===id){store.npcCur=null;scr=(o&&o.pid)?'part':'menu';if(o&&o.pid)partId=o.pid}save();render();toast('NPC borrado');break}
+  case 'npcrev':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;if(!o.pid){toast('Primero mueve este NPC a una partida');break}o.shared=true;save();pushShared().then(()=>toast('NPC metido en la partida'));render(1);const el=document.querySelector('[data-nid="'+o.id+'"]');if(el){el.classList.add('flash')}break}
+  case 'npchide':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=false;delete npcPushed[o.id];fs('DELETE','reveladas/'+o.id).catch(()=>{});save();render(1);toast('NPC retirado de la partida');break}
   case 'npcatt':{const n=npcCur();if(!n)break;const k=b.dataset.k,d=+b.dataset.d;n.attrs[k]=Math.max(0,Math.min(npcCap(n.level)+1,(n.attrs[k]||0)+d));save();render(1);break}
   case 'npclvl':{const n=npcCur();if(!n)break;n.level=Math.max(1,Math.min(30,n.level+(+b.dataset.d)));const mg=maxGrade({level:n.level});for(const k in n.skills)if(n.skills[k]>mg)n.skills[k]=mg;save();render(1);break}
   case 'npchp':{const n=npcCur();if(!n)break;n.hpAdj=Math.max(-30,Math.min(60,(+n.hpAdj||0)+(+b.dataset.d)));save();render(1);break}
