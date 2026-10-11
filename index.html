@@ -588,6 +588,29 @@ dialog.acctd{padding-bottom:104px}
 .skt .skc output{text-align:center;font-family:var(--display);font-size:1.2rem;font-weight:700}
 .skt.invt{opacity:.75}
 @media(prefers-reduced-motion:no-preference){.skt.has{animation:pop .3s ease-out}}
+
+dialog#updf{padding:0;border:0;border-radius:0;margin:0;max-width:none;max-height:none;width:100vw;height:100vh;height:100dvh;background:radial-gradient(70% 50% at 50% 28%,rgba(99,102,241,.55),transparent 70%),radial-gradient(60% 40% at 80% 90%,rgba(15,157,154,.4),transparent 70%),#0E1426;color:#fff;font-family:var(--sans);overflow:auto}
+dialog#updf[open]{display:grid;place-items:center;margin:0}
+dialog#updf::backdrop{background:#0E1426}
+#updf .uf{width:min(440px,100%);padding:32px 24px calc(32px + env(safe-area-inset-bottom,0px));text-align:center;display:grid;gap:14px;justify-items:center}
+#updf .ufi{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#4F46E5,#0F9D9A);box-shadow:0 18px 40px -14px rgba(79,70,229,.9),0 0 0 10px rgba(255,255,255,.06)}
+#updf .ufi svg{width:44px;height:44px}
+#updf h2{margin:6px 0 0;font-family:var(--sans);font-weight:800;font-size:clamp(1.6rem,7vw,2.2rem);line-height:1.1;letter-spacing:-.01em;color:#fff;text-transform:none}
+#updf .ufn{margin:0;font-size:1.05rem;font-weight:600;color:#C7D2FE}
+#updf .ufs{margin:0;font-size:.95rem;line-height:1.45;color:rgba(255,255,255,.75)}
+#updf .ufb{margin-top:8px;width:100%;min-height:56px;border:0;border-radius:18px;background:#fff;color:#14213D;font:800 1.1rem var(--sans);letter-spacing:.01em;cursor:pointer;box-shadow:0 14px 30px -14px rgba(0,0,0,.7)}
+#updf .ufb:disabled{opacity:.7;cursor:wait}
+@media(prefers-reduced-motion:no-preference){
+ dialog#updf[open]{animation:ufIn .4s ease-out}
+ #updf .uf>*{animation:ufUp .5s cubic-bezier(.2,.9,.3,1) both}
+ #updf .uf>:nth-child(2){animation-delay:.08s}#updf .uf>:nth-child(3){animation-delay:.14s}#updf .uf>:nth-child(4){animation-delay:.2s}#updf .uf>:nth-child(5){animation-delay:.26s}
+ #updf .ufi{animation:ufUp .5s cubic-bezier(.3,1.4,.5,1) both,ufBob 2.4s ease-in-out .6s infinite}
+ #updf .ufb:not(:disabled){animation:ufUp .5s .26s cubic-bezier(.2,.9,.3,1) both,ufPulse 2s 1s infinite}
+}
+@keyframes ufIn{from{opacity:0}to{opacity:1}}
+@keyframes ufUp{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes ufBob{0%,100%{translate:0 0}50%{translate:0 7px}}
+@keyframes ufPulse{0%{box-shadow:0 14px 30px -14px rgba(0,0,0,.7),0 0 0 0 rgba(255,255,255,.5)}70%,100%{box-shadow:0 14px 30px -14px rgba(0,0,0,.7),0 0 0 16px rgba(255,255,255,0)}}
 @keyframes dockIn{from{opacity:0;transform:translate(-50%,90px)}to{opacity:1;transform:translateX(-50%)}}
 @keyframes dockItem{from{opacity:0;transform:translateY(14px) scale(.7)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#tpop{transition:none}}
@@ -950,23 +973,27 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='52';
-const APPN='Habilidades: reparte los 4 grados de una vez con contador y recuadros iguales.';
-let updInfo=null,updBusy=false,updDismiss='';
+const APPV='53';
+const APPN='Las actualizaciones ahora son obligatorias: aparece una pantalla completa con «Actualizar ahora».';
+let updInfo=null,updBusy=false;
+function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
  if(updBusy)return 'busy';updBusy=true;
- try{const u=location.href.split('#')[0];const r=await fetch(u,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error('http '+r.status);const t=await r.text();
+ try{const u=updBase()+'?chk='+Date.now();const r=await fetch(u,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error('http '+r.status);const t=await r.text();
   const mv=t.match(new RegExp('const APPV'+"='([^']+)'")),mn=t.match(new RegExp('const APPN'+"='([^']*)'"));
   if(!mv)throw new Error('sin versión');
-  if(mv[1]!==APPV){updInfo={v:mv[1],n:mn?mn[1].replace(/\\'/g,"'"):''};if(manual||updDismiss!==mv[1])showUpd();return 'new'}
+  if(mv[1]!==APPV){updInfo={v:mv[1],n:mn?mn[1].replace(/\\'/g,"'"):''};showUpd();return 'new'}
   updInfo=null;hideUpd();return 'same'}
  catch(e){return 'err'}finally{updBusy=false}}
-function showUpd(){if(!updInfo)return;let b=document.getElementById('upd');if(!b){b=document.createElement('div');b.id='upd';b.setAttribute('role','status');document.body.appendChild(b)}
- b.innerHTML=`<span class="ui"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M7.500 9.500 12 14l4.500-4.500M5 19h14" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ut"><b>Hay una actualización disponible</b>${updInfo.n?`<small>${esc(updInfo.n)}</small>`:''}</span><button type="button" class="ub" data-act="doupd">Actualizar</button><button type="button" class="ux" data-act="noupd" aria-label="Más tarde">×</button>`;
- b.classList.remove('bye');void b.offsetWidth;b.classList.add('on')}
-function hideUpd(){const b=document.getElementById('upd');if(!b)return;b.classList.add('bye');setTimeout(()=>b.remove(),300)}
-setTimeout(()=>checkUpdate(),4000);setInterval(()=>checkUpdate(),300000);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+/* actualización obligatoria: pantalla completa que bloquea toda la interfaz */
+function showUpd(){if(!updInfo)return;let d=document.getElementById('updf');
+ if(!d){d=document.createElement('dialog');d.id='updf';d.setAttribute('aria-labelledby','updt');d.addEventListener('cancel',e=>e.preventDefault());document.body.appendChild(d)}
+ if(d.dataset.v!==updInfo.v){d.dataset.v=updInfo.v;
+  d.innerHTML=`<div class="uf"><div class="ufi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M7.500 9.500 12 14l4.500-4.500M5 19h14" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2 id="updt">Nueva versión disponible</h2><p class="ufn">${updInfo.n?esc(updInfo.n):'Hemos mejorado la app.'}</p><p class="ufs">Para seguir usando La Mesa Larga necesitas actualizar. Tus fichas están guardadas y no se perderá nada.</p><button type="button" class="ufb" data-act="doupd">Actualizar ahora</button></div>`}
+ if(!d.open){try{const x=document.getElementById('dlg');if(x&&x.open)x.close()}catch(e){}try{d.showModal()}catch(e){d.setAttribute('open','')}try{flush()}catch(e){}}}
+function hideUpd(){const d=document.getElementById('updf');if(!d)return;try{d.close()}catch(e){}d.remove()}
+setTimeout(()=>checkUpdate(),3000);setInterval(()=>checkUpdate(),60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});addEventListener('focus',()=>checkUpdate());addEventListener('online',()=>checkUpdate());
 const TKEY='mesa-larga-tema';
 function getTheme(){try{const v=localStorage.getItem(TKEY);return v==='light'||v==='dark'?v:'auto'}catch(e){return 'auto'}}
 function applyTheme(v){const r=document.documentElement;const tb=document.querySelector('#fdock .tbtn');if(tb){const sp=tb.querySelector('span');tb.innerHTML=TI[v]+(sp?sp.outerHTML:'<span>Tema</span>')}dockSig='';if(v==='light'||v==='dark')r.setAttribute('data-theme',v);else r.removeAttribute('data-theme');
@@ -1404,9 +1431,8 @@ document.addEventListener('click',e=>{
   case 'gohome':store.cur=null;scr='menu';try{save()}catch(x){}render();break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
   case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');if(r){const x=r.querySelector('[data-act=avdel]');if(x)x.remove()}}break;
-  case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}location.reload()})();break}
-  case 'noupd':if(updInfo)updDismiss=updInfo.v;hideUpd();break;
-  case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.innerHTML='Hay una actualización disponible'+(updInfo.n?': '+esc(updInfo.n):'.')+' <button class="btn sm pri" data-act="doupd">Actualizar ahora</button>';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
+  case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
+  case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas. Para volver a entrar necesitarás tu usuario y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{await flush();session=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
