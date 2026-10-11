@@ -929,8 +929,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='50';
-const APPN='Avisos de acceso más claros y descarga de PDF fuera de Claude.';
+const APPV='51';
+const APPN='Sangre koloss sin la nota «solo en la Era 2».';
 let updInfo=null,updBusy=false,updDismiss='';
 async function checkUpdate(manual){
  if(updBusy)return 'busy';updBusy=true;
@@ -1061,7 +1061,7 @@ function editor(c){
 function sOrig(c){
  const cl=[...CULT1.filter(()=>c.era===1),...CULT2.filter(()=>c.era===2),...CULTB];
  const sel=n=>{const v=c.cultures[n];const known=cl.includes(v);return `<label class="f">Pericia cultural ${n+1}<select data-f="cultures.${n}" data-r="1"><option value="">Elegir…</option>${cl.map(x=>`<option ${v===x?'selected':''}>${esc(x)}</option>`).join('')}${v&&!known?`<option selected>${esc(v)}</option>`:''}</select></label>`};
- const anc=[['humano','Humano','Un talento adicional de camino heroico'],['kandra','Kandra','6 puntos de atributo y una Bendición'],...(c.era===2?[['koloss','Sangre koloss','Fuerza hasta 4; +1 salud · Era 2']]:[])];
+ const anc=[['humano','Humano','Un talento adicional de camino heroico'],['kandra','Kandra','6 puntos de atributo y una Bendición'],...(c.era===2?[['koloss','Sangre koloss','Fuerza hasta 4; +1 salud']]:[])];
  return `<section class="panel"><h3>Paso 1. Orígenes</h3>
  <p class="hint lead">Tu ascendencia es de quién desciendes; tu cultura, dónde creciste. Pueden no coincidir.</p>
  <label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label>
@@ -1206,7 +1206,7 @@ addQ({id:'era',sec:'Orígenes',t:()=>'¿En qué era se ambienta vuestra partida?
 addQ({id:'name',sec:'Orígenes',t:()=>'¿Cómo se llama tu personaje?',h:()=>'Los nombres tienen poder. Puede inspirarse en su cultura, pero no tiene por qué.',
  r:c=>`<label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><label class="f">Tu nombre como jugador (opcional)<input type="text" data-f="player" value="${esc(c.player)}" autocomplete="off"></label>`,v:c=>!!c.name.trim()});
 addQ({id:'anc',sec:'Orígenes',t:()=>'¿De quién desciende tu personaje?',h:()=>'La ascendencia es la especie. Tu cultura se elige después y puede ser distinta.',
- r:c=>seg([{v:'humano',b:'Humano',s:'Un talento adicional de un camino heroico.'},{v:'kandra',b:'Kandra',s:'Solo 6 puntos de atributo, pero con una Bendición. Imitan a otros cuerpos.'},...(c.era===2?[{v:'koloss',b:'Sangre koloss',s:'Fuerza hasta 4 y +1 de salud. Solo en la Era 2.'}]:[])],c.ancestry,'anc')});
+ r:c=>seg([{v:'humano',b:'Humano',s:'Un talento adicional de un camino heroico.'},{v:'kandra',b:'Kandra',s:'Solo 6 puntos de atributo, pero con una Bendición. Imitan a otros cuerpos.'},...(c.era===2?[{v:'koloss',b:'Sangre koloss',s:'Fuerza hasta 4 y +1 de salud.'}]:[])],c.ancestry,'anc')});
 addQ({id:'bless',sec:'Orígenes',show:c=>c.ancestry==='kandra',t:()=>'¿Qué Bendición lleva tu kandra?',h:()=>'Es un par de clavos hemalúrgicos que da sapiencia y un beneficio. Se aplica incluso bajo un disfraz.',
  r:c=>seg(Object.entries(BLESS).map(([k,b])=>({v:k,b:b.n,s:b.d})),c.blessing,'bless'),v:c=>!!c.blessing});
 addQ({id:'c1',sec:'Cultura',t:()=>'¿En qué cultura te criaste?',h:()=>'Es tu primera pericia cultural. Da el idioma y el conocimiento de esa sociedad.',
