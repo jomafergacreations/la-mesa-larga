@@ -880,6 +880,49 @@ html[data-dev=desktop] .gmb{min-height:150px;font-size:1.05rem}
 #dlg input[type=number],#dlg textarea,#dlg select{font:inherit;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.6);color:inherit;width:100%;box-sizing:border-box}
 .ptags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pdesc{margin:0 0 14px;max-width:60ch}
 .nolink ul{margin:.3em 0 0 1.1em;padding:0}.nolink{padding:10px 12px;border-radius:12px;background:rgba(181,71,47,.1)}
+
+html[data-dev=phone] #fdock.tabcoll{bottom:calc(92px + env(safe-area-inset-bottom,0px));left:auto;right:14px;transform:translateY(12px) scale(.94);transform-origin:bottom right;opacity:0;pointer-events:none;flex-direction:column;border-radius:22px;padding:8px;transition:transform .22s cubic-bezier(.2,1.2,.4,1),opacity .18s}
+html[data-dev=phone] #fdock.tabcoll.open{opacity:1;pointer-events:auto;transform:none}
+html[data-dev=phone] #fdock.tabcoll .fd{flex-direction:row;justify-content:flex-start;gap:12px;min-width:180px;min-height:48px;padding:6px 14px;font-size:.95rem}
+html[data-dev=phone] #fdock.tabcoll .fd span:not(.avs){font-size:.95rem}
+html[data-dev=phone] #tpop{left:auto;right:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(0,12px) scale(.94)}
+html[data-dev=phone] #tpop.open{transform:none}
+html[data-dev=phone] #fbub{display:grid;place-items:center;position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;z-index:52;color:#fff;background:linear-gradient(145deg,#6366F1,#4338CA);box-shadow:0 14px 28px -8px rgba(55,48,163,.7),inset 0 2px 4px rgba(255,255,255,.35);cursor:pointer;transition:transform .2s cubic-bezier(.3,1.4,.5,1),bottom .2s}
+html[data-dev=phone] #fbub svg{width:27px;height:27px}html[data-dev=phone] #fbub.on{transform:rotate(90deg) scale(1.06)}html[data-dev=phone] #fbub:active{transform:scale(.92)}
+html[data-mode=gm][data-dev=phone] #fbub{background:linear-gradient(145deg,#D9603F,#9A3A22)}
+html[data-dev] #fbub.up{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+html[data-dev] #fdock.tabcoll.up{bottom:calc(166px + env(safe-area-inset-bottom,0px))}
+html[data-dev=phone] .wrap{padding-bottom:40px}
+.apb{display:inline-block;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:99px;margin:4px 0}.apb.ok{background:rgba(21,128,61,.18);color:#15803D}.apb.wait{background:rgba(217,119,6,.2);color:#B45309}
+:root[data-theme="dark"] .apb.ok{color:#4ADE80}:root[data-theme="dark"] .apb.wait{color:#FBBF24}
+/* v68 contraste en oscuro */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #topbar .tbin{background:rgba(34,44,72,.92);border-color:rgba(165,180,252,.5);box-shadow:0 16px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(165,180,252,.12)}
+:root:not([data-theme="light"]) #topbar .tbbrand,#topbar .tbi{color:#F3F5FF}
+:root:not([data-theme="light"]) #topbar .tbi:hover{background:rgba(129,140,248,.28)}
+:root:not([data-theme="light"]) #topbar .tbi.cur{color:#C7D2FE;background:rgba(129,140,248,.2)}
+:root:not([data-theme="light"]) #topbar .tbind{background:#A5B4FC}
+:root:not([data-theme="light"]) #topbar .tbmode{background:rgba(129,140,248,.28)!important;color:#fff}
+:root:not([data-theme="light"]) #topbar .tbmode.gm{background:#C2502F!important}
+:root:not([data-theme="light"]) #topbar .tbd{background:#26324F;border:1.5px solid rgba(165,180,252,.5);box-shadow:0 22px 44px -10px rgba(0,0,0,.85)}
+:root:not([data-theme="light"]) #topbar .tbd button{color:#F3F5FF}#topbar .tbd button:hover{background:rgba(129,140,248,.3)}
+:root:not([data-theme="light"]) #topbar .tbd em{color:#A5B4FC}
+}
+:root[data-theme="dark"] #topbar .tbin{background:rgba(34,44,72,.92);border-color:rgba(165,180,252,.5);box-shadow:0 16px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(165,180,252,.12)}
+:root[data-theme="dark"] #topbar .tbbrand,#topbar .tbi{color:#F3F5FF}
+:root[data-theme="dark"] #topbar .tbi:hover{background:rgba(129,140,248,.28)}
+:root[data-theme="dark"] #topbar .tbi.cur{color:#C7D2FE;background:rgba(129,140,248,.2)}
+:root[data-theme="dark"] #topbar .tbind{background:#A5B4FC}
+:root[data-theme="dark"] #topbar .tbmode{background:rgba(129,140,248,.28)!important;color:#fff}
+:root[data-theme="dark"] #topbar .tbmode.gm{background:#C2502F!important}
+:root[data-theme="dark"] #topbar .tbd{background:#26324F;border:1.5px solid rgba(165,180,252,.5);box-shadow:0 22px 44px -10px rgba(0,0,0,.85)}
+:root[data-theme="dark"] #topbar .tbd button{color:#F3F5FF}#topbar .tbd button:hover{background:rgba(129,140,248,.3)}
+:root[data-theme="dark"] #topbar .tbd em{color:#A5B4FC}
+html[data-dev=desktop] .bubbles .bub:nth-child(n){padding-top:116px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) html[data-dev=desktop] .glass,html[data-dev=desktop] .gmb,html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
+:root:not([data-theme="light"]) html[data-dev=desktop] .glass .hint,html[data-dev=desktop] .gmb small{color:#C5CCE0}
+}
+:root[data-theme="dark"] html[data-dev=desktop] .glass,html[data-dev=desktop] .gmb,html[data-dev=desktop] .card:not(.chapter){border-color:rgba(165,180,252,.4);background-color:rgba(30,40,66,.78)}
+:root[data-theme="dark"] html[data-dev=desktop] .glass .hint,html[data-dev=desktop] .gmb small{color:#C5CCE0}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1351,8 +1394,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='67';
-const APPN='Partidas con juego, era y parámetros; solo fichas terminadas y compatibles con la era; el nombre de jugador es tu usuario.';
+const APPV='68';
+const APPN='El Game Master aprueba los personajes de su partida, un personaje solo juega en una partida a la vez, burbuja de menú en el móvil y mejor contraste en escritorio.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1440,11 +1483,11 @@ function fdockUpdate(c){let d=document.getElementById('fdock');
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');dockSig='';return}
  if(isDesk()){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb')}
- const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole(),isTab()?'T':''].join('|');
+ const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole(),document.documentElement.dataset.dev].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
- {const tab=isTab(),hm=(scr==='menu'&&!c);d.classList.toggle('tabtr',tab&&hm);d.classList.toggle('tabcoll',tab&&!hm);if(!(tab&&!hm))d.classList.remove('open');
+ {const ph=document.documentElement.dataset.dev==='phone',tab=isTab()||ph,hm=ph?false:(scr==='menu'&&!c);d.classList.toggle('tabtr',tab&&hm);d.classList.toggle('tabcoll',tab&&!hm);if(!(tab&&!hm))d.classList.remove('open');
   let bb=document.getElementById('fbub');if(tab&&!hm){if(!bb){bb=document.createElement('button');bb.id='fbub';bb.type='button';bb.dataset.act='fbub';bb.setAttribute('aria-label','Abrir menú');bb.setAttribute('aria-expanded','false');bb.innerHTML=MENUI;document.body.appendChild(bb)}}else if(bb)bb.remove()}
- d.classList.toggle('above',!isTab()&&!!c&&!c.done);
+ d.classList.toggle('above',!isTab()&&document.documentElement.dataset.dev!=='phone'&&!!c&&!c.done);{const bb=document.getElementById('fbub');if(bb)bb.classList.toggle('up',!!c&&!c.done);d.classList.toggle('up',!!c&&!c.done)}
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
   d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd gmbtn${store.mode==='gm'?' cur':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${PENI}<span>${store.mode==='gm'?'Jugador':'GM'}</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
@@ -1579,7 +1622,7 @@ function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.
 
 /* ---------- Partidas ---------- */
 let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
-const pjDirty=new Set(),partSeen={},invSeen=new Set();
+let apState={};const pjDirty=new Set(),partSeen={},invSeen=new Set();
 const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
 async function fsQuery(col,field,val){const t=await tok();let r;
  try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
@@ -1602,12 +1645,14 @@ async function loadParts(){if(!session)return;
   const mem=await fsQuery('miembros','uid',session.uid);const mp=[];for(const m of mem){const d=await fs('GET','partidas/'+m.pid);if(d)mp.push(Object.assign(fbDec(d),{cid:m.cid,mid:m.id}));else fs('DELETE','miembros/'+m.id).catch(()=>{})}myParts=mp;
   invs=(await fsQuery('invitaciones','to',session.uid)).filter(i=>i.status==='pending');
   for(const c of store.chars){if(!c.pid)continue;if(!myParts.some(p=>p.id===c.pid)){delete c.pid;delete c.rev;delete c._ph;save()}}
+  try{const mj=await fsQuery('pjs','uid',session.uid);apState={};mj.forEach(x=>{apState[x.pid]=x.ap||'y'});
+   for(const c of store.chars){if(c.pid&&apState[c.pid]==='n'){const pn=(myParts.find(q=>q.id===c.pid)||{}).name||'la partida';delete c.pid;delete c.rev;delete c._ph;save();toast('El Game Master de «'+pn+'» pide cambiar o crear otro personaje')}}}catch(e){}
   await syncLinked();
   invPop();
-  const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid]),invs.map(i=>i.id)]);
+  const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id]]),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
 async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
-  try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
+  try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if(r.ap==='n')continue;if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
 async function loadPart(pid){if(!session)return;
  try{const [mem,inv,pj]=await Promise.all([fsQuery('miembros','pid',pid),fsQuery('invitaciones','pid',pid),fsQuery('pjs','pid',pid)]);
   const pjm={};pj.forEach(x=>{try{pjm[x.uid]={ch:JSON.parse(x.data),rev:x.rev|0,upd:x.updated|0,raw:x}}catch(e){}});
@@ -1620,12 +1665,14 @@ setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&
 const ENVSVG='<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="36" rx="5" fill="currentColor" opacity=".9"/><path class="flap" d="M6 20l26 20 26-20" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';
 function envFx(txt,kind){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red)return;const o=document.createElement('div');o.id='envfx';o.className=kind||'open';o.innerHTML=`<div class="en">${ENVSVG}<div class="ec"></div></div><b>${esc(txt)}</b>`;document.body.appendChild(o);setTimeout(()=>o.classList.add('out'),1250);setTimeout(()=>o.remove(),1600)}
 function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(x){try{ch=normalize(JSON.parse(JSON.stringify(x.ch)));d=derive(ch)}catch(e){}}
+ const ap=x&&x.raw?(x.raw.ap||'y'):'y';if(ap==='n'){ch=null}
  const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
- return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:'<p class="hint" style="margin:0">Todavía no ha elegido personaje.</p>'}
- <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">Ver y editar ficha</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
+ return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:`<p class="hint" style="margin:0">${ap==='n'?'Esperando que elija otro personaje.':'Todavía no ha elegido personaje.'}</p>`}
+ ${ch?`<span class="apb ${ap==='p'?'wait':'ok'}">${ap==='p'?'Pendiente de tu aprobación':'Aprobado'}</span>`:''}
+ <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Ver ficha':'Ver y editar ficha'}</button>`:''}${ch&&ap==='p'?`<button class="btn" data-act="pjap" data-v="y" data-p="${p.id}" data-u="${esc(m.uid)}">Aprobar</button>`:''}${ch?`<button class="btn" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Rechazar':'Pedir otro personaje'}</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
 
 function partTags(p){return `<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
-function pjOk(c,P){if(!c.done)return 'Ficha sin terminar';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
+function pjOk(c,P,pid){if(!c.done)return 'Ficha sin terminar';if(c.pid&&c.pid!==pid)return 'Ya participa en otra partida';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
 function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
  const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending');
  return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master</p><div class="meta ptags">${partTags(p)}</div>${p.desc?`<p class="hint pdesc">${esc(p.desc)}</p>`:''}
@@ -1638,20 +1685,20 @@ function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
  if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><div class="meta ptags">${partTags(i)}</div><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
- if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':'Sin personaje elegido.'}</p><div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
+ if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':apState[p.id]==='n'?'El Game Master ha pedido otro personaje.':'Sin personaje elegido.'}</p>${c?`<span class="apb ${apState[p.id]==='p'?'wait':'ok'}">${apState[p.id]==='p'?'Pendiente de aprobación del GM':'Aprobado por el GM'}</span>`:''}<div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
  return h}
-function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const ok=store.chars.filter(c=>!pjOk(c,P)),no=store.chars.filter(c=>pjOk(c,P));
+function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const ok=store.chars.filter(c=>!pjOk(c,P,pid)),no=store.chars.filter(c=>pjOk(c,P,pid));
  const opts=ok.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
- const why=no.length?`<div class="hint nolink"><b>No pueden participar:</b><ul>${no.map(c=>`<li>${esc(c.name||'Sin nombre')} — ${pjOk(c,P)}</li>`).join('')}</ul></div>`:'';
+ const why=no.length?`<div class="hint nolink"><b>No pueden participar:</b><ul>${no.map(c=>`<li>${esc(c.name||'Sin nombre')} — ${pjOk(c,P,pid)}</li>`).join('')}</ul></div>`:'';
  showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> solo puedes aportar personajes con la ficha terminada y compatibles con la partida (${P.era?'Era '+P.era:'cualquier era'}). El Game Master podrá ver y modificar la ficha que elijas, salvo Orígenes, Camino e Historia. Puedes salir cuando quieras y te quedas con una copia.</p>${why}
- <label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
+ ${ok.length?'':`<div class="hint nolink" style="background:rgba(79,70,229,.1)"><b>Ahora mismo no tienes ningún personaje que pueda jugar esta partida.</b> Crea uno nuevo${P.era?' (Era '+P.era+')':''}: cuando lo termines, elígelo desde tu inicio.<div class="row" style="margin-top:8px"><button type="button" class="btn pri" data-act="pjnew" data-e="${P.era||1}">Crear personaje nuevo</button></div></div>`}<label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
-  {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
+  {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
    if(accept&&(P.maxp|0)){const mm=await fsQuery('miembros','pid',pid);if(mm.length>=(P.maxp|0)){set('La partida ya está completa.','err');return}}}
   if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
-  if(cid){const c=store.chars.find(x=>x.id===cid);if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
+  if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
    try{await fs('PATCH','miembros/'+key,fbEnc({cid}),maskQ({cid:1}))}catch(e){}}
   else if(!accept){try{await fs('DELETE','pjs/'+key)}catch(e){}}
   save();try{$('#dlg').close()}catch(x){}envFx(accept?'¡Te has unido a la partida!':'Personaje actualizado','open');partSig='';await loadParts();render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo completar. Inténtalo de nuevo.','err')}}
@@ -2104,6 +2151,8 @@ document.addEventListener('click',e=>{
   case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
   case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
+  case 'pjnew':{try{$('#dlg').close()}catch(x){}const n=blank();n.era=+b.dataset.e===2?2:1;store.chars.push(n);store.cur=n.id;scr='nb';save();render();toast('Crea tu personaje y, al terminarlo, elígelo desde tu inicio');break}
+  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({ap:b.dataset.v}),maskQ({ap:1})).then(()=>{toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
   case 'fbub':break
   case 'ppx':closePop();break
   case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
