@@ -875,6 +875,11 @@ html[data-dev=desktop] .hs{font-size:1.25rem}
 html[data-dev=desktop] .hh2{font-size:1.7rem;padding-left:14px;border-left:5px solid #4F46E5}
 html[data-dev=desktop] .npcgrid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
 html[data-dev=desktop] .gmb{min-height:150px;font-size:1.05rem}
+
+.dlgf .f2,#dlg .f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#dlg input[type=number],#dlg textarea,#dlg select{font:inherit;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.6);color:inherit;width:100%;box-sizing:border-box}
+.ptags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pdesc{margin:0 0 14px;max-width:60ch}
+.nolink ul{margin:.3em 0 0 1.1em;padding:0}.nolink{padding:10px 12px;border-radius:12px;background:rgba(181,71,47,.1)}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1206,7 +1211,7 @@ document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.pr
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
-function blank(){return {mode:'q',q:'era',metalChoice:'',picks:[],id:uid(),name:'',player:'',era:1,ancestry:'humano',blessing:'',cultures:['',''],extra:[],path:'',powers:{alo:[],fer:[]},
+function blank(){return {mode:'q',q:'era',metalChoice:'',picks:[],id:uid(),name:'',player:(session&&session.name)||'',era:1,ancestry:'humano',blessing:'',cultures:['',''],extra:[],path:'',powers:{alo:[],fer:[]},
  attrs:{fue:0,vel:0,int:0,vol:0,dis:0,pre:0},skills:{},talents:{ancestry:'',notes:''},kit:'',weapons:'',armor:'',gear:'',deflect:0,arquillas:0,done:false,tl:[],hpAdj:0,
  purpose:'',obstacle:'',goals:['',''],connection:'',look:'',notes:'',step:0,level:1}}
 function sample(){const c=blank();Object.assign(c,{mode:'f',metalChoice:'no',name:'Brannen (ejemplo inventado)',era:1,path:'guerrero',cultures:['Skaa','Bajos fondos'],extra:['Hacha de guerra'],
@@ -1261,7 +1266,7 @@ function status(c,i){if(c.done&&i<7)return 'ok';const d=derive(c);
   case 5:return c.kit?'ok':'warn';
   case 6:return c.purpose.trim()&&c.obstacle.trim()&&c.goals.some(g=>g.trim())?'ok':'warn';
   default:return ''}}
-const LOCKED=[0,1,6];const isLk=(c,k)=>!!c.done&&!c._pj&&LOCKED.includes(k);
+const LOCKED=[0,1,6];const isLk=(c,k)=>!!c.done&&LOCKED.includes(k);
 const STEPS=['Orígenes','Camino','Atributos','Habilidades','Talentos','Equipo','Historia','Hoja'];
 
 /* ---------- utilidades ---------- */
@@ -1291,7 +1296,7 @@ function anim(c){const a=$('#app');if(!a||booting)return;const nbm=!!(session&&(
    if(el){const t=el.dataset.d!==undefined&&el.closest('.step,.skc')?el.closest('.step,.skc').querySelector('output'):el;if(t){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop')}}}}
  if(prevNums.length){document.querySelectorAll('#side .stat b,.counter .n').forEach((x,i)=>{if(prevNums[i]!==undefined&&prevNums[i]!==x.textContent){x.classList.add('pop')}})}
  pg='';popSel='';fx=false}
-function render(keep){document.documentElement.dataset.mode=(session&&store.mode==='gm')?'gm':'p';const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
+function render(keep){if(session&&store&&Array.isArray(store.chars))for(const c of store.chars)if(c.player!==session.name)c.player=session.name;document.documentElement.dataset.mode=(session&&store.mode==='gm')?'gm':'p';const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
 let fx=false;
 const METALS_FX=['#9FB4C7','#C9CED3','#8B8F96','#C59E57','#B4683B','#A67B3C','#E3C14A','#7F8FA3','#D7B07A'];
 function metalFx(el,cc){try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=el.getBoundingClientRect();if(!r.width)return;
@@ -1346,8 +1351,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='66';
-const APPN='Invitaciones a todos con jugadores conectados, aviso emergente, permisos en vivo, guardar en NPC y nuevo menú para tablet.';
+const APPV='67';
+const APPN='Partidas con juego, era y parámetros; solo fichas terminadas y compatibles con la era; el nombre de jugador es tu usuario.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1580,7 +1585,7 @@ async function fsQuery(col,field,val){const t=await tok();let r;
  try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
  if(!r.ok)throw{code:'FS'+r.status};const j=await r.json();return j.filter(x=>x.document).map(x=>fbDec(x.document))}
 function pullInto(c,r){let nc;try{nc=normalize(JSON.parse(r.data))}catch(e){return}nc.id=c.id;nc.pid=c.pid;nc.rev=r.rev|0;nc.step=c.step;nc.mode=c.mode;nc._ph=pjData(nc);
- const i=store.chars.findIndex(x=>x.id===c.id);if(i>=0)store.chars[i]=nc;flashId=nc.id;save();toast('El Game Master ha modificado tu ficha «'+(nc.name||'sin nombre')+'»');if(session&&!document.hidden)render(1);flashCard()}
+ const i=store.chars.findIndex(x=>x.id===c.id);if(i>=0)store.chars[i]=nc;save();if(session&&!document.hidden)render(1)}
 function flashCard(){setTimeout(()=>{if(!flashId)return;const el=document.querySelector('.card[data-cid="'+flashId+'"]');if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}const t=document.querySelector('.chapter');if(t&&store.cur===flashId){t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash')}flashId=null},60)}
 async function pushLinked(){if(!session)return;for(const c of store.chars){if(!c.pid)continue;const h=pjData(c);if(c._ph===h)continue;
   try{const key=c.pid+'_'+session.uid;const d=await fs('GET','pjs/'+key);if(!d){delete c.pid;delete c.rev;delete c._ph;toast('Ya no estás en esa partida');save();continue}
@@ -1618,25 +1623,32 @@ function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(
  const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
  return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:'<p class="hint" style="margin:0">Todavía no ha elegido personaje.</p>'}
  <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">Ver y editar ficha</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
+
+function partTags(p){return `<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
+function pjOk(c,P){if(!c.done)return 'Ficha sin terminar';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
 function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
  const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending');
- return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master</p>
+ return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master</p><div class="meta ptags">${partTags(p)}</div>${p.desc?`<p class="hint pdesc">${esc(p.desc)}</p>`:''}
  <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3><button class="btn pri" data-act="partinv">Invitar jugador</button></div>
  <p class="hint">Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
  ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Invita a tus jugadores por su nombre de usuario.</p>'}
  ${inv.length?`<h3>Invitaciones pendientes</h3><div class="alist">${inv.map(i=>`<div class="arow"><div class="ahead" style="cursor:default"><span class="aav">✉</span><span class="anm"><b>${esc(i.toName||'Jugador')}</b><small>Esperando respuesta</small></span><button class="btn sm ghost" data-act="invcancel" data-id="${i.id}">Cancelar</button></div></div>`).join('')}</div>`:''}</section>
  <section class="glass" style="margin-top:16px"><div class="row"><button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
- ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta"><span>Game Master: tú</span></div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
+ ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
- if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
- if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta"><span>Game Master: ${esc(p.gmName||'—')}</span></div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':'Sin personaje elegido.'}</p><div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
+ if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><div class="meta ptags">${partTags(i)}</div><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
+ if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':'Sin personaje elegido.'}</p><div class="row"><button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
  return h}
-function linkDlg(pid,pname,accept,invId){const opts=store.chars.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
- showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> el Game Master podrá ver y modificar la ficha que elijas mientras estés en la partida. Puedes salir cuando quieras y te quedas con una copia.</p>
+function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const ok=store.chars.filter(c=>!pjOk(c,P)),no=store.chars.filter(c=>pjOk(c,P));
+ const opts=ok.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
+ const why=no.length?`<div class="hint nolink"><b>No pueden participar:</b><ul>${no.map(c=>`<li>${esc(c.name||'Sin nombre')} — ${pjOk(c,P)}</li>`).join('')}</ul></div>`:'';
+ showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> solo puedes aportar personajes con la ficha terminada y compatibles con la partida (${P.era?'Era '+P.era:'cualquier era'}). El Game Master podrá ver y modificar la ficha que elijas, salvo Orígenes, Camino e Historia. Puedes salir cuando quieras y te quedas con una copia.</p>${why}
  <label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
+  {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
+   if(accept&&(P.maxp|0)){const mm=await fsQuery('miembros','pid',pid);if(mm.length>=(P.maxp|0)){set('La partida ya está completa.','err');return}}}
   if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
   if(cid){const c=store.chars.find(x=>x.id===cid);if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,updated:Date.now()}));c.pid=pid;c.rev=0;c._ph=h}
@@ -1644,7 +1656,7 @@ async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv
   else if(!accept){try{await fs('DELETE','pjs/'+key)}catch(e){}}
   save();try{$('#dlg').close()}catch(x){}envFx(accept?'¡Te has unido a la partida!':'Personaje actualizado','open');partSig='';await loadParts();render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo completar. Inténtalo de nuevo.','err')}}
 async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
- try{const id=uid()+uid();await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now()}));try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+ try{const id=uid()+uid();const E=f.elements,era=+E.pe.value===2?2:1,maxlvl=Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,desc:String(E.pd.value||'').slice(0,300)}));try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const name=nameN(f.elements.un.value);if(name.length<3){set('Escribe el nombre de usuario completo.','err');return}
  const p=parts.find(x=>x.id===partId);if(!p)return;
  try{set('Buscando…');const nd=await fs('GET',nameDoc(name));if(!nd){set('No existe ningún usuario con ese nombre.','err');return}const uidT=fbDec(nd).uid;
@@ -1673,8 +1685,9 @@ function openInvite(){invSel=new Set();invQ='';invRows=[];
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('invq')){invQ=t.value;invDraw()}});
 document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.iu){if(t.checked)invSel.add(t.dataset.iu);else invSel.delete(t.dataset.iu);invDraw()}});
 async function sendInvites(all){const p=parts.find(x=>x.id===partId);if(!p)return;const targets=invRows.filter(r=>!r.st&&(all||invSel.has(r.uid)));if(!targets.length)return;
+ {const cnt=(partMem[p.id]||[]).length+(partInv[p.id]||[]).filter(i=>i.status==='pending').length;if((p.maxp|0)&&cnt+targets.length>(p.maxp|0)){toast('La partida admite '+p.maxp+' jugadores: quedan '+Math.max(0,(p.maxp|0)-cnt)+' plazas');return}}
  const btns=document.querySelectorAll('.invdlg .row .btn');btns.forEach(x=>x.disabled=true);let ok=0;
- for(const r of targets){try{await fs('PATCH','invitaciones/'+p.id+'_'+r.uid,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:r.uid,toName:r.name,status:'pending',created:Date.now()}));ok++}catch(e){}}
+ for(const r of targets){try{await fs('PATCH','invitaciones/'+p.id+'_'+r.uid,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:r.uid,toName:r.name,status:'pending',created:Date.now(),game:p.game||'nb',era:p.era|0,maxlvl:p.maxlvl|0,maxp:p.maxp|0}));ok++}catch(e){}}
  clearInterval(invTm);invTm=0;try{$('#dlg').close()}catch(x){}
  if(ok){envFx(ok>1?'Invitaciones enviadas':'Invitación enviada','send');toast(ok+(ok>1?' invitaciones enviadas':' invitación enviada'))}else toast('No se pudo enviar. Inténtalo de nuevo.');
  await loadPart(p.id);render(1)}
@@ -1734,7 +1747,7 @@ function sOrig(c){
  return `<section class="panel"><h3>Paso 1. Orígenes${helpBtn('origenes')}</h3>
  <p class="hint lead">Tu ascendencia es de quién desciendes; tu cultura, dónde creciste. Pueden no coincidir.</p>
  <label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label>
- <label class="f">Nombre del jugador<input type="text" data-f="player" value="${esc(c.player)}" autocomplete="off"></label>
+ <p class="hint" style="margin:0">Jugador: <b>${esc(c.player||(session&&session.name)||'')}</b> (tu nombre de usuario)</p>
  <div class="f"><span style="font-weight:600;font-size:.92rem">Era de la partida</span><div class="seg">
   <button data-act="era" data-v="1" aria-pressed="${c.era===1}"><b>${eraTag(1)} Imperio Final</b><span>Imperio Final y Colapso</span></button>
   <button data-act="era" data-v="2" aria-pressed="${c.era===2}"><b>${eraTag(2)} Tras el Catacendro</b><span>Tras el Catacendro</span></button></div></div>
@@ -1904,7 +1917,7 @@ const addQ=o=>Q.push(Object.assign({show:()=>true,v:()=>true,h:()=>''},o));
 addQ({id:'era',sec:'Orígenes',t:()=>'¿En qué era se ambienta vuestra partida?',h:()=>'Lo decide la DJ. Cambia las culturas, ascendencias y caminos que puedes elegir.',
  r:c=>seg([{v:'1',b:eraTag(1)+' Imperio Final y Colapso',s:'El lord Legislador gobierna, o acaba de caer.'},{v:'2',b:eraTag(2)+' Tras el Catacendro',s:'Elendel, los Áridos y las armas de fuego.'}],String(c.era),'era')});
 addQ({id:'name',sec:'Orígenes',t:()=>'¿Cómo se llama tu personaje?',h:()=>'Los nombres tienen poder. Puede inspirarse en su cultura, pero no tiene por qué.',
- r:c=>`<label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><label class="f">Tu nombre como jugador (opcional)<input type="text" data-f="player" value="${esc(c.player)}" autocomplete="off"></label>`,v:c=>!!c.name.trim()});
+ r:c=>`<label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><p class="hint" style="margin:0">Jugador: <b>${esc(c.player||(session&&session.name)||'')}</b> (tu nombre de usuario)</p>`,v:c=>!!c.name.trim()});
 addQ({id:'anc',sec:'Orígenes',t:()=>'¿De quién desciende tu personaje?',h:()=>'La ascendencia es la especie. Tu cultura se elige después y puede ser distinta.',
  r:c=>seg([{v:'humano',b:'Humano',s:'Un talento adicional de un camino heroico.'},{v:'kandra',b:'Kandra',s:'Solo 6 puntos de atributo, pero con una Bendición. Imitan a otros cuerpos.'},...(c.era===2?[{v:'koloss',b:'Sangre koloss',s:'Fuerza hasta 4 y +1 de salud.'}]:[])],c.ancestry,'anc')});
 addQ({id:'bless',sec:'Orígenes',show:c=>c.ancestry==='kandra',t:()=>'¿Qué Bendición lleva tu kandra?',h:()=>'Es un par de clavos hemalúrgicos que da sapiencia y un beneficio. Se aplica incluso bajo un disfraz.',
@@ -2077,7 +2090,11 @@ document.addEventListener('click',e=>{
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
-  case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre que verán tus jugadores.</p><label class="f">Nombre de la partida<input type="text" name="pn" maxlength="40" autocomplete="off" required></label><div id="pmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Crear partida</button></div></form>`,true);break
+  case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre y las reglas de la mesa.</p><label class="f">Nombre de la partida<input type="text" name="pn" maxlength="40" autocomplete="off" required></label>
+<label class="f">Juego<select name="pg">${NPCGAMES.map(([k,n,on])=>`<option value="${k}"${on?'':' disabled'}>${n}${on?'':' (próximamente)'}</option>`).join('')}</select></label>
+<div class="f"><span style="font-weight:700">Era</span><div class="seg" role="group" aria-label="Era"><button type="button" data-act="peraset" data-v="1" aria-pressed="true">Era 1 · Imperio Final</button><button type="button" data-act="peraset" data-v="2" aria-pressed="false">Era 2 · Tras el Catacendro</button></div><input type="hidden" name="pe" value="1"><small class="hint">En Era 2 también pueden jugar kandra creados en Era 1.</small></div>
+<div class="f2"><label class="f">Nivel máximo de personaje<input type="number" name="pl" min="0" max="30" value="0" inputmode="numeric"><small class="hint">0 = sin límite</small></label><label class="f">Jugadores máximos<input type="number" name="pm" min="1" max="12" value="6" inputmode="numeric"></label></div>
+<label class="f">Descripción o reglas de la casa (opcional)<textarea name="pd" rows="3" maxlength="300"></textarea></label><div id="pmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Crear partida</button></div></form>`,true);break
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
   case 'partinv':openInvite();break
   case 'partinv_old':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
@@ -2086,6 +2103,7 @@ document.addEventListener('click',e=>{
   case 'kick2':{const p=b.dataset.p,u=b.dataset.u;try{$('#dlg').close()}catch(x){}kickPlayer(p,u).then(()=>loadPart(p)).then(()=>{render(1);toast('Jugador quitado')});break}
   case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
+  case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
   case 'fbub':break
   case 'ppx':closePop();break
   case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
