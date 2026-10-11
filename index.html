@@ -756,7 +756,7 @@ async function doAuth(f){
   if(fails>0)await wait(Math.min(fails*700,5000));
   let ok=false;
   if(rec){try{const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)===rec.auth){const key=await aesKey(dk.raw);const d=await dec(key,rec.data);startSession(k,rec,key,dk.raw,Array.isArray(d.chars)?d.chars:[],d.avatar);ok=true}}catch(e){}}
-  if(!ok){fails++;set('Usuario o contraseña incorrectos.','err');return}
+  if(!ok){fails++;set(rec?'La contraseña no es correcta para ese usuario. Pulsa «Ver» para comprobar lo que escribes.':'No hay ninguna cuenta con ese usuario en este navegador y dirección. Si tu cuenta está en otra dirección o dispositivo, usa «Tengo una copia de seguridad».','err');return}
   fails=0;render();
  }catch(e){set('Algo ha fallado. Inténtalo de nuevo.','err')}
  finally{authBusy=false;const b=f.querySelector('button[type=submit]');if(b)b.disabled=false}}
@@ -929,8 +929,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='49';
-const APPN='Recordar usuario más robusto (guardado doble).';
+const APPV='50';
+const APPN='Avisos de acceso más claros y descarga de PDF fuera de Claude.';
 let updInfo=null,updBusy=false,updDismiss='';
 async function checkUpdate(manual){
  if(updBusy)return 'busy';updBusy=true;
