@@ -283,6 +283,11 @@ html[data-mode=gm] .tbin{border-color:#B5472F}html[data-mode=gm] #fdock{border-c
 @keyframes rvfl{0%{box-shadow:0 0 0 0 rgba(197,158,87,.95)}100%{box-shadow:0 0 0 22px rgba(197,158,87,0)}}
 @media(prefers-reduced-motion:no-preference){.npcc.stg{animation:npcin .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*70ms)}
  #dicefx .dr span{animation:dicerot .55s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}#modefx{animation:modeIn .7s ease-in forwards}.npcc.flash{animation:rvfl 1s ease-out}}
+.gmgames{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 16px}.gmgames>span{font-weight:800;font-size:.85rem;margin-right:4px}
+.gmg{all:unset;box-sizing:border-box;cursor:pointer;padding:9px 16px;border-radius:99px;border:1px solid rgba(120,125,140,.4);background:rgba(255,255,255,.55);color:var(--h-ink,#121B2E);font-weight:700;font-size:.9rem;transition:transform .18s,background-color .18s,box-shadow .18s}
+.gmg:hover{transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(10,15,40,.5)}.gmg:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
+.gmg[aria-pressed=true]{background:#4F46E5;color:#fff;border-color:#4F46E5}.gmg[aria-disabled=true]{opacity:.65}.gmg em{font-style:normal;font-size:.7rem;margin-left:4px;opacity:.85}
+:root[data-theme="dark"] .gmg:not([aria-pressed=true]){background:rgba(24,32,51,.7);color:#EDF0F6}
 /* barra superior (PC) */
 body.has-tb{padding-top:74px}
 html[data-dev=desktop] body .wrap{padding-bottom:50px}
@@ -895,7 +900,7 @@ let saveT=null,dirty=false,flushing=null;
 const FKEY=u=>'mesa-larga-fichas-'+u;
 function save(){if(!session)return;clearTimeout(saveT);saveT=setTimeout(flush,1200)}
 function flush(){if(!session)return Promise.resolve();clearTimeout(saveT);if(flushing)return flushing.then(()=>{if(dirty)return flush()});
- const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p'});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
+ const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p',gmGame:store.gmGame||'nb'});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
  if(data.length>900000){toast('Tus fichas ocupan demasiado: borra alguna o quita la imagen de usuario');dirty=false;return Promise.resolve()}
  flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0;pushShared()}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
 async function loadFichas(s){let cloud=null,err=null;
@@ -933,7 +938,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';setTimeout(fetchRevealed,400);
+ session=s;cand=null;pend=null;store={chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null};scr='menu';regCache=null;revealed=[];revSig='';setTimeout(fetchRevealed,400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1092,7 +1097,7 @@ async function doRen(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.c
   session.name=name;dockSig='';render(1);set('Nombre cambiado.','ok');const t=document.querySelector('#dlg h3');if(t)t.textContent='Cuenta de '+name}
  catch(e){set(e.code==='NET'?aMsg(e):'No se pudo cambiar el nombre. Inténtalo de nuevo.','err')}}
 function doNpcR(f){const o={arch:f.elements.arch.value,kind:f.elements.kind.value,level:f.elements.level.value};try{$('#dlg').close()}catch(x){}
- diceFx(()=>{const n=npcGen(o);store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
+ diceFx(()=>{const n=npcGen(o);n.game=store.gmGame||'nb';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
 document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.nf)return;const n=npcCur();if(!n)return;const p=t.dataset.nf.split('.');
  if(p[0]==='atk'){const a=n.attacks[+p[1]];if(a)a[p[2]]=t.value}else n[p[0]]=t.value;
  if(p[0]==='name'){const h=document.querySelector('.hh');if(h)h.textContent=t.value||'NPC sin nombre'}save()});
@@ -1248,8 +1253,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='63';
-const APPN='Nuevo modo Game Master: crea NPC aleatorios o personalizados y revélalos a los jugadores.';
+const APPV='64';
+const APPN='Elige para qué juego creas cada NPC.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1385,6 +1390,8 @@ const NPCARCH=[
  {id:'tirador',n:'Arquero o tirador',w:[1,3,0,0,2,0],sk:['armlig','percepcion','sigilo','supervivencia','agilidad'],atk:['Arco','Honda','Ballesta ligera'],gear:['Carcaj','Capa de camuflaje','Cuerda']},
  {id:'lider',n:'Líder o cabecilla',w:[1,0,1,2,1,3],sk:['liderazgo','persuasion','intimidacion','perspicacia','disciplina'],atk:['Espada','Pistola de chispa','Cuchillo'],gear:['Mapa de la zona','Distintivo de la banda','Llave maestra']},
  {id:'aldeano',n:'Aldeano o trabajador',w:[1,1,1,1,1,1],sk:['supervivencia','manufactura','atletismo','percepcion'],atk:['Herramienta de trabajo','Cuchillo'],gear:['Ropa de faena','Mochila','Pan duro']}];
+const NPCGAMES=[['nb','Nacidos de la Bruma',1],['arch','El archivo de las tormentas',0]];
+const gameName=g=>(NPCGAMES.find(x=>x[0]===g)||NPCGAMES[0])[1];
 const NPCKIND={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss',otro:'Otro'};
 const NPC_PRE=['Ka','Ve','Ras','Tel','Mar','Dox','Ila','Sor','Bren','Cal','Yen','Orv','Lis','Tam','Hal','Quor','Nes','Zeb','Fen','Ur','Tor','Mel','Dar','Ysa'],NPC_MID=['','','an','el','or','in','ar','us','ei'],NPC_END=['a','en','is','ok','ar','el','um','ia','ith','os','ana','ek'];
 const NPC_ALIAS=['el Cojo','la Sombra','Manos Frías','el Viejo','de los Muelles','Ojo Torcido','la Callada','el Contable','Dedos Largos','el Gris','la Zurda','Piedra'];
@@ -1395,7 +1402,7 @@ const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function npcName(){let n=rnd(NPC_PRE)+rnd(NPC_MID)+rnd(NPC_END);return Math.random()<.4?n+' '+rnd(NPC_ALIAS):n}
 function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0,pre:0},o.attrs);
- return{id:o.id||uid(),name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,
+ return{id:o.id||uid(),game:NPCGAMES.some(x=>x[0]===o.game)?o.game:'nb',name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,
   skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||'')})):[],
   traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,created:o.created||Date.now()}}
 const npcCap=l=>Math.min(5,3+Math.floor(l/3));
@@ -1418,9 +1425,10 @@ function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.i
  if(kind==='koloss')n.traits+=' Sangre koloss: robusto y de gran tamaño.';if(kind==='kandra')n.traits+=' Kandra: puede cambiar de forma según tu mesa.';return n}
 function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
-function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span>${n.shared?'<span class="tag rv">Revelado</span>':''}</div>${npcSummary(n)}
+function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">Revelado</span>':''}</div>${npcSummary(n)}
  <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Ocultar':'Revelar'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
-function gmHome(){const l=store.npcs||[];const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Crea y gestiona los personajes no jugadores de tu mesa.</p>
+function gmHome(){const g=store.gmGame||'nb',l=(store.npcs||[]).filter(x=>x.game===g);const h=hubBar(null)+`<h1 class="hh">Game Master</h1><p class="hs">Crea y gestiona los personajes no jugadores de tu mesa.</p>
+ <div class="gmgames" role="group" aria-label="Juego"><span>Juego</span>${NPCGAMES.map(([k,n,on])=>`<button type="button" class="gmg" data-act="gmgame" data-v="${k}" aria-pressed="${g===k}"${on?'':' aria-disabled="true"'}>${n}${on?'':' <em>Próximamente</em>'}</button>`).join('')}</div>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${l.length?`<div class="npcgrid">${l.map(npcCard).join('')}</div>`:`<section class="glass"><p class="hint" style="margin:0">Todavía no has creado ningún NPC. Prueba con uno aleatorio para tener un punto de partida.</p></section>`}`;
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
@@ -1435,7 +1443,7 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
  const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
  const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
- return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC${n.shared?' · revelada a los jugadores':''}</p>
+ return hubBar(['menu','Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · revelada a los jugadores':''}</p>
  <section class="npcpanel glass"><div class="grid">
  <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
  <label class="f">Tipo<select data-nf="kind">${Object.entries(NPCKIND).map(([k,v])=>`<option value="${k}"${n.kind===k?' selected':''}>${v}</option>`).join('')}</select></label>
@@ -1848,9 +1856,10 @@ document.addEventListener('click',e=>{
   case 'atab':authTab=v;render();break;
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
+  case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'mode':setMode(store.mode==='gm'?'p':'gm');break;
-  case 'npcnew':{const n=npcNorm({name:'',role:'',level:1});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
-  case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
+  case 'npcnew':{const n=npcNorm({name:'',role:'',level:1,game:store.gmGame||'nb'});store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();break}
+  case 'npcrand':{showDlg('NPC aleatorio',`<form id="npcrform" class="grid" novalidate><p class="hint" style="margin:0">Juego: <b>${gameName(store.gmGame)}</b>. Elige lo que quieras fijar; lo demás lo decide el azar. Después podrás editar todo.</p>
     <label class="f">Tipo de personaje<select name="arch"><option value="any">Cualquiera</option>${NPCARCH.map(a=>`<option value="${a.id}">${a.n}</option>`).join('')}</select></label>
     <label class="f">Origen<select name="kind"><option value="any">Al azar</option>${Object.entries(NPCKIND).filter(x=>x[0]!=='otro').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
     <label class="f">Nivel (1 a 30, vacío = al azar)<input type="number" name="level" min="1" max="30" inputmode="numeric"></label>
