@@ -243,6 +243,11 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 @keyframes pgf{from{opacity:0}to{opacity:1}}
 @keyframes pgb{from{opacity:0}to{opacity:1}}
 /* ayuda del manual, ficha terminada */
+.onl{padding:10px 12px;border:1px solid var(--line);border-radius:12px}.onc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.onp{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;background:rgba(63,107,82,.16);font-weight:600;font-size:.85rem}
+.onp i,.dot-on{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2FA86B;box-shadow:0 0 0 0 rgba(47,168,107,.6)}.dot-on{margin-right:4px}
+@media(prefers-reduced-motion:no-preference){.onp i,.dot-on{animation:onp 2s infinite}}
+@keyframes onp{0%{box-shadow:0 0 0 0 rgba(47,168,107,.6)}70%{box-shadow:0 0 0 7px rgba(47,168,107,0)}100%{box-shadow:0 0 0 0 rgba(47,168,107,0)}}
 .chip.lk{opacity:.6}.lkic{width:13px;height:13px;margin-left:5px;vertical-align:-2px}
 .hq{all:unset;box-sizing:border-box;float:right;display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:2px 10px 2px 7px;border-radius:99px;background:rgba(255,255,255,.16);color:inherit;font:600 .72rem/1.4 var(--sans,system-ui);letter-spacing:.02em;cursor:pointer;border:1px solid rgba(255,255,255,.35)}
 .hq svg{width:15px;height:15px}
@@ -774,7 +779,7 @@ async function fs(m,p,body,q){const t=await tok();let r;
  if(r.status===404)return null;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
 async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
-async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;fs('PATCH','users/'+S().uid,fbEnc({seen:Date.now()}),maskQ({seen:1})).catch(()=>{});return 'ok'}
+async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n,ping:n}),maskQ({seen:1,ping:1})).catch(()=>{})}return 'ok'}
 async function claimProfile(name){const s=S();
  try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
  await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
@@ -806,6 +811,11 @@ async function loadFichas(s){let cloud=null,err=null;
  const use=loc&&(!cloud||loc.t>cloud.t)?loc:cloud;if(use===loc&&loc)dirty=true;
  try{return use?JSON.parse(use.d):{chars:[],avatar:''}}catch(e){return{chars:[],avatar:''}}}
 window.addEventListener('online',()=>{if(dirty)flush()});
+const ONLINE_MS=150000;
+const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
+function beat(){if(!session||session.owner||document.hidden)return;fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}),maskQ({ping:1})).catch(()=>{})}
+setInterval(beat,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()});
+setInterval(()=>{if(!session||!canAdm()||document.hidden||admState)return;if(document.querySelector('#owl .admw,#dlg[open] .admw'))fsList('users').then(l=>{regCache=l;if(!admState)admView()}).catch(()=>{})},30000);
 setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
 function ckGet(k){try{const m=document.cookie.split('; ').find(x=>x.indexOf(k+'=')===0);return m?decodeURIComponent(m.slice(k.length+1)):''}catch(e){return ''}}
 function ckSet(k,v){try{document.cookie=k+'='+encodeURIComponent(v)+'; max-age=31536000; path=/; SameSite=None; Secure'}catch(e){}}
@@ -924,8 +934,9 @@ function admView(){
   if(isAdmin()&&!self)ctl+=`<div class="seg" role="group" aria-label="Permisos de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
   if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
   if(act==='del')extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`;
-  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>${isAdmin()&&r.email?esc(r.email)+' · ':''}Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
- admShow(`<div class="grid"><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede leer las fichas de otros desde aquí.</p>
+  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>${isOn(r)?'<i class="dot-on"></i>En línea · ':''}${isAdmin()&&r.email?esc(r.email)+' · ':''}Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
+ const onl=all.filter(isOn).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
+ admShow(`<div class="grid admw"><div class="onl"><b>En línea ahora: ${onl.length}</b>${onl.length?`<div class="onc">${onl.map(r=>`<span class="onp"><i></i>${esc(r.name)}</span>`).join('')}</div>`:'<p class="hint" style="margin:4px 0 0">Ahora mismo no hay nadie conectado.</p>'}<p class="hint" style="margin:4px 0 0">Cuenta a quien tiene la app abierta y a la vista. Se actualiza solo cada 30 s.</p></div><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede leer las fichas de otros desde aquí.</p>
  <p class="hint" style="margin:0">${isAdmin()?'Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>). Un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Tienes permiso para ver las cuentas.'}</p>
  <div class="list">${rows||'<p class="hint">Todavía no hay cuentas.</p>'}</div><div class="row"><button class="btn sm ghost" data-act="admre">Actualizar lista</button></div></div>`)}
 function ownerView(){setTimeout(()=>{if(session&&session.owner){if(regCache)admView();else admLoad()}},0);return hubBar(null)+`<h1 class="hh">Administración</h1><p class="hs">Cuentas de la app y permisos.</p><section class="authhub" id="owl"><p class="hint">Cargando…</p></section>`}
@@ -935,6 +946,7 @@ function acctDlg(){
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
  ${session.owner?'':`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Se recorta en círculo y se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button>${store.avatar?'<button class="btn sm ghost" data-act="avdel">Quitar</button>':''}</div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div>`}
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
+${session.owner?'':`<form id="renform" class="grid" novalidate><b>Nombre de usuario</b><label class="f">Nombre<input type="text" name="rn" value="${esc(session.name)}" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar nombre</button></div></form>`}
  ${session.owner?'':`<form id="impform" class="grid" novalidate><b>Importar cuenta antigua</b><p class="hint" style="margin:0">Si tenías una cuenta de antes (usuario y contraseña) en este dispositivo, escríbelos y sus fichas pasarán a esta cuenta. Si estaba en otro dispositivo, pega su copia de seguridad.</p>
  <label class="f">Usuario antiguo<input type="text" name="iu" autocomplete="off" autocapitalize="none" spellcheck="false"></label>${pwf('ip','Contraseña antigua','off')}<label class="f">Copia de seguridad (opcional)<textarea name="ib" rows="2" placeholder="FSC1:…"></textarea></label><div id="imsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Importar fichas</button></div></form>`}
  <form id="pwform" class="grid" novalidate><b>Cambiar contraseña</b>${pwf('p0','Contraseña actual','current-password')}${pwf('p1','Contraseña nueva','new-password')}${pwf('p2','Repite la nueva','new-password')}<div id="pmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar contraseña</button></div><p class="hint" style="margin:0">Si no te acuerdas de la actual, cierra sesión y usa «¿Has olvidado tu contraseña?».</p></form>
@@ -953,6 +965,17 @@ async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.c
   await aCall('delete',{idToken:session.idToken});lsDel(FKEY(u));dirty=false;
   session=null;store={chars:[],cur:null};skClear();lsDel(UKEY);ckDel(UKEY);
   try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}authTab='login';render();toast('Cuenta borrada')}catch(x){set(aMsg(x),'err')}}
+async function doRen(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
+ const name=nameN(f.elements.rn.value);
+ if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
+ if(name===session.name){set('Ese ya es tu nombre.','ok');return}
+ try{set('Comprobando…');const old=session.name,same=nameK(name)===nameK(old);
+  if(!same){try{await fs('PATCH',nameDoc(name),fbEnc({uid:session.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code)){set('Ese nombre ya está escogido por otra persona.','err');return}throw e}}
+  await fs('PATCH','users/'+session.uid,fbEnc({name}),maskQ({name:1}));
+  if(!same)fs('DELETE',nameDoc(old)).catch(()=>{});
+  aCall('update',{idToken:await tok(),displayName:name,returnSecureToken:false}).catch(()=>{});
+  session.name=name;dockSig='';render(1);set('Nombre cambiado.','ok');const t=document.querySelector('#dlg h3');if(t)t.textContent='Cuenta de '+name}
+ catch(e){set(e.code==='NET'?aMsg(e):'No se pudo cambiar el nombre. Inténtalo de nuevo.','err')}}
 async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{loadAccounts();const bk=(f.elements.ib.value||'').trim(),pw=f.elements.ip.value;let rec=null;
   if(bk){if(!bk.startsWith('FSC1:')){set('Ese texto no es una copia de seguridad.','err');return}try{rec=JSON.parse(new TextDecoder().decode(unb64(bk.slice(5))))}catch(x){set('La copia de seguridad está dañada.','err');return}}
@@ -961,7 +984,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -1104,8 +1127,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='56';
-const APPN='Nuevo sistema de cuentas: inicia sesión con tu correo (con verificación), recupera tu contraseña y guarda tus fichas en la nube. Entra con una cuenta nueva; tus fichas antiguas se importan desde Cuenta.';
+const APPV='57';
+const APPN='Ahora puedes cambiar tu nombre de usuario desde Cuenta, y los administradores ven quién está en línea.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1594,7 +1617,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session&&!session.owner)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admDlg()}break;
