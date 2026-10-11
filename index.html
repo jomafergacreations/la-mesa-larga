@@ -242,6 +242,36 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 @keyframes flash{0%{background-color:color-mix(in srgb,var(--accent) 28%,var(--field))}100%{background-color:var(--field)}}
 @keyframes pgf{from{opacity:0}to{opacity:1}}
 @keyframes pgb{from{opacity:0}to{opacity:1}}
+/* barra superior (PC) */
+body.has-tb{padding-top:74px}
+html[data-dev=desktop] body .wrap{padding-bottom:50px}
+html[data-dev=desktop] body.has-tb .side{top:90px}
+#topbar{position:fixed;top:0;left:0;right:0;z-index:60;padding:10px 20px;pointer-events:none;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#topbar.hide{transform:translateY(-110%)}
+.tbin{pointer-events:auto;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:6px 10px;border-radius:22px;background:rgba(255,255,255,.8);border:1px solid rgba(120,125,140,.25);box-shadow:0 14px 34px -16px rgba(10,15,40,.55);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);color:var(--h-ink,#121B2E);font-family:var(--sans,system-ui)}
+body:not(.hub) .tbin{color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tbin{background:rgba(24,32,51,.82);border-color:rgba(255,255,255,.12)}}
+:root[data-theme="dark"] .tbin{background:rgba(24,32,51,.82);border-color:rgba(255,255,255,.12)}
+.tbbrand,.tbi,.tbd button{all:unset;box-sizing:border-box;cursor:pointer;font-family:inherit}
+.tbbrand{display:flex;align-items:center;gap:10px;padding:4px 10px 4px 4px;border-radius:14px;font-size:1rem}.tbbrand svg{width:30px;height:30px}.tbbrand:hover{background:rgba(79,70,229,.1)}
+.tbnav{position:relative;display:flex;align-items:center;gap:4px;margin-right:auto}
+.tbr{display:flex;align-items:center;gap:4px}
+.tbi{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:14px;font-size:.9rem;font-weight:700;position:relative;transition:background-color .18s,transform .18s}
+.tbi svg{width:20px;height:20px;flex:none}.tbi .avs{margin:0;width:26px;height:26px}.tbi .tbch{width:14px;height:14px;transition:transform .25s}
+.tbi:hover{background:rgba(79,70,229,.12);transform:translateY(-1px)}.tbi:focus-visible,.tbbrand:focus-visible,.tbd button:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
+.tbi.cur{color:#4F46E5}
+.tbm{position:relative}.tbm.open>.tbi .tbch{transform:rotate(180deg)}
+.tbd{position:absolute;right:0;top:calc(100% + 8px);min-width:210px;padding:6px;border-radius:16px;background:rgba(255,255,255,.97);color:#121B2E;border:1px solid rgba(120,125,140,.25);box-shadow:0 18px 40px -14px rgba(10,15,40,.6);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top right;transition:opacity .2s,transform .2s,visibility .2s}
+.tbnav .tbd{right:auto;left:0;transform-origin:top left}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tbd{background:rgba(24,32,51,.98);color:#EDF0F6}}
+:root[data-theme="dark"] .tbd{background:rgba(24,32,51,.98);color:#EDF0F6}
+.tbm.open>.tbd{opacity:1;visibility:visible;transform:none}
+.tbd button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:11px;font-size:.9rem;font-weight:600;transition:background-color .15s,transform .15s}
+.tbd button:hover{background:rgba(79,70,229,.14);transform:translateX(3px)}.tbd button svg{width:18px;height:18px}.tbd em{margin-left:auto;font-style:normal;color:#4F46E5}
+.tbind{position:absolute;left:0;bottom:-3px;height:3px;width:0;border-radius:3px;background:var(--gold,#C59E57);opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.3,1.2,.4,1),width .3s cubic-bezier(.3,1.2,.4,1),opacity .2s}
+@media(prefers-reduced-motion:no-preference){#topbar.in .tbin{animation:tbin .6s cubic-bezier(.2,1.1,.3,1) both}}
+@media(prefers-reduced-motion:reduce){#topbar,.tbd,.tbind,.tbi,.tbd button{transition:none}}
+@keyframes tbin{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:none}}
 /* ayuda del manual, ficha terminada */
 dialog.admd{width:min(940px,96vw);max-width:96vw;max-height:92dvh;overflow:auto}
 .admh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.admh .btn{margin-left:auto}
@@ -1169,10 +1199,10 @@ const BGD='<svg class="bgd" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid 
 const DIEI='<svg viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><rect x="7" y="7" width="46" height="46" rx="12"/></g><g fill="currentColor"><circle cx="21" cy="21" r="4"/><circle cx="39" cy="21" r="4"/><circle cx="30" cy="30" r="4"/><circle cx="21" cy="39" r="4"/><circle cx="39" cy="39" r="4"/></g></svg>';
 function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(pointer:coarse)').matches;
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
- const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
+ const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='59';
-const APPN='El administrador vuelve a poder crear fichas y jugar, y el panel de Administración es más grande, interactivo y se actualiza en directo.';
+const APPV='60';
+const APPN='En PC, el menú pasa a una barra superior con menús desplegables.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1230,7 +1260,34 @@ setInterval(tickClock,15000);document.addEventListener('visibilitychange',()=>{i
 const OUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.500 1.500 0 0 1 20 5.500v13a1.500 1.500 0 0 1-1.500 1.500H14M10 8l-4 4 4 4M6 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5.500c0 4.500 3.200 7.800 7.500 9.500 4.300-1.700 7.500-5 7.500-9.500V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 let dockSig='';
-function fdockUpdate(c){let d=document.getElementById('fdock');if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';return}
+const CHEV='<svg class="tbch" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const isDesk=()=>document.documentElement.dataset.dev==='desktop';
+function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
+ document.body.classList.add('has-tb');
+ const sig=['tb',scr,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ if(t.dataset.sig===sig)return;t.dataset.sig=sig;
+ const home=(scr==='menu'&&!c),th=getTheme();
+ const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
+ t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${DIEI}<b>La Mesa Larga</b></button>
+ <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi${home?' cur':''}" data-act="gohome" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button>
+ ${canAdm()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${it('adm','Panel de administración')}${it('admon','Usuarios en línea')}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
+ <div class="tbr"><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
+ <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
+ setTimeout(()=>tbInd(),30);
+ if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
+function tbInd(el){const n=document.querySelector('#topbar .tbnav');if(!n)return;const i=n.querySelector('.tbind');if(!i)return;const t=el||n.querySelector('.tbi.cur');
+ if(!t){i.style.width='0px';i.style.opacity='0';return}const a=n.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.transform='translateX('+(b.left-a.left)+'px)'}
+function closeTb(){document.querySelectorAll('#topbar .tbm.open').forEach(m=>{m.classList.remove('open');const b=m.querySelector('.tbi');if(b)b.setAttribute('aria-expanded','false')})}
+document.addEventListener('pointerover',e=>{const b=e.target.closest&&e.target.closest('#topbar .tbnav .tbi');if(b)tbInd(b)});
+document.addEventListener('pointerout',e=>{const n=e.target.closest&&e.target.closest('#topbar .tbnav');if(n&&!n.contains(e.relatedTarget))tbInd()});
+document.addEventListener('click',e=>{if(!e.target.closest('#topbar .tbm')||e.target.closest('.tbd [data-act]'))closeTb()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTb()});
+{let ly=0;addEventListener('scroll',()=>{const t=document.getElementById('topbar');if(!t)return;const y=scrollY;if(y>90&&y>ly+4&&!t.querySelector('.tbm.open'))t.classList.add('hide');else if(y<ly-4||y<=90)t.classList.remove('hide');ly=y},{passive:true})}
+addEventListener('resize',()=>{setTimeout(()=>{if(session&&!booting){dockSig='';fdockUpdate(cur())}tbInd()},160)});
+function fdockUpdate(c){let d=document.getElementById('fdock');
+ if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');dockSig='';return}
+ if(isDesk()){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';topbarUpdate(c);return}
+ {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb')}
  const sig=[scr,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
  d.classList.toggle('above',!!c&&!c.done);
@@ -1285,7 +1342,7 @@ function home(){
  ${store.chars.length?`<div class="grid cards">${cards}</div>`:
  `<div class="empty"><h2>Aún no hay personajes</h2><p>Crea uno siguiendo los ocho pasos del manual. La app calcula salud, concentración, Investidura, defensas y modificadores mientras eliges. Todo se guarda en este dispositivo.</p>
  <div class="row" style="justify-content:center"><button class="btn pri" data-act="new">Crear la primera ficha</button><button class="btn" data-act="sample">Ver un ejemplo inventado</button></div></div>`}
- <p class="hint" style="margin-top:16px">Tus fichas se guardan cifradas en este dispositivo, dentro de tu cuenta. Para llevarlas a otro, usa Cuenta y copia de seguridad; para pasar una sola, usa Exportar dentro de la ficha.</p>`}
+ <p class="hint" style="margin-top:16px">Tus fichas se guardan en la nube, dentro de tu cuenta, y las ves desde cualquier dispositivo; para pasar una sola, usa Exportar dentro de la ficha.</p>`}
 
 function statsPanel(c){const d=derive(c);
  return `<div class="panel"><h3>Hoja calculada${helpBtn('calculada')}</h3>
@@ -1652,7 +1709,9 @@ document.addEventListener('click',e=>{
  switch(a){
   case 'atab':authTab=v;render();break;
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
-  case 'theme':setTheme(v);setTimeout(closeTpop,160);break;
+  case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
+  case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
+  case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
   case 'gohome':store.cur=null;scr='menu';try{save()}catch(x){}render();break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
