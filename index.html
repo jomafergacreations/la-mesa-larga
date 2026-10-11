@@ -243,6 +243,7 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 @keyframes pgf{from{opacity:0}to{opacity:1}}
 @keyframes pgb{from{opacity:0}to{opacity:1}}
 /* ayuda del manual, ficha terminada */
+.chip.lk{opacity:.6}.lkic{width:13px;height:13px;margin-left:5px;vertical-align:-2px}
 .hq{all:unset;box-sizing:border-box;float:right;display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:2px 10px 2px 7px;border-radius:99px;background:rgba(255,255,255,.16);color:inherit;font:600 .72rem/1.4 var(--sans,system-ui);letter-spacing:.02em;cursor:pointer;border:1px solid rgba(255,255,255,.35)}
 .hq svg{width:15px;height:15px}
 .hq:hover,.hq:focus-visible{background:rgba(255,255,255,.3)}
@@ -626,16 +627,16 @@ dialog.acctd{padding-bottom:104px}
 .skt.invt{opacity:.75}
 @media(prefers-reduced-motion:no-preference){.skt.has{animation:pop .3s ease-out}}
 
-dialog#updf{padding:0;border:0;border-radius:0;margin:0;max-width:none;max-height:none;width:100vw;height:100vh;height:100dvh;background:radial-gradient(70% 50% at 50% 28%,rgba(99,102,241,.55),transparent 70%),radial-gradient(60% 40% at 80% 90%,rgba(15,157,154,.4),transparent 70%),#0E1426;color:#fff;font-family:var(--sans);overflow:auto}
+dialog#updf{padding:0;border:0;border-radius:0;margin:0;max-width:none;max-height:none;width:100vw;height:100vh;height:100dvh;background:radial-gradient(70% 50% at 50% 28%,rgba(99,102,241,.45),transparent 70%),radial-gradient(60% 40% at 80% 90%,rgba(15,157,154,.32),transparent 70%),rgba(14,20,38,.55);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);color:#fff;font-family:var(--sans);overflow:auto}
 dialog#updf[open]{display:grid;place-items:center;margin:0}
-dialog#updf::backdrop{background:#0E1426}
-#updf .uf{width:min(440px,100%);padding:32px 24px calc(32px + env(safe-area-inset-bottom,0px));text-align:center;display:grid;gap:14px;justify-items:center}
+dialog#updf::backdrop{background:rgba(14,20,38,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#updf .uf{width:min(440px,calc(100% - 32px));background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:28px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:32px 24px calc(32px + env(safe-area-inset-bottom,0px));text-align:center;display:grid;gap:14px;justify-items:center}
 #updf .ufi{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#4F46E5,#0F9D9A);box-shadow:0 18px 40px -14px rgba(79,70,229,.9),0 0 0 10px rgba(255,255,255,.06)}
 #updf .ufi svg{width:44px;height:44px}
 #updf h2{margin:6px 0 0;font-family:var(--sans);font-weight:800;font-size:clamp(1.6rem,7vw,2.2rem);line-height:1.1;letter-spacing:-.01em;color:#fff;text-transform:none}
 #updf .ufn{margin:0;font-size:1.05rem;font-weight:600;color:#C7D2FE}
 #updf .ufs{margin:0;font-size:.95rem;line-height:1.45;color:rgba(255,255,255,.75)}
-#updf .ufb{margin-top:8px;width:100%;min-height:56px;border:0;border-radius:18px;background:#fff;color:#14213D;font:800 1.1rem var(--sans);letter-spacing:.01em;cursor:pointer;box-shadow:0 14px 30px -14px rgba(0,0,0,.7)}
+#updf .ufb{margin-top:8px;width:100%;min-height:56px;border:0;border-radius:18px;background:rgba(255,255,255,.92);color:#14213D;font:800 1.1rem var(--sans);letter-spacing:.01em;cursor:pointer;box-shadow:0 14px 30px -14px rgba(0,0,0,.7)}
 #updf .ufb:disabled{opacity:.7;cursor:wait}
 @media(prefers-reduced-motion:no-preference){
  dialog#updf[open]{animation:ufIn .4s ease-out}
@@ -748,6 +749,27 @@ const AKEY='fichas-scadrial-cuentas-v1',SKEY='fichas-scadrial-sesion-v1',LEGACY=
 let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTab='login',authBusy=false,fails=0,booting=true;
 const ADMIN='alpha';
 const isAdmin=()=>!!session&&session.user===ADMIN;
+const myRole=()=>isAdmin()?3:(session&&session.role)|0;
+const canAdm=()=>!!session&&myRole()>=1;
+const ROLEN=['Sin permisos','Ver cuentas','Administrador','Propietario'];
+/* registro global de cuentas (Firestore por REST, solo nombres y roles; nunca contraseñas ni fichas) */
+const FB={projectId:'',apiKey:''};
+const fbOn=()=>!!(FB.projectId&&FB.apiKey);
+const fbU=(p,q)=>`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents/${p}?key=${FB.apiKey}${q||''}`;
+const fbEnc=o=>{const f={};for(const k in o){const v=o[k];f[k]=typeof v==='string'?{stringValue:v}:typeof v==='boolean'?{booleanValue:v}:{integerValue:String(Math.round(v))}}return{fields:f}};
+const fbDec=d=>{const o={id:decodeURIComponent((d.name||'').split('/').pop())};for(const k in(d.fields||{})){const v=d.fields[k];o[k]=v.stringValue!==undefined?v.stringValue:v.booleanValue!==undefined?v.booleanValue:+v.integerValue}return o};
+async function fbReq(m,p,body,q){const r=await fetch(fbU(p,q),{method:m,headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});if(r.status===404)return null;if(!r.ok)throw new Error('fb'+r.status);return m==='DELETE'?{}:r.json()}
+const fbGet=async k=>{const d=await fbReq('GET','cuentas/'+encodeURIComponent(k));return d?fbDec(d):null};
+async function fbList(){let out=[],tok='';do{const d=await fbReq('GET','cuentas',null,'&pageSize=300'+(tok?'&pageToken='+encodeURIComponent(tok):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tok=d&&d.nextPageToken||''}while(tok);return out}
+const fbPatch=(k,o)=>fbReq('PATCH','cuentas/'+encodeURIComponent(k),fbEnc(o),'&'+Object.keys(o).map(x=>'updateMask.fieldPaths='+x).join('&'));
+let regCache=null;
+async function regSync(){ // al entrar: registra la cuenta, lee el rol y detecta si la han eliminado
+ if(!fbOn()||!session)return;const k=session.user;
+ try{loadAccounts();const rec=accounts.users[k];if(!rec)return;const d=await fbGet(k);
+  if(d&&d.deleted&&d.created===rec.created){delete accounts.users[k];storeAccounts();skClear();session=null;store={chars:[],cur:null};scr='menu';authTab='login';render();toast('Un administrador ha eliminado esta cuenta');return}
+  if(!d||d.deleted){await fbPatch(k,{name:rec.name,created:rec.created||Date.now(),role:0,deleted:false,seen:Date.now()});if(session)session.role=0}
+  else{if(session)session.role=k===ADMIN?3:(d.role|0);fbPatch(k,{seen:Date.now()}).catch(()=>{})}
+  if(session)render(1)}catch(e){}}
 let admState=null;
 const hasCrypto=!!(window.crypto&&crypto.subtle);
 const b64=u=>{let t='';for(let i=0;i<u.length;i+=8192)t+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(t)};
@@ -778,7 +800,7 @@ function skRem(){return !!(lsGet(SKEY)||ckGet(SKEY))}
 let wantRem=false;
 const UKEY='mesa-larga-usuario';
 function lastUser(){return lsGet(UKEY)||ckGet(UKEY)||''}
-function startSession(k,rec,key,raw,chars,av){session={user:k,name:rec.name,key,raw};scr='menu';store={chars:chars,cur:null,avatar:avOk(av)};const rem=wantRem;const okS=skSet({user:k,raw:b64(raw)},rem);wantRem=false;
+function startSession(k,rec,key,raw,chars,av){session={user:k,name:rec.name,key,raw,role:0};setTimeout(regSync,60);scr='menu';store={chars:chars,cur:null,avatar:avOk(av)};const rem=wantRem;const okS=skSet({user:k,raw:b64(raw)},rem);wantRem=false;
  if(rem){lsSet(UKEY,rec.name);ckSet(UKEY,rec.name)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(rem&&(!okS||!lastUser()))setTimeout(()=>{try{toast('Tu navegador no permite recordar el usuario en este dispositivo.')}catch(x){}},700)}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);const rec=accounts.users[o.user];if(!rec)return false;
@@ -826,6 +848,7 @@ async function doAuth(f){
    loadAccounts();if(accounts.users[k]){set('Ese usuario ya existe en este dispositivo.','err');return}
    if(pw.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
    if(pw!==el('ap2').value){set('Las contraseñas no coinciden.','err');return}
+   if(fbOn()){set('Comprobando el nombre…');try{const g=await fbGet(k);if(g&&!g.deleted){set('Ese usuario ya existe en la app. Elige otro nombre.','err');return}}catch(e){}}
    set('Creando la cuenta…');
    const salt=crypto.getRandomValues(new Uint8Array(16));const dk=await kdf(pw,salt,ITER);const key=await aesKey(dk.raw);
    const takeLeg=el('leg')&&el('leg').checked;const chars=takeLeg?legacyChars().map(normalize):[];
@@ -844,17 +867,37 @@ async function doAuth(f){
 
 const fdate=t=>t?new Date(t).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'—';
 function admDlg(){
- if(!isAdmin())return;loadAccounts();
+ if(!canAdm())return;loadAccounts();
+ if(!fbOn()){admLocal();return}
+ if(!regCache){showDlg('Administración','<p class="hint">Cargando las cuentas de la app…</p>',true);admLoad();return}
+ admView()}
+async function admLoad(){try{regCache=await fbList()}catch(e){regCache=null;showDlg('Administración','<p class="hint warn-t">No se pudo conectar con la base de datos compartida. Revisa tu conexión e inténtalo de nuevo.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div>',true);return}
+ if(isAdmin()||canAdm())admView()}
+function admView(){
+ const me=myRole(),all=(regCache||[]).filter(x=>!x.deleted),n=all.length;
+ const list=all.sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
+ const rows=list.map(r=>{const k=r.id,self=k===session.user,rl=k===ADMIN?3:(r.role|0);
+  const act=admState&&admState.u===k?admState.mode:'';
+  const can=!self&&k!==ADMIN&&me>=2&&rl<me;
+  let ctl='',extra='';
+  if(isAdmin()&&!self&&k!==ADMIN)ctl+=`<div class="seg" role="group" aria-label="Permisos de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" class="${rl===v?'on':''}" data-act="admrole" data-u="${esc(k)}" data-r="${v}" ${rl===v?'aria-pressed="true"':'aria-pressed="false"'}>${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
+  if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
+  if(act==='del')extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Dejará de existir en la app y se borrará de su dispositivo la próxima vez que entre. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`;
+  return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${rl?` <span class="tag">${ROLEN[rl]}</span>`:''}<span>Creada ${fdate(r.created)} · Última entrada ${fdate(r.seen||r.created)}</span></div><div class="row">${ctl}</div>${extra}</div>`}).join('');
+ showDlg('Administración',`<div class="grid"><p class="hint"><b>${n}</b> ${n===1?'cuenta creada':'cuentas creadas'} en la app, de todos los dispositivos. Nadie puede ver las fichas de otros: están cifradas con la contraseña de cada usuario.</p>
+ <p class="hint" style="margin:0">${isAdmin()?'Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>). Un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Tienes permiso para ver las cuentas.'}</p>
+ <div class="list">${rows||'<p class="hint">Todavía no hay cuentas.</p>'}</div><div class="row"><button class="btn sm ghost" data-act="admre">Actualizar lista</button></div></div>`,true)}
+function admLocal(){
  const others=Object.entries(accounts.users).filter(([k])=>k!==session.user).sort((a,b)=>a[1].name.localeCompare(b[1].name,'es'));
  const rows=others.map(([k,r])=>{
   const act=admState&&admState.u===k?admState.mode:'';
   const meta=`<span>Creada ${fdate(r.created)} · Último guardado ${fdate(r.updated||r.created)}</span>`;
-  let ctl=`<button class="btn sm" data-act="admrst" data-u="${esc(k)}">Restablecer</button><button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Borrar</button>`;
+  let ctl=isAdmin()?`<button class="btn sm" data-act="admrst" data-u="${esc(k)}">Restablecer</button><button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Borrar</button>`:'';
   let extra='';
   if(act==='del'){ctl='';extra=`<div class="grid" style="width:100%"><p class="warn-t"><b>¿Borrar la cuenta ${esc(r.name)} y todas sus fichas?</b> No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, borrar</button><button class="btn ghost" data-act="admno">No</button></div></div>`}
   if(act==='rst'){ctl='';extra=`<form id="rstform" data-u="${esc(k)}" class="grid" style="width:100%" novalidate><p class="warn-t"><b>Se borrarán las fichas de ${esc(r.name)}.</b> La cuenta quedará vacía con la contraseña nueva que escribas.</p><label class="f">Contraseña nueva<input type="text" name="np" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Confirmar restablecimiento</button><button type="button" class="btn ghost" data-act="admno">Cancelar</button></div></form>`}
   return `<div class="item" style="flex-wrap:wrap"><div class="nm"><b>${esc(r.name)}</b>${meta}</div><div class="row">${ctl}</div>${extra}</div>`}).join('');
- showDlg('Administración',`<div class="grid"><p class="hint">Cuentas de este dispositivo. El administrador no puede ver las fichas de nadie porque están cifradas con la contraseña de cada usuario, ni cuántas hay. Este rol funciona solo en este navegador.</p>
+ showDlg('Administración',`<div class="grid"><p class="warn-t"><b>Registro global sin conectar.</b> Falta enlazar la base de datos compartida, así que ahora solo se ven las cuentas de este dispositivo (${others.length+1}).</p>
  <div class="list">${rows||'<p class="hint">No hay otras cuentas en este dispositivo.</p>'}</div></div>`,true)}
 async function doRst(f){const m=$('#rmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{const np=f.elements.np.value;if(np.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
@@ -881,7 +924,7 @@ async function doPw(f){const m=$('#pmsg');const set=(t,k)=>{m.textContent=t;m.cl
   f.reset();set('Contraseña cambiada. La copia de seguridad anterior sigue usando la contraseña anterior.','ok')}catch(x){set('Algo ha fallado. Inténtalo de nuevo.','err')}}
 async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{loadAccounts();if(!(await checkPw(f.elements.d0.value))){set('La contraseña no es correcta.','err');return}
-  clearTimeout(saveT);delete accounts.users[session.user];storeAccounts();session=null;store={chars:[],cur:null};skClear();
+  clearTimeout(saveT);if(fbOn())fbPatch(session.user,{deleted:true,role:0}).catch(()=>{});delete accounts.users[session.user];storeAccounts();session=null;store={chars:[],cur:null};skClear();
   try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}authTab='login';render();toast('Cuenta borrada')}catch(x){set('Algo ha fallado. Inténtalo de nuevo.','err')}}
 document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={authform:doAuth,pwform:doPw,delform:doDel,rstform:doRst}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
@@ -942,6 +985,7 @@ function status(c,i){if(c.done&&i<7)return 'ok';const d=derive(c);
   case 5:return c.kit?'ok':'warn';
   case 6:return c.purpose.trim()&&c.obstacle.trim()&&c.goals.some(g=>g.trim())?'ok':'warn';
   default:return ''}}
+const LOCKED=[0,1,6];const isLk=(c,k)=>!!c.done&&LOCKED.includes(k);
 const STEPS=['Orígenes','Camino','Atributos','Habilidades','Talentos','Equipo','Historia','Hoja'];
 
 /* ---------- utilidades ---------- */
@@ -1018,15 +1062,15 @@ function homeBtn(cls){return `<button type="button" class="${cls} homebtn" data-
 function avPickImg(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file);const im=new Image();im.onload=()=>{try{const n=192,c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');const m=Math.min(im.width,im.height);x.fillStyle='#fff';x.fillRect(0,0,n,n);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,n,n);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.86))}catch(e){rej(e)}};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};im.src=u})}
 function avRefresh(pop){const bs=document.getElementById('avbox');if(bs)bs.innerHTML=avBig();render(1);
  document.querySelectorAll('.avs,.avimg').forEach(el=>{if(pop){el.classList.remove('avpop');void el.offsetWidth;el.classList.add('avpop')}})}
-function acctBar(){return `<div class="acct nbt"><span>Sesión de <b>${esc(session.name)}</b>${isAdmin()?' <span class="tag">administrador</span>':''}</span></div>`}
+function acctBar(){return `<div class="acct nbt"><span>Sesión de <b>${esc(session.name)}</b>${canAdm()?' <span class="tag">'+(isAdmin()?'propietario':'administrador')+'</span>':''}</span></div>`}
 const BGD='<svg class="bgd" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><symbol id="d6" viewBox="0 0 60 60"><rect x="5" y="5" width="50" height="50" rx="12"/><circle cx="19" cy="19" r="3.2" fill="currentColor"/><circle cx="41" cy="19" r="3.2" fill="currentColor"/><circle cx="30" cy="30" r="3.2" fill="currentColor"/><circle cx="19" cy="41" r="3.2" fill="currentColor"/><circle cx="41" cy="41" r="3.2" fill="currentColor"/></symbol><symbol id="d20" viewBox="0 0 60 60"><polygon points="30,3 55,17 55,43 30,57 5,43 5,17"/><polygon points="30,15 45,41 15,41"/><path d="M30 3v12M55 17L45 41M5 17l10 24M30 57V41M55 43L45 41M5 43l10-2"/></symbol><symbol id="mee" viewBox="0 0 60 60"><circle cx="30" cy="13" r="9"/><path d="M30 24c8 0 10 4 14 6l10 2c2 1 2 4 0 6l-10 2c2 6 6 10 10 14H6c4-4 8-8 10-14L6 38c-2-2-2-5 0-6l10-2c4-2 6-6 14-6z"/></symbol><symbol id="card" viewBox="0 0 60 60"><rect x="12" y="4" width="36" height="52" rx="6"/><path d="M30 20l8 10-8 10-8-10z"/></symbol><symbol id="hex" viewBox="0 0 60 60"><polygon points="30,3 55,17 55,43 30,57 5,43 5,17"/><polygon points="30,18 42,25 42,39 30,46 18,39 18,25"/></symbol><symbol id="coin" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26"/><circle cx="30" cy="30" r="18"/><path d="M30 22v16M24 30h12"/></symbol></defs><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><use href="#d6" x="-32" y="-26" width="66" height="66" transform="rotate(-29 1 7)"/><use href="#coin" x="70" y="-13" width="54" height="54" transform="rotate(11 97 14)"/><use href="#hex" x="196" y="-29" width="81" height="81" transform="rotate(-8 236 12)"/><use href="#card" x="289" y="-28" width="66" height="66" transform="rotate(18 322 5)"/><use href="#card" x="15" y="72" width="54" height="54" transform="rotate(35 42 99)"/><use href="#mee" x="136" y="66" width="81" height="81" transform="rotate(-20 176 106)"/><use href="#d20" x="240" y="85" width="81" height="81" transform="rotate(-28 280 126)"/><use href="#d6" x="361" y="83" width="66" height="66" transform="rotate(-29 394 116)"/><use href="#d6" x="-35" y="161" width="81" height="81" transform="rotate(-18 6 202)"/><use href="#coin" x="77" y="173" width="54" height="54" transform="rotate(34 104 200)"/><use href="#hex" x="181" y="178" width="66" height="66" transform="rotate(-12 214 211)"/><use href="#card" x="291" y="178" width="81" height="81" transform="rotate(-11 332 218)"/><use href="#card" x="24" y="258" width="81" height="81" transform="rotate(-27 64 298)"/><use href="#mee" x="141" y="256" width="81" height="81" transform="rotate(-9 182 296)"/><use href="#d20" x="248" y="272" width="66" height="66" transform="rotate(5 281 305)"/><use href="#d6" x="357" y="273" width="66" height="66" transform="rotate(11 390 306)"/><use href="#d6" x="-33" y="357" width="54" height="54" transform="rotate(-4 -6 384)"/><use href="#coin" x="70" y="368" width="66" height="66" transform="rotate(32 103 401)"/><use href="#hex" x="193" y="360" width="81" height="81" transform="rotate(22 234 400)"/><use href="#card" x="297" y="369" width="54" height="54" transform="rotate(-20 324 396)"/><use href="#card" x="29" y="458" width="54" height="54" transform="rotate(8 56 485)"/><use href="#mee" x="127" y="460" width="66" height="66" transform="rotate(-30 160 493)"/><use href="#d20" x="254" y="447" width="81" height="81" transform="rotate(5 294 488)"/><use href="#d6" x="353" y="456" width="81" height="81" transform="rotate(28 394 496)"/><use href="#d6" x="-24" y="554" width="54" height="54" transform="rotate(-24 3 581)"/><use href="#coin" x="76" y="555" width="81" height="81" transform="rotate(-27 116 596)"/><use href="#hex" x="179" y="549" width="81" height="81" transform="rotate(22 220 590)"/><use href="#card" x="297" y="552" width="81" height="81" transform="rotate(9 338 592)"/><use href="#card" x="13" y="649" width="66" height="66" transform="rotate(-14 46 682)"/><use href="#mee" x="142" y="638" width="66" height="66" transform="rotate(-28 175 671)"/><use href="#d20" x="239" y="644" width="54" height="54" transform="rotate(-4 266 671)"/><use href="#d6" x="355" y="647" width="66" height="66" transform="rotate(-25 388 680)"/><use href="#d6" x="-37" y="744" width="66" height="66" transform="rotate(35 -4 777)"/><use href="#coin" x="76" y="734" width="66" height="66" transform="rotate(35 109 767)"/><use href="#hex" x="186" y="743" width="66" height="66" transform="rotate(13 219 776)"/><use href="#card" x="295" y="734" width="54" height="54" transform="rotate(-13 322 761)"/></g></svg>';
 const DIEI='<svg viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><rect x="7" y="7" width="46" height="46" rx="12"/></g><g fill="currentColor"><circle cx="21" cy="21" r="4"/><circle cx="39" cy="21" r="4"/><circle cx="30" cy="30" r="4"/><circle cx="21" cy="39" r="4"/><circle cx="39" cy="39" r="4"/></g></svg>';
 function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(pointer:coarse)').matches;
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='54';
-const APPN='Ya puedes seguir editando tu ficha terminada (atributos, habilidades, talentos, nivel y equipo) y consultar el manual con el icono junto a cada sección.';
+const APPV='55';
+const APPN='Orígenes, Camino e Historia se bloquean al finalizar la ficha, nueva pantalla de actualización translúcida y panel de administración con roles.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1085,11 +1129,11 @@ const OUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.50
 const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5.500c0 4.500 3.200 7.800 7.500 9.500 4.300-1.700 7.500-5 7.500-9.500V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 let dockSig='';
 function fdockUpdate(c){let d=document.getElementById('fdock');if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';return}
- const sig=[scr,c?(c.done?'d':'e'):'',session.user,store.avatar?store.avatar.length:0,getTheme(),isAdmin()].join('|');
+ const sig=[scr,c?(c.done?'d':'e'):'',session.user,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
  d.classList.toggle('above',!!c&&!c.done);
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
-  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${isAdmin()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
+  d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
  t.classList.toggle('above',!!c&&!c.done)}
@@ -1107,7 +1151,7 @@ const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em>admin</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return `<div class="hb"><span class="av lgs">${DIEI}</span><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}</span></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
  if(scr==='nb')return home();
@@ -1150,7 +1194,7 @@ function statsPanel(c){const d=derive(c);
 
 function editor(c){
  const i=c.step;
- const chips=STEPS.map((s,k)=>{const st=status(c,k);return `<button class="chip" data-act="go" data-i="${k}" ${k===i?'aria-current="step"':''}><span class="dot ${st}"></span>${k+1}. ${s}</button>`}).join('');
+ const chips=STEPS.map((s,k)=>{const st=status(c,k);const lk=isLk(c,k);return `<button class="chip${lk?' lk':''}" data-act="go" data-i="${k}" ${k===i?'aria-current="step"':''} ${lk?'aria-disabled="true" title="Bloqueado al finalizar la ficha"':''}><span class="dot ${st}"></span>${k+1}. ${s}${lk?'<svg class="lkic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>':''}</button>`}).join('');
  const bodies=[sOrig,sCamino,sAttr,sHab,sTal,sEq,sHist,sHoja];
  return `<div class="top"><button class="btn" data-act="home">‹ Mis fichas</button><div class="row">${c.done?'':'<button class="btn sm" data-act="qmode">Modo preguntas</button>'}<button class="btn sm" data-act="export">Exportar</button></div></div>
  <header class="chapter"><div class="mist"></div><div class="tab">${c.done?'Ficha · ':'Paso '+(i+1)+' · '}${STEPS[i]}</div><div class="cart"><span class="med">${GLYPH_A}</span><h2 id="ttl">${esc(c.name||'Personaje sin nombre')}</h2><span class="med">${GLYPH_B}</span></div></header>
@@ -1288,7 +1332,8 @@ function sHoja(c){const d=derive(c),p=pathInfo(c),t=d.t;
  <div><h4>Equipo</h4><p class="pre">${esc([c.weapons&&'Armas: '+c.weapons,c.armor&&'Armadura: '+c.armor,c.gear,(+c.arquillas)?'Arquillas: '+c.arquillas:''].filter(Boolean).join('\n')||'—')}</p></div>
  <div><h4>Historia</h4><p class="pre">${esc([c.purpose&&'Propósito: '+c.purpose,c.obstacle&&'Obstáculo: '+c.obstacle,...c.goals.filter(Boolean).map(g=>'Meta: '+g),c.connection&&'Conexiones: '+c.connection,c.look&&'Aspecto: '+c.look,c.notes].filter(Boolean).join('\n')||'—')}</p></div></div>
  <div class="row"><button class="btn pri" data-act="copytext">Copiar hoja como texto</button><button class="btn pri" data-act="sheet" data-id="${c.id}">Exportar hoja (PDF)</button><button class="btn" data-act="export">Exportar ficha</button></div>
- ${c.done?'<div class="row"><button class="btn ghost sm" data-act="unfinish">Volver al modo creación</button></div>':finBox(c)}</section>`}
+ ${c.done?'':finBox(c)}</section>`}
+function lockedFx(b){toast('Este apartado quedó bloqueado al finalizar la ficha');if(b&&b.animate&&!matchMedia('(prefers-reduced-motion:reduce)').matches)b.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'none'}],{duration:320})}
 function sealFx(c){try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return}catch(e){}
  const o=document.createElement('div');o.id='seal';o.setAttribute('role','status');o.innerHTML=`<div class="sealw"><div class="sealr"></div><div class="sealc">${GLYPH_A}</div><b>Ficha completada</b><small>${esc(c.name||'Tu personaje')} ya puede crecer con cada partida</small></div>`;
  document.body.appendChild(o);const end=()=>{o.classList.add('out');setTimeout(()=>o.remove(),380)};o.addEventListener('click',end);setTimeout(end,2300)}
@@ -1296,7 +1341,7 @@ function lvlBox(c){const l=+c.level||1,d=derive(c);return `<div class="lvlbox"><
  <div><small>Ajuste de salud</small><div class="step lvls"><button type="button" data-act="hp" data-d="-1" aria-label="Bajar salud">−</button><output>${c.hpAdj>0?'+':''}${c.hpAdj||0}</output><button type="button" data-act="hp" data-d="1" aria-label="Subir salud">+</button></div></div></div>
  <p class="hint" style="margin:6px 0 0">Salud máxima: <b>${d.salud}</b>. Se calcula con tu nivel y tu Fuerza actual; usa el ajuste para bonificaciones o penalizaciones de la partida.</p>
  <div class="lvlg"><b>Lo que te da el nivel ${l}</b><ul>${lvlInfo(c,l).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="hint" style="margin:0">Actualiza después tus atributos, habilidades, talentos y equipo en las pestañas de arriba.</p></div></div>`}
-function finBox(c){const bad=STEPS.slice(0,7).filter((n,i)=>status(c,i)==='warn');return `<div class="finbox"><p class="hint" style="margin:0">${bad.length?`Antes de finalizar te falta: <b>${bad.join(', ')}</b>.`:'¡Todo listo! Al finalizar podrás actualizar atributos, habilidades, talentos y equipo según avances de nivel.'}</p><div class="row"><button class="btn pri" data-act="finish" ${bad.length?'disabled':''}>Finalizar ficha</button></div></div>`}
+function finBox(c){const bad=STEPS.slice(0,7).filter((n,i)=>status(c,i)==='warn');return `<div class="finbox"><p class="hint" style="margin:0">${bad.length?`Antes de finalizar te falta: <b>${bad.join(', ')}</b>.`:'¡Todo listo! Al finalizar, Orígenes, Camino e Historia quedarán bloqueados y no podrás modificarlos. Podrás seguir actualizando atributos, habilidades, talentos, equipo y nivel.'}</p><div class="row"><button class="btn pri" data-act="finask" ${bad.length?'disabled':''}>Finalizar ficha</button></div></div>`}
 
 /* ---------- texto, exportar, importar ---------- */
 function asText(c){const d=derive(c),p=pathInfo(c);
@@ -1311,7 +1356,7 @@ async function copy(txt,ok){try{await navigator.clipboard.writeText(txt);toast(o
 function showDlg(title,html,closeOnly){const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>${title}</h3>${html}<div class="row">${closeOnly?'':'<button class="btn pri" data-act="doimport">Importar</button>'}<button class="btn" data-act="closedlg">Cerrar</button></div></div>`;try{d.showModal()}catch(e){d.setAttribute('open','')}}
 function normalize(o){const b=blank();const c=Object.assign(b,o||{});c.id=uid();c.attrs=Object.assign(blank().attrs,o&&o.attrs);c.powers=Object.assign({alo:[],fer:[]},o&&o.powers);c.talents=Object.assign({ancestry:'',notes:''},o&&o.talents);
  if(!Array.isArray(c.cultures))c.cultures=['',''];if(!Array.isArray(c.goals))c.goals=['',''];if(!Array.isArray(c.extra))c.extra=[];c.skills=Object.assign({},o&&o.skills);
- if(!['humano','kandra','koloss'].includes(c.ancestry))c.ancestry='humano';if(![1,2].includes(c.era))c.era=1;c.step=0;c.mode='f';if(!Array.isArray(c.picks))c.picks=[];if(!Array.isArray(c.tl))c.tl=[];c.done=!!c.done;c.hpAdj=+c.hpAdj||0;if(c.done)c.step=7;if(!c.metalChoice)c.metalChoice=METAL[c.path]?'si':c.path?'no':'';return c}
+ if(!['humano','kandra','koloss'].includes(c.ancestry))c.ancestry='humano';if(![1,2].includes(c.era))c.era=1;c.step=0;c.mode='f';if(!Array.isArray(c.picks))c.picks=[];if(!Array.isArray(c.tl))c.tl=[];c.done=!!c.done;c.hpAdj=+c.hpAdj||0;if(c.done&&(isLk(c,c.step)||c.step>7))c.step=7;if(!c.metalChoice)c.metalChoice=METAL[c.path]?'si':c.path?'no':'';return c}
 
 
 /* ---------- modo preguntas ---------- */
@@ -1389,7 +1434,7 @@ addQ({id:'notes',sec:'Historia',opt:1,t:()=>'¿Algo más sobre su vida?',h:()=>'
 addQ({id:'fin',sec:'Final',t:c=>`${c.name||'Tu personaje'} está listo`,h:()=>'Estos son los valores calculados. Puedes revisar cualquier paso en el formulario.',
  r:c=>{const bad=STEPS.slice(0,7).map((n,i)=>status(c,i)==='warn'?n:null).filter(Boolean);
   return `${bad.length?`<p class="warn-t"><b>Quedan pendientes:</b> ${bad.join(', ')}.</p>`:'<p class="ok-t"><b>No falta nada.</b></p>'}
-  <div class="row">${bad.length?'':`<button class="btn pri" data-act="finish">Finalizar ficha</button>`}<button class="btn ${bad.length?'pri':''}" data-act="sheet" data-id="${c.id}">Exportar hoja rellena (PDF)</button><button class="btn" data-act="qform" data-i="7">Ver la hoja completa</button><button class="btn" data-act="qform" data-i="0">Revisar en el formulario</button><button class="btn ghost" data-act="home">Mis fichas</button></div>`}});
+  <div class="row">${bad.length?'':`<button class="btn pri" data-act="finask">Finalizar ficha</button>`}<button class="btn ${bad.length?'pri':''}" data-act="sheet" data-id="${c.id}">Exportar hoja rellena (PDF)</button><button class="btn" data-act="qform" data-i="7">Ver la hoja completa</button><button class="btn" data-act="qform" data-i="0">Revisar en el formulario</button><button class="btn ghost" data-act="home">Mis fichas</button></div>`}});
 const qList=c=>Q.filter(q=>q.show(c));
 function curQ(c){const l=qList(c);return l.find(q=>q.id===c.q)||l[0]}
 function qview(c){
@@ -1516,16 +1561,21 @@ document.addEventListener('click',e=>{
   case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{await flush();session=null;store={chars:[],cur:null};skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
-  case 'admdel':if(isAdmin()){admState={u:b.dataset.u,mode:'del'};admDlg()}break;
+  case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admDlg()}break;
   case 'admrst':if(isAdmin()){admState={u:b.dataset.u,mode:'rst'};admDlg()}break;
   case 'admno':admState=null;admDlg();break;
-  case 'admdel2':if(isAdmin()){loadAccounts();if(b.dataset.u!==session.user){delete accounts.users[b.dataset.u];storeAccounts()}admState=null;admDlg();toast('Cuenta borrada')}break;
+  case 'admre':regCache=null;admDlg();break;
+  case 'admrole':if(isAdmin()&&fbOn()){const u=b.dataset.u,r=+b.dataset.r;if(u!==ADMIN&&u!==session.user&&r>=0&&r<=2){fbPatch(u,{role:r}).then(()=>{const x=regCache&&regCache.find(y=>y.id===u);if(x)x.role=r;admView();toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break;
+  case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;
+    if(fbOn()){const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.user||u===ADMIN||(x.role|0)>=myRole())break;
+     fbPatch(u,{deleted:true,role:0}).then(()=>{x.deleted=true;loadAccounts();if(accounts.users[u]&&u!==session.user){delete accounts.users[u];storeAccounts()}admView();toast('Cuenta eliminada')}).catch(()=>toast('No se pudo eliminar'))}
+    else if(isAdmin()){loadAccounts();if(u!==session.user){delete accounts.users[u];storeAccounts()}admDlg();toast('Cuenta borrada')}}break;
   case 'backup':(async()=>{await flush();loadAccounts();const rec=accounts.users[session.user];copy('FSC1:'+b64(new TextEncoder().encode(JSON.stringify(rec))),'Copia de seguridad copiada')})();break;
   case 'new':{const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
   case 'sheet':sheetOpen(b.dataset.id);break;
   case 'help':b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');helpDlg(b.dataset.k);break;
-  case 'finish':{if(STEPS.slice(0,7).some((n,i)=>status(c,i)==='warn'))break;c.done=true;c.mode='f';c.step=7;if(!c.level)c.level=1;save();render();sealFx(c);break}
-  case 'unfinish':c.done=false;save();render();break;
+  case 'finask':{if(STEPS.slice(0,7).some((n,i)=>status(c,i)==='warn'))break;showDlg('Antes de finalizar',`<p class="hlpw"><b>Orígenes</b>, <b>Camino</b> e <b>Historia</b> se bloquearán y <b>no se podrán modificar después</b>. Revísalos ahora.</p><p class="hint">Podrás seguir actualizando atributos, habilidades, talentos, equipo, nivel y salud a medida que avancen las partidas.</p><div class="row"><button class="btn pri" data-act="finish">Sí, finalizar</button></div>`,true);break}
+  case 'finish':{try{$('#dlg').close()}catch(x){}if(STEPS.slice(0,7).some((n,i)=>status(c,i)==='warn'))break;c.done=true;c.mode='f';c.step=7;if(!c.level)c.level=1;save();render();sealFx(c);break}
   case 'lvl':{const d=+b.dataset.d;const n=Math.max(1,Math.min(40,(+c.level||1)+d));if(n===c.level)break;c.level=n;if(d<0){const m=maxGrade(c);for(const k of Object.keys(c.skills)){const fr=freeSkill(c)===k?1:0;if(c.skills[k]+fr>m)c.skills[k]=Math.max(0,m-fr)}}save();render(1);break}
   case 'hp':c.hpAdj=Math.max(-30,Math.min(60,(+c.hpAdj||0)+(+b.dataset.d)));save();render(1);break;
   case 'taladd':c.tl.push('');save();render(1);{const i=document.querySelectorAll('#tlist input');if(i.length)i[i.length-1].focus()}break;
@@ -1543,11 +1593,11 @@ document.addEventListener('click',e=>{
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':scr='deck';render();break;
   case 'soon_arch':scr='arch';render();break;
-  case 'go':c.step=+b.dataset.i;save();render();break;
+  case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
   case 'qnext':if(curQ(c).v(c))qGo(c,1);break;
   case 'qskip':qGo(c,1);break;
   case 'qprev':qGo(c,-1);break;
-  case 'qform':c.mode='f';c.step=+b.dataset.i||0;save();render();break;
+  case 'qform':if(isLk(c,+b.dataset.i||0)){lockedFx(b);break}c.mode='f';c.step=+b.dataset.i||0;save();render();break;
   case 'qmode':{c.mode='q';const l=qList(c);const f=l.find(q=>!q.opt&&!q.v(c));c.q=(f||l[l.length-1]).id;save();render();break}
   case 'qset':setPath(c,b.dataset.f,v);save();render(1);break;
   case 'qmetal':c.metalChoice=v;if(c.path&&((v==='si')!==!!METAL[c.path])){c.path='';c.powers={alo:[],fer:[]}}save();render(1);break;
