@@ -242,6 +242,43 @@ body.hub:has(#app>.bgd){background-image:radial-gradient(60% 40% at 15% 0,rgba(7
 @keyframes flash{0%{background-color:color-mix(in srgb,var(--accent) 28%,var(--field))}100%{background-color:var(--field)}}
 @keyframes pgf{from{opacity:0}to{opacity:1}}
 @keyframes pgb{from{opacity:0}to{opacity:1}}
+/* ayuda del manual, ficha terminada */
+.hq{all:unset;box-sizing:border-box;float:right;display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:2px 10px 2px 7px;border-radius:99px;background:rgba(255,255,255,.16);color:inherit;font:600 .72rem/1.4 var(--sans,system-ui);letter-spacing:.02em;cursor:pointer;border:1px solid rgba(255,255,255,.35)}
+.hq svg{width:15px;height:15px}
+.hq:hover,.hq:focus-visible{background:rgba(255,255,255,.3)}
+.hq:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.panel h3:not(:first-child) .hq,.hq.dk{background:transparent;color:var(--head);border-color:var(--line)}
+@media(max-width:480px){.hq span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.hq{padding:5px}}
+dialog.hlp{max-width:min(560px,94vw)}
+.hlpw p{margin:.4em 0}.hlpl{margin:.3em 0 .6em 1.1em;padding:0}.hlpr{font-size:.8rem;color:var(--gold-ink);font-weight:700;margin-top:.6em}
+.lvlbox{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(197,158,87,.1)}
+.lvlh{display:flex;gap:18px;flex-wrap:wrap}.lvlh small{display:block;font-weight:700;margin-bottom:3px}
+.lvls output{min-width:2.2ch;text-align:center}
+.lvlg ul{margin:.3em 0 .5em 1.1em;padding:0}.lvlg li{margin:.15em 0}
+.finbox{margin-top:12px;padding:12px;border:1px dashed var(--gold);border-radius:12px}
+.tlist{display:grid;gap:8px;margin:10px 0}.item.tl{display:flex;gap:8px;align-items:flex-end}
+@keyframes upfl{0%{box-shadow:0 0 0 0 rgba(197,158,87,.9);background-color:rgba(197,158,87,.45)}100%{box-shadow:0 0 0 14px rgba(197,158,87,0);background-color:transparent}}
+@keyframes hqb{0%{transform:scale(1)}40%{transform:scale(.85)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes hlpin{0%{opacity:0;transform:translateY(24px) scale(.88)}60%{opacity:1;transform:translateY(-6px) scale(1.03)}80%{transform:translateY(2px) scale(.99)}100%{transform:none}}
+@keyframes hlpout{to{opacity:0;transform:translateY(16px) scale(.92)}}
+@keyframes sealin{0%{opacity:0;transform:scale(2.6) rotate(-24deg)}55%{opacity:1;transform:scale(.92) rotate(5deg)}75%{transform:scale(1.05) rotate(-2deg)}100%{transform:none}}
+@keyframes sealring{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(2.2)}}
+#seal{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:rgba(20,14,18,.62);cursor:pointer}
+#seal.out{opacity:0;transition:opacity .36s}
+.sealw{position:relative;display:grid;justify-items:center;gap:6px;text-align:center;color:#fff;padding:24px;font-family:var(--sans,system-ui)}
+.sealw b{font:700 1.6rem var(--sc,serif);letter-spacing:.04em}.sealw small{opacity:.85;max-width:28ch}
+.sealc{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#2A2325;border:4px double #2A2325;box-shadow:0 6px 28px rgba(0,0,0,.5)}
+.sealc svg{width:62px;height:62px}
+.sealr{position:absolute;top:24px;width:110px;height:110px;border-radius:50%;border:3px solid var(--gold)}
+@media(prefers-reduced-motion:no-preference){
+ .up{animation:upfl .9s ease-out}
+ .hq.tap{animation:hqb .35s}
+ dialog.hlp[open]{animation:hlpin .5s cubic-bezier(.2,.8,.2,1)}
+ dialog.hlp.closing{animation:hlpout .2s ease-in forwards}
+ .sealc{animation:sealin .7s cubic-bezier(.2,.8,.2,1) both}
+ .sealr{animation:sealring 1s .35s ease-out both}
+ .sealw b,.sealw small{animation:pgf .5s .6s ease-out both}
+}
 @keyframes dlgin{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes bdin{from{opacity:0}to{opacity:1}}
 @keyframes tabin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
@@ -851,7 +888,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
 function blank(){return {mode:'q',q:'era',metalChoice:'',picks:[],id:uid(),name:'',player:'',era:1,ancestry:'humano',blessing:'',cultures:['',''],extra:[],path:'',powers:{alo:[],fer:[]},
- attrs:{fue:0,vel:0,int:0,vol:0,dis:0,pre:0},skills:{},talents:{ancestry:'',notes:''},kit:'',weapons:'',armor:'',gear:'',deflect:0,arquillas:0,
+ attrs:{fue:0,vel:0,int:0,vol:0,dis:0,pre:0},skills:{},talents:{ancestry:'',notes:''},kit:'',weapons:'',armor:'',gear:'',deflect:0,arquillas:0,done:false,tl:[],hpAdj:0,
  purpose:'',obstacle:'',goals:['',''],connection:'',look:'',notes:'',step:0,level:1}}
 function sample(){const c=blank();Object.assign(c,{mode:'f',metalChoice:'no',name:'Brannen (ejemplo inventado)',era:1,path:'guerrero',cultures:['Skaa','Bajos fondos'],extra:['Hacha de guerra'],
  attrs:{fue:3,vel:2,int:1,vol:2,dis:2,pre:2},skills:{armpes:2,atletismo:1,intimidacion:1},kit:'mercenario',weapons:KITS.mercenario.w,armor:KITS.mercenario.a,gear:KITS.mercenario.g,arquillas:7,
@@ -873,15 +910,29 @@ function skillList(c){const l=SKILLS.slice();const p=METAL[c.path];if(p){if(p.al
 function grades(c,k){return (c.skills[k]||0)+(freeSkill(c)===k?1:0)}
 function assignedSkillPts(c){return SKILLS.reduce((s,x)=>s+(c.skills[x[0]]||0),0)}
 function attrSpent(c){return ATT.reduce((s,x)=>s+c.attrs[x[0]],0)}
+const LVLA=[3,6,9,12,15,18];
+function maxGrade(c){const l=+c.level||1;return l<=5?2:l<=10?3:l<=15?4:5}
+function hpGain(l,fue){return l<=1?0:l<=5?5:l===6?4+fue:l<=10?4:l===11?3+fue:l<=15?3:l===16?2+fue:l<=20?2:1}
+function hpLevel(c,fue){let h=0;for(let l=2;l<=(+c.level||1);l++)h+=hpGain(l,fue);return h}
+function spentAll(c){return Object.values(c.skills).reduce((a,b)=>a+(+b||0),0)}
+function expectGrades(c){const l=+c.level||1;return 4+2*(Math.min(l,20)-1)+Math.max(0,l-20)}
+function expectAttr(c){const l=+c.level||1;return attrBudget(c)+LVLA.filter(x=>x<=l).length}
+function lvlInfo(c,l){const f=derive(c).t.fue;const o=[];if(l<=1)return ['Nivel inicial: 1 talento del camino y los de ascendencia.'];
+ if(LVLA.includes(l))o.push('+1 punto de atributo a tu elección (máximo 5)');
+ o.push('+'+hpGain(l,f)+' de salud máxima y actual');
+ if(l<=20){o.push('+2 grados de habilidad');o.push('+1 talento')}else o.push('+1 grado de habilidad o +1 talento (uno de los dos)');
+ if([6,11,16,21].includes(l))o.push('+1 talento de ascendencia adicional');
+ if([6,11,16].includes(l))o.push('El máximo de grados por habilidad sube a '+(l===6?3:l===11?4:5));
+ return o}
 function derive(c){const t=totals(c),{def}=bonus(c);const kol=c.ancestry==='koloss'?1:0;
- const d={t,salud:10+t.fue+kol,conc:2+t.vol,
+ const d={t,salud:10+t.fue+kol+hpLevel(c,t.fue)+(+c.hpAdj||0),conc:2+t.vol,
   fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,
   lift:LIFT[TIER(t.fue)],move:MOVE[TIER(t.vel)],die:DIE[TIER(t.vol)],sense:SENSE[TIER(t.dis)],desvio:(+c.deflect||0)+def};
  d.inv=hasInvest(c)?2+Math.max(t.dis,t.pre):null;
  d.extraPer=t.int+(c.kit==='indagador'?1:0);return d}
 function mod(c,k){const s=SK[k];return grades(c,k)+derive(c).t[s[2]]}
 function pathNeeds(c){const p=METAL[c.path];if(!p)return{alo:0,fer:0};return {alo:p.alo==='all'?0:p.alo,fer:p.fer==='all'?0:p.fer}}
-function status(c,i){const d=derive(c);
+function status(c,i){if(c.done&&i<7)return 'ok';const d=derive(c);
  switch(i){
   case 0:return c.name.trim()&&c.cultures.filter(Boolean).length>=1&&(c.ancestry!=='kandra'||c.blessing)?'ok':'warn';
   case 1:{if(!c.path)return'warn';const n=pathNeeds(c);return c.powers.alo.filter(Boolean).length>=n.alo&&c.powers.fer.filter(Boolean).length>=n.fer?'ok':'warn'}
@@ -916,10 +967,11 @@ function anim(c){const a=$('#app');if(!a||booting)return;const nbm=!!(session&&(
   const pi=document.querySelector('.prog i');if(pi&&prevPct!==null&&pg){const w=pi.style.width;pi.style.width=prevPct;void pi.offsetWidth;pi.style.width=w}
   if(popSel){let el=null;try{el=document.querySelector(popSel+'[aria-pressed="true"]')||document.querySelector(popSel)}catch(x){}
    if(el)metalFx(el);
-   if(el){const t=el.dataset.d!==undefined&&el.closest('.step')?el.closest('.step').querySelector('output'):el;if(t){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop')}}}}
+   if(el&&el.dataset.d==='1'){const row=el.closest('.skt,.item,.lvlbox .lvls');if(row){row.classList.remove('up');void row.offsetWidth;row.classList.add('up')}}
+   if(el){const t=el.dataset.d!==undefined&&el.closest('.step,.skc')?el.closest('.step,.skc').querySelector('output'):el;if(t){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop')}}}}
  if(prevNums.length){document.querySelectorAll('#side .stat b,.counter .n').forEach((x,i)=>{if(prevNums[i]!==undefined&&prevNums[i]!==x.textContent){x.classList.add('pop')}})}
  pg='';popSel='';fx=false}
-function render(keep){const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
+function render(keep){const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!booting&&!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<p class="hint" style="text-align:center;padding-top:80px">Cargando…</p>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
 let fx=false;
 const METALS_FX=['#9FB4C7','#C9CED3','#8B8F96','#C59E57','#B4683B','#A67B3C','#E3C14A','#7F8FA3','#D7B07A'];
 function metalFx(el,cc){try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=el.getBoundingClientRect();if(!r.width)return;
@@ -973,8 +1025,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d)r.dataset.dev=d;r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='53';
-const APPN='Las actualizaciones ahora son obligatorias: aparece una pantalla completa con «Actualizar ahora».';
+const APPV='54';
+const APPN='Ya puedes seguir editando tu ficha terminada (atributos, habilidades, talentos, nivel y equipo) y consultar el manual con el icono junto a cada sección.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1033,14 +1085,14 @@ const OUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.50
 const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5.500c0 4.500 3.200 7.800 7.500 9.500 4.300-1.700 7.500-5 7.500-9.500V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 let dockSig='';
 function fdockUpdate(c){let d=document.getElementById('fdock');if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';return}
- const sig=[scr,!!c,session.user,store.avatar?store.avatar.length:0,getTheme(),isAdmin()].join('|');
+ const sig=[scr,c?(c.done?'d':'e'):'',session.user,store.avatar?store.avatar.length:0,getTheme(),isAdmin()].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
- d.classList.toggle('above',!!c);
+ d.classList.toggle('above',!!c&&!c.done);
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
   d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${isAdmin()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
- t.classList.toggle('above',!!c)}
+ t.classList.toggle('above',!!c&&!c.done)}
 function closeTpop(){const t=document.getElementById('tpop');if(t)t.classList.remove('open')}
 document.addEventListener('click',e=>{if(!e.target.closest('#tpop,[data-act=tpop]'))closeTpop()});
 document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#fdock .fd');if(!b)return;b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),600)});
@@ -1090,7 +1142,7 @@ function home(){
  <p class="hint" style="margin-top:16px">Tus fichas se guardan cifradas en este dispositivo, dentro de tu cuenta. Para llevarlas a otro, usa Cuenta y copia de seguridad; para pasar una sola, usa Exportar dentro de la ficha.</p>`}
 
 function statsPanel(c){const d=derive(c);
- return `<div class="panel"><h3>Hoja calculada</h3>
+ return `<div class="panel"><h3>Hoja calculada${helpBtn('calculada')}</h3>
  <div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Concentr.</span></div>
  <div class="stat inv"><b>${d.inv===null?'—':d.inv}</b><span>Investidura</span></div>
  <div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div></div>
@@ -1100,17 +1152,17 @@ function editor(c){
  const i=c.step;
  const chips=STEPS.map((s,k)=>{const st=status(c,k);return `<button class="chip" data-act="go" data-i="${k}" ${k===i?'aria-current="step"':''}><span class="dot ${st}"></span>${k+1}. ${s}</button>`}).join('');
  const bodies=[sOrig,sCamino,sAttr,sHab,sTal,sEq,sHist,sHoja];
- return `<div class="top"><button class="btn" data-act="home">‹ Mis fichas</button><div class="row"><button class="btn sm" data-act="qmode">Modo preguntas</button><button class="btn sm" data-act="export">Exportar</button></div></div>
- <header class="chapter"><div class="mist"></div><div class="tab">Paso ${i+1} · ${STEPS[i]}</div><div class="cart"><span class="med">${GLYPH_A}</span><h2 id="ttl">${esc(c.name||'Personaje sin nombre')}</h2><span class="med">${GLYPH_B}</span></div></header>
+ return `<div class="top"><button class="btn" data-act="home">‹ Mis fichas</button><div class="row">${c.done?'':'<button class="btn sm" data-act="qmode">Modo preguntas</button>'}<button class="btn sm" data-act="export">Exportar</button></div></div>
+ <header class="chapter"><div class="mist"></div><div class="tab">${c.done?'Ficha · ':'Paso '+(i+1)+' · '}${STEPS[i]}</div><div class="cart"><span class="med">${GLYPH_A}</span><h2 id="ttl">${esc(c.name||'Personaje sin nombre')}</h2><span class="med">${GLYPH_B}</span></div></header>
  <nav class="steps" aria-label="Pasos">${chips}</nav>
  <div class="layout"><div id="body">${bodies[i](c)}</div><div id="side" class="side">${statsPanel(c)}</div></div>
- <div class="nav"><div class="in"><button class="btn" data-act="prev" ${i===0?'disabled':''}>Anterior</button><button class="btn pri" data-act="next" ${i===7?'disabled':''}>Siguiente</button></div></div>`}
+ ${c.done?'':`<div class="nav"><div class="in"><button class="btn" data-act="prev" ${i===0?'disabled':''}>Anterior</button><button class="btn pri" data-act="next" ${i===7?'disabled':''}>Siguiente</button></div></div>`}`}
 
 function sOrig(c){
  const cl=[...CULT1.filter(()=>c.era===1),...CULT2.filter(()=>c.era===2),...CULTB];
  const sel=n=>{const v=c.cultures[n];const known=cl.includes(v);return `<label class="f">Pericia cultural ${n+1}<select data-f="cultures.${n}" data-r="1"><option value="">Elegir…</option>${cl.map(x=>`<option ${v===x?'selected':''}>${esc(x)}</option>`).join('')}${v&&!known?`<option selected>${esc(v)}</option>`:''}</select></label>`};
  const anc=[['humano','Humano','Un talento adicional de camino heroico'],['kandra','Kandra','6 puntos de atributo y una Bendición'],...(c.era===2?[['koloss','Sangre koloss','Fuerza hasta 4; +1 salud']]:[])];
- return `<section class="panel"><h3>Paso 1. Orígenes</h3>
+ return `<section class="panel"><h3>Paso 1. Orígenes${helpBtn('origenes')}</h3>
  <p class="hint lead">Tu ascendencia es de quién desciendes; tu cultura, dónde creciste. Pueden no coincidir.</p>
  <label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label>
  <label class="f">Nombre del jugador<input type="text" data-f="player" value="${esc(c.player)}" autocomplete="off"></label>
@@ -1134,7 +1186,7 @@ function sCamino(c){
   powers=`<div class="two">${n.alo?metalPick(c,'alo',n.alo,'Poder alomántico',aloOpts):''}${n.fer?metalPick(c,'fer',n.fer,'Poder feruquímico',FER_METALS.map(m=>[m,m])):''}</div>
   ${p.alo==='all'?'<p class="hint">Este camino domina todos los poderes alománticos.</p>':''}${p.fer==='all'?'<p class="hint">Este camino domina todos los poderes feruquímicos.</p>':''}
   <p class="hint">Al empezar solo tienes la versión naciente del poder; se desbloquea del todo al cumplir una meta de nacido del metal. Los detalles están en el cap. 6 del manual.</p>`}
- return `<section class="panel"><h3>Paso 2. Camino inicial</h3>
+ return `<section class="panel"><h3>Paso 2. Camino inicial${helpBtn('camino')}</h3>
  <p class="hint lead">Los caminos heroicos dan capacidades mundanas; los de nacido del metal, poderes alománticos o feruquímicos. Los de nacido del metal son excluyentes entre sí${c.ancestry==='kandra'?'. Un kandra no puede elegirlos':''}.</p>
  <h4 style="margin:0">Caminos heroicos</h4><div class="seg">${heroic.map(btn).join('')}</div>
  ${c.ancestry==='kandra'?'':`<h4 style="margin:0">Caminos de nacido del metal</h4><div class="seg">${metal.map(btn).join('')}</div>`}
@@ -1143,31 +1195,48 @@ function sCamino(c){
 function sAttr(c){
  const t=totals(c),b=bonus(c).b,left=attrBudget(c)-attrSpent(c);
  const rows=ATT.map(([k,n])=>`<div class="item"><div class="nm"><b>${n}</b><span>${{fue:'Salud, levantamiento, Defensa física',vel:'Movimiento, Defensa física',int:'Pericias extra, Defensa cognitiva',vol:'Concentración, recuperación, Defensa cognitiva',dis:'Sentidos, Defensa espiritual, Investidura',pre:'Defensa espiritual, Investidura'}[k]}</span></div>
- <div class="step"><button data-act="att" data-k="${k}" data-d="-1" aria-label="Bajar ${n}" ${c.attrs[k]<=0?'disabled':''}>−</button><output>${c.attrs[k]}</output><button data-act="att" data-k="${k}" data-d="1" aria-label="Subir ${n}" ${(c.attrs[k]>=attrCap(c,k)||left<=0)?'disabled':''}>+</button>
+ <div class="step"><button data-act="att" data-k="${k}" data-d="-1" aria-label="Bajar ${n}" ${c.attrs[k]<=0?'disabled':''}>−</button><output>${c.attrs[k]}</output><button data-act="att" data-k="${k}" data-d="1" aria-label="Subir ${n}" ${(c.done?c.attrs[k]>=5:(c.attrs[k]>=attrCap(c,k)||left<=0))?'disabled':''}>+</button>
  ${b[k]?`<span class="bonus">+${b[k]}</span>`:''}</div></div>`).join('');
- return `<section class="panel"><h3>Paso 3. Atributos</h3>
- <p class="lead">Reparte <b>${attrBudget(c)} puntos</b>. Máximo ${attrCap(c,'fue')===4?'3 en cada atributo (4 en Fuerza)':'3 en cada uno'}; 0 es válido.</p>
- <div class="counter ${left===0?'ok':'warn'}"><span class="n">${left}</span> puntos por repartir</div>
+ return `<section class="panel"><h3>Paso 3. Atributos${helpBtn('atributos')}</h3>
+ <p class="lead">${c.done?`Actualiza tus atributos al subir de nivel: +1 en los niveles <b>3, 6, 9, 12, 15 y 18</b>. Máximo 5 (el bonus de la Bendición se suma aparte).`:`Reparte <b>${attrBudget(c)} puntos</b>.`}${c.done?'':` Máximo ${attrCap(c,'fue')===4?'3 en cada atributo (4 en Fuerza)':'3 en cada uno'}; 0 es válido.`}</p>
+ ${c.done?(()=>{const sp=attrSpent(c),ex=expectAttr(c),d=ex-sp;return `<div class="counter ${d===0?'ok':'warn'}"><span class="n">${sp}</span> de ${ex} puntos esperados en el nivel ${c.level}${d>0?` · te faltan ${d}`:d<0?` · te pasas en ${-d}`:' · ¡al día!'}</div>`})():`<div class="counter ${left===0?'ok':'warn'}"><span class="n">${left}</span> puntos por repartir</div>`}
  <div class="list">${rows}</div>
  ${c.ancestry==='kandra'&&c.blessing?`<p class="hint">La Bendición ${BLESS[c.blessing].n} suma ${BLESS[c.blessing].d.toLowerCase()} (se muestra en naranja).</p>`:''}
  <p class="hint">Valores totales: ${ATT.map(([k,n])=>`${n} ${t[k]}`).join(' · ')}</p></section>`}
 
-function skCounter(c){const left=4-assignedSkillPts(c);return `<div class="counter ${left===0?'ok':'warn'}" id="skc"><span class="n">${left}</span> ${left===1?'grado por repartir':'grados por repartir'}${left===0?' · ¡completo!':''}</div>`}
-function skGrid(c,withInv){const left=4-assignedSkillPts(c),fs=freeSkill(c);
+const HELP={
+ origenes:{t:'Orígenes',w:'Quién es tu personaje y de dónde viene: era de la partida, ascendencia, culturas y nombre.',h:['Era: la decide la DJ y cambia las culturas, ascendencias y caminos disponibles.','Ascendencia: humano (un talento extra de camino heroico), kandra (solo 6 puntos de atributo, una Bendición y los talentos Forma natural y Disfraz kandra) o sangre koloss (Fuerza hasta 4 y +1 de salud; solo en la Era 2).','Culturas: elige dos pericias culturales; reflejan el entorno que te formó.','Nombre: puede inspirarse en tu cultura, pero no es obligatorio.'],r:'Capítulo 1, paso 1 · Capítulo 2'},
+ camino:{t:'Camino inicial',w:'Tu especialidad. Define tu talento principal y, si lo da, 1 grado gratis en una habilidad inicial.',h:['Caminos heroicos: Agente, Cazador, Enviado, Erudito, Guerrero y Líder.','Caminos de nacido del metal: Brumoso, Ferrin, Nacidoble, Nacido de la bruma y Feruquimista. Los dos últimos son solo para jugadores con experiencia.','Si eliges un camino de metal, escoge también tus poderes alománticos o feruquímicos.','Anota el talento principal en la hoja.'],r:'Capítulo 1, paso 2 · Capítulos 4 y 5'},
+ atributos:{t:'Atributos',w:'Seis valores que miden tus capacidades innatas: Fuerza, Velocidad, Intelecto, Voluntad, Discernimiento y Presencia. Suelen ir de 0 a 5.',h:['Fuerza: capacidad de levantamiento, salud y defensa física.','Velocidad: movimiento y defensa física.','Intelecto: pericias adicionales y defensa cognitiva.','Voluntad: dado de recuperación, concentración y defensa cognitiva.','Discernimiento: alcance de los sentidos, defensa espiritual e Investidura.','Presencia: defensa espiritual e Investidura.','Al crear: reparte 12 puntos, con un máximo de 3 en cada uno (los kandra reparten 6). Al subir de nivel: +1 en los niveles 3, 6, 9, 12, 15 y 18, hasta un máximo de 5.'],r:'Capítulo 1, paso 3 · Capítulo 3'},
+ habilidades:{t:'Habilidades',w:'Las 18 destrezas con las que resuelves pruebas. El modificador es los grados que tengas más el atributo asociado.',h:['Al crear: 1 grado gratis del camino (si lo da) y 4 grados más, con un máximo de 2 por habilidad.','En la hoja se marca un punto por cada grado y se anota el modificador en la casilla de la izquierda.','Al subir de nivel: +2 grados por nivel hasta el 20. El máximo por habilidad es 2 (niveles 1-5), 3 (6-10), 4 (11-15) y 5 (16 en adelante).','Las habilidades de artes metálicas (Alomancia, Feruquimia) también reciben grados.'],r:'Capítulo 1, paso 4 · Capítulo 3'},
+ pericias:{t:'Pericias',w:'Conocimientos muy especializados de tu personaje: un tipo de arma, un tema académico, una cultura…',h:['Empiezas con tus dos pericias culturales y una adicional por cada punto de Intelecto.','Se escriben como una palabra o una expresión corta.','El capítulo 3 sugiere temas, pero puedes elegir casi cualquiera.'],r:'Capítulo 1, paso 4 · Capítulo 3, «Pericias»'},
+ talentos:{t:'Talentos y capacidades',w:'Habilidades especiales que consigues al avanzar por el árbol de tu camino. Cada talento da un beneficio o una capacidad.',h:['Primero tienes el talento principal de tu camino.','Por tu ascendencia obtienes talentos adicionales: kandra, Forma natural y Disfraz kandra; sangre koloss, Resistencia koloss; humano, otro talento de camino heroico.','Al subir de nivel ganas 1 talento por nivel hasta el 20, y uno de ascendencia adicional en los niveles 6, 11, 16 y 21.','Cada talento exige tener el anterior del árbol y cumplir sus prerrequisitos.','Para rellenarlo: escribe el nombre del talento y, si quieres, un resumen de lo que hace tal como aparece en el manual.'],r:'Capítulo 1, paso 5 · Capítulos 4 a 6'},
+ equipo:{t:'Equipo',w:'Lo que lleva tu personaje: armas, armadura, objetos y dinero (arquillas). El desvío es el daño por golpe, laceración y energía que tu armadura te permite ignorar.',h:['Elige un equipo inicial del capítulo 7; su nombre no limita tu historia.','Anota su contenido en Armas, Armadura y Equipo.','Con las arquillas puedes comprar más equipo; apúntalo cuando lo consigas, y quítalo si lo pierdes.','Desvío: el valor de tu armadura; sin armadura es 0.'],r:'Capítulo 1, paso 6 · Capítulo 7'},
+ historia:{t:'Historia',w:'Quién eres y qué te mueve.',h:['Propósito: tu razón de ser. No tiene efecto mecánico, pero te impulsa.','Obstáculo: lo que se interpone una y otra vez en el camino de tu propósito.','Metas: objetivos concretos que persigues. Al lograrlas desbloqueas recompensas.','Conexiones: vínculos con otros personajes, patrocinadores o facciones.','Aspecto, ocupación, relaciones y lealtades ayudan a dar vida al personaje.'],r:'Capítulo 1, paso 7 · Capítulo 8'},
+ hoja:{t:'Hoja de personaje',w:'El resumen con todo lo calculado: salud, concentración, Investidura, defensas, levantamiento, movimiento, dado de recuperación y sentidos.',h:['Nivel: sube cuando la DJ marca un hito de la aventura.','Al subir de nivel: +1 nivel; +1 atributo en los niveles 3, 6, 9, 12, 15 y 18; más salud; +2 grados de habilidad; y +1 talento.','Pasado el nivel 20 eliges entre +1 grado o +1 talento.','Revisa y actualiza los modificadores cada vez que cambie un atributo.'],r:'Capítulo 1, «Cómo subir de nivel»'},
+ calculada:{t:'Valores calculados',w:'Lo que la app calcula por ti a partir de tus atributos y tu nivel.',h:['Salud: 10 + Fuerza, más lo que ganas al subir de nivel.','Concentración: 2 + Voluntad.','Investidura: solo si usas artes metálicas; 2 + el mayor entre Discernimiento y Presencia.','Defensas: 10 + los dos atributos de su grupo (física: Fuerza y Velocidad; cognitiva: Intelecto y Voluntad; espiritual: Discernimiento y Presencia).','Levantamiento, movimiento, dado de recuperación y alcance de los sentidos salen de las tablas del capítulo 3.'],r:'Capítulo 1, paso 8 · Capítulo 3'}};
+const HBOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.500A1.500 1.500 0 0 1 6.500 3H19v15H6.500A1.500 1.500 0 0 0 5 19.500zM5 19.500A1.500 1.500 0 0 0 6.500 21H19" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linejoin="round"/><path d="M9 8h6" stroke="currentColor" stroke-width="1.900" stroke-linecap="round"/></svg>';
+const helpBtn=k=>HELP[k]?`<button type="button" class="hq" data-act="help" data-k="${k}" aria-label="Consultar Manual: ${HELP[k].t}" title="Consultar Manual">${HBOOK}<span>Consultar Manual</span></button>`:'';
+const secKey={'Orígenes':'origenes','Camino':'camino','Atributos':'atributos','Habilidades':'habilidades','Pericias':'pericias','Talentos':'talentos','Equipo':'equipo','Historia':'historia','Final':'hoja'};
+function helpDlg(k){const x=HELP[k];if(!x)return;showDlg('Consultar Manual · '+esc(x.t),`<p class="hlpw">${esc(x.w)}</p><ul class="hlpl">${x.h.map(l=>`<li>${esc(l)}</li>`).join('')}</ul><p class="hint hlpr">Dónde verlo en el manual: ${esc(x.r)}.</p>`,true);const d=$('#dlg');d.classList.add('hlp')}
+function skCounter(c){
+ if(c.done){const sp=spentAll(c),ex=expectGrades(c),d=ex-sp;return `<div class="counter ${d===0?'ok':'warn'}" id="skc"><span class="n">${sp}</span> de ${ex} grados esperados en el nivel ${c.level}${d>0?` · te faltan ${d}`:d<0?` · te pasas en ${-d}`:' · ¡al día!'}</div>`}
+ const left=4-assignedSkillPts(c);return `<div class="counter ${left===0?'ok':'warn'}" id="skc"><span class="n">${left}</span> ${left===1?'grado por repartir':'grados por repartir'}${left===0?' · ¡completo!':''}</div>`}
+function skGrid(c,withInv){const done=!!c.done,left=done?99:4-assignedSkillPts(c),fs=freeSkill(c),cap=done?maxGrade(c):2;
  const l=withInv?skillList(c):SKILLS;
- return `<div class="skgrid">${l.map(s=>{const k=s[0],inv=s[3],g=grades(c,k),as=c.skills[k]||0;const free=fs===k?1:0;
-  const dots=[0,1].map(i=>`<i class="${i<free?'fr on':i<g?'on':''}"></i>`).join('');
-  return `<div class="skt${g>0?' has':''}${inv?' invt':''}" data-sk="${k}"><div class="skn"><b>${s[1]}</b><small>${AN[s[2]]} ${derive(c).t[s[2]]}${inv?' · Investida':''}</small></div>
+ return `<div class="skgrid">${l.map(s=>{const k=s[0],inv=s[3]&&!done,g=grades(c,k),as=c.skills[k]||0;const free=fs===k?1:0;
+  const dots=Array.from({length:cap},(_,i)=>`<i class="${i<free?'fr on':i<g?'on':''}"></i>`).join('');
+  return `<div class="skt${g>0?' has':''}${inv?' invt':''}" data-sk="${k}"><div class="skn"><b>${s[1]}</b><small>${AN[s[2]]} ${derive(c).t[s[2]]}${s[3]?' · Investida':''}</small></div>
   <div class="skm"><span class="dots" aria-hidden="true">${dots}</span><span class="mod">${sg(mod(c,k))}</span></div>
-  ${inv?'<div class="skc"></div>':`<div class="skc"><button type="button" data-act="sk" data-k="${k}" data-d="-1" aria-label="Quitar grado de ${s[1]}" ${as<=0?'disabled':''}>−</button><output aria-label="${g} grados">${g}</output><button type="button" data-act="sk" data-k="${k}" data-d="1" aria-label="Añadir grado a ${s[1]}" ${(g>=2||left<=0)?'disabled':''}>+</button></div>`}</div>`}).join('')}</div>`}
+  ${inv?'<div class="skc"></div>':`<div class="skc"><button type="button" data-act="sk" data-k="${k}" data-d="-1" aria-label="Quitar grado de ${s[1]}" ${as<=0?'disabled':''}>−</button><output aria-label="${g} grados">${g}</output><button type="button" data-act="sk" data-k="${k}" data-d="1" aria-label="Añadir grado a ${s[1]}" ${(g>=cap||left<=0)?'disabled':''}>+</button></div>`}</div>`}).join('')}</div>`}
 function sHab(c){
  const left=4-assignedSkillPts(c),fs=freeSkill(c);
- return `<section class="panel"><h3>Paso 4. Habilidades y pericias</h3>
- <p class="lead">${fs?`Ya tienes <b>1 grado gratis</b> en ${SK[fs][1]}. `:'Tu camino no da grado gratis. '}Reparte <b>4 grados</b> más; máximo 2 grados en cada habilidad.</p>
+ return `<section class="panel"><h3>Paso 4. Habilidades y pericias${helpBtn('habilidades')}</h3>
+ <p class="lead">${c.done?`Sube grados al ganar niveles: <b>+2 por nivel</b> hasta el 20. Máximo por habilidad en tu rango: <b>${maxGrade(c)}</b> (el grado gratis del camino cuenta).`:`${fs?`Ya tienes <b>1 grado gratis</b> en ${SK[fs][1]}. `:'Tu camino no da grado gratis. '}Reparte <b>4 grados</b> más; máximo 2 grados en cada habilidad.`}</p>
  ${skCounter(c)}
  <p class="hint">Modificador = grados + atributo (el número de la derecha de cada recuadro).</p>
  ${skGrid(c,true)}
- <h3 style="margin-top:6px">Pericias</h3>
+ <h3 style="margin-top:6px">Pericias${helpBtn('pericias')}</h3>
  <p class="hint">Ya tienes tus dos culturales. Además, una pericia por cada punto de Intelecto: <b>${derive(c).extraPer}</b>${c.kit==='indagador'?' (incluye Literatura del equipo Indagador)':''}. Escribe una palabra o expresión: un arma, un tema, una cultura.</p>
  <div class="two">${Array.from({length:derive(c).extraPer},(_,n)=>`<label class="f">Pericia adicional ${n+1}<input type="text" data-f="extra.${n}" value="${esc(c.extra[n]||'')}" autocomplete="off"></label>`).join('')||'<p class="hint">Con Intelecto 0 no tienes pericias adicionales.</p>'}</div></section>`}
 
@@ -1175,25 +1244,26 @@ function sTal(c){const p=pathInfo(c);
  const anc={humano:`<label class="f">Talento adicional de ascendencia (humano)<input type="text" data-f="talents.ancestry" value="${esc(c.talents.ancestry)}" placeholder="Otro talento de tu camino o el primero de otro camino heroico"></label>`,
   kandra:`<div class="item"><div class="nm"><b>Forma natural y Disfraz kandra</b><span>Talentos de ascendencia kandra, ya incluidos</span></div></div>`,
   koloss:`<div class="item"><div class="nm"><b>Resistencia koloss</b><span>+1 salud máxima; ya incluida en el cálculo</span></div></div>`}[c.ancestry];
- return `<section class="panel"><h3>Paso 5. Talentos</h3>
+ return `<section class="panel"><h3>Paso 5. Talentos${helpBtn('talentos')}</h3>
  ${p?`<div class="item"><div class="nm"><b>${esc(p.talent)}</b><span>Talento principal de ${esc(p.n)}</span></div></div>`:'<p class="hint">Elige un camino en el paso 2 para ver tu talento principal.</p>'}
  ${anc}
+ ${c.done?`<div class="tlist" id="tlist">${c.tl.map((x,i)=>`<div class="item tl"><label class="f" style="flex:1">Talento ${i+1}<input type="text" data-f="tl.${i}" value="${esc(x)}" placeholder="Nombre y, si quieres, qué hace" autocomplete="off"></label><button type="button" class="btn sm ghost" data-act="taldel" data-i="${i}" aria-label="Quitar talento ${i+1}">✕</button></div>`).join('')}</div><div class="row"><button type="button" class="btn pri" data-act="taladd">+ Añadir talento</button><span class="hint">Recuerda: +1 talento por nivel${(+c.level||1)>20?' (o un grado, pasado el 20)':''}.</span></div>`:''}
  <label class="f">Notas sobre talentos<textarea data-f="talents.notes" placeholder="Describe lo que hace cada talento tal y como aparece en el manual (cap. 4 a 6).">${esc(c.talents.notes)}</textarea></label>
  <p class="hint">Los árboles de talentos completos están en los capítulos 4, 5 y 6 del manual.</p></section>`}
 
 function sEq(c){const k=KITS[c.kit];
- return `<section class="panel"><h3>Paso 6. Equipo</h3>
- <p class="hint lead">Elige un equipo inicial; el nombre no limita tu historia. Luego puedes editar cualquier campo.</p>
+ return `<section class="panel"><h3>Paso 6. Equipo${helpBtn('equipo')}</h3>
+ ${c.done?'<p class="hint lead">Actualiza aquí lo que ganas, compras, gastas o pierdes durante las partidas.</p>':`<p class="hint lead">Elige un equipo inicial; el nombre no limita tu historia. Luego puedes editar cualquier campo.</p>
  <div class="seg">${Object.entries(KITS).map(([id,x])=>`<button data-act="kit" data-v="${id}" aria-pressed="${c.kit===id}"><b>${x.n}</b></button>`).join('')}</div>
- ${k&&k.note?`<p class="hint">${esc(k.note)}</p>`:''}
+ ${k&&k.note?`<p class="hint">${esc(k.note)}</p>`:''}`}
  <div class="two"><label class="f">Armas<input type="text" data-f="weapons" value="${esc(c.weapons)}"></label><label class="f">Armadura<input type="text" data-f="armor" value="${esc(c.armor)}"></label></div>
  <label class="f">Equipo<textarea data-f="gear">${esc(c.gear)}</textarea></label>
  <div class="two"><label class="f">Desvío (de la armadura)<input type="number" inputmode="numeric" min="0" data-f="deflect" data-num="1" value="${+c.deflect||0}"></label>
  <label class="f">Arquillas<input type="number" inputmode="numeric" min="0" id="f-ar" data-f="arquillas" data-num="1" value="${+c.arquillas||0}"></label></div>
- ${k&&k.dice?`<div class="row"><button class="btn" data-act="roll">Tirar ${k.dice[0]}d${k.dice[1]}${c.era===2?' × 10':''} arquillas</button><span class="hint">Tirada del equipo inicial${c.era===2?' (Era 2: se multiplica por 10)':''}</span></div>`:''}</section>`}
+ ${!c.done&&k&&k.dice?`<div class="row"><button class="btn" data-act="roll">Tirar ${k.dice[0]}d${k.dice[1]}${c.era===2?' × 10':''} arquillas</button><span class="hint">Tirada del equipo inicial${c.era===2?' (Era 2: se multiplica por 10)':''}</span></div>`:''}</section>`}
 
 function sHist(c){
- return `<section class="panel"><h3>Paso 7. Historia</h3>
+ return `<section class="panel"><h3>Paso 7. Historia${helpBtn('historia')}</h3>
  <label class="f">Propósito (tu razón de ser)<textarea data-f="purpose">${esc(c.purpose)}</textarea></label>
  <label class="f">Obstáculo (lo que se interpone en el camino)<textarea data-f="obstacle">${esc(c.obstacle)}</textarea></label>
  <div class="two"><label class="f">Meta 1<input type="text" data-f="goals.0" value="${esc(c.goals[0]||'')}"></label><label class="f">Meta 2<input type="text" data-f="goals.1" value="${esc(c.goals[1]||'')}"></label></div>
@@ -1207,8 +1277,8 @@ function sHoja(c){const d=derive(c),p=pathInfo(c),t=d.t;
  const sk=skillList(c).map(s=>`<tr><td>${s[1]}</td><td class="g">${AN[s[2]].slice(0,3)}</td><td class="g">${grades(c,s[0])}</td><td>${sg(mod(c,s[0]))}</td></tr>`).join('');
  const pw=[...(METAL[c.path]?c.powers.alo.filter(Boolean).map(x=>(ALO_METALS.find(m=>m[0]===x)||[0,x])[1]):[]),...c.powers.fer.filter(Boolean).map(x=>'Feruquimia de '+x)];
  const meta=METAL[c.path];const allp=meta&&meta.alo==='all'?['Todos los poderes alománticos']:meta&&meta.fer==='all'?['Todos los poderes feruquímicos']:[];
- return `<section class="panel"><h3>Paso 8. Hoja de personaje</h3>
- <p class="hint">Resumen con todo calculado. Revisa los puntos de colores de arriba: naranja indica que a ese paso le falta algo.</p>
+ return `<section class="panel"><h3>${c.done?'Hoja de personaje':'Paso 8. Hoja de personaje'}${helpBtn('hoja')}</h3>
+ ${c.done?lvlBox(c):`<p class="hint">Resumen con todo calculado. Revisa los puntos de colores de arriba: naranja indica que a ese paso le falta algo.</p>`}
  <div class="sheetgrid"><div><h4>Identidad</h4><dl class="kv"><dt>Personaje</dt><dd>${esc(c.name||'—')}</dd><dt>Jugador</dt><dd>${esc(c.player||'—')}</dd><dt>Ascendencia</dt><dd>${{humano:'Humano',kandra:'Kandra'+(c.blessing?' ('+BLESS[c.blessing].n+')':''),koloss:'Sangre koloss'}[c.ancestry]}</dd><dt>Camino</dt><dd>${p?esc(p.n):'—'}</dd><dt>Era / nivel</dt><dd>${c.era} / ${c.level}</dd></dl></div>
  <div><h4>Atributos</h4><dl class="kv">${ATT.map(([k,n])=>`<dt>${n}</dt><dd>${t[k]}</dd>`).join('')}</dl></div>
  <div><h4>Reservas y defensas</h4><dl class="kv"><dt>Salud</dt><dd>${d.salud}</dd><dt>Concentración</dt><dd>${d.conc}</dd><dt>Investidura</dt><dd>${d.inv===null?'—':'0 / '+d.inv}</dd><dt>Defensa física</dt><dd>${d.fis}</dd><dt>Defensa cognitiva</dt><dd>${d.cog}</dd><dt>Defensa espiritual</dt><dd>${d.esp}</dd><dt>Desvío</dt><dd>${d.desvio}</dd></dl></div>
@@ -1217,7 +1287,16 @@ function sHoja(c){const d=derive(c),p=pathInfo(c),t=d.t;
  <div><h4>Pericias</h4><p class="pre">${esc(per.join('\n')||'—')}</p><h4 style="margin-top:12px">Poderes</h4><p class="pre">${esc([...pw,...allp].join('\n')||'—')}</p><h4 style="margin-top:12px">Talentos</h4><p class="pre">${esc([p?p.talent:'',c.ancestry==='humano'?c.talents.ancestry:c.ancestry==='kandra'?'Forma natural, Disfraz kandra':'Resistencia koloss',c.talents.notes].filter(Boolean).join('\n')||'—')}</p></div>
  <div><h4>Equipo</h4><p class="pre">${esc([c.weapons&&'Armas: '+c.weapons,c.armor&&'Armadura: '+c.armor,c.gear,(+c.arquillas)?'Arquillas: '+c.arquillas:''].filter(Boolean).join('\n')||'—')}</p></div>
  <div><h4>Historia</h4><p class="pre">${esc([c.purpose&&'Propósito: '+c.purpose,c.obstacle&&'Obstáculo: '+c.obstacle,...c.goals.filter(Boolean).map(g=>'Meta: '+g),c.connection&&'Conexiones: '+c.connection,c.look&&'Aspecto: '+c.look,c.notes].filter(Boolean).join('\n')||'—')}</p></div></div>
- <div class="row"><button class="btn pri" data-act="copytext">Copiar hoja como texto</button><button class="btn pri" data-act="sheet" data-id="${c.id}">Exportar hoja (PDF)</button><button class="btn" data-act="export">Exportar ficha</button></div></section>`}
+ <div class="row"><button class="btn pri" data-act="copytext">Copiar hoja como texto</button><button class="btn pri" data-act="sheet" data-id="${c.id}">Exportar hoja (PDF)</button><button class="btn" data-act="export">Exportar ficha</button></div>
+ ${c.done?'<div class="row"><button class="btn ghost sm" data-act="unfinish">Volver al modo creación</button></div>':finBox(c)}</section>`}
+function sealFx(c){try{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return}catch(e){}
+ const o=document.createElement('div');o.id='seal';o.setAttribute('role','status');o.innerHTML=`<div class="sealw"><div class="sealr"></div><div class="sealc">${GLYPH_A}</div><b>Ficha completada</b><small>${esc(c.name||'Tu personaje')} ya puede crecer con cada partida</small></div>`;
+ document.body.appendChild(o);const end=()=>{o.classList.add('out');setTimeout(()=>o.remove(),380)};o.addEventListener('click',end);setTimeout(end,2300)}
+function lvlBox(c){const l=+c.level||1,d=derive(c);return `<div class="lvlbox"><div class="lvlh"><div><small>Nivel</small><div class="step lvls"><button type="button" data-act="lvl" data-d="-1" aria-label="Bajar nivel" ${l<=1?'disabled':''}>−</button><output id="lvl">${l}</output><button type="button" data-act="lvl" data-d="1" aria-label="Subir nivel">+</button></div></div>
+ <div><small>Ajuste de salud</small><div class="step lvls"><button type="button" data-act="hp" data-d="-1" aria-label="Bajar salud">−</button><output>${c.hpAdj>0?'+':''}${c.hpAdj||0}</output><button type="button" data-act="hp" data-d="1" aria-label="Subir salud">+</button></div></div></div>
+ <p class="hint" style="margin:6px 0 0">Salud máxima: <b>${d.salud}</b>. Se calcula con tu nivel y tu Fuerza actual; usa el ajuste para bonificaciones o penalizaciones de la partida.</p>
+ <div class="lvlg"><b>Lo que te da el nivel ${l}</b><ul>${lvlInfo(c,l).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="hint" style="margin:0">Actualiza después tus atributos, habilidades, talentos y equipo en las pestañas de arriba.</p></div></div>`}
+function finBox(c){const bad=STEPS.slice(0,7).filter((n,i)=>status(c,i)==='warn');return `<div class="finbox"><p class="hint" style="margin:0">${bad.length?`Antes de finalizar te falta: <b>${bad.join(', ')}</b>.`:'¡Todo listo! Al finalizar podrás actualizar atributos, habilidades, talentos y equipo según avances de nivel.'}</p><div class="row"><button class="btn pri" data-act="finish" ${bad.length?'disabled':''}>Finalizar ficha</button></div></div>`}
 
 /* ---------- texto, exportar, importar ---------- */
 function asText(c){const d=derive(c),p=pathInfo(c);
@@ -1227,12 +1306,12 @@ function asText(c){const d=derive(c),p=pathInfo(c);
  `Levantamiento ${d.lift} kg · Movimiento ${d.move} m · Recuperación ${d.die} · Sentidos ${d.sense}`,
  'Habilidades: '+skillList(c).map(s=>`${s[1]} ${sg(mod(c,s[0]))}`).join(', '),
  'Pericias: '+[...c.cultures.filter(Boolean),...c.extra.filter(Boolean)].join(', '),
- c.purpose&&'Propósito: '+c.purpose,c.obstacle&&'Obstáculo: '+c.obstacle,c.goals.filter(Boolean).length&&'Metas: '+c.goals.filter(Boolean).join('; ')].filter(Boolean).join('\n')}
+ ((c.tl||[]).filter(Boolean).length?'Talentos: '+c.tl.filter(Boolean).join(', '):''),c.purpose&&'Propósito: '+c.purpose,c.obstacle&&'Obstáculo: '+c.obstacle,c.goals.filter(Boolean).length&&'Metas: '+c.goals.filter(Boolean).join('; ')].filter(Boolean).join('\n')}
 async function copy(txt,ok){try{await navigator.clipboard.writeText(txt);toast(ok)}catch(e){showDlg('Copiar manualmente','<p class="hint">Tu navegador no permitió copiar. Selecciona el texto y cópialo.</p><textarea id="dl-t" readonly rows="10">'+esc(txt)+'</textarea>',true);const t=$('#dl-t');t&&t.select()}}
 function showDlg(title,html,closeOnly){const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>${title}</h3>${html}<div class="row">${closeOnly?'':'<button class="btn pri" data-act="doimport">Importar</button>'}<button class="btn" data-act="closedlg">Cerrar</button></div></div>`;try{d.showModal()}catch(e){d.setAttribute('open','')}}
 function normalize(o){const b=blank();const c=Object.assign(b,o||{});c.id=uid();c.attrs=Object.assign(blank().attrs,o&&o.attrs);c.powers=Object.assign({alo:[],fer:[]},o&&o.powers);c.talents=Object.assign({ancestry:'',notes:''},o&&o.talents);
  if(!Array.isArray(c.cultures))c.cultures=['',''];if(!Array.isArray(c.goals))c.goals=['',''];if(!Array.isArray(c.extra))c.extra=[];c.skills=Object.assign({},o&&o.skills);
- if(!['humano','kandra','koloss'].includes(c.ancestry))c.ancestry='humano';if(![1,2].includes(c.era))c.era=1;c.step=0;c.mode='f';if(!Array.isArray(c.picks))c.picks=[];if(!c.metalChoice)c.metalChoice=METAL[c.path]?'si':c.path?'no':'';return c}
+ if(!['humano','kandra','koloss'].includes(c.ancestry))c.ancestry='humano';if(![1,2].includes(c.era))c.era=1;c.step=0;c.mode='f';if(!Array.isArray(c.picks))c.picks=[];if(!Array.isArray(c.tl))c.tl=[];c.done=!!c.done;c.hpAdj=+c.hpAdj||0;if(c.done)c.step=7;if(!c.metalChoice)c.metalChoice=METAL[c.path]?'si':c.path?'no':'';return c}
 
 
 /* ---------- modo preguntas ---------- */
@@ -1310,7 +1389,7 @@ addQ({id:'notes',sec:'Historia',opt:1,t:()=>'¿Algo más sobre su vida?',h:()=>'
 addQ({id:'fin',sec:'Final',t:c=>`${c.name||'Tu personaje'} está listo`,h:()=>'Estos son los valores calculados. Puedes revisar cualquier paso en el formulario.',
  r:c=>{const bad=STEPS.slice(0,7).map((n,i)=>status(c,i)==='warn'?n:null).filter(Boolean);
   return `${bad.length?`<p class="warn-t"><b>Quedan pendientes:</b> ${bad.join(', ')}.</p>`:'<p class="ok-t"><b>No falta nada.</b></p>'}
-  <div class="row"><button class="btn pri" data-act="sheet" data-id="${c.id}">Exportar hoja rellena (PDF)</button><button class="btn" data-act="qform" data-i="7">Ver la hoja completa</button><button class="btn" data-act="qform" data-i="0">Revisar en el formulario</button><button class="btn ghost" data-act="home">Mis fichas</button></div>`}});
+  <div class="row">${bad.length?'':`<button class="btn pri" data-act="finish">Finalizar ficha</button>`}<button class="btn ${bad.length?'pri':''}" data-act="sheet" data-id="${c.id}">Exportar hoja rellena (PDF)</button><button class="btn" data-act="qform" data-i="7">Ver la hoja completa</button><button class="btn" data-act="qform" data-i="0">Revisar en el formulario</button><button class="btn ghost" data-act="home">Mis fichas</button></div>`}});
 const qList=c=>Q.filter(q=>q.show(c));
 function curQ(c){const l=qList(c);return l.find(q=>q.id===c.q)||l[0]}
 function qview(c){
@@ -1319,7 +1398,7 @@ function qview(c){
  return `<div class="top"><button class="btn" data-act="home">‹ Mis fichas</button><div class="row"><button class="btn sm" data-act="qform" data-i="0">Modo formulario</button></div></div>
  <header class="chapter"><div class="mist"></div><div class="tab">Pregunta ${idx+1} de ${list.length}</div><div class="cart"><span class="med">${GLYPH_A}</span><h2 id="ttl">${esc(c.name||'Personaje sin nombre')}</h2><span class="med">${GLYPH_B}</span></div></header>
  <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="Progreso"><i style="width:${pct}%"></i></div>
- <div class="layout"><div><section class="panel"><h3>${q.sec}</h3><p class="qt">${esc(q.t(c))}</p>${q.h(c)?`<p class="hint">${esc(q.h(c))}</p>`:''}${q.r(c)}
+ <div class="layout"><div><section class="panel"><h3>${q.sec}${helpBtn(secKey[q.sec])}</h3><p class="qt">${esc(q.t(c))}</p>${q.h(c)?`<p class="hint">${esc(q.h(c))}</p>`:''}${q.r(c)}
  ${q.opt?`<div class="row"><button class="btn ghost" data-act="qskip">Saltar por ahora</button></div>`:''}</section></div>
  <div id="side" class="side qside">${statsPanel(c)}</div></div>
  <div class="nav"><div class="in"><button class="btn" data-act="qprev" ${idx===0?'disabled':''}>Anterior</button><button class="btn pri" data-act="qnext" ${idx===list.length-1||!q.v(c)?'disabled':''}>Siguiente</button></div></div>`}
@@ -1372,7 +1451,7 @@ function shPage1(c){const d=derive(c),p=pathInfo(c);const [cv,x]=shCanvas();shHe
  x.fillStyle='#222';x.font='700 6.6px '+SHF;x.textAlign='center';x.fillText('PERICIAS',401,478);x.fillText('TALENTOS Y CAPACIDADES',401,550);x.textAlign='left';
  shText(x,[...c.cultures.filter(Boolean).map(v=>v+' (cultural)'),...c.extra.filter(v=>v&&v.trim())].join('\n'),220,482,365,54,9,6.2);
  const anc=c.ancestry==='humano'?c.talents.ancestry:c.ancestry==='kandra'?'Forma natural, Disfraz kandra':'Resistencia koloss';
- shText(x,[p?'Talento de camino: '+p.talent:'',anc,c.talents.notes].filter(Boolean).join('\n'),220,555,365,193,9.5,6);
+ shText(x,[p?'Talento de camino: '+p.talent:'',anc,...(c.tl||[]).filter(Boolean).map(x=>'• '+x),c.talents.notes].filter(Boolean).join('\n'),220,555,365,193,9.5,6);
  shBox(x,12,540,188,213,'Armas',{r:6});shText(x,[c.weapons].filter(Boolean).join('\n'),22,555,168,193,9.5,6);
  x.fillStyle='#666';x.font='500 6.4px '+SHF;x.textAlign='center';x.fillText('Hoja de personaje de Nacidos de la Bruma · generada con La Mesa Larga',SH_W/2,774);return cv}
 function shPage2(c){const d=derive(c),p=pathInfo(c);const [cv,x]=shCanvas();shHead(x,c,d,p,2);
@@ -1444,6 +1523,13 @@ document.addEventListener('click',e=>{
   case 'backup':(async()=>{await flush();loadAccounts();const rec=accounts.users[session.user];copy('FSC1:'+b64(new TextEncoder().encode(JSON.stringify(rec))),'Copia de seguridad copiada')})();break;
   case 'new':{const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
   case 'sheet':sheetOpen(b.dataset.id);break;
+  case 'help':b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');helpDlg(b.dataset.k);break;
+  case 'finish':{if(STEPS.slice(0,7).some((n,i)=>status(c,i)==='warn'))break;c.done=true;c.mode='f';c.step=7;if(!c.level)c.level=1;save();render();sealFx(c);break}
+  case 'unfinish':c.done=false;save();render();break;
+  case 'lvl':{const d=+b.dataset.d;const n=Math.max(1,Math.min(40,(+c.level||1)+d));if(n===c.level)break;c.level=n;if(d<0){const m=maxGrade(c);for(const k of Object.keys(c.skills)){const fr=freeSkill(c)===k?1:0;if(c.skills[k]+fr>m)c.skills[k]=Math.max(0,m-fr)}}save();render(1);break}
+  case 'hp':c.hpAdj=Math.max(-30,Math.min(60,(+c.hpAdj||0)+(+b.dataset.d)));save();render(1);break;
+  case 'taladd':c.tl.push('');save();render(1);{const i=document.querySelectorAll('#tlist input');if(i.length)i[i.length-1].focus()}break;
+  case 'taldel':c.tl.splice(+b.dataset.i,1);save();render(1);break;
   case 'sheetpdf':sheetPdf();break;
   case 'sample':{const n=sample();store.chars.push(n);store.cur=n.id;n.step=7;save();render();break}
   case 'open':store.cur=b.dataset.id;render();break;
@@ -1476,15 +1562,15 @@ document.addEventListener('click',e=>{
    for(const [k] of ATT)c.attrs[k]=Math.min(c.attrs[k],attrCap(c,k));while(attrSpent(c)>attrBudget(c)){const k=ATT.map(x=>x[0]).reverse().find(k=>c.attrs[k]>0);c.attrs[k]--}save();render(1);break;
   case 'bless':c.blessing=v;save();render(1);break;
   case 'path':c.path=v;c.powers={alo:[],fer:[]};if(freeSkill(c)){}for(const k of Object.keys(c.skills)){if(grades(c,k)>2)c.skills[k]=Math.max(0,2-(freeSkill(c)===k?1:0))}save();render(1);break;
-  case 'att':{const k=b.dataset.k,d=+b.dataset.d,n=c.attrs[k]+d;if(n<0||n>attrCap(c,k)||attrSpent(c)+d>attrBudget(c))break;c.attrs[k]=n;save();render(1);break}
-  case 'sk':{const k=b.dataset.k,d=+b.dataset.d,n=(c.skills[k]||0)+d;if(n<0||(d>0&&(grades(c,k)>=2||assignedSkillPts(c)>=4)))break;c.skills[k]=n;save();render(1);break}
+  case 'att':{const k=b.dataset.k,d=+b.dataset.d,n=c.attrs[k]+d;if(c.done){if(n<0||n>5)break}else if(n<0||n>attrCap(c,k)||attrSpent(c)+d>attrBudget(c))break;c.attrs[k]=n;save();render(1);break}
+  case 'sk':{const k=b.dataset.k,d=+b.dataset.d,n=(c.skills[k]||0)+d;if(n<0||(d>0&&(c.done?grades(c,k)>=maxGrade(c):(grades(c,k)>=2||assignedSkillPts(c)>=4))))break;c.skills[k]=n;save();render(1);break}
   case 'kit':{c.kit=v;const k=KITS[v];if(v!=='otro'){c.weapons=k.w;c.armor=k.a;c.gear=k.g}save();render(1);break}
   case 'roll':{const k=KITS[c.kit];if(!k||!k.dice)break;let s=0;for(let i=0;i<k.dice[0];i++)s+=1+Math.floor(Math.random()*k.dice[1]);c.arquillas=s*(c.era===2?10:1);save();render(1);toast('Tirada: '+c.arquillas+' arquillas');break}
   case 'copytext':copy(asText(c),'Hoja copiada');break;
   case 'export':copy(JSON.stringify(c),'Ficha copiada. Pégala en Importar en otro dispositivo');break;
   case 'import':showDlg('Importar ficha','<p class="hint">Pega aquí el texto de una ficha exportada.</p><textarea id="dl-t" rows="8" aria-label="Texto de la ficha"></textarea>');break;
   case 'doimport':{try{const o=JSON.parse($('#dl-t').value);const n=normalize(o);store.chars.push(n);save();$('#dlg').close();render();toast('Ficha importada')}catch(err){toast('El texto no es una ficha válida')}break}
-  case 'closedlg':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}break;
+  case 'closedlg':{const d=$('#dlg'),fin=()=>{try{d.close()}catch(x){d.removeAttribute('open')}d.classList.remove('closing')};if(d.classList.contains('hlp')&&!matchMedia('(prefers-reduced-motion:reduce)').matches){d.classList.add('closing');setTimeout(fin,200)}else fin();break}
  }});
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||!t.dataset.f)return;const c=cur();if(!c)return;
  let v=t.value;if(t.dataset.num)v=Math.max(0,parseInt(v,10)||0);setPath(c,t.dataset.f,v);save();
@@ -1499,5 +1585,3 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
 loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
 </script>
-
-</body></html>
