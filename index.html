@@ -1249,41 +1249,97 @@ body.hub:has(.lfroot){--h-bg:var(--bg);--h-card:var(--surface);--h-ink:var(--ink
 .lfctl{justify-content:center}
 
 .mtb{margin:8px auto 40px;max-width:1080px;padding:16px 12px 14px;border-radius:22px;background:linear-gradient(180deg,#44494D,#2E3235);border:1px solid color-mix(in srgb,var(--gold) 45%,#2b2e31);box-shadow:inset 0 0 0 3px #34383B,inset 0 0 0 4px color-mix(in srgb,var(--gold) 25%,transparent),0 18px 34px -20px rgba(10,6,8,.7);color:#D8D6D6}
-.mth{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:22px}
+.mth{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .mth b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:#DDBF86}
-.mth small{font-family:var(--sans);font-size:.8rem;color:#B0A9AA}
-.mth .btn{background:transparent;color:#D8D6D6;border-color:#6a7075}
-.mtg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 8px}
-.mtc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-height:44px;-webkit-tap-highlight-color:transparent}
+.mth small{display:block;font-family:var(--sans);font-size:.78rem;line-height:1.35;color:#B0A9AA}
+.mth .btn{flex:none}
+.mtch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.mtch button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:1px;padding:8px 12px;min-height:44px;border-radius:12px;border:1px solid #6a7075;background:rgba(0,0,0,.18);transition:border-color .25s,background .25s}
+.mtch button b{font-family:var(--display);font-size:.95rem;letter-spacing:.04em;color:#E7E3E1}
+.mtch button small{font-family:var(--sans);font-size:.72rem;color:#A8A3A4}
+.mtch button[aria-checked="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 16%,rgba(0,0,0,.18))}
+.mtch button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.mtcp{margin-bottom:14px;padding:10px 12px;border-radius:14px;background:rgba(0,0,0,.2);border:1px solid #565c61;font-family:var(--sans);font-size:.85rem;line-height:1.4}
+.mtnoc{margin:0;color:#B0A9AA;font-style:italic;font-family:var(--serif);font-size:.98rem}
+.mtbase{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;color:#B9B3B4}
+.mtbase b{font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--mc);padding:3px 12px;border-radius:99px;font-size:.85rem}
+.mtnow{margin:0 0 8px;padding:6px 10px;border-radius:10px;background:color-mix(in srgb,var(--gold) 22%,transparent);color:#F3E3B8;font-weight:700}
+.mtab{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.mtab li{display:flex;gap:10px;align-items:flex-start;opacity:.55}
+.mtab li.on{opacity:1}
+.mtab em{display:block;font-style:normal;font-size:.72rem;color:#A8A3A4;margin-top:1px}
+.mtab li.on em{color:#DDBF86}
+.mtrm{flex:none;width:28px;height:28px;display:grid;place-items:center;transform:rotate(45deg);border:2px solid #70777c;border-radius:5px;margin:3px 3px 0 3px}
+.mtrm{font-family:var(--display);font-weight:700;font-size:.7rem;color:#D8D6D6;letter-spacing:0}
+.mtab li.on .mtrm{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 28%,transparent)}
+.mttr{overflow-x:auto;margin:0 -4px 16px;padding:4px 4px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.mttk{display:flex;gap:2px;min-width:max-content}
+.mts{all:unset;box-sizing:border-box;cursor:pointer;width:34px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border-radius:8px;color:#8c9297}
+.mts:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.mtk{width:26px;height:26px;display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:.72rem;background:#22262a;border:1px solid #565c61;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.mts.done{color:#C8B27A}.mts.done .mtk{background:color-mix(in srgb,var(--gold) 30%,#22262a);border-color:var(--gold);color:#E9DDBB}
+.mts.cur{color:#fff}.mts.cur .mtk{background:var(--gold);border-color:#fff;color:#1E2225;box-shadow:0 0 12px 3px color-mix(in srgb,var(--gold) 65%,transparent)}
+.mtri{position:relative;height:30px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font-family:var(--sans)}
+.mtri svg{width:18px;height:18px}.mtri b{font-size:.62rem;line-height:1;font-weight:800}
+.mtri.fl{color:#F0A04B}.mtri.at{color:#B9B3E8}.mtri.ro b{font-family:var(--display);font-size:.8rem;margin-top:4px;color:inherit}
+.mts:not(.done):not(.cur) .mtri{opacity:.7}
+.mtg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 8px;margin-top:10px}
+.mtc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-height:44px;-webkit-tap-highlight-color:transparent;position:relative}
 .mtc:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:12px}
 .mtd{position:relative;width:clamp(48px,15vw,60px);aspect-ratio:1}
-.mtdisc{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:var(--dc);color:var(--gc);box-shadow:inset 0 -4px 8px rgba(0,0,0,.22),inset 0 3px 6px rgba(255,255,255,.35),0 3px 8px rgba(0,0,0,.5);filter:grayscale(.85) brightness(.55);opacity:.8;transition:filter .7s ease,opacity .7s ease,box-shadow .7s ease,transform .3s}
+.mtdisc{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:var(--dc);color:var(--gc);box-shadow:inset 0 -4px 8px rgba(0,0,0,.22),inset 0 3px 6px rgba(255,255,255,.35),0 3px 8px rgba(0,0,0,.5);transition:filter .7s ease,opacity .7s ease,box-shadow .7s ease,transform .3s}
 .mtdisc svg{width:58%;height:58%}
-.mtc[aria-pressed="true"] .mtdisc{filter:none;opacity:1;box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.4),0 0 0 2px color-mix(in srgb,var(--mc) 70%,#fff),0 0 20px 5px color-mix(in srgb,var(--mc) 75%,transparent)}
+.mtc[data-s="ready"] .mtdisc{filter:brightness(.82) saturate(.9)}
+.mtc[data-s="burn"] .mtdisc,.mtc[data-s="flare"] .mtdisc{filter:none;box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.4),0 0 0 2px color-mix(in srgb,var(--mc) 70%,#fff),0 0 20px 5px color-mix(in srgb,var(--mc) 75%,transparent)}
+.mtc[data-s="flare"] .mtdisc{box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.5),0 0 0 3px #fff,0 0 28px 9px color-mix(in srgb,var(--mc) 85%,transparent)}
+.mtc[data-s="flip"] .mtdisc,.mtc[data-s="used"] .mtdisc{filter:grayscale(.9) brightness(.5);opacity:.8;box-shadow:inset 0 0 0 4px #1b1e20,0 3px 8px rgba(0,0,0,.5)}
+.mtc[data-s="used"] .mtdisc{opacity:.6}
+.mtsg{position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;display:none;place-items:center;background:var(--gold);color:#1E2225;font-size:.7rem;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.mtc.mtsig .mtsg{display:grid}
+.mtc.mtsigon .mtdisc{outline:2px solid var(--gold);outline-offset:4px}
 .mtn{align-self:stretch;padding:5px 2px;background:var(--mc);color:#fff;font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.mtst{font-family:var(--sans);font-weight:700;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:#8e9499}
+.mtc[data-s="burn"] .mtst{color:#F3E3B8}.mtc[data-s="flare"] .mtst{color:#FFB35C}.mtc[data-s="flip"] .mtst,.mtc[data-s="used"] .mtst{color:#8e9499}.mtc[data-s="ready"] .mtst{color:#B9B3B4}
 .mtds{display:none;font-family:var(--serif);font-style:italic;font-size:.74rem;line-height:1.25;color:#A8A3A4;padding:0 4px}
 .mtl{width:11px;height:11px;transform:rotate(45deg);border:2px solid #70777c;border-radius:2px;background:transparent;transition:background .5s,border-color .5s,box-shadow .5s}
-.mtc[aria-pressed="true"] .mtl{background:var(--mc);border-color:color-mix(in srgb,var(--mc) 60%,#fff);box-shadow:0 0 10px 2px color-mix(in srgb,var(--mc) 70%,transparent)}
-.mtcap{margin:18px 0 0;min-height:2.6em;text-align:center;font-family:var(--serif);font-style:italic;font-size:.98rem;color:#B9B3B4}
+.mtc[data-s="burn"] .mtl,.mtc[data-s="flare"] .mtl{background:var(--mc);border-color:color-mix(in srgb,var(--mc) 60%,#fff);box-shadow:0 0 10px 2px color-mix(in srgb,var(--mc) 70%,transparent)}
+.mtatp{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;padding:10px 12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid #565c61}
+.mtai{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#1a1c1e;color:#C9C4F0;box-shadow:inset 0 0 0 2px #50565b}
+.mtai svg{width:22px;height:22px}
+.mtat1{flex:1 1 90px}.mtat1 b{display:block;font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;font-size:.9rem;color:#E7E3E1}
+.mtat1 small{font-family:var(--sans);font-size:.75rem;color:#B0A9AA}
+.mtatb{display:flex;gap:6px;flex-wrap:wrap}
+.mtatb .btn{background:transparent;color:#D8D6D6;border-color:#6a7075;min-width:44px}
+.mtatb .btn:disabled{opacity:.35}
+.mtcap{margin:16px 0 0;min-height:2.6em;text-align:center;font-family:var(--serif);font-style:italic;font-size:.98rem;color:#B9B3B4}
+.mtact{display:flex;gap:8px;justify-content:center;margin-top:8px}.mtact:empty{display:none}
+.mtact .btn.ghost{background:transparent;color:#D8D6D6;border-color:#6a7075}
+.mtrule{margin:14px 0 0;font-family:var(--sans);font-size:.74rem;line-height:1.45;color:#8e9499}
 .mtsm,.mtring{pointer-events:none}
 .mtsm{position:absolute;left:50%;top:6px;width:0;height:0}
 .mtsm i{position:absolute;left:-8px;top:0;width:16px;height:16px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--mc) 80%,#fff),transparent);filter:blur(3px);opacity:0}
 .mtsm i:nth-child(2){left:-16px}.mtsm i:nth-child(3){left:2px}
 .mtring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mc);box-shadow:0 0 14px var(--mc),inset 0 0 10px var(--mc);opacity:0}
+html[data-dev=tablet] .mtch,html[data-dev=desktop] .mtch{grid-template-columns:repeat(4,minmax(0,1fr))}
 html[data-dev=tablet] .mtg,html[data-dev=desktop] .mtg{grid-template-columns:repeat(8,minmax(0,1fr));gap:0 6px}
 html[data-dev=tablet] .mtds,html[data-dev=desktop] .mtds{display:block}
-html[data-dev=tablet] .mtcap,html[data-dev=desktop] .mtcap{display:none}
 html[data-dev=tablet] .mtn,html[data-dev=desktop] .mtn{font-size:.8rem;padding:7px 2px}
+html[data-dev=tablet] .mttr,html[data-dev=desktop] .mttr{overflow-x:visible}
+html[data-dev=tablet] .mts,html[data-dev=desktop] .mts{width:calc((100% - 40px)/21);min-width:34px}
+html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{min-width:0;width:100%}
 @media(prefers-reduced-motion:no-preference){
- .mtc[aria-pressed="true"] .mtsm i{animation:mtSmoke 2.6s ease-out infinite}
- .mtc[aria-pressed="true"] .mtsm i:nth-child(2){animation-delay:.9s;animation-duration:3s}
- .mtc[aria-pressed="true"] .mtsm i:nth-child(3){animation-delay:1.7s;animation-duration:2.8s}
+ .mtc[data-s="burn"] .mtsm i,.mtc[data-s="flare"] .mtsm i{animation:mtSmoke 2.6s ease-out infinite}
+ .mtc[data-s="burn"] .mtsm i:nth-child(2),.mtc[data-s="flare"] .mtsm i:nth-child(2){animation-delay:.9s;animation-duration:3s}
+ .mtc[data-s="burn"] .mtsm i:nth-child(3),.mtc[data-s="flare"] .mtsm i:nth-child(3){animation-delay:1.7s;animation-duration:2.8s}
+ .mtc[data-s="flare"] .mtsm i{animation-duration:1.7s}
  .mtc.mtpop .mtdisc{animation:mtPop .45s cubic-bezier(.2,1.2,.3,1)}
  .mtring{animation:mtRing .75s ease-out}
  .mtc.mtoff .mtdisc{animation:mtOff .75s ease-out}
+ .mtc.mtsigon .mtdisc{animation:mtSig 2s ease-in-out infinite}
  @keyframes mtSmoke{0%{opacity:0;transform:translate(0,4px) scale(.7)}25%{opacity:.55}100%{opacity:0;transform:translate(8px,-38px) scale(2)}}
  @keyframes mtPop{0%{transform:scale(.86)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
  @keyframes mtRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
+ @keyframes mtSig{0%,100%{outline-offset:4px}50%{outline-offset:7px}}
  @keyframes mtOff{0%{box-shadow:0 0 0 2px #fff,0 0 22px 6px var(--mc)}30%{box-shadow:0 0 0 2px var(--mc),0 0 8px 1px var(--mc)}45%{box-shadow:0 0 0 2px var(--mc),0 0 16px 3px var(--mc)}100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent}}
 }
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
@@ -1800,8 +1856,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='117';
-const APPN='Nuevo tablero de metales de Nacidos de la Bruma en Creación de mazos: marca los metales que puedes usar este turno.';
+const APPV='118';
+const APPN='Tablero de metales según el manual: personaje y metal base, entrenamiento, quemas, avivar y refrescar, y Atium.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1983,7 +2039,7 @@ function lfChange(d){const old=LF.hp;
  const nv=Math.max(0,Math.min(LF_MAX,old+d));
  if(nv===old){toast('Máximo '+LF_MAX+' de vida');return}
  LF.hp=nv;lfSave();lfRoll(nv,nv>old?1:-1);lfPaint();lfFx(nv>old?'fxheal':'fxdmg');if(nv<old)lfAsh(0);if(nv===0)toast('Has perdido')}
-function lfNew(){LF.hp=LF_START;lfSave();mtClear(true);const c=document.getElementById('lfc0');if(!c)return;
+function lfNew(){LF.hp=LF_START;lfSave();mtReset();const c=document.getElementById('lfc0');if(!c)return;
  const v=document.getElementById('lfv0'),d=v&&v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(d)d.textContent=LF_START;lfPaint();return}
  c.classList.remove('fxnew');void c.offsetWidth;c.classList.add('fxnew');
@@ -1993,39 +2049,99 @@ function lfNew(){LF.hp=LF_START;lfSave();mtClear(true);const c=document.getEleme
  requestAnimationFrame(step)}
 
 
-/* ---------- Creación de mazos: tablero de metales ---------- */
-const MT_KEY='lml_metals';
+/* ---------- Creación de mazos: tablero de metales (reglas del manual) ---------- */
+const MT_KEY='lml_metals2',MT_STEPS=21,MT_REW={1:'b',4:'b',6:'I',9:'II',10:'b',12:'a',14:'III',16:'b',17:'a',21:'c'};
 const MTL=[
- {id:'peltre',n:'Peltre',d:'Aumenta la fuerza física y la resiliencia.',dc:'#E6E1DA',gc:'#D1384A',bc:'#C9394B',g:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M12 8v7M8.500 11.500h7"/>'},
- {id:'estano',n:'Estaño',d:'Amplifica los cinco sentidos.',dc:'#D13A4C',gc:'#D9D5D9',bc:'#C9394B',g:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'},
- {id:'bronce',n:'Bronce',d:'Identifica la localización de otros metales que estén siendo quemados.',dc:'#3E9B84',gc:'#F0773A',bc:'#D9622F',g:'<circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M8 8a5.500 5.500 0 0 0 0 8M16 8a5.500 5.500 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/>'},
- {id:'cobre',n:'Cobre',d:'Te oculta de los que queman bronce.',dc:'#E57B34',gc:'#2E8F78',bc:'#D9622F',g:'<circle cx="12" cy="12" r="8"/><path d="M5.500 18.500l13-13"/>'},
- {id:'cinc',n:'Cinc',d:'Enciende las emociones de los demás.',dc:'#ECE8E1',gc:'#B88C3E',bc:'#D9A92B',g:'<path d="M12 3c3 4 5 6.600 5 9.500A5 5 0 0 1 12 17.500 5 5 0 0 1 7 12.500C7 9.600 9 7 12 3z"/><path d="M12 21v-3.500"/>'},
- {id:'laton',n:'Latón',d:'Aplaca las emociones de los demás.',dc:'#E9C13A',gc:'#FFF7DA',bc:'#D9A92B',g:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>'},
- {id:'hierro',n:'Hierro',d:'Tira de fuentes de metal.',dc:'#3F78D1',gc:'#F2F6FF',bc:'#4A74BF',g:'<path d="M2 12h8M6.500 8l3.500 4-3.500 4M22 12h-8M17.500 8 14 12l3.500 4"/>'},
- {id:'acero',n:'Acero',d:'Empuja fuentes de metal.',dc:'#E9EEF8',gc:'#2F63C6',bc:'#4A74BF',g:'<path d="M10 12H2M5.500 8 2 12l3.500 4M14 12h8M18.500 8 22 12l-3.500 4"/>'}];
-let MT=mtLoad();
+ {id:'peltre',n:'Peltre',p:'estano',d:'Aumenta la fuerza física y la resiliencia.',u:'Cartas de combate y curación. Sus aliados son Defensores.',dc:'#E6E1DA',gc:'#D1384A',bc:'#C9394B',g:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M12 8v7M8.500 11.500h7"/>'},
+ {id:'estano',n:'Estaño',p:'peltre',d:'Amplifica los cinco sentidos.',u:'Puntos de misión y monedas; puede frenar el avance de los demás en las misiones.',dc:'#D13A4C',gc:'#D9D5D9',bc:'#C9394B',g:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'},
+ {id:'bronce',n:'Bronce',p:'cobre',d:'Identifica la localización de otros metales que estén siendo quemados.',u:'Puntos de misión y uso de efectos de las cartas del mercado.',dc:'#3E9B84',gc:'#F0773A',bc:'#D9622F',g:'<circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M8 8a5.500 5.500 0 0 0 0 8M16 8a5.500 5.500 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/>'},
+ {id:'cobre',n:'Cobre',p:'bronce',d:'Te oculta de los que queman bronce.',u:'Curación y cartas que bloquean daño.',dc:'#E57B34',gc:'#2E8F78',bc:'#D9622F',g:'<circle cx="12" cy="12" r="8"/><path d="M5.500 18.500l13-13"/>'},
+ {id:'cinc',n:'Cinc',p:'laton',d:'Enciende las emociones de los demás.',u:'Sobre todo monedas; permite usar aliados sin quemar metales.',dc:'#ECE8E1',gc:'#B88C3E',bc:'#D9A92B',g:'<path d="M12 3c3 4 5 6.600 5 9.500A5 5 0 0 1 12 17.500 5 5 0 0 1 7 12.500C7 9.600 9 7 12 3z"/><path d="M12 21v-3.500"/>'},
+ {id:'laton',n:'Latón',p:'cinc',d:'Aplaca las emociones de los demás.',u:'Puntos de misión y monedas; permite eliminar cartas.',dc:'#E9C13A',gc:'#FFF7DA',bc:'#D9A92B',g:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>'},
+ {id:'hierro',n:'Hierro',p:'acero',d:'Tira de fuentes de metal.',u:'Combate; permite devolver cartas del descarte a lo alto de tu mazo.',dc:'#3F78D1',gc:'#F2F6FF',bc:'#4A74BF',g:'<path d="M2 12h8M6.500 8l3.500 4-3.500 4M22 12h-8M17.500 8 14 12l3.500 4"/>'},
+ {id:'acero',n:'Acero',p:'hierro',d:'Empuja fuentes de metal.',u:'Combate y monedas; permite eliminar cartas del mercado.',dc:'#E9EEF8',gc:'#2F63C6',bc:'#4A74BF',g:'<path d="M10 12H2M5.500 8 2 12l3.500 4M14 12h8M18.500 8 22 12l-3.500 4"/>'}];
+const MTC={vin:{n:'Vin',r:'La Guerrera',m:'peltre'},kelsier:{n:'Kelsier',r:'El Superviviente',m:'acero'},marsh:{n:'Marsh',r:'El Espía',m:'bronce'},shan:{n:'Shan',r:'La Noble',m:'cinc'}};
+const MT_LAB={ready:'Listo',burn:'Quemando',flare:'Avivado',flip:'Volteado',used:'Usado'};
+const MT_FLAME='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c3 4 6 6.500 6 11a6 6 0 0 1-12 0c0-2 1-3.500 2-5 .5 1.500 1.500 2 2.500 2C10 7.500 10.500 5 12 2z" fill="currentColor"/></svg>';
+const MT_ATI='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor" opacity=".18"/><path d="M12 3.500l2 6.500 6.500 2-6.500 2-2 6.500-2-6.500-6.500-2 6.500-2z" fill="currentColor"/></svg>';
+let MT=mtLoad(),mtSel=null;
 function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'null')}catch(e){}
- return{on:o&&Array.isArray(o.on)?o.on.filter(x=>MTL.some(m=>m.id===x)):[]}}
+ o=o||{};const st={};MTL.forEach(m=>{const v=o.st&&o.st[m.id];st[m.id]=['burn','flare','flip'].includes(v)?v:'ready'});
+ const n=x=>Number.isFinite(+x)?Math.max(0,Math.round(+x)):0;
+ return{ch:MTC[o.ch]?o.ch:null,step:Math.max(1,Math.min(MT_STEPS,n(o.step)||1)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
 function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
-function mtCell(m){const on=MT.on.includes(m.id);
- return `<button type="button" class="mtc" data-act="mt" data-m="${m.id}" aria-pressed="${on}" aria-label="${m.n}: ${m.d}" style="--mc:${m.bc};--dc:${m.dc};--gc:${m.gc}">
-  <span class="mtd"><span class="mtsm" aria-hidden="true"><i></i><i></i><i></i></span><span class="mtdisc"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${m.g}</svg></span></span>
-  <span class="mtn">${m.n}</span><span class="mtds">${m.d}</span><span class="mtl" aria-hidden="true"></span></button>`}
-function mtBoard(){return `<section class="mtb" aria-label="Metales de este turno"><div class="mth"><div><b>Metales de este turno</b><small><span id="mtcnt">${MT.on.length}</span> de ${MTL.length} activos</small></div><button type="button" class="btn sm ghost" data-act="mtclr">Nuevo turno</button></div>
- <div class="mtg">${MTL.map(mtCell).join('')}</div><p class="mtcap" id="mtcap" aria-live="polite">Toca un metal para activarlo o apagarlo.</p></section>`}
-function mtToggle(id){const m=MTL.find(x=>x.id===id);if(!m)return;const i=MT.on.indexOf(id),on=i<0;
- if(on)MT.on.push(id);else MT.on.splice(i,1);mtSave();
- const b=document.querySelector('.mtc[data-m="'+id+'"]');if(b){b.setAttribute('aria-pressed',on);
-  if(!lfRM()){const d=b.querySelector('.mtd');
-   if(on){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.remove('mtoff');b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
-   else{b.classList.remove('mtpop');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}}
- const c=document.getElementById('mtcnt');if(c)c.textContent=MT.on.length;
- const cap=document.getElementById('mtcap');if(cap)cap.textContent=m.n+' '+(on?'activo':'apagado')+' · '+m.d}
-function mtClear(quiet){if(!MT.on.length){if(!quiet)toast('No hay metales activos');return}
- const prev=MT.on.slice();MT.on=[];mtSave();
- prev.forEach(id=>{const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;b.setAttribute('aria-pressed','false');if(!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}});
- const c=document.getElementById('mtcnt');if(c)c.textContent=0;const cap=document.getElementById('mtcap');if(cap)cap.textContent='Toca un metal para activarlo o apagarlo.'}
+function mtLimit(){let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
+function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn').length+MT.atu}
+function mtNFlare(){return MTL.filter(m=>MT.st[m.id]==='flare').length}
+function mtAb(k){return MT.step>={I:6,II:9,III:14}[k]}
+function mtSig(){return MT.ch?MTC[MT.ch].m:null}
+function mtSt(id){const s=MT.st[id];return s==='ready'&&MT.used.includes(id)?'used':s}
+function mtCell(m){const s=mtSt(m.id),on=s==='burn'||s==='flare',sig=mtSig()===m.id;
+ return `<button type="button" class="mtc${sig?' mtsig':''}${sig&&on&&mtAb('I')?' mtsigon':''}" data-act="mt" data-m="${m.id}" data-s="${s}" aria-pressed="${on}" aria-label="${m.n}, ${MT_LAB[s]}. ${m.d}" style="--mc:${m.bc};--dc:${m.dc};--gc:${m.gc}">
+  <span class="mtd"><span class="mtsm" aria-hidden="true"><i></i><i></i><i></i></span><span class="mtdisc"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${m.g}</svg></span><span class="mtsg" aria-hidden="true">★</span></span>
+  <span class="mtn">${m.n}</span><span class="mtst" aria-hidden="true">${MT_LAB[s]}</span><span class="mtds">${m.d}</span><span class="mtl" aria-hidden="true"></span></button>`}
+function mtTrackH(){let h='';for(let i=1;i<=MT_STEPS;i++){const r=MT_REW[i],cl=i<MT.step?' done':i===MT.step?' cur':'';
+  const ic=r==='b'?'<span class="mtri fl">'+MT_FLAME+'<b>+1</b></span>':r==='a'?'<span class="mtri at">'+MT_ATI+'</span>':r==='c'?'<span class="mtri at">'+MT_ATI+'<b>∞</b></span>':r?'<span class="mtri ro"><b>'+r+'</b></span>':'<span class="mtri"></span>';
+  const tx=r==='b'?'; quemas un metal más':r==='a'?'; ganas 1 Atium':r==='c'?'; ganas 1 Atium cada turno':r?'; habilidad '+r:'';
+  h+=`<button type="button" class="mts${cl}" data-act="mtstep" data-n="${i}" aria-label="Paso ${i}${tx}"${i===MT.step?' aria-current="step"':''}><span class="mtk">${i}</span>${ic}</button>`}
+ return h}
+function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Elige tu personaje para ver tu metal base y sus habilidades.</p>';
+ const c=MTC[MT.ch],sg=MTL.find(x=>x.id===c.m),on=MT.st[c.m]==='burn'||MT.st[c.m]==='flare';
+ const ab=[['I',`Si estás quemando ${sg.n}, ganas el efecto de tu carta de personaje (una sola vez por turno, aunque lo quemes varias veces).`,6],['II','Una vez por turno, al comprar una carta de acción puedes eliminarla al instante y completar su efecto superior sin quemar metal.',9],['III','Si quemas Atium (como Atium o como otro metal), ganas el efecto de tu carta de personaje.',14]];
+ return `<div class="mtbase"><span>Metal base de ${c.n}</span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! Aplica el efecto de tu carta de personaje.</p>':''}<ul class="mtab">${ab.map(a=>`<li class="${mtAb(a[0])?'on':''}"><span class="mtrm">${a[0]}</span><span>${a[1]}<em>${mtAb(a[0])?'Desbloqueada':'Se desbloquea en el paso '+a[2]}</em></span></li>`).join('')}</ul>`}
+function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
+ return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
+function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
+function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Más allá de tu límite de quemas, se aviva (se gira).',a:''};
+ const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
+ let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
+ if(s==='flare'){t+=` Para refrescarlo, descarta una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.`;a=`<button type="button" class="btn sm" data-act="mtref" data-m="${m.id}">Refrescar</button><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer</button>`}
+ else if(s==='flip')t+=` Está girado: toca para refrescarlo (descartas una carta cuyo vial muestre ${m.n} o ${pr.n}).`;
+ else if(s==='used')t+=' Ya lo usaste este turno: no puedes volver a usarlo hasta el siguiente.';
+ return{t,a}}
+function mtBoard(){const c=mtCapH();setTimeout(mtScroll,80);
+ return `<section class="mtb" aria-label="Tablero de metales"><div class="mth"><div><b>Tablero de metales</b><small id="mtsub">${mtSubH()}</small></div><button type="button" class="btn sm pri" id="mtnext" data-act="mtnext">${MT.turn?'Siguiente turno':'Empezar turno 1'}</button></div>
+ <div class="mtch" role="radiogroup" aria-label="Personaje">${Object.keys(MTC).map(k=>`<button type="button" role="radio" aria-checked="${MT.ch===k}" data-act="mtch" data-c="${k}"><b>${MTC[k].n}</b><small>${MTC[k].r}</small></button>`).join('')}</div>
+ <div class="mtcp" id="mtcp">${mtCharH()}</div>
+ <div class="mttr" id="mttr"><div class="mttk">${mtTrackH()}</div></div>
+ <div class="mtg">${MTL.map(mtCell).join('')}</div>
+ <div class="mtatp" id="mtatp">${mtAtH()}</div>
+ <p class="mtcap" id="mtcap" aria-live="polite">${c.t}</p><div class="mtact" id="mtact">${c.a}</div>
+ <p class="mtrule">Al empezar tu turno avanzas un paso en el entrenamiento. Solo puedes quemar tantos metales como iconos de llama hayas ganado; para más, avívalos. Al acabar el turno, los quemados vuelven al tablero y los avivados vuelven girados hasta que los refresques. Cada metal solo se usa una vez por turno.</p></section>`}
+function mtScroll(){const t=document.getElementById('mttr');if(!t)return;const c=t.querySelector('.cur');if(c)t.scrollLeft=c.offsetLeft-t.clientWidth/2+c.offsetWidth/2}
+function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>document.getElementById(id);
+ MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(!b)return;const s=mtSt(m.id),on=s==='burn'||s==='flare',sig=mtSig()===m.id;
+  b.dataset.s=s;b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',m.n+', '+MT_LAB[s]+'. '+m.d);const t=b.querySelector('.mtst');if(t)t.textContent=MT_LAB[s];
+  b.classList.toggle('mtsig',sig);b.classList.toggle('mtsigon',sig&&on&&mtAb('I'))});
+ $i('mtsub').textContent=mtSubH();$i('mtnext').textContent=MT.turn?'Siguiente turno':'Empezar turno 1';
+ document.querySelectorAll('.mtch [data-c]').forEach(x=>x.setAttribute('aria-checked',MT.ch===x.dataset.c));
+ $i('mtcp').innerHTML=mtCharH();$i('mttr').innerHTML='<div class="mttk">'+mtTrackH()+'</div>';$i('mtatp').innerHTML=mtAtH();
+ const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;mtScroll()}
+function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
+ b.classList.remove('mtpop','mtoff');void b.offsetWidth;
+ if(k==='on'){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
+ else{b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}
+function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;
+ if(s==='used'){mtPaint();toast('Ya usaste este metal este turno');return}
+ if(s==='ready'){if(mtBurning()<mtLimit()){MT.st[id]='burn';mtSave();mtPaint();mtFx(id,'on')}
+  else{MT.st[id]='flare';mtSave();mtPaint();mtFx(id,'on');toast('Límite de quemas alcanzado: '+m.n+' avivado (se gira)')}return}
+ if(s==='burn'){MT.st[id]='ready';mtSave();mtPaint();mtFx(id,'off');return}
+ if(s==='flip'){MT.st[id]='ready';mtSave();mtPaint();mtFx(id,'off');toast('Refrescado: descarta una carta cuyo vial muestre '+m.n+' o '+MTL.find(x=>x.id===m.p).n);return}
+ mtPaint()}
+function mtRefresh(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';if(!MT.used.includes(id))MT.used.push(id);mtSave();mtPaint();mtFx(id,'off');toast('Refrescado, pero ya lo usaste este turno')}
+function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off')}
+function mtEndTurn(){MTL.forEach(m=>{const s=MT.st[m.id];if(s==='burn')MT.st[m.id]='ready';else if(s==='flare')MT.st[m.id]='flip'});MT.used=[];MT.atu=0}
+function mtNext(){if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn;
+ if(MT.step<MT_STEPS){MT.step++;const r=MT_REW[MT.step];
+  if(r==='b')msg+=' · ahora quemas '+mtLimit()+' metales';else if(r==='a'){MT.at++;msg+=' · +1 Atium'}
+  else if(r==='c')msg+=' · fin del entrenamiento: 1 Atium cada turno';else if(r)msg+=' · habilidad '+r+' desbloqueada'}
+ else{MT.at++;msg+=' · +1 Atium'}
+ mtSel=null;mtSave();mtPaint();toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
+function mtChar(c){if(!MTC[c])return;MT.ch=c;mtSave();mtPaint()}
+function mtStep(n){if(n<1||n>MT_STEPS||n===MT.step)return;MT.step=n;mtSave();mtPaint();toast('Entrenamiento: paso '+n+' · quemas '+mtLimit())}
+function mtAtium(d){const v=MT.at+d;if(v<0)return;MT.at=v;mtSave();mtPaint()}
+function mtAtUse(d){if(d>0){if(MT.at<1)return;if(mtBurning()>=mtLimit()){toast('No te quedan quemas libres para usar Atium');return}MT.at--;MT.atu++}else{if(MT.atu<1)return;MT.atu--;MT.at++}mtSave();mtPaint()}
+function mtReset(){MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=1;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -2987,8 +3103,14 @@ document.addEventListener('click',e=>{
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
   case 'lf':lfChange(+b.dataset.d);break;
-  case 'mt':mtToggle(b.dataset.m);break;
-  case 'mtclr':mtClear();break;
+  case 'mt':mtTap(b.dataset.m);break;
+  case 'mtnext':mtNext();break;
+  case 'mtch':mtChar(b.dataset.c);break;
+  case 'mtstep':mtStep(+b.dataset.n);break;
+  case 'mtat':mtAtium(+b.dataset.d);break;
+  case 'mtatu':mtAtUse(+b.dataset.d);break;
+  case 'mtref':mtRefresh(b.dataset.m);break;
+  case 'mtundo':mtUndo(b.dataset.m);break;
   case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida';y.classList.remove('arm')}},3000)}break}
   case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
   case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
