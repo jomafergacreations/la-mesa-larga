@@ -1611,6 +1611,38 @@ html[data-cos] body.hub .hs,html[data-cos] body.hub .hint,html[data-cos] body.hu
 @keyframes wpStr{0%{opacity:0;transform:rotate(var(--a)) translateX(2vmax) scaleX(0)}25%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateX(10vmax) scaleX(1)}}
 @keyframes wpCore{0%{transform:scale(0);opacity:.9}50%{transform:scale(.5);opacity:1}100%{transform:scale(3.2);opacity:0}}
 @media(prefers-reduced-motion:reduce){#warp,#gx .gsh{display:none}}
+/* ===== Galaxia en modo GM ===== */
+html[data-mode=gm][data-cos][data-dev][data-dev]:root body.hub{--h-bg:#1A0D12;--h-card:#2B1620;--h-ink:#FDF0E8;--h-mut:#DDB9AB;--h-line:#6A3038;color:var(--h-ink)}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hh,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hn b{color:#FFE9DD}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hs,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hint,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hback{color:#DDB9AB}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .hh2{border-left-color:#E8643F;color:#FFE9DD}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .gmb,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .npcpanel{background:rgba(58,24,36,.82);border-color:rgba(232,100,63,.5);color:#FDF0E8}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass h3,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass .f,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .gmb b,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card h3{color:#FFE9DD}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .gmb small,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card .meta,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card .hint{color:#E2C4B8}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass input[type=text],html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass select,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .glass textarea{background:rgba(255,255,255,.1);color:#FFF4EE;border-color:rgba(232,100,63,.5)}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card:not(.chapter) h3{background:none;color:#FFE9DD}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .stat{background:rgba(255,255,255,.1);color:#FFE9DD}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .gmi{background:#C2502F}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .gmg[aria-pressed=true]{background:#C2502F}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .psh .btn.pri,html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .btn.pri{background:#D9603F;border-color:#D9603F;color:#fff}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .btn:not(.pri):not(.danger){background:rgba(255,255,255,.1);color:#FFE9DD;border-color:rgba(232,100,63,.55)}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .btn.ghost{background:transparent}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .apb.ok{color:#86EFAC}html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .apb.wait{color:#FCD34D}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .stat b{color:#FFD9C7}html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .stat span{color:#E2C4B8}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .tag:not(.rv),html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .era{color:#F5D5C6;border-color:rgba(245,213,198,.5)}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .btn.danger{color:#FFB8A0;border-color:#E8643F;background:transparent}
+html[data-mode=gm][data-cos][data-dev][data-dev] body.hub .card h3{font-family:var(--sans,system-ui)}
+html[data-mode=gm][data-cos][data-dev]:root{--pc:#D9603F;--accent:#F08A5D;--accent-ink:#1A0D12;--head:#FFD9C7;--frame:#D9603F;--gold:#F5C98B;--gold-ink:#F5C98B;--plum:#6E1F3A;--muted:#E2C4B8;--ink:#FDF0E8;--field:#1A0D12;--bg:#12060D;--surface:#2B1620;--line:#6A3038;--mist-a:rgba(240,120,80,.14);--mist:#3A1824;--pink:rgba(217,96,63,.3)}
+html[data-mode=gm][data-cos][data-dev][data-dev]:root body,html[data-mode=gm][data-cos][data-dev][data-dev]:root body.hub{background-color:#12060D;background-image:radial-gradient(60% 40% at 82% 0,rgba(217,96,63,.30),transparent 70%),radial-gradient(55% 40% at 8% 58%,rgba(168,40,70,.30),transparent 70%),radial-gradient(70% 40% at 60% 100%,rgba(245,158,11,.14),transparent 70%);background-attachment:fixed}
+html[data-mode=gm] #gx .n1{background:radial-gradient(closest-side,rgba(217,96,63,.6),transparent)}
+html[data-mode=gm] #gx .n2{background:radial-gradient(closest-side,rgba(168,40,70,.55),transparent)}
+html[data-mode=gm] #gx .n3{background:radial-gradient(closest-side,rgba(245,158,11,.3),transparent)}
+html[data-mode=gm] .bub.gal{background:radial-gradient(circle at 50% 50%,#4A1A2C 0%,#220B16 55%,#0C0408 100%);box-shadow:0 24px 40px -16px rgba(217,96,63,.6),inset 0 0 34px rgba(240,120,80,.32),inset 0 10px 22px rgba(255,255,255,.1)}
+html[data-mode=gm] .gxb svg{filter:hue-rotate(112deg) saturate(1.15)}
+html[data-cos][data-mode=gm] .bub.t1:not(.gal){background:radial-gradient(circle at 30% 25%,#FB923C,#D9603F 55%,#6E1F3A)}
+html[data-cos][data-mode=gm] .bub.t2{background:radial-gradient(circle at 30% 25%,#FCA5A5,#E11D48 55%,#4C0519)}
+html[data-cos][data-mode=gm] .bub.t3{background:radial-gradient(circle at 30% 25%,#FCD34D,#D97706 55%,#7C2D12)}
+html[data-mode=gm] .bub.gal .ti{box-shadow:0 0 0 1px rgba(255,190,160,.45)}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -2057,7 +2089,7 @@ const GLYPH_B='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const EMBLEM='<svg class="emb" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true"><circle cx="60" cy="60" r="56" stroke-width="2"/><circle cx="60" cy="60" r="50" stroke-width="1" opacity=".55"/><path d="M60 22c-8 12-13 18-13 26a13 13 0 0 0 26 0c0-8-5-14-13-26z" fill="currentColor" stroke="none"/><path d="M24 70q18-14 36 0t36 0" stroke-width="2.2"/><path d="M28 82q16-12 32 0t32 0" stroke-width="2" opacity=".75"/><path d="M34 94q13-10 26 0t26 0" stroke-width="1.8" opacity=".5"/></svg>';
 const eraTag=e=>`<span class="era${e===2?' e2':''}">Era ${e}</span>`;
 const corners='<span class="cn tl">'+CORNER+'</span><span class="cn tr">'+CORNER+'</span><span class="cn bl">'+CORNER+'</span><span class="cn br">'+CORNER+'</span>';
-const COS_SCR=['cosmere','rol','nb','deck','arch'];
+const COS_SCR=['cosmere','rol','nb','deck','arch','npc','part','ppart','pjview'];
 let gxT=0;
 function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove();clearTimeout(gxT);gxT=0;return}if(g)return;
  g=document.createElement('div');g.id='gx';g.setAttribute('aria-hidden','true');
@@ -2069,7 +2101,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
 function warpIntro(){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';o.setAttribute('aria-hidden','true');
  let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
-function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&store.mode!=='gm'&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'));const key=!session?'auth':c?'ed':scr;let d='';
+function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
  lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d)a.classList.add('go-'+d);
  if(c){if(pg)a.classList.add('pg-'+pg);
@@ -2137,8 +2169,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='132';
-const APPN='Tema Galaxia: la burbuja de Cosmere lleva una galaxia y, al entrar, todo el Cosmere se tematiza con estrellas, nebulosas y salto al espacio.';
+const APPV='133';
+const APPN='Tema Galaxia también en modo GM (nebulosas cálidas) y en las pantallas de sesión y partida.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
