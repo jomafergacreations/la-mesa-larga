@@ -1063,6 +1063,9 @@ body.pend [data-act=partinv],body.pend [data-act=npcrand],body.pend [data-act=np
 @media(prefers-reduced-motion:no-preference){.rpc{animation:npcin .35s cubic-bezier(.2,.8,.2,1) both}}
 .lg .logo svg{width:46px;height:46px}.tbbrand svg{width:26px;height:26px}
 .rpadm .seg{display:flex;gap:6px}.rpadm .seg button{flex:1;min-height:42px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:transparent;color:inherit;font:700 .9rem var(--sans,system-ui);cursor:pointer}.rpadm .seg button[aria-pressed="true"]{background:var(--pc);color:#fff;border-color:var(--pc)}
+.rpok{display:grid;gap:10px;justify-items:center;text-align:center;padding:10px 4px}.rpok svg{width:64px;height:64px;color:#2B8A3E}.rpok b{font-size:1.15rem}.rpok p{margin:0;opacity:.85}
+@media(prefers-reduced-motion:no-preference){.rpok svg circle{stroke-dasharray:152;stroke-dashoffset:152;animation:rpdraw .6s ease forwards}.rpok svg path{stroke-dasharray:40;stroke-dashoffset:40;animation:rpdraw .4s .45s ease forwards}.rpok b,.rpok p{animation:npcin .45s .5s both}}
+@keyframes rpdraw{to{stroke-dashoffset:0}}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1536,8 +1539,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='81';
-const APPN='Nuevo logo y botón ¿Algo no funciona? para avisar a ALPHA de fallos, con imagen opcional y respuesta cuando se solucione.';
+const APPV='82';
+const APPN='Al enviar un aviso se muestra una confirmación de que se envió bien y de que el administrador responderá pronto.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1941,12 +1944,13 @@ function rptDlg(){rpImg='';const adm=isAdmin();
  ${adm?`<div class="rpadm"><div class="seg" role="tablist"><button type="button" data-act="rptab" data-v="open" aria-pressed="${rpTab==='open'}">Pendientes (${rpOpenN()})</button><button type="button" data-act="rptab" data-v="done" aria-pressed="${rpTab==='done'}">Solucionados</button></div><div class="rplist">${rpAll.filter(r=>(r.status==='done')===(rpTab==='done')).map(r=>rpCard(r,true)).join('')||'<p class="hint">No hay avisos aquí.</p>'}</div></div>`:''}
  ${rpMine.length?`<h3 style="margin:14px 0 4px">Mis avisos</h3><div class="rplist">${rpMine.map(r=>rpCard(r,false)).join('')}</div>`:''}`,true);
  const d=$('#dlg');d.classList.add('rptd')}
+function rpSent(){showDlg('Aviso enviado',`<div class="rpok" role="status"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 15-17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>¡Tu aviso se ha enviado correctamente!</b><p>Gracias por contárnoslo. Recibirás pronto una respuesta del administrador del sistema; te lo mostraremos aquí en cuanto esté solucionado.</p><div class="row"><button type="button" class="btn" data-act="rpt">Ver mis avisos o enviar otro</button></div></div>`,true);$('#dlg').classList.add('rptd')}
 function rpShrink(file){return new Promise((ok,no)=>{const fr=new FileReader();fr.onerror=no;fr.onload=()=>{const im=new Image();im.onerror=no;im.onload=()=>{const m=1100,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);let q=.72,u=c.toDataURL('image/jpeg',q);while(u.length>650000&&q>.3){q-=.12;u=c.toDataURL('image/jpeg',q)}ok(u)};im.src=fr.result};fr.readAsDataURL(file)})}
 document.addEventListener('change',async e=>{const t=e.target;if(!t||t.id!=='rpfile')return;const f=t.files&&t.files[0];t.value='';const m=$('#rpmsg');if(!f)return;if(!/^image\//.test(f.type)){m.textContent='Elige un archivo de imagen.';m.className='msg err';return}
  try{rpImg=await rpShrink(f);$('#rpname').textContent=f.name.slice(0,40);$('#rppv').innerHTML=`<img class="rpi" src="${rpImg}" alt="Vista previa de la imagen adjunta"> <button type="button" class="btn sm ghost" data-act="rpimgx">Quitar imagen</button>`;m.textContent='';m.className='msg'}catch(x){m.textContent='No se pudo leer esa imagen.';m.className='msg err'}});
 async function doRpt(f){const m=$('#rpmsg'),tx=String(f.elements.tx.value||'').trim();if(tx.length<5){m.textContent='Cuéntanos un poco más (mínimo 5 letras).';m.className='msg err';return}
  const btn=f.querySelector('button[type=submit]');btn.disabled=true;
- try{const id=uid()+uid();await fs('PATCH','reportes/'+id,fbEnc({uid:session.uid,name:session.name,cat:f.elements.cat.value,text:tx.slice(0,3000),img:rpImg||'',status:'open',reply:'',created:Date.now()}));toast('Aviso enviado a ALPHA');await rpLoad();rptDlg()}catch(e){btn.disabled=false;m.textContent=e.code==='NET'?aMsg(e):'No se pudo enviar. Inténtalo de nuevo.';m.className='msg err'}}
+ try{const id=uid()+uid();await fs('PATCH','reportes/'+id,fbEnc({uid:session.uid,name:session.name,cat:f.elements.cat.value,text:tx.slice(0,3000),img:rpImg||'',status:'open',reply:'',created:Date.now()}));await rpLoad();rpSent()}catch(e){btn.disabled=false;m.textContent=e.code==='NET'?aMsg(e):'No se pudo enviar. Inténtalo de nuevo.';m.className='msg err'}}
 async function doReq(f){const m=$('#rmsg'),pid=f.dataset.p,rs=String(f.elements.rs.value||'').trim();if(denyState[pid]==='1'){m.textContent='El Game Master ya denegó una solicitud de cambio.';m.className='msg err';return}if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
  const nc=store.chars.find(x=>x.id===f.elements.nc.value);if(!nc){m.textContent='Elige el personaje por el que quieres cambiar.';m.className='msg err';return}
  try{await fs('PATCH','pjs/'+pid+'_'+session.uid,fbEnc({req:'1',reason:rs.slice(0,120),rc:nc.id,rd:pjData(nc)}),maskQ({req:1,reason:1,rc:1,rd:1}));try{$('#dlg').close()}catch(x){}toast('Solicitud enviada al Game Master');partSig='';await loadParts();render(1)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
