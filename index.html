@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=104"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=104">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=105"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=105">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1668,8 +1668,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='104';
-const APPN='El resumen de los manuales se centra en cómo funcionan los turnos y cómo subir de nivel; el manual completo se abre sin destellos y se puede volver a analizar.';
+const APPV='105';
+const APPN='Ya se pueden eliminar las partidas finalizadas, con doble confirmación.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2651,7 +2651,7 @@ document.addEventListener('click',e=>{
  if(a==='atab')pg='t';
  if(c){const PG={next:'f',qnext:'f',qskip:'f',prev:'b',qprev:'b',qmode:'f',qform:'f'};if(PG[a])pg=PG[a];else if(a==='go')pg=(+b.dataset.i>=c.step)?'f':'b';
   if(b.tagName==='BUTTON'&&(b.hasAttribute('aria-pressed')||b.dataset.d!==undefined)&&a!=='showpw'){const d=b.dataset;popSel='[data-act="'+a+'"]'+['v','k','n','d'].filter(x=>d[x]!==undefined).map(x=>'[data-'+x+'="'+d[x]+'"]').join('');fx=['path','qmetal','bless'].includes(a)||(a==='qset'&&/path|powers/.test(d.f||''))}}
- {const GB=['partinv','invsel','invall','invcancel','kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','partdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
+ {const GB=['partinv','invsel','invall','invcancel','kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
  switch(a){
   case 'atab':authTab=v;render();break;
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
@@ -2678,7 +2678,8 @@ document.addEventListener('click',e=>{
   case 'partend':{showDlg('¿Finalizar la partida?',`<p class="hint" style="margin:0">La partida seguirá en «Mis partidas», pero <b>nada de ella podrá modificarse</b>: ni jugadores, ni NPC, ni vida, ni fichas. Los personajes que no hayan fallecido vuelven a estar disponibles para sus jugadores. No se puede deshacer.</p><div class="row"><button class="btn pri" data-act="partendok" data-id="${esc(b.dataset.id)}">Finalizar partida</button></div>`,true);break}
   case 'partendok':{const id=b.dataset.id;fs('PATCH','partidas/'+id,fbEnc({end:'1',endAt:Date.now()}),maskQ({end:1,endAt:1})).then(()=>{const q=parts.find(x=>x.id===id);if(q)q.end='1';try{$('#dlg').close()}catch(x){}toast('Partida finalizada');partSig='';render(1)}).catch(()=>toast('No se pudo finalizar la partida'));break}
   case 'pjhp':{const pid=b.dataset.p,u=b.dataset.u;if(isEnd(pid))break;const k=pid+'_'+u,mx=+b.dataset.mx||1;const n=Math.max(0,Math.min(mx,(hpMap[k]|0)-(+b.dataset.d)));hpMap[k]=n;render(1);fs('PATCH','pjs/'+k,fbEnc({hp:n}),maskQ({hp:1})).catch(()=>toast('No se pudo guardar la vida'));break}
-  case 'partdel':{const id=b.dataset.id;showDlg('¿Eliminar la partida?',`<p class="hint" style="margin:0">Se eliminará la partida y todos los jugadores dejarán de estar en ella. Conservan una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Sí, eliminar</button></div>`,true);break}
+  case 'partdel':{const id=b.dataset.id,q=parts.find(x=>x.id===id);showDlg('¿Eliminar la partida?',`<p style="margin:0">Vas a eliminar <b>${esc(q?q.name:'esta partida')}</b>${q&&q.end==='1'?' (finalizada)':''}.</p><p class="hint" style="margin:6px 0 0">Todos los jugadores dejarán de estar en ella y conservarán una copia de sus fichas. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="partdel1" data-id="${id}">Sí, continuar</button><button class="btn" data-act="closedlg">No, cancelar</button></div>`,true);break}
+  case 'partdel1':{const id=b.dataset.id,q=parts.find(x=>x.id===id);showDlg('Última comprobación',`<p style="margin:0"><b>¿Seguro que quieres eliminar «${esc(q?q.name:'la partida')}» para siempre?</b></p><p class="hint" style="margin:6px 0 0">Esta es la confirmación final: después de pulsar el botón rojo la partida desaparecerá.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Eliminar definitivamente</button><button class="btn" data-act="closedlg">No, cancelar</button></div>`,true);break}
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});store.npcs.filter(n=>n.pid===id).forEach(n=>{if(n.shared)fs('DELETE','reveladas/'+n.id).catch(()=>{})});store.npcs=store.npcs.filter(n=>n.pid!==id);save();await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
   case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
   case 'pjnew':{try{$('#dlg').close()}catch(x){}const n=blank();n.era=+b.dataset.e===2?2:1;store.chars.push(n);store.cur=n.id;scr='nb';save();render();toast('Crea tu personaje y, al terminarlo, elígelo desde tu inicio');break}
