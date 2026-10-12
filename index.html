@@ -849,16 +849,16 @@ html[data-dev=tablet] #fbub:active{transform:scale(.92)}
 html[data-mode=gm][data-dev=tablet] #fbub{background:linear-gradient(145deg,#D9603F,#9A3A22)}
 /* escritorio: más visual y claro */
 html[data-dev=desktop] body.hub .wrap{max-width:1180px}
-html[data-dev=desktop] .bubbles{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:24px;padding-bottom:60px;align-items:stretch}
-html[data-dev=desktop] .bubbles .bub:nth-child(n){--d:auto;width:auto;height:auto;min-height:230px;margin:0;align-self:stretch;border-radius:30px;padding:30px 34px;flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;gap:14px}
-html[data-dev=desktop] .bub .tt{display:grid;gap:8px;text-align:left}
-html[data-dev=desktop] .bub .tt b{font-size:1.9rem;line-height:1.1}
-html[data-dev=desktop] .bub .tt span{font-size:1.05rem;line-height:1.4;opacity:.95}
-html[data-dev=desktop] .bub .ti{position:absolute;top:26px;left:30px;width:68px;height:68px;border-radius:20px}
-html[data-dev=desktop] .bub .ti svg{width:38px;height:38px}
-html[data-dev=desktop] .bub .go{position:absolute;right:28px;top:30px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:1.5rem;transition:transform .2s,background .2s}
-html[data-dev=desktop] .bub:hover .go{transform:translateX(5px);background:rgba(255,255,255,.38)}
-html[data-dev=desktop] .bub:hover{transform:translateY(-6px);box-shadow:0 26px 40px -18px rgba(20,30,90,.7)}
+html[data-dev] .bubbles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:20px;padding-bottom:60px;align-items:stretch}
+html[data-dev] .bubbles .bub:nth-child(n){--d:auto;width:auto;height:auto;min-height:230px;margin:0;align-self:stretch;border-radius:30px;padding:30px 34px;flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;gap:14px}
+html[data-dev] .bub .tt{display:grid;gap:8px;text-align:left}
+html[data-dev] .bub .tt b{font-size:1.9rem;line-height:1.1}
+html[data-dev] .bub .tt span{font-size:1.05rem;line-height:1.4;opacity:.95}
+html[data-dev] .bub .ti{position:absolute;top:26px;left:30px;width:68px;height:68px;border-radius:20px}
+html[data-dev] .bub .ti svg{width:38px;height:38px}
+html[data-dev] .bub .go{position:absolute;right:28px;top:30px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:1.5rem;transition:transform .2s,background .2s}
+html[data-dev] .bub:hover .go{transform:translateX(5px);background:rgba(255,255,255,.38)}
+html[data-dev] .bub:hover{transform:translateY(-6px);box-shadow:0 26px 40px -18px rgba(20,30,90,.7)}
 html[data-dev=desktop] .hh{letter-spacing:-.02em}
 html[data-dev=desktop] .glass,html[data-dev=desktop] .card{border-width:1.5px;box-shadow:0 20px 44px -22px rgba(10,15,40,.55)}
 html[data-dev=desktop] .npcc,html[data-dev=desktop] .invc{transition:transform .18s,box-shadow .18s}
@@ -923,13 +923,13 @@ html[data-dev=phone] .wrap{padding-bottom:40px}
 :root[data-theme="dark"] #topbar .tbd em{color:#93C5FD}
 :root[data-theme="dark"] html[data-dev=desktop] .glass,:root[data-theme="dark"] html[data-dev=desktop] .gmb,:root[data-theme="dark"] html[data-dev=desktop] .card:not(.chapter){border-color:rgba(147,197,253,.4);background-color:rgba(30,40,66,.78)}
 :root[data-theme="dark"] html[data-dev=desktop] .glass .hint,:root[data-theme="dark"] html[data-dev=desktop] .gmb small{color:#C5CCE0}
-html[data-dev=desktop] .bubbles .bub:nth-child(n){padding-top:116px}
+html[data-dev] .bubbles .bub:nth-child(n){padding-top:116px}
 /* v69 escritorio a pantalla completa */
 html[data-dev=desktop] body .wrap,html[data-dev=desktop] body.hub .wrap{max-width:none;width:auto;margin-inline:0;padding-inline:clamp(28px,4vw,88px)}
 html[data-dev=desktop] body.hub #app:has(.authhub){max-width:1100px;margin-inline:auto;padding-inline:24px}
 html[data-dev=desktop] .tbin{max-width:none}
 html[data-dev=desktop] #topbar{padding:10px clamp(16px,2.4vw,40px)}
-html[data-dev=desktop] .bubbles{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+html[data-dev] .bubbles{grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
 html[data-dev=desktop] .npcgrid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
 html[data-dev=desktop] .hs{max-width:none}
 
@@ -1023,6 +1023,23 @@ html[data-dev=desktop] #expop{top:86px}
 .bub,.bub:focus,.bub:focus-visible,.bub:active{outline:none!important;-webkit-tap-highlight-color:transparent}
 button,.bub,.gmb,.hback{-webkit-tap-highlight-color:transparent}
 .bub:focus-visible{box-shadow:0 22px 34px -18px rgba(20,30,60,.7)}
+
+html[data-dev=phone] .bubbles .bub:nth-child(n){min-height:176px;padding:22px 22px 22px;padding-top:92px;border-radius:26px}
+html[data-dev=phone] .bub .tt b{font-size:1.4rem}html[data-dev=phone] .bub .tt span{font-size:.95rem}
+html[data-dev=phone] .bub .ti{top:20px;left:22px;width:58px;height:58px;border-radius:17px}
+html[data-dev=phone] .bub .go{right:20px;top:22px;width:40px;height:40px}
+html[data-dev=phone] .bubbles{padding-bottom:90px}
+#stormfx{position:fixed;inset:0;z-index:99998;overflow:hidden;display:grid;place-content:center;justify-items:center;gap:10px;background:linear-gradient(#0B1020,#1B2442 70%,#26335C);color:#E8EEFF;font-family:var(--sans);text-align:center;pointer-events:none}
+#stormfx.out{opacity:0;transition:opacity .45s}
+#stormfx .dr{position:absolute;top:-12vh;width:2px;height:12vh;background:linear-gradient(transparent,rgba(170,200,255,.8));transform:rotate(12deg)}
+#stormfx .fl{position:absolute;inset:0;background:#DDE8FF;opacity:0}
+#stormfx svg.bolt{position:absolute;top:0;height:60vh;width:auto;opacity:0;filter:drop-shadow(0 0 12px #BFD4FF)}
+#stormfx b{position:relative;font-size:clamp(1.4rem,5vw,2.4rem);text-shadow:0 0 18px rgba(160,190,255,.8)}
+#stormfx span{position:relative;opacity:.85}
+@keyframes rainf{to{transform:translate(-14vh,118vh) rotate(12deg)}}
+@keyframes flashf{0%,100%{opacity:0}6%{opacity:.85}12%{opacity:.1}18%{opacity:.7}30%{opacity:0}}
+@keyframes boltf{0%,100%{opacity:0}6%{opacity:1}14%{opacity:.2}18%{opacity:1}34%{opacity:0}}
+@media(prefers-reduced-motion:no-preference){#stormfx .dr{animation:rainf var(--t) linear infinite;animation-delay:var(--dl)}#stormfx .fl{animation:flashf 1.7s infinite}#stormfx svg.bolt{animation:boltf 1.7s infinite}#stormfx svg.b2{animation-delay:.85s}#stormfx .fl.f2{animation-delay:.85s}}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1494,8 +1511,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='73';
-const APPN='Motivo al abandonar o expulsar de una partida, solicitud de cambio denegada definitiva y tu imagen de usuario en la pantalla principal.';
+const APPV='74';
+const APPN='Tormenta con rayos y lluvia en El archivo de las tormentas, menús en tarjetas horizontales en todos los dispositivos, cambio de personaje con ficha propuesta y botón atrás del sistema.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1719,6 +1736,12 @@ async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){
 function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
  const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
  setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),300)},1050)}
+function stormFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
+ const o=document.createElement('div');o.id='stormfx';o.setAttribute('aria-hidden','true');let h='<i class="fl"></i><i class="fl f2"></i>';
+ for(let i=0;i<70;i++)h+=`<i class="dr" style="left:${Math.random()*115-5}vw;--t:${(.5+Math.random()*.5).toFixed(2)}s;--dl:-${(Math.random()*1).toFixed(2)}s"></i>`;
+ h+='<svg class="bolt" style="left:22%" viewBox="0 0 40 100"><path d="M24 0 12 40h10L8 100 34 38H22L32 0z" fill="#F4F8FF"/></svg><svg class="bolt b2" style="left:68%" viewBox="0 0 40 100"><path d="M24 0 12 40h10L8 100 34 38H22L32 0z" fill="#F4F8FF"/></svg>';
+ o.innerHTML=h+'<b>El archivo de las tormentas</b><span>Se acerca la Tormenta Eterna…</span>';document.body.appendChild(o);
+ setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),480)},2300)}
 function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
  const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.setAttribute('aria-hidden','true');o.innerHTML=`<i class="mc"></i><div class="ml">${m==='gm'?PENI:DIEI}<span>${m==='gm'?'Modo Game Master':'Modo Jugador'}</span></div>`;document.body.appendChild(o);
@@ -1758,7 +1781,8 @@ async function loadParts(){if(!session)return;
   const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id],reqState[p.id],denyState[p.id]]),exits.map(x=>x.id),kicks.map(x=>x.id),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'))render(1)}}catch(e){}}
 async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store.cur===c.id&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))continue;
-  try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if(r.ap==='n')continue;if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
+  try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if(r.ap==='n')continue;
+   if(r.cid&&r.cid!==c.id){const nc=store.chars.find(x=>x.id===r.cid);delete c.pid;delete c.rev;delete c._ph;if(nc){nc.pid=r.pid;nc.rev=0;nc._ph=pjData(nc)}save();try{await fs('PATCH','miembros/'+r.pid+'_'+session.uid,fbEnc({cid:r.cid}),maskQ({cid:1}))}catch(e){}toast('El Game Master ha autorizado tu cambio de personaje');render(1);continue}if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
 async function loadPart(pid){if(!session)return;
  try{const [mem,inv,pj]=await Promise.all([fsQuery('miembros','pid',pid),fsQuery('invitaciones','pid',pid),fsQuery('pjs','pid',pid)]);
   const pjm={};pj.forEach(x=>{try{pjm[x.uid]={ch:JSON.parse(x.data),rev:x.rev|0,upd:x.updated|0,raw:x}}catch(e){}});
@@ -1770,12 +1794,13 @@ async function loadPart(pid){if(!session)return;
 setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},8000);
 const ENVSVG='<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="36" rx="5" fill="currentColor" opacity=".9"/><path class="flap" d="M6 20l26 20 26-20" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';
 function envFx(txt,kind){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red)return;const o=document.createElement('div');o.id='envfx';o.className=kind||'open';o.innerHTML=`<div class="en">${ENVSVG}<div class="ec"></div></div><b>${esc(txt)}</b>`;document.body.appendChild(o);setTimeout(()=>o.classList.add('out'),1250);setTimeout(()=>o.remove(),1600)}
+function rdName(d){try{const c=JSON.parse(d);return (c.name||'Sin nombre')+' · nivel '+(c.level||1)}catch(e){return 'Personaje'}}
 function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(x){try{ch=normalize(JSON.parse(JSON.stringify(x.ch)));d=derive(ch)}catch(e){}}
  const ap=x&&x.raw?(x.raw.ap||'y'):'y';if(ap==='n'){ch=null}
  const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
  return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:`<p class="hint" style="margin:0">${ap==='n'?'Esperando que elija otro personaje.':'Todavía no ha elegido personaje.'}</p>`}
  ${ch?`<span class="apb ${ap==='p'?'wait':'ok'}">${ap==='p'?'Pendiente de tu aprobación':'Aprobado'}</span>`:''}
- ${ch&&ap==='y'&&x.raw.req==='1'?`<div class="reqbox"><b>Solicita cambiar de personaje</b><span>«${esc(x.raw.reason||'')}»</span><div class="row"><button class="btn pri sm" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">Autorizar cambio</button><button class="btn sm" data-act="pjdeny" data-p="${p.id}" data-u="${esc(m.uid)}">Denegar</button></div></div>`:''}
+ ${ch&&ap==='y'&&x.raw.req==='1'?`<div class="reqbox"><b>Solicita cambiar de personaje</b><span>«${esc(x.raw.reason||'')}»</span>${x.raw.rd?`<span>Propone: <b>${esc(rdName(x.raw.rd))}</b></span>`:''}<div class="row">${x.raw.rd?`<button class="btn pri sm" data-act="pjrq" data-p="${p.id}" data-u="${esc(m.uid)}">Ver ficha del nuevo</button>`:`<button class="btn pri sm" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">Autorizar cambio</button>`}<button class="btn sm" data-act="pjdeny" data-p="${p.id}" data-u="${esc(m.uid)}">Denegar</button></div></div>`:''}
  <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Ver ficha':'Ver y editar ficha'}</button>`:''}${ch&&ap==='p'?`<button class="btn" data-act="pjap" data-v="y" data-p="${p.id}" data-u="${esc(m.uid)}">Aprobar</button>`:''}${ch?`<button class="btn" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Rechazar':'Pedir otro personaje'}</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
 
 function partTags(p){return `<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
@@ -1797,7 +1822,13 @@ function exPop(){if(!exits.length||document.getElementById('expop'))return;const
  const d=document.createElement('aside');d.id='expop';d.setAttribute('role','alert');
  d.innerHTML=`<div class="ppi">${OUT}</div><div class="ppt"><b>${esc(x.name||'Un jugador')} abandona la partida</b><span>«${esc(x.pname||'Partida')}»</span><em>Motivo: ${esc(x.reason||'—')}</em><div class="row"><button class="btn pri sm" data-act="exok" data-id="${x.id}">Entendido</button></div></div><button class="ppx" data-act="expx" aria-label="Cerrar aviso">✕</button>`;
  document.body.appendChild(d);try{if(navigator.vibrate)navigator.vibrate(60)}catch(e){}d._t=setTimeout(()=>closeEx(),20000)}
+function reqOpts(p){const cur=store.chars.find(x=>x.pid===p.id);const ok=store.chars.filter(c=>(!cur||c.id!==cur.id)&&!pjOk(c,p,p.id));
+ return ok.length?`<label class="f">Personaje nuevo<select name="nc" required>${ok.map(c=>`<option value="${esc(c.id)}">${esc(c.name||'Sin nombre')} · nivel ${c.level||1}</option>`).join('')}</select></label>`:`<p class="hint" style="margin:0"><b>No tienes ningún otro personaje que pueda jugar esta partida.</b> Crea y termina uno nuevo y vuelve a pedir el cambio.</p><input type="hidden" name="nc" value="">`}
 function pjViewScreen(){const v=store.pjv;if(!v){scr='part';return partScreen()}const c=v.c;let h='';try{h=sHoja(c)}catch(e){}
+ if(v.nw)return hubBar(['pjback','Volver a la partida'])+`<h1 class="hh">${esc(c.name||'Personaje')}</h1><p class="hs">Personaje propuesto por ${esc((c._pj&&c._pj.owner)||'el jugador')} para sustituir al actual · solo lectura</p>
+ <div class="pjb"><span>Motivo: «${esc(v.reason||'')}»</span></div>
+ <div class="row" style="margin:12px 0"><button class="btn pri" data-act="pjap" data-v="sw" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Autorizar cambio a este personaje</button><button class="btn" data-act="pjdeny" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Denegar</button></div>
+ <div class="ro">${h}</div>`;
  return hubBar(['pjback','Volver a la partida'])+`<h1 class="hh">${esc(c.name||'Personaje')}</h1><p class="hs">Ficha de ${esc((c._pj&&c._pj.owner)||'jugador')} · solo lectura hasta que la apruebes</p>
  <div class="pjb"><span>Ficha pendiente de aprobación: puedes ver todos sus parámetros, pero no modificarlos.</span></div>
  <div class="row" style="margin:12px 0"><button class="btn pri" data-act="pjap" data-v="y" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Aprobar personaje</button><button class="btn" data-act="pjap" data-v="n" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Rechazar (pedir otro)</button></div>
@@ -1837,7 +1868,8 @@ async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv
   else if(!accept){try{await fs('DELETE','pjs/'+key)}catch(e){}}
   save();try{$('#dlg').close()}catch(x){}envFx(accept?'¡Te has unido a la partida!':'Personaje actualizado','open');partSig='';await loadParts();render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo completar. Inténtalo de nuevo.','err')}}
 async function doReq(f){const m=$('#rmsg'),pid=f.dataset.p,rs=String(f.elements.rs.value||'').trim();if(denyState[pid]==='1'){m.textContent='El Game Master ya denegó una solicitud de cambio.';m.className='msg err';return}if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
- try{await fs('PATCH','pjs/'+pid+'_'+session.uid,fbEnc({req:'1',reason:rs.slice(0,200)}),maskQ({req:1,reason:1}));try{$('#dlg').close()}catch(x){}toast('Solicitud enviada al Game Master');partSig='';await loadParts();render(1)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+ const nc=store.chars.find(x=>x.id===f.elements.nc.value);if(!nc){m.textContent='Elige el personaje por el que quieres cambiar.';m.className='msg err';return}
+ try{await fs('PATCH','pjs/'+pid+'_'+session.uid,fbEnc({req:'1',reason:rs.slice(0,200),rc:nc.id,rd:pjData(nc)}),maskQ({req:1,reason:1,rc:1,rd:1}));try{$('#dlg').close()}catch(x){}toast('Solicitud enviada al Game Master');partSig='';await loadParts();render(1)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
  try{const id=uid()+uid();const E=f.elements,era=+E.pe.value===2?2:1,maxlvl=Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,desc:String(E.pd.value||'').slice(0,300)}));try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const name=nameN(f.elements.un.value);if(name.length<3){set('Escribe el nombre de usuario completo.','err');return}
@@ -1885,6 +1917,11 @@ function invPop(){if(!session||!invs.length)return;if(document.getElementById('i
  d._t=setTimeout(()=>closePop(),30000)}
 function closePop(then){const d=document.getElementById('invpop');if(!d){if(then)then();return}clearTimeout(d._t);d.classList.add('out');setTimeout(()=>{d.remove();invPop();if(then)then()},260)}
 let pg='',popSel='',prevPct=null,prevNums=[];
+/* v74 botón atrás del sistema */
+(function(){let hk=null,pop=false;const snap=()=>({s:scr,c:store&&store.cur||null,p:typeof partId!=='undefined'?partId:null});const key=o=>o.s+'|'+o.c+'|'+o.p;
+ const r0=render;render=function(k){r0.apply(this,arguments);try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
+ window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
+  const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
 const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
  const cards=store.chars.map(c=>{const p=PATHS[c.path];const anc={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss'}[c.ancestry];
@@ -2287,9 +2324,10 @@ document.addEventListener('click',e=>{
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{try{const mem=await fsQuery('miembros','pid',id);for(const m of mem)await kickPlayer(id,m.uid);const iv=await fsQuery('invitaciones','pid',id);for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});store.npcs.filter(n=>n.pid===id).forEach(n=>{if(n.shared)fs('DELETE','reveladas/'+n.id).catch(()=>{})});store.npcs=store.npcs.filter(n=>n.pid!==id);save();await fs('DELETE','partidas/'+id);scr='menu';partId=null;partSig='';await loadParts();render();toast('Partida eliminada')}catch(e){toast('No se pudo eliminar')}})();break}
   case 'peraset':{const f=b.closest('form');f.elements.pe.value=b.dataset.v;f.querySelectorAll('[data-act=peraset]').forEach(x=>x.setAttribute('aria-pressed',x===b));break}
   case 'pjnew':{try{$('#dlg').close()}catch(x){}const n=blank();n.era=+b.dataset.e===2?2:1;store.chars.push(n);store.cur=n.id;scr='nb';save();render();toast('Crea tu personaje y, al terminarlo, elígelo desde tu inicio');break}
-  case 'pjreq':{const p=myParts.find(x=>x.id===b.dataset.p);if(!p)break;showDlg('Solicitar cambio de personaje',`<form id="reqform" class="grid" data-p="${esc(p.id)}" novalidate><p class="hint" style="margin:0">Tu personaje ya fue aprobado en <b>${esc(p.name)}</b>. Para cambiarlo, el Game Master tiene que autorizarlo. Cuéntale el motivo (por ejemplo: «lo escogí por error»).</p><label class="f">Motivo<textarea name="rs" rows="3" maxlength="200" required></textarea></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar solicitud</button></div></form>`,true);break}
-  case 'pjdeny':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({req:'',reason:'',deny:'1'}),maskQ({req:1,reason:1,deny:1})).then(()=>{toast('Solicitud denegada');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
-  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;const raw=((partPJ[pid]||{})[b.dataset.u]||{}).raw||{};const f=b.dataset.v==='n'?{ap:'n',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:'',deny:''}:{ap:'y',req:'',reason:''};fs('PATCH','pjs/'+k,fbEnc(f),maskQ(Object.fromEntries(Object.keys(f).map(q=>[q,1])))).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
+  case 'pjreq':{const p=myParts.find(x=>x.id===b.dataset.p);if(!p)break;showDlg('Solicitar cambio de personaje',`<form id="reqform" class="grid" data-p="${esc(p.id)}" novalidate><p class="hint" style="margin:0">Tu personaje ya fue aprobado en <b>${esc(p.name)}</b>. Para cambiarlo, el Game Master tiene que autorizarlo. Elige el personaje por el que lo cambiarías y cuéntale el motivo (por ejemplo: «lo escogí por error»).</p>${reqOpts(p)}<label class="f">Motivo<textarea name="rs" rows="3" maxlength="200" required></textarea></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar solicitud</button></div></form>`,true);break}
+  case 'pjdeny':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;fs('PATCH','pjs/'+k,fbEnc({req:'',reason:'',deny:'1',rc:'',rd:''}),maskQ({req:1,reason:1,deny:1,rc:1,rd:1})).then(()=>{toast('Solicitud denegada');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
+  case 'pjrq':{const x=(partPJ[b.dataset.p]||{})[b.dataset.u];if(!x||!x.raw.rd)break;const c=pjMake(Object.assign({},x.raw,{data:x.raw.rd,id:x.raw.rc}),'');if(!c)break;store.pjv={c,pid:b.dataset.p,uid:b.dataset.u,nw:1,reason:x.raw.reason};scr='pjview';render();break}
+  case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;const raw=((partPJ[pid]||{})[b.dataset.u]||{}).raw||{};const f=b.dataset.v==='sw'?{cid:raw.rc,data:raw.rd,rev:0,ap:'y',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:'',rc:'',rd:'',deny:''}:b.dataset.v==='n'?{ap:'n',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:'',deny:''}:{ap:'y',req:'',reason:''};fs('PATCH','pjs/'+k,fbEnc(f),maskQ(Object.fromEntries(Object.keys(f).map(q=>[q,1])))).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':b.dataset.v==='sw'?'Cambio autorizado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
   case 'fbub':break
   case 'ppx':closePop();break
   case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
@@ -2375,7 +2413,7 @@ document.addEventListener('click',e=>{
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':scr='deck';render();break;
-  case 'soon_arch':scr='arch';render();break;
+  case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
   case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
   case 'qnext':if(curQ(c).v(c))qGo(c,1);break;
   case 'qskip':qGo(c,1);break;
