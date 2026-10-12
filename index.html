@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=110"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=110">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=111"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=111">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -858,7 +858,7 @@ html[data-dev] .bub .tt b{font-size:1.9rem;line-height:1.1}
 html[data-dev] .bub .tt span{font-size:1.05rem;line-height:1.4;opacity:.95}
 html[data-dev] .bub .ti{position:absolute;top:26px;left:30px;width:68px;height:68px;border-radius:20px}
 html[data-dev] .bub .ti svg{width:38px;height:38px}
-html[data-dev] .bub .go{position:absolute;right:28px;top:30px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:1.5rem;transition:transform .2s,background .2s}
+html[data-dev] .bub .go{position:absolute;right:28px;top:calc(50% - 23px);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22);font-size:1.5rem;transition:transform .2s,background .2s}
 html[data-dev] .bub:hover .go{transform:translateX(5px);background:rgba(255,255,255,.38)}
 html[data-dev] .bub:hover{transform:translateY(-6px);box-shadow:0 26px 40px -18px rgba(20,30,90,.7)}
 html[data-dev=desktop] .hh{letter-spacing:-.02em}
@@ -1029,7 +1029,7 @@ button,.bub,.gmb,.hback{-webkit-tap-highlight-color:transparent}
 html[data-dev=phone] .bubbles .bub:nth-child(n){min-height:176px;padding:22px 22px 22px;padding-top:92px;border-radius:26px}
 html[data-dev=phone] .bub .tt b{font-size:1.4rem}html[data-dev=phone] .bub .tt span{font-size:.95rem}
 html[data-dev=phone] .bub .ti{top:20px;left:22px;width:58px;height:58px;border-radius:17px}
-html[data-dev=phone] .bub .go{right:20px;top:22px;width:40px;height:40px}
+html[data-dev=phone] .bub .go{right:20px;top:calc(50% - 20px);width:40px;height:40px}
 html[data-dev=phone] .bubbles{padding-bottom:90px}
 #stormfx{position:fixed;inset:0;z-index:99998;overflow:hidden;display:grid;place-content:center;justify-items:center;gap:10px;background:linear-gradient(#0B1020,#1B2442 70%,#26335C);color:#E8EEFF;font-family:var(--sans);text-align:center;pointer-events:auto}
 #stormfx canvas{position:absolute;inset:0}#stormfx.out{opacity:0;transition:opacity .45s}
@@ -1669,8 +1669,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='110';
-const APPN='Menú principal como antes (sin Juegos ni Mis fichas). Máximo de 10 fichas por juego y sin Importar cuenta antigua.';
+const APPV='111';
+const APPN='La flecha de las burbujas del menú queda centrada verticalmente en tablet y PC.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
