@@ -2142,6 +2142,22 @@ html[data-lm=l] #bye:not(.dun):not(.cyb):not(.cos){color:#14306B;background:radi
 .cyeye,.dneye{overflow-wrap:anywhere}
 .hb,.top,.tbin{min-width:0}
 img,video{max-width:100%}
+
+/* ---------- Avatares dibujados ---------- */
+.avsvg{width:100%;height:100%;display:block;border-radius:inherit}
+.hb .av.lgs .avsvg{border-radius:inherit}
+.avpk{display:grid;gap:10px}
+.avgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.avopt{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;box-shadow:0 0 0 2px var(--line,rgba(120,125,140,.4));transition:transform .18s,box-shadow .18s}
+.avopt:active{transform:scale(.92)}.avopt:focus-visible{outline:3px solid var(--pc,#2563EB);outline-offset:2px}
+.avopt.sel{box-shadow:0 0 0 3px var(--surface,#fff),0 0 0 6px var(--pc,#2563EB)}
+.avcols{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.avcol{all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.18);position:relative;flex:none}
+.avcol.sel{box-shadow:0 0 0 3px var(--surface,#fff),0 0 0 5px var(--pc,#2563EB)}
+.avcol:focus-visible{outline:3px solid var(--pc,#2563EB);outline-offset:2px}
+.avcust{background:conic-gradient(#f43f5e,#eab308,#22c55e,#06b6d4,#6366f1,#f43f5e);overflow:hidden}
+.avcust input{position:absolute;inset:-8px;width:56px;height:56px;opacity:0;cursor:pointer;border:0;padding:0}
+@media (prefers-reduced-motion:no-preference){.avopt:hover{transform:translateY(-3px) rotate(-3deg)}.avopt.sel svg{animation:avBob 1.8s ease-in-out infinite}@keyframes avBob{50%{transform:scale(1.07)}}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2433,7 +2449,7 @@ function acctDlg(){
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
  <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div>
  ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>ALPHA</b>: está bloqueado y solo lo ven los administradores.</p>':''}
- ${`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Se recorta en círculo y se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button>${store.avatar?'<button class="btn sm ghost" data-act="avdel">Quitar</button>':''}</div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div>`}
+ ${`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
 ${session.owner?'':`<form id="renform" class="grid" novalidate><b>Nombre de usuario</b><label class="f">Nombre<input type="text" name="rn" value="${esc(session.name)}" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar nombre</button></div></form>`}
 
@@ -2622,13 +2638,42 @@ function delChar(id){
  setTimeout(done,520)}
 const HOUSE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.500 11 12 4l8.500 7M5.500 9.500V20h4.500v-5.500h4V20h4.500V9.500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const CAM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.500h3l1.500-2.500h7L17 8.500h3V19H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13.500" r="3.300" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
-function avOk(a){return typeof a==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(a)&&a.length<400000?a:''}
+function avOk(a){if(typeof a==='string'&&avParse(a))return a;return typeof a==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(a)&&a.length<400000?a:''}
+
+/* ---------- Avatares dibujados: 10 personajes con color a elegir (se guardan como «av:id:RRGGBB») ---------- */
+const AVL=[
+ ['cab','Caballero','<path d="M32 10c-10 0-17 7-17 17v13c0 4 3 7 7 7h4V37h12v10h4c4 0 7-3 7-7V27c0-10-7-17-17-17z"/><rect x="21" y="26" width="22" height="5" rx="2" class="k"/><path d="M32 4c3 0 5 3 5 6H27c0-3 2-6 5-6z"/>'],
+ ['mag','Mago','<path d="M32 5l13 27H19z"/><ellipse cx="32" cy="33" rx="21" ry="5"/><path d="M22 37h20l-3 19-7 5-7-5z"/><circle cx="32" cy="22" r="2.6" class="k"/>'],
+ ['dra','Dragón','<path d="M12 8l12 9h16l12-9-3 18c3 3 4 7 4 11 0 12-11 19-25 19S7 49 7 37c0-4 1-8 4-11z"/><path d="M17 31l9 3-2 4zM47 31l-9 3 2 4z" class="k"/><circle cx="26" cy="50" r="2" class="k"/><circle cx="38" cy="50" r="2" class="k"/>'],
+ ['d20','Dado d20','<path d="M32 6l22 13v26L32 58 10 45V19z"/><path d="M32 18l12 22H20z M32 18V6M20 40L10 45M44 40l10 5M20 40l-10-21M44 40l10-21" fill="none" stroke-width="2.4" stroke-linejoin="round" class="ks"/>'],
+ ['gat','Gato','<path d="M10 8l12 9c7-3 13-3 20 0l12-9v22c0 15-10 26-22 26S10 45 10 30z"/><ellipse cx="23" cy="31" rx="3.2" ry="4.6" class="k"/><ellipse cx="41" cy="31" rx="3.2" ry="4.6" class="k"/><path d="M29 40h6l-3 4z" class="k"/><path d="M3 38l15 3M3 46l15-3M61 38l-15 3M61 46l-15-3" fill="none" stroke-width="2" stroke-linecap="round" class="ki"/>'],
+ ['rob','Robot','<rect x="13" y="20" width="38" height="32" rx="9"/><path d="M32 20v-9" fill="none" stroke-width="4" stroke-linecap="round" class="ki"/><circle cx="32" cy="9" r="4"/><rect x="21" y="29" width="8" height="8" rx="2" class="k"/><rect x="35" y="29" width="8" height="8" rx="2" class="k"/><rect x="22" y="43" width="20" height="3.5" rx="1.7" class="k"/><rect x="6" y="30" width="5" height="12" rx="2.5"/><rect x="53" y="30" width="5" height="12" rx="2.5"/>'],
+ ['buh','Búho','<path d="M12 8l10 8h20l10-8v26c0 14-9 24-20 24S12 48 12 34z"/><circle cx="23" cy="31" r="8.5" class="k"/><circle cx="41" cy="31" r="8.5" class="k"/><circle cx="23" cy="31" r="4"/><circle cx="41" cy="31" r="4"/><path d="M28 40h8l-4 8z" class="k"/>'],
+ ['zor','Zorro','<path d="M7 9l16 11h18l16-11-3 26-22 22-22-22z"/><path d="M15 34l11 4-3 4zM49 34l-11 4 3 4z" class="k"/><path d="M27 52h10l-5 6z" class="k"/><path d="M32 40l8 4v6l-8 6-8-6v-6z" class="kl"/>'],
+ ['cal','Calavera','<path d="M32 6c13 0 22 8 22 20 0 7-3 11-7 14v9c0 3-2 5-5 5H22c-3 0-5-2-5-5v-9c-4-3-7-7-7-14C10 14 19 6 32 6z"/><circle cx="23" cy="28" r="6" class="k"/><circle cx="41" cy="28" r="6" class="k"/><path d="M32 36l-4 7h8z" class="k"/><path d="M25 50v-5M32 50v-5M39 50v-5" fill="none" stroke-width="2.4" class="ks"/>'],
+ ['ali','Alienígena','<path d="M32 5c15 0 25 11 25 25 0 14-9 22-18 26l-7 4-7-4c-9-4-18-12-18-26C7 16 17 5 32 5z"/><path d="M12 28c9-3 15 4 17 11-9 2-16-2-17-11zM52 28c-9-3-15 4-17 11 9 2 16-2 17-11z" class="k"/>']
+];
+const AVC=['#2563EB','#0F9D9A','#7C5CFF','#D9603F','#E8590C','#EAB308','#16A34A','#DB2777','#64748B','#1F2937'];
+const AVID=AVL.map(x=>x[0]);
+function avDef(){return {i:'cab',c:'#2563EB'}}
+function avParse(a){const m=/^av:([a-z0-9]{3}):([0-9A-Fa-f]{6})$/.exec(a||'');return m&&AVID.indexOf(m[1])>-1?{i:m[1],c:'#'+m[2].toUpperCase()}:null}
+function avLum(h){const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return(.2126*r+.7152*g+.0722*b)/255}
+function avSvg(id,col,cls){const g=AVL.find(x=>x[0]===id)||AVL[0];const ink=avLum(col)>.62?'#17171F':'#FFFFFF';
+ const d=g[2].replace(/class="ks"/g,'stroke="'+col+'"').replace(/class="ki"/g,'stroke="'+ink+'"').replace(/class="kl"/g,'fill="'+col+'" opacity=".55"').replace(/class="k"/g,'fill="'+col+'"');
+ const hi=avLum(col)>.62?'rgba(0,0,0,.14)':'rgba(255,255,255,.22)';
+ return `<svg class="avsvg${cls?' '+cls:''}" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="avg${id}${col.slice(1)}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${col}"/><stop offset="1" stop-color="${col}" stop-opacity=".78"/></linearGradient></defs><rect width="64" height="64" fill="url(#avg${id}${col.slice(1)})"/><circle cx="20" cy="12" r="26" fill="${hi}" opacity=".5"/><g fill="${ink}">${d}</g></svg>`}
+function avImg(alt){const a=avParse(store.avatar);if(a)return avSvg(a.i,a.c);return store.avatar?`<img src="${store.avatar}" alt="${alt||''}">`:''}
+function avGalHtml(){const cur=avParse(store.avatar)||{i:'',c:store._avc||avDef().c};
+ return `<div class="avgrid" role="radiogroup" aria-label="Avatar">${AVL.map(g=>`<button type="button" class="avopt${cur.i===g[0]?' sel':''}" data-act="avset" data-id="${g[0]}" role="radio" aria-checked="${cur.i===g[0]}" aria-label="${g[1]}" title="${g[1]}">${avSvg(g[0],cur.c)}</button>`).join('')}</div>
+ <div class="avcols" role="radiogroup" aria-label="Color del avatar">${AVC.map(c=>`<button type="button" class="avcol${c.toUpperCase()===cur.c.toUpperCase()?' sel':''}" data-act="avcol" data-c="${c}" style="--c:${c}" role="radio" aria-checked="${c.toUpperCase()===cur.c.toUpperCase()}" aria-label="Color ${c}"></button>`).join('')}<label class="avcol avcust" title="Otro color" aria-label="Elegir otro color"><input type="color" data-avc value="${cur.c.toLowerCase()}"></label></div>`}
+function avSet(id,col){const cur=avParse(store.avatar)||{i:'',c:store._avc||avDef().c};const i=id||cur.i||'cab',c=(col||cur.c).toUpperCase();store._avc=c;store.avatar='av:'+i+':'+c.slice(1);save();avRefresh(!!id)}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.matches&&t.matches('input[data-avc]')){const c=t.value.toUpperCase();const cur=avParse(store.avatar)||{i:'cab'};store._avc=c;store.avatar='av:'+cur.i+':'+c.slice(1);save();const m=document.getElementById('avbox');if(m)m.innerHTML=avBig();document.querySelectorAll('.avopt svg').forEach(()=>{});document.querySelectorAll('.avopt').forEach(o=>{o.innerHTML=avSvg(o.dataset.id,c)});render(1)}});
 function avIni(){return esc(((session&&session.name)||'?').trim().charAt(0).toUpperCase())}
-function avSmall(){return `<span class="avs">${store.avatar?`<img src="${store.avatar}" alt="">`:avIni()}</span>`}
-function avBig(){return `<span class="avimg">${store.avatar?`<img src="${store.avatar}" alt="Tu imagen">`:`<b>${avIni()}</b>`}</span>`}
+function avSmall(){return `<span class="avs">${store.avatar?avImg(''):avIni()}</span>`}
+function avBig(){return `<span class="avimg">${store.avatar?avImg('Tu imagen'):`<b>${avIni()}</b>`}</span>`}
 function homeBtn(cls){return `<button type="button" class="${cls} homebtn" data-act="gohome" aria-label="Inicio" title="Inicio">${HOUSE}<span>Inicio</span></button>`}
 function avPickImg(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file);const im=new Image();im.onload=()=>{try{const n=192,c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');const m=Math.min(im.width,im.height);x.fillStyle='#fff';x.fillRect(0,0,n,n);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,n,n);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.86))}catch(e){rej(e)}};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};im.src=u})}
-function avRefresh(pop){const bs=document.getElementById('avbox');if(bs)bs.innerHTML=avBig();render(1);
+function avRefresh(pop){const bs=document.getElementById('avbox');if(bs)bs.innerHTML=avBig();const gl=document.getElementById('avgal');if(gl)gl.innerHTML=avGalHtml();const dq=document.getElementById('avdelb');if(dq)dq.hidden=!store.avatar;render(1);
  document.querySelectorAll('.avs,.avimg').forEach(el=>{if(pop){el.classList.remove('avpop');void el.offsetWidth;el.classList.add('avpop')}})}
 function acctBar(){return `<div class="acct nbt"><span>Sesión de <b>${esc(session.name)}</b>${canAdm()?' <span class="tag">'+(isAdmin()?'propietario':'administrador')+'</span>':''}</span></div>`}
 const AUTHBG='<div class="atable" aria-hidden="true"><svg viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="at1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2DD4C4" stop-opacity=".55"/><stop offset="1" stop-color="#2563EB" stop-opacity=".08"/></linearGradient><radialGradient id="at2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7FE8DC" stop-opacity=".55"/><stop offset="1" stop-color="#7FE8DC" stop-opacity="0"/></radialGradient><filter id="atg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter></defs><ellipse cx="400" cy="150" rx="330" ry="70" fill="url(#at2)"/><polygon points="150,120 650,120 780,205 20,205" fill="url(#at1)" stroke="#7FE8DC" stroke-opacity=".55" stroke-width="2"/><rect x="20" y="205" width="760" height="9" rx="4.5" fill="#7FE8DC" fill-opacity=".35"/><g fill="#9FF3E8" filter="url(#atg)" opacity=".9"><circle cx="230" cy="100" r="10"/><circle cx="330" cy="100" r="10"/><circle cx="470" cy="100" r="10"/><circle cx="570" cy="100" r="10"/><circle cx="150" cy="248" r="12"/><circle cx="290" cy="248" r="12"/><circle cx="510" cy="248" r="12"/><circle cx="650" cy="248" r="12"/></g><g fill="#E9FFFC"><circle cx="230" cy="100" r="6"/><circle cx="330" cy="100" r="6"/><circle cx="470" cy="100" r="6"/><circle cx="570" cy="100" r="6"/><circle cx="150" cy="248" r="7.5"/><circle cx="290" cy="248" r="7.5"/><circle cx="510" cy="248" r="7.5"/><circle cx="650" cy="248" r="7.5"/></g></svg></div><div class="apts" aria-hidden="true"><i class="pt" style="left:43%;--s:3px;--t:17s;--dl:-20s"></i><i class="pt" style="left:8%;--s:2px;--t:24s;--dl:-17s"></i><i class="pt" style="left:14%;--s:3px;--t:20s;--dl:-1s"></i><i class="pt" style="left:66%;--s:3px;--t:11s;--dl:-2s"></i><i class="pt" style="left:57%;--s:4px;--t:12s;--dl:-7s"></i><i class="pt" style="left:13%;--s:4px;--t:11s;--dl:-18s"></i><i class="pt" style="left:17%;--s:3px;--t:21s;--dl:-20s"></i><i class="pt" style="left:76%;--s:2px;--t:20s;--dl:-18s"></i><i class="pt" style="left:52%;--s:2px;--t:14s;--dl:-1s"></i><i class="pt" style="left:73%;--s:3px;--t:15s;--dl:-13s"></i><i class="pt" style="left:20%;--s:2px;--t:20s;--dl:-9s"></i><i class="pt" style="left:73%;--s:3px;--t:12s;--dl:-18s"></i><i class="pt" style="left:75%;--s:3px;--t:16s;--dl:-3s"></i><i class="pt" style="left:72%;--s:2px;--t:20s;--dl:-1s"></i><i class="pt" style="left:81%;--s:3px;--t:18s;--dl:-17s"></i><i class="pt" style="left:56%;--s:3px;--t:18s;--dl:-18s"></i><i class="pt" style="left:60%;--s:3px;--t:15s;--dl:-7s"></i><i class="pt" style="left:25%;--s:3px;--t:12s;--dl:-18s"></i><i class="pt" style="left:40%;--s:4px;--t:16s;--dl:-14s"></i><i class="pt" style="left:38%;--s:2px;--t:12s;--dl:-16s"></i><i class="pt" style="left:55%;--s:3px;--t:23s;--dl:-10s"></i><i class="pt" style="left:21%;--s:4px;--t:17s;--dl:-1s"></i><i class="pt" style="left:87%;--s:2px;--t:23s;--dl:-17s"></i><i class="pt" style="left:75%;--s:3px;--t:16s;--dl:-11s"></i><i class="pt" style="left:78%;--s:4px;--t:20s;--dl:-14s"></i><i class="pt" style="left:10%;--s:2px;--t:15s;--dl:-15s"></i></div>';
@@ -2639,8 +2684,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='143';
-const APPN='Arreglo para móvil: ya no se cortan textos ni paneles por el borde derecho (Cyberpunk, Dune y el resto de pantallas).';
+const APPV='144';
+const APPN='Nuevos avatares: elige entre 10 personajes dibujados y ponles el color que quieras desde Mi cuenta.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2713,7 +2758,7 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN()].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN()].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
@@ -2737,7 +2782,7 @@ function fdockUpdate(c){let d=document.getElementById('fdock');
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');dockSig='';return}
  if(isDesk()){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb')}
- const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,store.avatar?store.avatar.length:0,getTheme(),myRole(),document.documentElement.dataset.dev].join('|');
+ const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),document.documentElement.dataset.dev].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
  {const ph=document.documentElement.dataset.dev==='phone',tab=isTab()||ph,hm=ph?false:(scr==='menu'&&!c);d.classList.toggle('tabtr',tab&&hm);d.classList.toggle('tabcoll',tab&&!hm);if(!(tab&&!hm))d.classList.remove('open');
   let bb=document.getElementById('fbub');if(tab&&!hm){if(!bb){bb=document.createElement('button');bb.id='fbub';bb.type='button';bb.dataset.act='fbub';bb.setAttribute('aria-label','Abrir menú');bb.setAttribute('aria-expanded','false');bb.innerHTML=MENUI;document.body.appendChild(bb)}}else if(bb)bb.remove()}
@@ -2767,7 +2812,7 @@ const GALX='<span class="gxb" aria-hidden="true"><svg class="gxa" viewBox="0 0 2
 const NAIL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v1.200a1 1 0 0 1-1 1h-2.100l-1.400 12.800-1.500 3-1.500-3L9.100 6.200H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="currentColor"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?avImg(''):`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 /* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
 const CYBER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.500-6 10-6 10 6 10 6-3.500 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.200" fill="currentColor"/><path d="M12 2.500v2M12 19.500v2M4.500 18.500l1.500-1.300M19.500 18.500 18 17.200" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></svg>';
@@ -3963,8 +4008,10 @@ document.addEventListener('click',e=>{
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
   case 'gohome':exitFx(()=>{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render()});break;
+  case 'avset':avSet(b.dataset.id,'');{const m=$('#avmsg');if(m){m.textContent='Avatar actualizado.';m.className='msg ok'}}break;
+  case 'avcol':avSet('',b.dataset.c);break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
-  case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');if(r){const x=r.querySelector('[data-act=avdel]');if(x)x.remove()}}break;
+  case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');{}}break;
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
