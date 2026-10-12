@@ -1924,6 +1924,18 @@ html[data-dun][data-dev][data-dev]:root #tpop .thm{background:rgba(34,16,8,.96);
  html[data-dun][data-dev][data-dev]:root .tbin{animation:dnGlow 6s ease-in-out infinite alternate}
 }
 @keyframes dnGlow{from{box-shadow:inset 0 0 0 1px rgba(255,226,170,.06),0 14px 36px -14px rgba(0,0,0,.8),0 0 20px -10px rgba(233,169,87,.45)}to{box-shadow:inset 0 0 0 1px rgba(255,226,170,.06),0 14px 36px -14px rgba(0,0,0,.8),0 0 38px -6px rgba(255,200,120,.85)}}
+/* ===== Cabecera y menús superiores: acento propio de cada universo (avatar, campana, ayuda, insignias) ===== */
+html[data-cos][data-dev][data-dev]:root{--ux-a:#8B5CF6;--ux-b:#3730A3;--ux-ink:#fff;--ux-t:#C4B5FD;--ux-g:rgba(150,130,255,.45);--ux-bg:rgba(18,14,56,.72);--ux-fg:#F2F0FF}
+html[data-mode=gm][data-cos][data-dev][data-dev]:root{--ux-a:#D9603F;--ux-b:#8A2F1E;--ux-ink:#fff;--ux-t:#FFD2BC;--ux-g:rgba(232,100,63,.5);--ux-bg:rgba(38,16,26,.72);--ux-fg:#FFE9DD}
+html[data-cyb][data-dev][data-dev]:root{--ux-a:#FCEE0A;--ux-b:#E0D100;--ux-ink:#0A0A0C;--ux-t:#FCEE0A;--ux-g:rgba(252,238,10,.5);--ux-bg:rgba(10,10,6,.8);--ux-fg:#FCEE0A}
+html[data-dun][data-dev][data-dev]:root{--ux-a:#E9A957;--ux-b:#8F4519;--ux-ink:#2A1409;--ux-t:#FFE2A8;--ux-g:rgba(233,169,87,.5);--ux-bg:rgba(34,16,8,.78);--ux-fg:#F6E3BE}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .av,:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .av.lgs,:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .avs{background:linear-gradient(135deg,var(--ux-a),var(--ux-b));color:var(--ux-ink)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .av.lgs{box-shadow:0 6px 14px -8px var(--ux-g)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .avb:hover{box-shadow:0 0 0 3px var(--ux-g)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .avb:focus-visible,:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hlp:focus-visible{outline-color:var(--ux-a)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .hn em:not(.supr):not(.gmem){color:var(--ux-t)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hb .bell,:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hlp{background:var(--ux-bg);color:var(--ux-fg);border-color:var(--ux-g)}
+:is(html[data-cos],html[data-cyb],html[data-dun])[data-dev][data-dev]:root .hlp span{background:linear-gradient(135deg,var(--ux-a),var(--ux-b));color:var(--ux-ink)}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2421,8 +2433,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='138';
-const APPN='Nueva burbuja «Dune» (próximamente) con temática de arena: tormenta, dunas, gusano de arena y espejismo, y el menú se viste de arena al entrar.';
+const APPV='139';
+const APPN='La cabecera y los menús superiores (avatar, campana y ayuda) ahora usan los colores del universo en el que entras: violeta en Cosmere, amarillo en Cyberpunk y arena en Dune.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
