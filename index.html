@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=114"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=114">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=115"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=115">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1186,12 +1186,6 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 .fcount{margin:10px 0 0;font-size:.95rem;opacity:.85}.fcount b{font-size:1.15em}.fcount.max{color:#C2410C;opacity:1;font-weight:600}
 @media (prefers-reduced-motion:no-preference){.fcount b{display:inline-block;animation:fcPop .35s ease both}}@keyframes fcPop{from{transform:scale(1.4);opacity:.4}to{transform:none;opacity:1}}
 .card.sel{outline:3px solid var(--pc);outline-offset:-3px}.selb{width:100%}.top .btn[disabled]{opacity:.5;cursor:not-allowed}
-#bye{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#16275a,#050b1f);color:#EAF0FF;text-align:center;opacity:1}
-#bye .byei{display:grid;gap:10px;justify-items:center;padding:24px}#bye b{font-size:1.5rem}#bye small{opacity:.75}
-#bye .byeo{width:54px;height:54px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:#8DB2FF}
-@media (prefers-reduced-motion:no-preference){#bye{animation:byeIn .45s ease both}#bye .byei{animation:byeUp .6s ease both}#bye .byeo{animation:byeSpin 1s linear infinite}#bye.out{animation:byeOut .55s ease both}
-#app.bye-go{animation:byeApp .4s ease both}}
-@keyframes byeIn{from{opacity:0}to{opacity:1}}@keyframes byeUp{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}@keyframes byeSpin{to{transform:rotate(360deg)}}@keyframes byeOut{from{opacity:1}to{opacity:0}}@keyframes byeApp{to{opacity:0;transform:scale(.98)}}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1678,8 +1672,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='114';
-const APPN='Animación de despedida al cerrar sesión (pantalla Hasta pronto con transición).';
+const APPV='115';
+const APPN='Se retira la animación de despedida al cerrar sesión.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2734,7 +2728,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;const nm=session&&session.name||'';const by=document.createElement('div');by.id='bye';by.setAttribute('role','status');by.innerHTML='<div class="byei"><span class="byeo" aria-hidden="true"></span><b>Hasta pronto'+(nm?', '+esc(nm):'')+'</b><small>Guardando tus fichas…</small></div>';document.body.appendChild(by);const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1200-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';render();{const by2=document.getElementById('bye');if(by2){by2.classList.add('out');setTimeout(()=>by2.remove(),red?0:600)}}})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{try{await flush()}catch(x){}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';render()})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
