@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=109"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=109">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=110"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=110">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1183,10 +1183,6 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 }
 .pcx{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(120,125,140,.45);background:rgba(255,255,255,.18);color:inherit;font:700 .95rem/1 var(--sans,system-ui);cursor:pointer;display:grid;place-items:center;transition:background .15s,transform .15s;z-index:2}.pcx:hover{background:rgba(217,72,15,.85);color:#fff;transform:scale(1.08)}.pcx:focus-visible{outline:2px solid var(--pc);outline-offset:2px}
 .card.npcc{position:relative}
-.myf{display:grid;gap:8px;max-width:760px;margin:0 auto}.myfh{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}.myfh .hh2{margin:0;flex:1 1 auto}
-.myfl{display:grid;gap:8px;margin-top:10px}.myfc{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid rgba(128,128,128,.35);background:rgba(255,255,255,.08);color:inherit;font:inherit;cursor:pointer}.myfc b{flex:1 1 auto}.myfc span{opacity:.75;font-size:.9em}
-@media (prefers-reduced-motion:no-preference){.myfg{animation:myfIn .35s ease both}.myfc{transition:transform .15s}.myfc:hover{transform:translateX(3px)}}
-@keyframes myfIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1673,8 +1669,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='109';
-const APPN='Nuevo menú: burbujas Juegos y Mis fichas (fichas siempre ligadas a un juego). Máximo de 10 fichas por juego y sin Importar cuenta antigua.';
+const APPV='110';
+const APPN='Menú principal como antes (sin Juegos ni Mis fichas). Máximo de 10 fichas por juego y sin Importar cuenta antigua.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1799,14 +1795,7 @@ const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
-const GAMES=[['nb','Nacidos de la Bruma','Cosmere · rol',1]];
-function myfSec(){return GAMES.map(g=>{const cs=store.chars.filter(c=>(c.game||'nb')===g[0]);const full=cs.length>=CHAR_MAX;
- return `<section class="myfg"><div class="myfh"><h2 class="hh2">${esc(g[1])}</h2><span class="tag">${cs.length}/${CHAR_MAX} fichas</span><button type="button" class="btn pri" data-act="ngame" data-g="${g[0]}"${full?' title="Máximo alcanzado"':''}>Nueva ficha</button></div>
- ${cs.length?`<div class="myfl">${cs.map(c=>{const p=PATHS[c.path];return `<button type="button" class="myfc" data-act="open" data-id="${c.id}"><b>${esc(c.name||'Sin nombre')}</b><span>${g[0]==='nb'?(p?esc(p.n):'sin camino')+' · nivel '+c.level:''}${c.pid?' · en partida':''}</span><i aria-hidden="true">→</i></button>`}).join('')}</div>`:'<p class="hint">Aún no tienes fichas de este juego.</p>'}</section>`}).join('')}
 function screen(){
- if(scr==='games')return hubBar(['menu','Inicio'])+`<h1 class="hh">Juegos</h1><p class="hs">Todos los juegos de la mesa.</p><div class="bubbles">
-  ${hubTile('t1',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>`;
- if(scr==='myf')return hubBar(['menu','Inicio'])+`<h1 class="hh">Mis fichas</h1><p class="hs">Tus fichas, agrupadas por el juego al que pertenecen. Cada ficha se crea siempre dentro de un juego.</p><div class="myf">${myfSec()}</div>`;
  if(scr==='npc')return npcEditor();
  if(scr==='part')return partScreen();
  if(scr==='ppart')return ppartScreen();
@@ -1817,11 +1806,11 @@ function screen(){
   ${hubTile('t2',BOOK,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb')}
   ${hubTile('t3',STORM,'El archivo de las tormentas','Fichas de Roshar.','soon_arch',1)}</div>`;
  if(scr==='deck'||scr==='arch')return hubBar([scr==='deck'?'cosmere':'rol',scr==='deck'?'Cosmere':'Rol'])+`<h1 class="hh">${scr==='deck'?'Creación de mazos':'El archivo de las tormentas'}</h1><p class="hs">Esta parte todavía está en preparación. Cuando esté lista aparecerá aquí.</p>`;
- if(scr==='cosmere')return hubBar(['games','Juegos'])+`<h1 class="hh">Cosmere</h1><p class="hs">¿Qué quieres hacer?</p><div class="bubbles">
+ if(scr==='cosmere')return hubBar(['menu','Inicio'])+`<h1 class="hh">Cosmere</h1><p class="hs">¿Qué quieres hacer?</p><div class="bubbles">
   ${hubTile('t1',CARDS,'Creación de mazos','Mazos de Nacidos de la Bruma.','deck',1)}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1',ORB,'Juegos','Todos los juegos de la mesa.','games')}${hubTile('t2',BOOK,'Mis fichas','Tus fichas y el juego de cada una.','myf')}</div>${partsPlayer()}`}
+  ${hubTile('t1',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}`}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -2249,7 +2238,7 @@ document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)retur
  const r0=render;render=function(k){r0.apply(this,arguments);{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
-const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,games:1,myf:1,cosmere:2,rol:3,deck:3,arch:4,nb:4,ed:5};let lastKey=null;
+const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 function home(){
  const cards=store.chars.map(c=>{const p=PATHS[c.path];const anc={humano:'Humano',kandra:'Kandra',koloss:'Sangre koloss'}[c.ancestry];
   const d=derive(c);const sts=STEPS.slice(0,7).map((n,k)=>[n,status(c,k)]);const okN=sts.filter(x=>x[1]==='ok').length,full=okN===7;const miss=sts.filter(x=>x[1]!=='ok').map(x=>x[0]);
@@ -2768,13 +2757,10 @@ document.addEventListener('click',e=>{
   case 'dup':{if(charFull('nb'))break;const o=store.chars.find(x=>x.id===b.dataset.id);if(!o)break;const n=normalize(JSON.parse(JSON.stringify(o)));delete n.pid;delete n.rev;delete n._ph;n.name=(o.name||'Personaje')+' (copia)';n.done=false;n.mode='f';n.step=0;n.dupOf=dupSig(o);store.chars.push(n);store.cur=n.id;save();render();toast('Ficha duplicada: es editable hasta que la vuelvas a finalizar');break}
   case 'askdel':{const ch=store.chars.find(x=>x.id===b.dataset.id);if(!ch)break;const d=$('#dlg');d.className='dlgdel';d.innerHTML=`<div class="grid"><h3>¿Borrar esta ficha?</h3><p class="hint" style="margin:0"><b>${esc(ch.name||'Sin nombre')}</b> se borrará de tu cuenta. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="del" data-id="${ch.id}">Sí, borrar</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'del':delChar(b.dataset.id);break;
-  case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr=(scr==='myf')?'myf':'nb';render();break}
+  case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
   case 'menu':scr='menu';render();break;
   case 'cosmere':store.cur=null;scr='cosmere';render();break;
   case 'rol':store.cur=null;scr='rol';render();break;
-  case 'games':store.cur=null;scr='games';render();break;
-  case 'myf':store.cur=null;scr='myf';render();break;
-  case 'ngame':{const g=b.dataset.g||'nb';if(charFull(g))break;const n=blank();n.game=g;store.chars.push(n);store.cur=n.id;save();render();break}
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':scr='deck';render();break;
   case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
