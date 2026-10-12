@@ -1643,6 +1643,12 @@ html[data-cos][data-mode=gm] .bub.t1:not(.gal){background:radial-gradient(circle
 html[data-cos][data-mode=gm] .bub.t2{background:radial-gradient(circle at 30% 25%,#FCA5A5,#E11D48 55%,#4C0519)}
 html[data-cos][data-mode=gm] .bub.t3{background:radial-gradient(circle at 30% 25%,#FCD34D,#D97706 55%,#7C2D12)}
 html[data-mode=gm] .bub.gal .ti{box-shadow:0 0 0 1px rgba(255,190,160,.45)}
+#warp.wo b{animation-name:wpStrO;animation-timing-function:cubic-bezier(.15,.55,.5,1)}
+#warp.wo .wcore{animation-name:wpCoreO;animation-timing-function:ease-out}
+@keyframes wpStrO{0%{opacity:0;transform:rotate(var(--a)) translateX(10vmax) scaleX(1)}35%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateX(2vmax) scaleX(0)}}
+@keyframes wpCoreO{0%{transform:scale(3.2);opacity:0}55%{transform:scale(.5);opacity:1}100%{transform:scale(0);opacity:0}}
+html.modeswap,html.modeswap body,html.modeswap #topbar,html.modeswap #topbar *,html.modeswap #fdock,html.modeswap #fbub,html.modeswap .nav{transition:background-color 1s ease,color 1s ease,border-color 1s ease,box-shadow 1s ease!important}
+@media(prefers-reduced-motion:no-preference){#modefx.out{animation:mfOut 1.3s cubic-bezier(.4,0,.2,1) forwards!important}}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -2098,7 +2104,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
  document.body.appendChild(g);
  const shoot=()=>{const gg=document.getElementById('gx');if(!gg){gxT=0;return}if(!lfRM()&&!document.hidden){const s=document.createElement('i');s.className='gsh';s.style.left=(Math.random()*70).toFixed(0)+'vw';s.style.top=(Math.random()*45).toFixed(0)+'vh';gg.appendChild(s);setTimeout(()=>s.remove(),1300)}gxT=setTimeout(shoot,6000+Math.random()*8000)};
  gxT=setTimeout(shoot,2500+Math.random()*3000)}
-function warpIntro(){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';o.setAttribute('aria-hidden','true');
+function warpIntro(out){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';if(out)o.className='wo';o.setAttribute('aria-hidden','true');
  let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
 function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'));const key=!session?'auth':c?'ed':scr;let d='';
@@ -2169,8 +2175,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='133';
-const APPN='Tema Galaxia también en modo GM (nebulosas cálidas) y en las pantallas de sesión y partida.';
+const APPV='134';
+const APPN='Animación de salida del Cosmere al menú principal y transición más suave al cambiar entre modo GM y jugador.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2681,7 +2687,7 @@ function stormOff(){const o=document.getElementById('stormfx');if(o){o.classList
 function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
  const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.setAttribute('aria-hidden','true');o.innerHTML=`<i class="mc"></i><div class="ml">${m==='gm'?PENI:DIEI}<span>${m==='gm'?'Modo Game Master':'Modo Jugador'}</span></div>`;document.body.appendChild(o);
- setTimeout(apply,850);setTimeout(()=>o.classList.add('out'),1600);setTimeout(()=>o.remove(),2250)}
+ setTimeout(()=>{document.documentElement.classList.add('modeswap');apply()},850);setTimeout(()=>o.classList.add('out'),1500);setTimeout(()=>o.remove(),2900);setTimeout(()=>document.documentElement.classList.remove('modeswap'),2900)}
 
 /* ---------- Partidas ---------- */
 const hpMap={};let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
@@ -3443,7 +3449,7 @@ document.addEventListener('click',e=>{
   case 'selask':{const ch=store.chars.filter(x=>selIds.has(x.id));if(!ch.length)break;const all=ch.length===store.chars.length;const d=$('#dlg');d.className='dlgdel';d.innerHTML=`<div class="grid"><h3>${all?'¿Borrar TODAS tus fichas?':'¿Borrar '+ch.length+(ch.length===1?' ficha?':' fichas?')}</h3><p class="hint" style="margin:0">${all?'Se borrarán las '+ch.length+' fichas de este juego':'Se borrarán de tu cuenta'}: <b>${ch.slice(0,8).map(x=>esc(x.name||'Sin nombre')).join(', ')}${ch.length>8?' y '+(ch.length-8)+' más':''}</b>. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="selok">Sí, borrar</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'selok':{const ids=new Set(selIds);try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}store.chars.filter(o=>ids.has(o.id)&&o.pid).forEach(o=>{fs('DELETE','pjs/'+o.pid+'_'+session.uid).catch(()=>{})});store.chars=store.chars.filter(x=>!ids.has(x.id));selIds.clear();selMode=false;save();render(1);toast(ids.size===1?'Ficha borrada':ids.size+' fichas borradas');break}
   case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
-  case 'menu':scr='menu';render();break;
+  case 'menu':if(session&&document.documentElement.dataset.cos&&!lfRM()){warpIntro(true);setTimeout(()=>{scr='menu';render()},420)}else{scr='menu';render()}break;
   case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{store.cur=null;scr='cosmere';render()}break;
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
