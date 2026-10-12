@@ -1482,6 +1482,7 @@ html[data-dev=tablet] .lfsolo .lfv,html[data-dev=desktop] .lfsolo .lfv{height:4.
 @media(max-width:1199px){
  html[data-dev=tablet] .mtg,html[data-dev=desktop] .mtg{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 8px}
  html[data-dev=tablet] .mtds,html[data-dev=desktop] .mtds{display:none}
+ html[data-dev=tablet] .mtn,html[data-dev=desktop] .mtn{font-size:.7rem;letter-spacing:0;padding:6px 1px}
  html[data-dev=tablet] .mttr,html[data-dev=desktop] .mttr{overflow-x:auto}
  html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{width:max-content;min-width:100%}
  html[data-dev=tablet] .mts,html[data-dev=desktop] .mts{width:42px;min-width:42px}
@@ -1495,6 +1496,64 @@ html[data-dev=phone],html[data-dev=phone] body{max-width:100%;overflow-x:hidden;
 @supports(overflow:clip){html[data-dev=phone],html[data-dev=phone] body{overflow-x:clip}}
 html[data-dev=phone] #app,html[data-dev=phone] .wrap{max-width:100%;overflow-x:clip}
 html[data-dev=phone] img,html[data-dev=phone] svg,html[data-dev=phone] video,html[data-dev=phone] iframe{max-width:100%}
+.mtshx{display:none}
+@keyframes mtAdvK{0%{transform:scale(1)}30%{transform:scale(1.3);filter:brightness(1.9) drop-shadow(0 0 8px rgba(214,216,255,.95))}100%{transform:scale(1);filter:none}}
+@media(prefers-reduced-motion:no-preference){.mts.cur.mtadv .mtk{animation:mtAdvK 1.2s cubic-bezier(.2,.9,.3,1)}}
+/* ===== móvil: vida compacta fija + tablero en una columna ===== */
+html[data-dev=phone] .lfroot{padding-bottom:150px}
+html[data-dev=phone] .lfroot{animation-fill-mode:backwards!important}
+html[data-dev=phone] .mtatb{display:grid;grid-template-columns:auto auto 44px 44px;gap:6px;width:100%}
+html[data-dev=phone] .mtatb .btn{min-width:0;padding:0 8px}
+html[data-dev=phone] .lfsplit{display:block}
+html[data-dev=phone] .lfside{position:sticky;top:env(safe-area-inset-top,0px);height:0;margin:0;z-index:30;overflow:visible}
+html[data-dev=phone] .lfside .lfc{position:absolute;left:0;right:0;top:0}
+html[data-dev=phone] .lfmain{padding-top:var(--lfh,190px)}
+html[data-dev=phone] .lfsolo{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto auto auto auto;gap:0 8px;align-items:center;justify-items:stretch;padding:8px 10px;transition:padding .3s,box-shadow .3s}
+html[data-dev=phone] .lfhd{grid-column:1/-1;grid-row:1;height:42px;overflow:hidden;transition:height .3s,opacity .25s}
+html[data-dev=phone] .lfhd .lfnew{min-height:38px}
+html[data-dev=phone] .lfv{grid-column:2;grid-row:2;width:auto;height:4rem;transition:height .3s}
+html[data-dev=phone] .lfsolo .lfd{font-size:3.4rem;transition:font-size .3s}
+html[data-dev=phone] .lfb{display:contents}
+html[data-dev=phone] .lfsolo .lfbt{height:54px;min-height:0;min-width:58px;font-size:1.15rem;overflow:hidden;transition:height .3s,margin .3s,opacity .25s}
+html[data-dev=phone] .lfbt[data-d="-1"]{grid-column:1;grid-row:2}
+html[data-dev=phone] .lfbt[data-d="1"]{grid-column:3;grid-row:2}
+html[data-dev=phone] .lfbt[data-d="-5"]{grid-column:1;grid-row:3;margin-top:6px}
+html[data-dev=phone] .lfbt[data-d="5"]{grid-column:3;grid-row:3;margin-top:6px}
+html[data-dev=phone] .lfbar{grid-column:2;grid-row:3;margin-top:6px;transition:opacity .25s}
+html[data-dev=phone] .lfmsg{grid-column:1/-1;grid-row:4;margin:6px 0 0}
+html[data-dev=phone] .lfmini{padding:5px 10px;box-shadow:0 10px 24px -6px rgba(0,0,0,.7)}
+html[data-dev=phone] .lfmini .lfhd,html[data-dev=phone] .lfmini .lfbar{height:0;opacity:0;pointer-events:none}
+html[data-dev=phone] .lfmini .lfbt[data-d="-5"],html[data-dev=phone] .lfmini .lfbt[data-d="5"]{height:0;margin-top:0;opacity:0;pointer-events:none;border-width:0}
+html[data-dev=phone] .lfmini .lfbt[data-d="-1"],html[data-dev=phone] .lfmini .lfbt[data-d="1"]{height:44px}
+html[data-dev=phone] .lfmini .lfv{height:2.8rem}
+html[data-dev=phone] .lfmini .lfd{font-size:2.2rem}
+html[data-dev=phone] .lfnt,html[data-dev=phone] .lfnt *{transition:none!important}
+html[data-dev=phone] .mtb{display:flex;flex-direction:column}
+html[data-dev=phone] .mth{order:0;flex-direction:column;align-items:stretch;gap:10px;margin-bottom:6px}
+html[data-dev=phone] .mth .btn{width:100%;min-height:50px;font-size:1.05rem}
+html[data-dev=phone] .mtg{order:1;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 4px;margin:6px 0 10px}
+html[data-dev=phone] .mtd{width:clamp(56px,18vw,72px)}
+html[data-dev=phone] .mtn{font-size:.74rem;letter-spacing:0;padding:5px 1px}
+html[data-dev=phone] .mtst,html[data-dev=phone] .mtds{display:none}
+html[data-dev=phone] .mttr{order:2}
+html[data-dev=phone] .mtatp{order:3;margin-top:8px}
+html[data-dev=phone] .mtcp{order:4;margin-top:12px;padding:6px 8px}
+html[data-dev=phone] .mtrule{order:6;font-size:.82rem}
+html[data-dev=phone] .mtsheet,html[data-dev=phone] .mtchw{position:fixed;left:0;right:0;bottom:0;z-index:75;background:linear-gradient(180deg,#44494D,#2E3235);border-top:1px solid var(--gold);border-radius:20px 20px 0 0;box-shadow:0 -14px 40px rgba(0,0,0,.55);transform:translateY(110%);visibility:hidden;transition:transform .4s cubic-bezier(.2,.9,.25,1),visibility 0s .4s}
+html[data-dev=phone] .mtsheet.show,html[data-dev=phone] .mtchw.open{transform:none;visibility:visible;transition:transform .4s cubic-bezier(.2,.9,.25,1),visibility 0s}
+html[data-dev=phone] .mtsheet{order:5;padding:20px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+html[data-dev=phone] .mtsheet::before,html[data-dev=phone] .mtchw::before{content:'';position:absolute;left:50%;top:7px;width:40px;height:4px;margin-left:-20px;border-radius:99px;background:#6a7075}
+html[data-dev=phone] .mtsheet .mtcap{margin:6px 40px 0 0;min-height:0;text-align:left;font-size:1.08rem}
+html[data-dev=phone] .mtchw{z-index:76;max-height:74vh;overflow-y:auto;overscroll-behavior:contain}
+html[data-dev=phone] .mtchp{grid-template-rows:1fr;visibility:visible;transition:none}
+html[data-dev=phone] .mtchi{position:relative;padding:22px 14px calc(18px + env(safe-area-inset-bottom,0px))}
+html[data-dev=phone] .mtshx{display:grid;place-items:center;position:absolute;top:10px;right:8px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.28);color:#E7E3E1;font-size:1.5rem;line-height:1;cursor:pointer;z-index:2}
+html[data-dev=phone] .mtsheet .mtact .btn{min-height:48px;font-size:1.05rem;background:#2563eb;color:#fff;border-color:#2563eb}
+html[data-dev=phone] .mtsheet .mtact .btn.ghost{background:transparent;color:#E7E3E1;border-color:#6a7075}
+html[data-dev=phone] .mtsheet .mtact{flex-wrap:wrap}
+html[data-dev=phone] .mtchi .mtab{margin-top:38px}
+html[data-dev=phone] .mtchh{background:rgba(0,0,0,.25);border:1px solid #565c61;border-radius:14px;padding:6px 12px;margin-bottom:0}
+@media(prefers-reduced-motion:reduce){html[data-dev=phone] .mtsheet,html[data-dev=phone] .mtchw,html[data-dev=phone] .lfsolo,html[data-dev=phone] .lfsolo *{transition:none!important}}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -2009,8 +2068,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='129';
-const APPN='Móvil: sin desplazamiento lateral en toda la app.';
+const APPV='130';
+const APPN='Rediseño móvil de creación de mazos: vida fija que se encoge al bajar, metales en rejilla 4×2, hojas inferiores y animación al avanzar el entrenamiento.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2169,8 +2228,14 @@ function lfCard(){const h=LF.hp,x=h<=0?' disabled':'';
   <div class="lfb">${bt(-5,'lfdn','−5')}${bt(-1,'lfdn','−1')}${bt(1,'lfup','+1')}${bt(5,'lfup','+5')}</div>
   <div class="lfbar" aria-hidden="true"><i id="lfbar0" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
   <p class="lfmsg" id="lfmsg"${h<=0?'':' hidden'}>Has perdido. Solo puedes empezar una nueva partida.</p></div>`}
-function deckScreen(){
+function deckScreen(){setTimeout(lfMeasure,60);
  return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><div class="lfsplit"><div class="lfside">${lfCard()}</div><div class="lfmain">${mtBoard()}</div></div></div>`}
+function lfMini(){const c=document.getElementById('lfc0');if(!c)return;const y=window.scrollY||0,m=c.classList.contains('lfmini');c.classList.toggle('lfmini',document.documentElement.dataset.dev==='phone'&&(m?y>12:y>70))}
+function lfMeasure(){const c=document.getElementById('lfc0'),r=document.querySelector('.lfroot');if(!c||!r)return;
+ if(document.documentElement.dataset.dev!=='phone'){r.style.removeProperty('--lfh');return}
+ const m=c.classList.contains('lfmini');c.classList.add('lfnt');c.classList.remove('lfmini');const h=c.offsetHeight;if(m)c.classList.add('lfmini');
+ r.style.setProperty('--lfh',(h+10)+'px');setTimeout(()=>{c.classList.remove('lfnt');lfMini()},30)}
+(function(){let t=0;window.addEventListener('scroll',()=>{if(!t)t=requestAnimationFrame(()=>{t=0;lfMini()})},{passive:true});window.addEventListener('resize',()=>{setTimeout(lfMeasure,120)})})();
 function lfRoll(nv,dir){const v=document.getElementById('lfv0');if(!v)return;const old=v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(old)old.textContent=nv;return}
  const n=document.createElement('span');n.className='lfd lfin '+(dir>0?'fromb':'fromt');n.textContent=nv;
@@ -2244,14 +2309,15 @@ function mtTrackH(){let h='';for(let i=1;i<=MT_STEPS;i++){const r=MT_REW[i],cl=i
   h+=`<div class="mts${cl}" role="img" aria-label="Paso ${i}${tx}"${i===MT.step?' aria-current="step"':''}><span class="mtk">${i}</span>${ic}</div>`}
  return h}
 const MT_CAP={heal:'Recuperas esa cantidad de vida.',combat:'Esa cantidad de daño. Lo repartes al final de tu turno entre aliados y rivales.',coin:'Esa cantidad de monedas para comprar cartas del mercado y Boxings. No pasan al siguiente turno.',mission:'Avanzas esa cantidad de puntos en una o varias pistas de misión.'};
-let mtOpen={},mtChOpen=true;
+let mtOpen={},mtChOpen=null;
+function mtPh(){return document.documentElement.dataset.dev==='phone'}
 function mtCapsH(l){return '<ul class="mtcaps">'+l.map(x=>`<li><span class="mtfx ${x[0]}"><i>${MT_FXI[x[0]]}</i><b aria-hidden="true">${x[1]}</b></span><span class="mtcapt"><b>${MT_FXN[x[0]]} ${x[1]}</b>${MT_CAP[x[0]]}</span></li>`).join('')+'</ul>'}
-function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Al empezar la partida elegirás tu personaje. Aquí verás su metal base y sus habilidades.</p>';
+function mtCharH(){if(mtChOpen===null)mtChOpen=!mtPh();if(!MT.ch)return '<p class="mtnoc">Al empezar la partida elegirás tu personaje. Aquí verás su metal base y sus habilidades.</p>';
  const c=MTC[MT.ch],sg=MTL.find(x=>x.id===c.m),on=MT.st[c.m]==='burn'||MT.st[c.m]==='flare';
  const row=(k,lab,body,n)=>{const o=!!mtOpen[k],un=mtAb(k);return `<li class="${un?'on':''}${o?' open':''}"><button type="button" class="mtabh" data-act="mtab" data-k="${k}" aria-expanded="${o}" aria-controls="mtabp${k}"><span class="mtrm">${k}</span><span class="mtabt"><small class="mtlab">${lab}</small><em>${un?'Desbloqueada':'Se desbloquea en el paso '+n}</em></span><span class="mtchev" aria-hidden="true">▾</span></button><div class="mtabp" id="mtabp${k}" role="region" aria-label="Habilidad ${k}"><div class="mtabi">${body}</div></div></li>`};
- return `<button type="button" class="mtbase mtchh" data-act="mtch" aria-expanded="${mtChOpen}" aria-controls="mtchp"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b><span class="mtchev${mtChOpen?' up':''}" aria-hidden="true">▾</span></button>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<div class="mtchw${mtChOpen?' open':''}"><div class="mtchp" id="mtchp" role="region" aria-label="Habilidades de ${c.n}"><div class="mtchi"><ul class="mtab">${row('I','Si quemas '+sg.n+'…','<p class="mtwhen">Se activa una sola vez por turno, aunque quemes o avives '+sg.n+' varias veces.</p>'+mtCapsH(c.fx1),6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<p class="mtwhen">Se activa al quemar Atium, ya sea como Atium o como sustituto de otro metal.</p>'+mtCapsH(MT_FX3),14)}</ul></div></div></div>`}
+ return `<button type="button" class="mtbase mtchh" data-act="mtch" aria-expanded="${mtChOpen}" aria-controls="mtchp"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b><span class="mtchev${mtChOpen?' up':''}" aria-hidden="true">▾</span></button>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<div class="mtchw${mtChOpen?' open':''}"><div class="mtchp" id="mtchp" role="region" aria-label="Habilidades de ${c.n}"><div class="mtchi"><button type="button" class="mtshx" data-act="mtch" aria-label="Cerrar habilidades">×</button><ul class="mtab">${row('I','Si quemas '+sg.n+'…','<p class="mtwhen">Se activa una sola vez por turno, aunque quemes o avives '+sg.n+' varias veces.</p>'+mtCapsH(c.fx1),6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<p class="mtwhen">Se activa al quemar Atium, ya sea como Atium o como sustituto de otro metal.</p>'+mtCapsH(MT_FX3),14)}</ul></div></div></div>`}
 function mtAbTog(k){mtOpen[k]=!mtOpen[k];const h=document.querySelector('.mtabh[data-k="'+k+'"]');if(!h)return;h.setAttribute('aria-expanded',mtOpen[k]);h.parentNode.classList.toggle('open',mtOpen[k]);h.parentNode.classList.toggle('anim',mtOpen[k])}
-function mtChTog(){mtChOpen=!mtChOpen;const h=document.querySelector('.mtchh');if(!h)return;h.setAttribute('aria-expanded',mtChOpen);h.querySelector('.mtchev').classList.toggle('up',mtChOpen);const w=document.querySelector('.mtchw');if(w){w.classList.toggle('open',mtChOpen);w.classList.toggle('anim',mtChOpen)}}
+function mtChTog(){if(mtChOpen===null)mtChOpen=!mtPh();mtChOpen=!mtChOpen;if(mtChOpen&&mtPh()){mtSel=null;const sh=document.getElementById('mtsheet');if(sh)sh.classList.remove('show')}const h=document.querySelector('.mtchh');if(!h)return;h.setAttribute('aria-expanded',mtChOpen);h.querySelector('.mtchev').classList.toggle('up',mtChOpen);const w=document.querySelector('.mtchw');if(w){w.classList.toggle('open',mtChOpen);w.classList.toggle('anim',mtChOpen)}}
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
 function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
@@ -2270,22 +2336,23 @@ function mtBoard(){const c=mtCapH();setTimeout(mtScroll,80);
  <div class="mttr" id="mttr"><div class="mttk">${mtTrackH()}</div></div>
  <div class="mtg">${MTL.map(mtCell).join('')}</div>
  <div class="mtatp" id="mtatp">${mtAtH()}</div>
- <p class="mtcap" id="mtcap" aria-live="polite">${c.t}</p><div class="mtact" id="mtact">${c.a}</div>
+ <div class="mtsheet${mtSel?' show':''}" id="mtsheet"><button type="button" class="mtshx" data-act="mtshx" aria-label="Cerrar">×</button><p class="mtcap" id="mtcap" aria-live="polite">${c.t}</p><div class="mtact" id="mtact">${c.a}</div></div>
  <p class="mtrule">Al empezar tu turno avanzas un paso en el entrenamiento. Solo puedes quemar tantos metales como iconos de llama hayas ganado; para más, avívalos. Al acabar el turno, los quemados vuelven al tablero y los avivados vuelven girados hasta que los refresques. Cada metal solo se usa una vez por turno.</p></section>`}
-function mtScroll(){const t=document.getElementById('mttr');if(!t)return;const c=t.querySelector('.cur');if(c)t.scrollLeft=c.offsetLeft-t.clientWidth/2+c.offsetWidth/2}
+function mtScroll(sm){const t=document.getElementById('mttr');if(!t)return;const c=t.querySelector('.cur');if(!c)return;const x=c.offsetLeft-t.clientWidth/2+c.offsetWidth/2;if(sm===true&&!lfRM()&&t.scrollTo)t.scrollTo({left:x,behavior:'smooth'});else t.scrollLeft=x}
+function mtStepFx(){const c=document.querySelector('#mttr .mts.cur');if(!c||lfRM())return;c.classList.add('mtadv');setTimeout(()=>c.classList.remove('mtadv'),1300)}
 function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>document.getElementById(id);
  MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(!b)return;const s=mtSt(m.id),on=s==='burn'||s==='flare',sig=mtSig()===m.id;
   b.dataset.s=s;b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',m.n+', '+MT_LAB[s]+'. '+m.d);const t=b.querySelector('.mtst');if(t)t.textContent=MT_LAB[s];
   b.classList.toggle('mtsig',sig);b.classList.toggle('mtsigon',sig&&on&&mtAb('I'))});
  $i('mtsub').textContent=mtSubH();$i('mtnext').textContent=MT.turn?'Pasar turno':'Empezar partida';
- $i('mtcp').innerHTML=mtCharH();$i('mttr').innerHTML='<div class="mttk">'+mtTrackH()+'</div>';$i('mtatp').innerHTML=mtAtH();
- const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;mtScroll()}
+ $i('mtcp').innerHTML=mtCharH();const tr=$i('mttr'),sl=tr.scrollLeft;tr.innerHTML='<div class="mttk">'+mtTrackH()+'</div>';tr.scrollLeft=sl;$i('mtatp').innerHTML=mtAtH();
+ const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;const sh=$i('mtsheet');if(sh)sh.classList.toggle('show',!!mtSel);mtScroll(true)}
 function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
  b.classList.remove('mtpop','mtoff','mtflp');void b.offsetWidth;
  if(k==='flare'){b.classList.add('mtflp');setTimeout(()=>b.classList.remove('mtflp'),1100)}
  else if(k==='on'){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
  else{b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}
-function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;
+function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;if(mtPh()&&mtChOpen)mtChTog();
  if(s==='used'){mtPaint();toast('Ya usaste este metal este turno');return}
  if(s==='ready'){if(mtBurning()<mtLimit()){MT.st[id]='burn';mtLast={id,t:Date.now()};mtSave();mtPaint();mtFx(id,'on')}
   else{mtPaint();toast('Has alcanzado tu límite de quemas ('+mtLimit()+'). Para usar otro metal, toca uno de los que estás quemando y elige avivarlo o dejar de quemarlo.')}return}
@@ -2300,7 +2367,7 @@ function mtNext(){if(!MT.ch){mtAsk();return}if(MT.turn>0)mtEndTurn();MT.turn++;l
   if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
   else if(r==='c')msg+=' · fin del entrenamiento: 1 Atium cada turno';else if(r)msg+=' · habilidad '+r+' desbloqueada'}
  else{MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
- mtSel=null;mtSave();mtPaint();if(gain)mtAtFx('gain');toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
+ mtSel=null;mtSave();mtPaint();mtStepFx();if(gain)mtAtFx('gain');toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
 function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.createElement('div');o.id='mtpick';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtpickt');
  o.innerHTML=`<div class="mtpk"><h2 id="mtpickt">¿Con qué personaje vas a jugar?</h2><p>Cuando empiece la partida no podrás cambiarlo.</p><div class="mtpg">${Object.keys(MTC).map(k=>{const c=MTC[k],m=MTL.find(x=>x.id===c.m);return `<button type="button" class="mtpb" data-act="mtpick" data-c="${k}" style="--mc:${m.bc}"><b>${c.n}</b><small>${c.r}</small><em>${m.n}</em></button>`}).join('')}</div><button type="button" class="btn ghost" data-act="mtpickx">Cancelar</button></div>`;
  document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
@@ -3285,6 +3352,7 @@ document.addEventListener('click',e=>{
   case 'mtpickx':mtAskClose();break;
   case 'mtab':mtAbTog(b.dataset.k);break;
   case 'mtch':mtChTog();break;
+  case 'mtshx':{mtSel=null;const sh=document.getElementById('mtsheet');if(sh)sh.classList.remove('show')}break;
   case 'mtflr':mtAskFlare(b.dataset.m);break;
   case 'mtflrok':mtDoFlare(b.dataset.m);break;
   case 'mtflrx':mtAskClose();break;
