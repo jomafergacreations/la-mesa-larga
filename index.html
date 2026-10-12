@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 /* Diseño: papel gris rosado del manual con niebla, títulos en capitales de cartucho granate, cubierta pizarra con filete dorado. Todo dibujado con CSS y SVG propios. */
 :root{
@@ -1678,6 +1678,87 @@ html.modeswap,html.modeswap body,html.modeswap #topbar,html.modeswap #topbar *,h
  @keyframes dkFallFar{0%{opacity:0;transform:translate(0,0)}10%{opacity:.4}90%{opacity:.25}100%{opacity:0;transform:translate(var(--dx),108vh)}}
 }
 @media(prefers-reduced-motion:reduce){#dmist{display:none}}
+/* ===== Cyberpunk: burbuja del menú, fondo, arranque «Próximamente» ===== */
+.bub.cyb{background:linear-gradient(155deg,#FFF65E 0%,#FCEE0A 42%,#E0D100 100%);color:#0A0A0C;box-shadow:0 0 30px 2px rgba(252,238,10,.5),0 22px 34px -18px rgba(0,0,0,.7),inset 0 0 0 3px rgba(10,10,12,.92),inset 0 -14px 26px rgba(0,0,0,.14)}
+.bub.cyb::before{left:0;top:0;width:100%;height:100%;border-radius:inherit;transform:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.17) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;z-index:2;pointer-events:none}
+.bub.cyb.soon{filter:none}
+.bub.cyb>.ti,.bub.cyb>.tt{z-index:3}
+.bub.cyb .ti{background:#0A0A0C;color:#FCEE0A;border-radius:10px;box-shadow:0 0 0 1px rgba(252,238,10,.55),0 0 14px rgba(252,238,10,.35)}
+.bub.cyb .tt b{font-family:'Orbitron',var(--sans),sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#0A0A0C}
+.bub.cyb .tt span{font-family:'Share Tech Mono',ui-monospace,monospace;color:#0A0A0C;opacity:.88}
+.bub.cyb .tt em{background:#0A0A0C;color:#FCEE0A;font-family:'Share Tech Mono',ui-monospace,monospace;font-weight:400;letter-spacing:.16em;border-radius:2px;padding:3px 9px;box-shadow:0 0 10px rgba(252,238,10,.5)}
+.bub.cyb .tt em::after{content:"_";margin-left:2px}
+html[data-dev] .bubbles .bub.cyb:nth-child(n){border-radius:6px 28px 6px 28px}
+html[data-dev] .bub.cyb .ti{border-radius:14px}
+.cyx{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:0}
+.cyx .cr{position:absolute;top:-150px;font:400 12px/1.15 'Share Tech Mono',ui-monospace,monospace;white-space:pre;color:#0A0A0C;opacity:.2}
+.cyx .cs{position:absolute;left:0;right:0;top:-30%;height:26%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.6) 50%,rgba(255,255,255,0))}
+.cyx .cg{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 38px 6px rgba(255,255,255,.65)}
+html[data-cyb][data-dev][data-dev]:root body.hub{--h-bg:#07070A;--h-card:#121208;--h-ink:#FCEE0A;--h-mut:#CFC43A;--h-line:#4D4809;--pc:#FCEE0A;background:#07070A;color:#FCEE0A}
+html[data-cyb][data-dev][data-dev]:root #fdock,html[data-cyb][data-dev][data-dev]:root .tbin{background:rgba(10,10,6,.88);border-color:rgba(252,238,10,.5);color:#FCEE0A}
+html[data-cyb][data-dev][data-dev]:root #fdock .fd,html[data-cyb][data-dev][data-dev]:root .tbin button{color:#FCEE0A}
+html[data-cyb] body.hub .hh.cyh{font-family:'Orbitron',var(--sans),sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#FCEE0A;position:relative;width:fit-content;text-shadow:0 0 18px rgba(252,238,10,.55);margin-bottom:2px}
+.cyh::before,.cyh::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none}
+.cyh::before{color:#00F0FF}.cyh::after{color:#FF2A6D}
+.cyroot{position:relative;display:grid;gap:18px;font-family:'Share Tech Mono',ui-monospace,monospace;max-width:720px}
+.cyeye{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:#00F0FF}
+.cyhz{height:10px;background:repeating-linear-gradient(-45deg,#FCEE0A 0 12px,#0A0A0C 12px 24px);opacity:.9}
+.cyterm{position:relative;border:1px solid rgba(252,238,10,.4);background:rgba(10,10,6,.8);padding:14px 16px 16px;border-radius:2px;box-shadow:0 0 28px -8px rgba(252,238,10,.45),inset 0 0 40px rgba(252,238,10,.05)}
+.cyterm::before,.cyterm::after{content:"";position:absolute;width:16px;height:16px;border:2px solid #FCEE0A;pointer-events:none}
+.cyterm::before{left:-3px;top:-3px;border-right:0;border-bottom:0}
+.cyterm::after{right:-3px;bottom:-3px;border-left:0;border-top:0}
+.cyth{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed rgba(252,238,10,.3);font-size:.78rem;color:#CFC43A;letter-spacing:.06em}
+.cyth i{width:8px;height:8px;background:#FCEE0A;opacity:.85}.cyth i:nth-child(2){background:#00F0FF}.cyth i:nth-child(3){background:#FF2A6D}.cyth span{margin-left:6px}
+.cylog{min-height:9.6em;font-size:.9rem;line-height:1.6;color:#EDE67A}
+.cyl{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.cyl span{min-width:0}.cyl em{flex:none;white-space:nowrap;font-style:normal;color:#00F0FF}.cyl.wn,.cyl em.wn{color:#FF2A6D}
+.cyc{display:inline-block;width:.6em;height:1em;margin-left:2px;background:#FCEE0A;vertical-align:-2px}
+.cypp{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:.85rem;color:#CFC43A}
+.cypb{flex:1;height:14px;border:1px solid #FCEE0A;padding:2px}
+.cypb i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#FCEE0A 0 8px,transparent 8px 11px);box-shadow:0 0 10px rgba(252,238,10,.6)}
+.cypp b{min-width:3.4em;text-align:right;font-weight:400;color:#FCEE0A}
+.cyso{display:grid;gap:12px;justify-items:center;text-align:center;padding:22px 4px 8px;filter:drop-shadow(0 0 18px rgba(252,238,10,.55))}
+.cyso[hidden]{display:none}
+.cyso b{font:900 clamp(1.6rem,8.4vw,3.2rem)/1.05 'Orbitron',var(--sans),sans-serif;text-transform:uppercase;letter-spacing:.1em;color:#0A0A0C;background:#FCEE0A;padding:.3em .55em .3em .65em;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.cyso span{font-size:.95rem;color:#EDE67A;max-width:34ch}
+@media(prefers-reduced-motion:no-preference){
+ .bub.cyb .tt b{animation:cyGl 4.6s steps(1,end) infinite,cyNeon 6s linear infinite}
+ .bub.cyb .tt em::after{animation:cyBlink 1s steps(1) infinite}
+ .cyx .cr{animation:cyDrop var(--t) linear var(--d) infinite}
+ .cyx .cs{animation:cyScan 3.6s linear infinite}
+ .cyx .cg{animation:cyNeon 5s linear -1s infinite}
+ .cyh{animation:cyNeon 7s linear infinite}
+ .cyh::before{animation:cyGhost 4.6s steps(1,end) infinite}
+ .cyh::after{animation:cyGhost 4.6s steps(1,end) -.14s infinite reverse}
+ .cyhz{background-size:34px 34px;animation:cyHz 1.2s linear infinite}
+ .cyc{animation:cyBlink 1s steps(1) infinite}
+ .cyso:not([hidden]){animation:cySoIn .7s steps(8,end) both}
+ .cyso:not([hidden]) b{animation:cyGl 3.8s steps(1,end) infinite,cyNeon 5s linear infinite}
+ #cyfx .cybeam{animation:cyBeam 7s linear infinite}
+ #cyfx .cc{animation:cyFall var(--t) linear var(--d) infinite}
+ #cyfx .cysc{animation:cyJit .18s steps(2) infinite}
+}
+@media(prefers-reduced-motion:reduce){.cyx .cr,#cyfx .cyrain,#cyfx .cybeam,#cyin{display:none}}
+@keyframes cyGl{0%,90%,100%{transform:none;text-shadow:none}91%{transform:translate(-2px,0) skewX(-6deg);text-shadow:2px 0 #00F0FF,-2px 0 #FF2A6D}93%{transform:translate(2px,1px);text-shadow:-2px 0 #00F0FF,2px 0 #FF2A6D}95%{transform:translate(-1px,-1px) skewX(4deg);text-shadow:1px 0 #00F0FF,-1px 0 #FF2A6D}97%{transform:none;text-shadow:none}}
+@keyframes cyNeon{0%,17%,22%,25%,52%,57%,100%{opacity:1}19%,24%,54%{opacity:.5}}
+@keyframes cyBlink{50%{opacity:0}}
+@keyframes cyDrop{from{top:-150px}to{top:100%}}
+@keyframes cyScan{from{top:-30%}to{top:110%}}
+@keyframes cyGhost{0%,88%,100%{opacity:0}90%{opacity:.9;clip-path:inset(10% 0 55% 0);transform:translate(3px,0)}93%{opacity:.9;clip-path:inset(60% 0 8% 0);transform:translate(-3px,0)}96%{opacity:.9;clip-path:inset(30% 0 40% 0);transform:translate(2px,0)}}
+@keyframes cyHz{to{background-position:34px 0}}
+@keyframes cySoIn{0%{opacity:0;transform:translateX(-14px) skewX(-8deg)}40%{opacity:1;transform:translateX(8px)}70%{transform:translateX(-4px)}100%{opacity:1;transform:none}}
+@keyframes cyBeam{to{transform:translateY(calc(100vh + 260px))}}
+@keyframes cyFall{from{transform:translateY(0)}to{transform:translateY(150vh)}}
+@keyframes cyJit{to{transform:translateY(1px)}}
+#cyfx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(70% 45% at 85% 0,rgba(252,238,10,.16),transparent 70%),radial-gradient(60% 40% at 0 100%,rgba(0,240,255,.12),transparent 70%),radial-gradient(50% 35% at 100% 100%,rgba(255,42,109,.12),transparent 70%),#07070A}
+#cyfx .cyg{position:absolute;inset:0;background-image:linear-gradient(rgba(252,238,10,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(252,238,10,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 35%,#000 70%,transparent);mask-image:linear-gradient(180deg,transparent,#000 35%,#000 70%,transparent)}
+#cyfx .cysc{position:absolute;inset:-2px 0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 1px,transparent 1px 3px)}
+#cyfx .cybeam{position:absolute;left:0;right:0;top:-130px;height:120px;background:linear-gradient(180deg,rgba(252,238,10,0),rgba(252,238,10,.1) 50%,rgba(252,238,10,.28) 98%,rgba(252,238,10,0))}
+#cyfx .cyrain{position:absolute;inset:0}
+#cyfx .cc{position:absolute;top:-45vh;white-space:pre;font:400 var(--fs,14px)/1.15 'Share Tech Mono',ui-monospace,monospace;color:#FCEE0A;opacity:.24;text-shadow:0 0 6px rgba(252,238,10,.6);will-change:transform}
+#cyin{position:fixed;inset:0;z-index:99991;pointer-events:none;overflow:hidden;background:#FCEE0A;opacity:0;animation:cyInBg .95s linear forwards}
+#cyin i{position:absolute;left:-10%;width:120%;top:var(--y);height:var(--h);background:var(--c);opacity:0;transform:translateX(var(--x));animation:cySl .85s steps(6,end) var(--d) forwards}
+@keyframes cyInBg{0%{opacity:0;background:#FCEE0A}22%{opacity:1;background:#FCEE0A}44%{opacity:1;background:#07070A}78%{opacity:1;background:#07070A}100%{opacity:0;background:#07070A}}
+@keyframes cySl{0%{opacity:0;transform:translateX(var(--x))}30%{opacity:1}65%{opacity:1;transform:translateX(calc(var(--x) * -.5))}100%{opacity:0;transform:none}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2107,7 +2188,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
 function warpIntro(out){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';if(out)o.className='wo';o.setAttribute('aria-hidden','true');
  let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
-function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'));const key=!session?'auth':c?'ed':scr;let d='';
+function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));cyberFx(!!(session&&!c&&scr==='cyber'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'&&scr!=='cyber'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
  lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d)a.classList.add('go-'+d);
  if(c){if(pg)a.classList.add('pg-'+pg);
@@ -2175,8 +2256,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='134';
-const APPN='Animación de salida del Cosmere al menú principal y transición más suave al cambiar entre modo GM y jugador.';
+const APPV='135';
+const APPN='Nueva burbuja Cyberpunk en el menú principal, con su propio estilo neón y una pantalla de arranque que anuncia que llegará próximamente.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2302,9 +2383,49 @@ const NAIL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
-function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}<span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
+function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}<span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
+/* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
+const CYBER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.500-6 10-6 10 6 10 6-3.500 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.200" fill="currentColor"/><path d="M12 2.500v2M12 19.500v2M4.500 18.500l1.500-1.300M19.500 18.500 18 17.200" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></svg>';
+const CYBFX=(()=>{const ch='01<>/{}#$%=+';let h='<span class="cyx" aria-hidden="true">';for(let i=0;i<9;i++){let s='';const n=9+(i*3)%7;for(let k=0;k<n;k++)s+=ch.charAt((i*7+k*5)%ch.length)+'\n';h+=`<b class="cr" style="left:${6+i*11}%;--t:${(4+(i%4)*1.3).toFixed(1)}s;--d:-${(i*0.9).toFixed(1)}s">${s}</b>`}return h+'<i class="cs"></i><i class="cg"></i></span>'})();
+const CYL=[{t:'> iniciando sistema…',s:'OK'},{t:'> cargando motor de neón…',s:'OK'},{t:'> enlazando con la mesa…',s:'OK'},{t:'> verificando reglas y fichas…',s:'OK'},{t:'> cargando módulo CYBERPUNK…',s:'OK',bar:1},{t:'> estado: módulo en desarrollo',s:'AVISO',w:1}];
+const CYBAR=CYL.findIndex(x=>x.bar);
+const cyst={i:0,k:0,p:0,done:0};let cyTm=0;
+function cyReset(){clearTimeout(cyTm);cyTm=0;cyst.i=0;cyst.k=0;cyst.p=0;cyst.done=0}
+function cyDraw(){const log=document.getElementById('cylog');if(!log)return false;
+ let h='';for(let j=0;j<CYL.length&&j<=cyst.i;j++){const L=CYL[j],cur=j===cyst.i&&!cyst.done;
+  h+=`<div class="cyl${L.w?' wn':''}"><span>${esc(cur?L.t.slice(0,cyst.k):L.t)}${cur?'<i class="cyc"></i>':''}</span>${cur?'':`<em class="${L.w?'wn':''}">[ ${L.s} ]</em>`}</div>`}
+ log.innerHTML=h;
+ const bp=cyst.i<CYBAR?0:cyst.i===CYBAR?cyst.p:100,bar=document.getElementById('cybar'),pc=document.getElementById('cypct'),so=document.getElementById('cyso');
+ if(bar)bar.style.width=bp+'%';if(pc)pc.textContent=bp+'%';if(so)so.hidden=!cyst.done;return true}
+function cyTick(){cyTm=0;if(scr!=='cyber'||!document.getElementById('cylog'))return;
+ const L=CYL[cyst.i];
+ if(!L){cyst.done=1;cyDraw();return}
+ if(cyst.k<L.t.length){cyst.k++;cyDraw();cyTm=setTimeout(cyTick,18+Math.random()*22);return}
+ if(L.bar&&cyst.p<100){cyst.p=Math.min(100,cyst.p+2+Math.floor(Math.random()*7));cyDraw();cyTm=setTimeout(cyTick,45+Math.random()*60);return}
+ cyst.i++;cyst.k=0;cyDraw();cyTm=setTimeout(cyTick,L.w?650:260)}
+function cyberBoot(){if(!document.getElementById('cylog'))return;
+ if(lfRM()&&!cyst.done){cyst.i=CYL.length;cyst.k=0;cyst.p=100;cyst.done=1}
+ cyDraw();if(!cyst.done&&!cyTm)cyTm=setTimeout(cyTick,380)}
+function cyberIntro(){if(lfRM()||document.getElementById('cyin'))return;
+ const o=document.createElement('div');o.id='cyin';o.setAttribute('aria-hidden','true');let h='';const C=['#FCEE0A','#07070A','#00F0FF','#FF2A6D','#FCEE0A','#07070A'];
+ for(let i=0;i<9;i++)h+=`<i style="--y:${(i*11+Math.random()*4).toFixed(1)}%;--h:${(4+Math.random()*9).toFixed(1)}%;--x:${((Math.random()-.5)*60).toFixed(0)}%;--d:${(Math.random()*.3).toFixed(2)}s;--c:${C[i%C.length]}"></i>`;
+ o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1000)}
+function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
+ if(!on){if(f)f.remove();delete r.dataset.cyb;return}
+ r.dataset.cyb='1';if(f)return;
+ f=document.createElement('div');f.id='cyfx';f.setAttribute('aria-hidden','true');
+ const ch='01ABCDEF<>/\\{}#$%&=+*';let h='<i class="cyg"></i><div class="cyrain">';
+ for(let i=0;i<20;i++){let s='';const n=14+Math.floor(Math.random()*16);for(let k=0;k<n;k++)s+=ch.charAt(Math.floor(Math.random()*ch.length))+'\n';
+  h+=`<b class="cc" style="left:${(i*5+Math.random()*3).toFixed(1)}%;--t:${(7+Math.random()*9).toFixed(1)}s;--d:-${(Math.random()*14).toFixed(1)}s;--fs:${(11+Math.random()*6).toFixed(0)}px">${s}</b>`}
+ f.innerHTML=h+'</div><i class="cybeam"></i><i class="cysc"></i>';document.body.appendChild(f)}
+function cyberScreen(){setTimeout(cyberBoot,30);
+ return hubBar(['menu','Inicio'])+`<div class="cyroot"><div class="cyeye">// módulo 02 · enlace seguro</div><h1 class="hh cyh" data-t="Cyberpunk">Cyberpunk</h1><div class="cyhz" aria-hidden="true"></div>
+  <div class="cyterm"><div class="cyth" aria-hidden="true"><i></i><i></i><i></i><span>mesa-larga://cyberpunk</span></div><div class="cylog" id="cylog" role="status" aria-live="polite" aria-label="Arranque del módulo Cyberpunk"></div>
+  <div class="cypp" aria-hidden="true"><div class="cypb"><i id="cybar"></i></div><b id="cypct">0%</b></div></div>
+  <div class="cyso" id="cyso" hidden><b data-t="Próximamente">Próximamente</b><span>El módulo todavía se está conectando. Vuelve pronto.</span></div></div>`}
 function screen(){
  if(scr==='npc')return npcEditor();
+ if(scr==='cyber')return cyberScreen();
  if(scr==='part')return partScreen();
  if(scr==='ppart')return ppartScreen();
  if(scr==='pjview')return pjViewScreen();
@@ -2319,7 +2440,8 @@ function screen(){
   ${hubTile('t1',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck')}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}`}
+  ${hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}
+  ${hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1)}</div>${partsPlayer()}`}
 
 
 /* ---------- Creación de mazos: contador de vida (cada jugador ve solo el suyo) ---------- */
@@ -2921,7 +3043,7 @@ document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)retur
  const r0=render;render=function(k){r0.apply(this,arguments);{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
-const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
+const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cyber:1,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 let selMode=false;const selIds=new Set();
 function home(){
  if(selMode)for(const id of [...selIds])if(!store.chars.some(x=>x.id===id))selIds.delete(id);
@@ -3451,6 +3573,7 @@ document.addEventListener('click',e=>{
   case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
   case 'menu':if(session&&document.documentElement.dataset.cos&&!lfRM()){warpIntro(true);setTimeout(()=>{scr='menu';render()},420)}else{scr='menu';render()}break;
   case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{store.cur=null;scr='cosmere';render()}break;
+  case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
