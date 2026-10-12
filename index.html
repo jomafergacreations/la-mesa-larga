@@ -1768,6 +1768,44 @@ html[data-cyb] body.hub .hh.cyh{font-family:'Orbitron',var(--sans),sans-serif;fo
 @keyframes cyShrink{to{width:0}}
 @keyframes cyInBg{0%{opacity:0;background:#FCEE0A}22%{opacity:1;background:#FCEE0A}44%{opacity:1;background:#07070A}78%{opacity:1;background:#07070A}100%{opacity:0;background:#07070A}}
 @keyframes cySl{0%{opacity:0;transform:translateX(var(--x))}30%{opacity:1}65%{opacity:1;transform:translateX(calc(var(--x) * -.5))}100%{opacity:0;transform:none}}
+
+/* ===== Menú interactivo (barra superior, dock, desplegables) tematizado por universo ===== */
+html[data-cos][data-dev][data-dev]:root .tbin,html[data-cos][data-dev][data-dev]:root #fdock{background:linear-gradient(135deg,rgba(26,19,78,.88),rgba(11,9,38,.9));border:1px solid rgba(150,130,255,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 36px -14px rgba(0,0,0,.8),0 0 30px -10px rgba(124,58,237,.75);color:#F2F0FF}
+html[data-cos][data-dev][data-dev]:root .tbbrand,html[data-cos][data-dev][data-dev]:root .tbi,html[data-cos][data-dev][data-dev]:root .fd{color:#F2F0FF}
+html[data-cos][data-dev][data-dev]:root .tbbrand:hover,html[data-cos][data-dev][data-dev]:root .tbi:hover,html[data-cos][data-dev][data-dev]:root .tbd button:hover{background:rgba(139,124,255,.24)}
+html[data-cos][data-dev][data-dev]:root .tbi.cur,html[data-cos][data-dev][data-dev]:root .fd.cur{color:#DCD4FF;background:rgba(139,124,255,.24)}
+html[data-cos][data-dev][data-dev]:root .tbind{background:linear-gradient(90deg,#8B7CFF,#F0ABFC);box-shadow:0 0 10px rgba(167,139,250,.9)}
+html[data-cos][data-dev][data-dev]:root .tbd{background:rgba(18,14,56,.97);color:#F2F0FF;border-color:rgba(150,130,255,.45);box-shadow:0 18px 40px -14px rgba(0,0,0,.8),0 0 26px -10px rgba(124,58,237,.7)}
+html[data-cos][data-dev][data-dev]:root .tbd button{color:#F2F0FF}html[data-cos][data-dev][data-dev]:root .tbd em{color:#C4B5FD}
+html[data-cos][data-dev][data-dev]:root #topbar .tbmode:not(.gm){background:rgba(139,124,255,.26)!important;border-color:rgba(150,130,255,.55);color:#F2F0FF!important}
+html[data-cos][data-dev][data-dev]:root #fbub{background:linear-gradient(145deg,#8B5CF6,#3730A3);box-shadow:0 0 22px rgba(139,92,246,.6),0 14px 28px -10px rgba(0,0,0,.7)}
+html[data-cos][data-dev][data-dev]:root #tpop .thm{background:rgba(18,14,56,.96);color:#F2F0FF;border:1px solid rgba(150,130,255,.45)}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbin,html[data-cos][data-mode=gm][data-dev][data-dev]:root #fdock{background:linear-gradient(135deg,rgba(66,26,40,.9),rgba(26,10,18,.92));border-color:rgba(232,100,63,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 36px -14px rgba(0,0,0,.8),0 0 30px -10px rgba(217,96,63,.7);color:#FFE9DD}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbbrand,html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbi,html[data-cos][data-mode=gm][data-dev][data-dev]:root .fd{color:#FFE9DD}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbbrand:hover,html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbi:hover,html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbd button:hover{background:rgba(232,100,63,.26)}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbi.cur,html[data-cos][data-mode=gm][data-dev][data-dev]:root .fd.cur{color:#FFD2BC;background:rgba(232,100,63,.26)}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbind{background:linear-gradient(90deg,#F08A5D,#F5C98B);box-shadow:0 0 10px rgba(240,138,93,.9)}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbd{background:rgba(38,16,26,.97);color:#FFE9DD;border-color:rgba(232,100,63,.5)}html[data-cos][data-mode=gm][data-dev][data-dev]:root .tbd button{color:#FFE9DD}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root #fbub{background:linear-gradient(145deg,#D9603F,#8A2F1E)}
+html[data-cos][data-mode=gm][data-dev][data-dev]:root #tpop .thm{background:rgba(38,16,26,.96);color:#FFE9DD;border-color:rgba(232,100,63,.5)}
+html[data-cyb][data-dev][data-dev]:root .tbin,html[data-cyb][data-dev][data-dev]:root #fdock{background:rgba(8,8,6,.92);border:1px solid #FCEE0A;border-radius:6px 22px 6px 22px;box-shadow:inset 0 0 0 1px rgba(252,238,10,.12),0 0 24px -6px rgba(252,238,10,.55);color:#FCEE0A}
+html[data-cyb][data-dev][data-dev]:root .tbbrand,html[data-cyb][data-dev][data-dev]:root .tbi,html[data-cyb][data-dev][data-dev]:root .fd,html[data-cyb][data-dev][data-dev]:root .tbd button{color:#FCEE0A}
+html[data-cyb][data-dev][data-dev]:root .tbi,html[data-cyb][data-dev][data-dev]:root .fd span,html[data-cyb][data-dev][data-dev]:root .tbbrand,html[data-cyb][data-dev][data-dev]:root .tbd button{font-family:'Orbitron',var(--sans),sans-serif;text-transform:uppercase;letter-spacing:.06em}
+html[data-cyb][data-dev][data-dev]:root .tbi{font-size:.72rem;font-weight:800}html[data-cyb][data-dev][data-dev]:root .fd span:not(.avs){font-size:.58rem;font-weight:800}html[data-cyb][data-dev][data-dev]:root .tbd button{font-size:.72rem;font-weight:700}
+html[data-cyb][data-dev][data-dev]:root .tbbrand:hover,html[data-cyb][data-dev][data-dev]:root .tbi:hover,html[data-cyb][data-dev][data-dev]:root .tbd button:hover{background:#FCEE0A;color:#0A0A0C}
+html[data-cyb][data-dev][data-dev]:root .tbi.cur,html[data-cyb][data-dev][data-dev]:root .fd.cur{color:#FCEE0A;background:rgba(252,238,10,.16);box-shadow:inset 0 0 0 1px rgba(252,238,10,.65)}
+html[data-cyb][data-dev][data-dev]:root .tbind{background:#FCEE0A;box-shadow:0 0 10px #FCEE0A}
+html[data-cyb][data-dev][data-dev]:root .tbd{background:#0A0A0C;color:#FCEE0A;border:1px solid #FCEE0A;border-radius:4px 16px 4px 16px;box-shadow:0 0 24px -8px rgba(252,238,10,.6)}
+html[data-cyb][data-dev][data-dev]:root .tbd em{color:#00F0FF}
+html[data-cyb][data-dev][data-dev]:root #topbar .tbmode:not(.gm){background:#FCEE0A!important;color:#0A0A0C!important;border-color:#FCEE0A}
+html[data-cyb][data-dev][data-dev]:root #fbub{background:#FCEE0A;color:#0A0A0C;box-shadow:0 0 24px rgba(252,238,10,.6),0 14px 28px -10px rgba(0,0,0,.7)}
+html[data-cyb][data-dev][data-dev]:root #tpop .thm{background:#0A0A0C;color:#FCEE0A;border:1px solid #FCEE0A}
+@media(prefers-reduced-motion:no-preference){
+ html[data-cos][data-dev][data-dev]:root .tbin{animation:cosGlow 6s ease-in-out infinite alternate}
+ html[data-cyb][data-dev][data-dev]:root .tbin{animation:cyGlow 4.6s linear infinite}
+}
+@keyframes cosGlow{from{box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 36px -14px rgba(0,0,0,.8),0 0 22px -10px rgba(124,58,237,.5)}to{box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 36px -14px rgba(0,0,0,.8),0 0 38px -6px rgba(167,139,250,.9)}}
+@keyframes cyGlow{0%,17%,22%,25%,52%,57%,100%{box-shadow:inset 0 0 0 1px rgba(252,238,10,.12),0 0 26px -4px rgba(252,238,10,.7)}19%,24%,54%{box-shadow:inset 0 0 0 1px rgba(252,238,10,.12),0 0 8px -4px rgba(252,238,10,.3)}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2265,8 +2303,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='136';
-const APPN='Al pulsar Inicio, cada universo tiene su propia animación de salida: el salto estelar en Cosmere y el cierre de terminal en Cyberpunk.';
+const APPV='137';
+const APPN='El menú principal (barra superior, dock y desplegables) ahora se viste con el estilo de cada universo: violeta estelar en Cosmere y neón amarillo en Cyberpunk.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
