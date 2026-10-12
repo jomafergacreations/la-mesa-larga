@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=103"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=103">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=104"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=104">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1668,8 +1668,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='103';
-const APPN='Las partidas finalizadas de Mis partidas tienen una cruz para eliminarlas de la lista (con confirmación).';
+const APPV='104';
+const APPN='El resumen de los manuales se centra en cómo funcionan los turnos y cómo subir de nivel; el manual completo se abre sin destellos y se puede volver a analizar.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1879,14 +1879,17 @@ async function manPool(n,k,fn){let nx=0;const w=async()=>{while(nx<n){const i=nx
 let pdfjsP=null;const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
 function pdfLoad(){if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);return pdfjsP||(pdfjsP=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src=PDFJS+'pdf.min.js';sc.onload=async()=>{try{const w=await(await fetch(PDFJS+'pdf.worker.min.js')).text();window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([w],{type:'text/javascript'}))}catch(e){}ok(window.pdfjsLib)};sc.onerror=()=>{pdfjsP=null;no(new Error('pdfjs'))};document.head.appendChild(sc)}))}
 const MSTOP=new Set('de la que el en y a los del se las por un para con no una su al lo como más pero sus le ya o este sí porque esta entre cuando muy sin sobre también me hasta hay donde quien desde todo nos durante todos uno les ni contra otros ese eso ante ellos e esto antes algunos qué unos yo otro otras otra él tanto esa estos mucho quienes nada muchos cual poco ella estar estas algunas algo nosotros mi mis tú te ti tu tus ellas es son ser puede pueden si cada así donde tiene tienen será serán han ha fue era the of and to in is'.split(' '));
+const MTURN=/\b(turnos?|rondas?|iniciativa)\b/gi,MLVL=/\b(subir de nivel|sube de nivel|nivel(?:es)? de personaje|avanzar de nivel|ganar un nivel|alcanzar(?:s|á)? el nivel|puntos? de experiencia|experiencia|hitos?|avance|ascender|ascendencia|nivel)\b/gi;
+const MTURNB=/(en tu turno|tu turno|cada turno|orden de (?:los )?turnos|comienzo de (?:cada|la) ronda|principio de (?:cada|la) ronda|final de (?:cada|la) ronda|tirada de iniciativa|iniciativa)/i,MLVLB=/(subir de nivel|sube de nivel|al alcanzar el nivel|alcanzas el nivel|puntos? de experiencia|ganar un nivel|avanzar de nivel|hito)/i;
+function manSumTopic(sents,re,bonus,n){const sc=[];sents.forEach((x,i)=>{re.lastIndex=0;const hits=(x.match(re)||[]).length;if(!hits)return;let v=hits+(bonus.test(x)?3:0);const dg=(x.match(/\d/g)||[]).length;if(dg/x.length>.12)v-=2;if(/Capítulo \d/.test(x))v-=2;if(v>0)sc.push({i,x,v})});
+ return sc.sort((a,b)=>b.v-a.v).slice(0,n).sort((a,b)=>a.i-b.i).map(q=>q.x.length>250?q.x.slice(0,247)+'…':q.x)}
 function manSummarize(text,outline,pages){
- const clean=String(text||'').replace(/\s+/g,' ').trim();const o=(outline||[]).map(x=>String(x).trim()).filter(x=>x.length>1&&x.length<90).slice(0,60);
- let sents=(clean.match(/[^.!?¿¡]{45,300}[.!?]/g)||[]).slice(0,20000).map(x=>x.trim());
- if(!sents.length&&!o.length)return '';
- const fr=Object.create(null);for(const w of clean.toLowerCase().match(/[a-záéíóúñü]{4,}/g)||[])if(!MSTOP.has(w))fr[w]=(fr[w]||0)+1;
- const sc=sents.map((x,i)=>{const ws=x.toLowerCase().match(/[a-záéíóúñü]{4,}/g)||[];let t=0;for(const w of ws)if(!MSTOP.has(w))t+=fr[w]||0;return{i,x,v:t/Math.sqrt(ws.length+4)}});
- const top=sc.sort((a,b)=>b.v-a.v).slice(0,14).sort((a,b)=>a.i-b.i).map(q=>q.x.length>260?q.x.slice(0,257)+'…':q.x);
- return JSON.stringify({p:pages|0,o:o,s:top})}
+ const clean=String(text||'').replace(/\s+/g,' ').trim();
+ const o=(outline||[]).map(x=>String(x).trim()).filter(x=>x.length>1&&x.length<90&&/(turno|ronda|iniciativa|nivel|avance|progres|experiencia|combate)/i.test(x)).slice(0,20);
+ const sents=(clean.match(/[A-ZÁÉÍÓÚÑ¿¡][^.!?]{40,300}[.!?]/g)||[]).slice(0,40000).map(x=>x.trim());
+ const t=manSumTopic(sents,MTURN,MTURNB,8),l=manSumTopic(sents,MLVL,MLVLB,8);
+ if(!t.length&&!l.length&&!o.length)return '';
+ return JSON.stringify({p:pages|0,o:o,t:t,l:l})}
 function flatOutline(a,out,d){(a||[]).forEach(x=>{if(x&&x.title)out.push(String(x.title));if(x&&x.items&&d<1)flatOutline(x.items,out,d+1)});return out}
 async function manAnalyze(f,ty){let u='';try{
  if(/^image/.test(ty))return '';
@@ -1896,17 +1899,19 @@ async function manAnalyze(f,ty){let u='';try{
   return manSummarize(txt,ol,doc.numPages)}
  return manSummarize((await f.text()).slice(0,3000000),[],0)}catch(e){return ''}finally{if(u)try{URL.revokeObjectURL(u)}catch(e){}}}
 function manSumHtml(m){let r=null;try{r=m.sum?JSON.parse(m.sum):null}catch(e){}
- if(!r||(!(r.s&&r.s.length)&&!(r.o&&r.o.length)))return `<section class="mansum"><h4>Resumen</h4><p class="hint" style="margin:0">${/^image/.test(m.type)?'Las imágenes no tienen resumen automático.':'No se ha podido extraer texto de este archivo (puede ser un documento escaneado), así que no hay resumen.'}</p></section>`;
- return `<section class="mansum"><h4>Resumen automático${r.p?' · '+r.p+' páginas':''}</h4>${r.o&&r.o.length?`<h5>Contenido</h5><ul class="manol">${r.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${r.s&&r.s.length?`<h5>Ideas principales</h5><ul class="manss">${r.s.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}<small class="hint">Extracto generado automáticamente a partir del texto del manual. Para consultar una regla exacta abre el manual completo.</small></section>`}
+ const re=`<div class="row" style="margin-top:10px"><button type="button" class="btn sm" data-act="manre" data-id="${esc(m.id)}">Volver a analizar el manual</button></div><div class="manprog" aria-live="polite"></div>`;
+ if(!r||(!(r.t&&r.t.length)&&!(r.l&&r.l.length)&&!(r.o&&r.o.length)))return `<section class="mansum"><h4>Resumen</h4><p class="hint" style="margin:0">${/^image/.test(m.type)?'Las imágenes no tienen resumen automático.':r&&r.s?'Este resumen es de una versión anterior (general). Vuelve a analizar el manual para obtener el resumen de turnos y subida de nivel.':'No se ha encontrado texto sobre turnos o subida de nivel (puede ser un documento escaneado).'}</p>${/^image/.test(m.type)?'':re}</section>`;
+ const ul=a=>`<ul class="manss">${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+ return `<section class="mansum"><h4>Resumen automático${r.p?' · '+r.p+' páginas':''}</h4>${r.t&&r.t.length?`<h5>Cómo funcionan los turnos</h5>${ul(r.t)}`:''}${r.l&&r.l.length?`<h5>Cómo subir de nivel</h5>${ul(r.l)}`:''}${r.o&&r.o.length?`<h5>Apartados relacionados</h5><ul class="manol">${r.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}<small class="hint">Extracto automático de las frases del manual sobre turnos y subida de nivel. Para una regla exacta abre el manual completo.</small>${re}</section>`}
 async function manLoad(){if(!session)return;try{manList=(await fsQuery('manuales','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0))}catch(e){if(!Array.isArray(manList))manList=[]}
  try{const mp=new Map();for(const k of await idbKeys()){let v=null;try{v=await idbGet(k)}catch(e){}mp.set(k,v&&typeof v.getFile==='function'?'h':'b')}manLocal=mp}catch(e){manLocal=new Map()}}
 const manFSA=()=>typeof window.showOpenFilePicker==='function';
 function manState(m){return manLocal.get(m.id)||((m.n|0)>0?'c':'')}
 function manRows(open){const L=manList||[];return L.length?`<div class="alist mancards">${L.map(m=>{const st=manState(m);const lb=st==='h'?'archivo vinculado en este dispositivo (no ocupa espacio)':st==='b'?'copia dentro de la app (ocupa espacio)':st==='c'?'copia en la nube':'archivo sin vincular';return `<div class="arow mancard"><div class="ahead" style="cursor:default"><span class="aav">${manIco(m.type)}</span><span class="anm"><b>${esc(m.name)}</b><small>${manSz(m.size|0)} · ${lb}</small></span><button type="button" class="btn sm pri" data-act="manopen" data-id="${esc(m.id)}">Abrir</button><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(m.id)}">Borrar</button></div></div>`}).join('')}</div>`:`<p class="hint" style="margin:0">${manList===null?'Cargando tus manuales…':'Aún no has subido ningún manual.'}</p>`}
 function manSec(){if(manList===null)manLoad().then(()=>{if(scr==='menu'&&store.mode==='gm'&&!store.cur&&!document.querySelector('dialog[open]'))render(1)});
- return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><button type="button" class="btn pri" data-act="manpick">+ Subir manual</button><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden></div><p class="hint">Elige un manual (PDF, texto o imagen, sin límite de tamaño). La app lo analiza, guarda en la nube solo el resumen y recuerda dónde está el archivo en tu dispositivo para abrirlo cuando lo necesites, sin copiarlo ni ocupar espacio. Solo tú, como Game Master, puedes verlo.</p><div id="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
+ return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><button type="button" class="btn pri" data-act="manpick">+ Subir manual</button><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden></div><p class="hint">Elige un manual (PDF, texto o imagen, sin límite de tamaño). La app lo analiza, guarda en la nube solo el resumen y recuerda dónde está el archivo en tu dispositivo para abrirlo cuando lo necesites, sin copiarlo ni ocupar espacio. Solo tú, como Game Master, puedes verlo.</p><div class="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
 function manDlg(){if(!manAllowed())return;showDlg('Manuales del Game Master',`<p class="hint" style="margin:0">Solo tú puedes consultar estos manuales.</p>${manRows(true)}${manList&&manList.length?'':'<p class="hint">Súbelos desde el inicio del modo Game Master.</p>'}`,true);$('#dlg').classList.add('mand');if(manList===null)manLoad().then(()=>{if($('#dlg').open&&$('#dlg').classList.contains('mand'))manDlg()})}
-function manProg(t,pc){const e=document.getElementById('manprog');if(e)e.innerHTML=t?`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`:''}
+function manProg(t,pc){const h=t?`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`:'';document.querySelectorAll('.manprog').forEach(e=>{e.innerHTML=h})}
 const MAN_PICK={types:[{description:'Manuales',accept:{'application/pdf':['.pdf'],'text/plain':['.txt'],'text/markdown':['.md'],'image/*':['.png','.jpg','.jpeg','.webp','.gif']}}]};
 async function manPickFile(){if(!manFSA())return 'input';try{const [h]=await window.showOpenFilePicker(MAN_PICK);return {h,f:await h.getFile()}}catch(e){return null}}
 async function manPickNew(){if(!manAllowed()||manUp)return;const r=await manPickFile();if(r==='input'){const i=document.getElementById('manfile');if(i)i.click();return}if(r)manProcess(r.f,r.h)}
@@ -1924,7 +1929,8 @@ document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='ma
  const m=(manList||[]).find(x=>x.id===lid);if(!m)return;const u=URL.createObjectURL(f);window.open(u,'_blank');setTimeout(()=>{try{URL.revokeObjectURL(u)}catch(x){}},120000)});
 /* obtener el archivo: ruta vinculada (sin copiar), copia antigua o nube antigua */
 async function manFile(m,gesture){let v=null;try{v=await idbGet(m.id)}catch(e){}
- if(v&&typeof v.getFile==='function'){try{let p=await v.queryPermission({mode:'read'});if(p!=='granted')p=await v.requestPermission({mode:'read'});if(p!=='granted')return {err:'perm'};return {f:await v.getFile()}}catch(e){return {err:'gone'}}}
+ if(v&&typeof v.getFile==='function'){let p='denied';try{p=await v.queryPermission({mode:'read'});if(p!=='granted')p=await v.requestPermission({mode:'read'})}catch(e){return {err:'perm'}}
+  if(p!=='granted')return {err:'perm'};try{return {f:await v.getFile()}}catch(e){return {err:'gone'}}}
  if(v instanceof Blob)return {f:v};
  if((m.n|0)>0){try{const parts=new Array(m.n|0);await manPool(m.n|0,4,async i=>{const d=await fs('GET','manchunks/'+m.id+'_'+i);if(!d)throw 0;const bin=atob(fbDec(d).d||''),a=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)a[k]=bin.charCodeAt(k);parts[i]=a});return {f:new Blob(parts,{type:m.type})}}catch(e){}}
  return {err:'none'}}
@@ -1936,9 +1942,13 @@ function manBody(m){const st=manState(m);
  return `<section class="mansum"><h4>Manual completo</h4><p class="hint" style="margin:0 0 10px">${hint}</p><div class="row">${btns}</div></section>`}
 function manOpen(id,mode){if(!manAllowed())return;const m=(manList||[]).find(x=>x.id===id);if(!m)return;manMode=mode||'sum';
  showDlg(esc(m.name),`<div class="row"><button type="button" class="btn sm" data-act="manview">‹ Manuales</button><div class="seg manseg" role="tablist"><button type="button" data-act="mansum" data-id="${esc(id)}" aria-pressed="${manMode==='sum'}">Resumen</button><button type="button" data-act="manfull" data-id="${esc(id)}" aria-pressed="${manMode==='full'}">Manual completo</button></div><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(id)}">Borrar manual</button></div><div id="manbox">${manBody(m)}</div>`,true);$('#dlg').classList.add('mand','manv')}
-async function manExt(id){const m=(manList||[]).find(x=>x.id===id);if(!m)return;const w=window.open('','_blank');const r=await manFile(m);
- if(r.f){const u=URL.createObjectURL(r.f.type||!m.type?r.f:new Blob([r.f],{type:m.type}));if(w)w.location.href=u;else window.open(u,'_blank');setTimeout(()=>{try{URL.revokeObjectURL(u)}catch(x){}},300000);return}
- if(w)try{w.close()}catch(x){}toast(r.err==='perm'?'Necesito permiso para leer el archivo: vuelve a pulsar y acepta':'No encuentro el archivo: vincúlalo de nuevo')}
+async function manExt(id){const m=(manList||[]).find(x=>x.id===id);if(!m)return;const r=await manFile(m);
+ if(r.f){const u=URL.createObjectURL(r.f.type||!m.type?r.f:new Blob([r.f],{type:m.type}));setTimeout(()=>{try{URL.revokeObjectURL(u)}catch(x){}},600000);
+  const w=window.open(u,'_blank');if(!w){const bx=$('#manbox');if(bx)bx.insertAdjacentHTML('beforeend',`<div class="row" style="margin-top:10px"><a class="btn pri" href="${u}" target="_blank" rel="noopener">Abrir ahora el manual</a></div>`);toast('Tu navegador bloqueó la pestaña: pulsa «Abrir ahora el manual»')}return}
+ toast(r.err==='perm'?'Hace falta permiso para leer el archivo: pulsa «Abrir manual completo» y acepta':r.err==='gone'?'El archivo se ha movido o borrado: vincúlalo de nuevo':'Este manual no tiene archivo vinculado: vincúlalo')}
+async function manReanalyze(id){const m=(manList||[]).find(x=>x.id===id);if(!m)return;const r=await manFile(m);
+ if(!r.f){toast(r.err==='perm'?'Hace falta permiso para leer el archivo':manFSA()?'Vincula primero el archivo del manual':'Elige otra vez el archivo para analizarlo');return}
+ manProg('Analizando el manual…',3);try{const sm=await manAnalyze(r.f,m.type);await fs('PATCH','manuales/'+id,fbEnc({sum:sm}),maskQ({sum:1}));m.sum=sm;manProg('¡Resumen actualizado!',100);setTimeout(()=>manProg(''),1200);const bx=$('#manbox');if(bx&&manMode==='sum')bx.innerHTML=manBody(m)}catch(e){manProg('');toast('No se pudo actualizar el resumen')}}
 async function manRelink(id){const r=await manPickFile();if(!r||r==='input')return;try{await idbPut(id,r.h);manLocal.set(id,'h');toast('Archivo vinculado; copia interna eliminada');const m=(manList||[]).find(x=>x.id===id);if(m&&$('#manbox'))$('#manbox').innerHTML=manBody(m)}catch(e){toast('No se pudo vincular el archivo')}}
 function manRmDlg(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
  showDlg('Borrar manual',`<p style="margin:0">¿Seguro que quieres borrar <b>${esc(m.name)}</b>?</p><p class="hint" style="margin:6px 0 0">Se eliminarán el resumen y el archivo guardado en este dispositivo. Esta acción no se puede deshacer.</p><div id="manrmp" aria-live="polite"></div><div class="row"><button type="button" class="btn danger" data-act="manrm2" data-id="${esc(id)}">Sí, borrar</button><button type="button" class="btn" data-act="manrmno">No, cancelar</button></div>`,true)}
@@ -2741,6 +2751,7 @@ document.addEventListener('click',e=>{
   case 'manpick':manPickNew();break;
   case 'manfull':{const m=(manList||[]).find(x=>x.id===b.dataset.id);if(m){manMode='full';const bx=$('#manbox');if(bx)bx.innerHTML=manBody(m);document.querySelectorAll('.manseg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.act==='manfull'));if(manFSA())manExt(m.id)}break}
   case 'mansum':{const m=(manList||[]).find(x=>x.id===b.dataset.id);if(m){manMode='sum';const bx=$('#manbox');if(bx)bx.innerHTML=manBody(m);document.querySelectorAll('.manseg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.act==='mansum'))}break}
+  case 'manre':manReanalyze(b.dataset.id);break;
   case 'manext':manExt(b.dataset.id);break;
   case 'manrelink':manRelink(b.dataset.id);break;
   case 'manopen':manOpen(b.dataset.id);break;
