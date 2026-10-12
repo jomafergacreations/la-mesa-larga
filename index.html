@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=102"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=102">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=103"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=103">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1181,6 +1181,8 @@ html[data-mode=gm]:not([data-theme="dark"]) body.hub .tag:not(.rv),html[data-mod
 html[data-mode=gm]:not([data-theme="dark"]) body.hub .btn.danger{color:#B42318;border-color:#D9603F;background:transparent}
 html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([data-theme="dark"]) .hb .hlp{background:rgba(255,255,255,.85);color:#4A1624;border-color:rgba(217,96,63,.45)}
 }
+.pcx{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(120,125,140,.45);background:rgba(255,255,255,.18);color:inherit;font:700 .95rem/1 var(--sans,system-ui);cursor:pointer;display:grid;place-items:center;transition:background .15s,transform .15s;z-index:2}.pcx:hover{background:rgba(217,72,15,.85);color:#fff;transform:scale(1.08)}.pcx:focus-visible{outline:2px solid var(--pc);outline-offset:2px}
+.card.npcc{position:relative}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1666,8 +1668,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='102';
-const APPN='Manuales: el archivo ya no se copia en la app, solo se recuerda su ruta en tu dispositivo; el manual completo se abre en una pestaña nueva y puedes alternar entre resumen y manual completo.';
+const APPV='103';
+const APPN='Las partidas finalizadas de Mis partidas tienen una cruz para eliminarlas de la lista (con confirmación).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2125,7 +2127,7 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
  ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
  <section class="glass" style="margin-top:16px"><div class="row"><button type="button" class="btn" data-act="manview">Consultar manuales</button>${p.end==='1'?'<span class="apb wait">Partida finalizada · solo lectura</span>':`<button class="btn" data-act="partend" data-id="${p.id}">Finalizar partida</button>`}<button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
- ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
+ ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}">${p.end==='1'?`<button type="button" class="pcx" data-act="partdel" data-id="${p.id}" aria-label="Eliminar la partida finalizada de la lista" title="Eliminar de la lista">✕</button>`:''}<h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
  if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><div class="meta ptags">${partTags(i)}</div><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
  if(kicks.length)h+=`<section class="partsec"><h2 class="hh2">Expulsado de</h2><div class="npcgrid">${kicks.map((k,i)=>`<article class="card npcc" style="--i:${i}"><h3>${esc(k.pname||'Partida')}</h3><div class="meta"><span>Expulsado por ${esc(k.gmName||'el Game Master')}</span></div><p class="hint" style="margin:0"><b>Motivo:</b> ${esc(k.reason||'—')}</p><div class="row"><button class="btn ghost" data-act="kickdel" data-id="${k.id}">Eliminar de mi lista</button></div></article>`).join('')}</div></section>`;
