@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=95"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=95">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=96"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=96">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1171,6 +1171,10 @@ let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTa
 const isAdmin=()=>!!session&&!!session.owner;
 const myRole=()=>isAdmin()?3:(session&&session.role)|0;
 const canAdm=()=>!!session&&myRole()>=1;
+const canInc=()=>!!session&&(isAdmin()||(session.inc|0)===1);
+const canGive=()=>!!session&&(isAdmin()||(session.gp|0)===1);
+const canList=()=>!!session&&(myRole()>=1||canGive());
+const canMenu=()=>canList()||canInc();
 const ROLEN=['Sin permisos','Ver cuentas','Administrador','Propietario'];
 /* ---------- cuentas en la nube: Firebase Auth + Firestore (REST) ---------- */
 const FB={projectId:'lamesalarga-c9518',apiKey:'AIzaSyATrJ2mZmTidyubsdEkz8Z7c13wAh2qTig'};
@@ -1236,6 +1240,7 @@ function beat(){if(!session||document.hidden)return;const n=Date.now();fs('PATCH
 async function watchMe(){if(!session||document.hidden||session.owner)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
+  const ni=u.inc|0,ng=u.gp|0;if(ni!==(session.inc|0)||ng!==(session.gp|0)){const oi=session.inc|0;session.inc=ni;session.gp=ng;dockSig='';if(ni&&!oi)toast('Ahora puedes responder incidencias');rpAll=[];rpLoad.f=0;try{topbarSync()}catch(e){}fdockUpdate(cur());render(1)}
   const nr=u.role|0,old=session.role|0;
   if(nr!==old){session.role=nr;dockSig='';
    if(nr<1){const x=document.querySelector('#dlg[open] .admroot');if(x){try{$('#dlg').close()}catch(e){}}}
@@ -1353,13 +1358,15 @@ async function doAuth(f){
 const fdate=t=>t?new Date(t).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'—';
 let admQ='',admF='all',admOpen=null,admSig='',admT=0,admPrev={on:null,n:null,st:null};
 let admTab='acc';
-function admTabs(){return isAdmin()?`<div class="seg admtabs" role="tablist"><button type="button" data-act="admtab" data-v="acc" aria-pressed="${admTab==='acc'}">Cuentas</button><button type="button" data-act="admtab" data-v="rp" aria-pressed="${admTab==='rp'}">Reportes${rpOpenN()?` <i class="bdg2">${rpOpenN()}</i>`:''}</button></div>`:''}
+function admTabs(){return (canInc()&&canList())?`<div class="seg admtabs" role="tablist"><button type="button" data-act="admtab" data-v="acc" aria-pressed="${admTab==='acc'}">Cuentas</button><button type="button" data-act="admtab" data-v="rp" aria-pressed="${admTab==='rp'}">Incidencias${rpOpenN()?` <i class="bdg2">${rpOpenN()}</i>`:''}</button></div>`:''}
 function rpAdmHtml(){const L=rpAll.filter(r=>(r.status==='done')===(rpTab==='done'));return `<div class="grid"><p class="hint" style="margin:0">Avisos que envían los usuarios con «¿Algo no funciona?». Solo tú puedes verlos. Al responder, el usuario recibe tu mensaje y el aviso queda como solucionado.</p><div class="seg" role="tablist"><button type="button" data-act="rptab" data-v="open" aria-pressed="${rpTab==='open'}">Pendientes (${rpOpenN()})</button><button type="button" data-act="rptab" data-v="done" aria-pressed="${rpTab==='done'}">Solucionados</button></div><div class="rplist">${L.map(r=>rpCard(r,true)).join('')||'<p class="hint">No hay avisos aquí.</p>'}</div></div>`}
+function topbarSync(){const t=document.getElementById('topbar');if(t)t.dataset.sig=''}
 function admShow(html){const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
-function admDlg(){if(!canAdm())return;regCache=null;admSig='';admOpen=null;admTab='acc';admShow('<p class="hint">Cargando las cuentas de la app…</p>');admLoad()}
+function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}
+function admDlg(){if(!canList()){incDlg();return}regCache=null;admSig='';admOpen=null;admTab='acc';admShow('<p class="hint">Cargando las cuentas de la app…</p>');admLoad()}
 async function admLoad(){try{regCache=await fsList('users');admT=Date.now()}catch(e){regCache=null;admShow('<div class="grid"><p class="hint warn-t">No se pudo cargar la lista ('+esc(e.code||'error')+'). Revisa tu conexión y los permisos.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div></div>');return}admView(true)}
 function admView(force){
- if(admTab==='rp'&&isAdmin()){admShow(rpAdmHtml());return}
+ if(admTab==='rp'&&canInc()){admShow(rpAdmHtml());return}
  const me=myRole(),allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filter(x=>(x.role|0)<3),n=all.length;
  const onl=allU.filter(isOn).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),stf=all.filter(x=>(x.role|0)>=1).length;
  const sig=JSON.stringify([allU.map(r=>[r.id,r.name,r.role|0,isOn(r)?1:0,r.email||'']),admQ,admF,admOpen,admState]);
@@ -1373,11 +1380,12 @@ function admView(force){
  const rows=list.map(r=>{const k=r.id,self=k===session.uid,rl=r.role|0,open=admOpen===k,act=admState&&admState.u===k?admState.mode:'';
   const can=!self&&me>=2&&rl<me;let det='';
   if(open){let ctl='';
-   if(isAdmin()&&!self)ctl+=`<div class="seg" role="group" aria-label="Permisos de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
+   const tgtOk=!self&&rl<(isAdmin()?3:2)&&(isAdmin()||((r.gp|0)!==1&&canGive()));
+   if(tgtOk)ctl+=`<div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${(isAdmin()?[0,1,2]:[0,1]).map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div><div class="seg" role="group" aria-label="Incidencias de ${esc(r.name)}"><button type="button" data-act="admperm" data-u="${esc(k)}" data-k="inc" data-v="${(r.inc|0)?0:1}" aria-pressed="${(r.inc|0)===1}">Responder incidencias${(r.inc|0)?': sí':''}</button>${isAdmin()?`<button type="button" data-act="admperm" data-u="${esc(k)}" data-k="gp" data-v="${(r.gp|0)?0:1}" aria-pressed="${(r.gp|0)===1}">Dar permisos${(r.gp|0)?': sí':''}</button>`:''}</div>`;
    if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
    det=`<div class="det">${isAdmin()&&r.email?`<span>Correo: <b>${esc(r.email)}</b></span>`:''}<span>Creada: ${fdate(r.created)}</span><span>Última entrada: ${fdate(r.seen||r.created)}</span>${ctl?`<div class="row">${ctl}</div>`:`<span class="hint" style="margin:0">${self?'Esta eres tú.':'No tienes permisos para gestionar esta cuenta.'}</span>`}
    ${act==='del'?`<div class="grid"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`:''}</div>`}
-  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
+  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}${(r.inc|0)?'<span class="tag">Incidencias</span>':''}${(r.gp|0)?'<span class="tag">Permisos</span>':''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
  const chips=onl.length?onl.map(r=>`<span class="onp${prevOn&&!prevOn.includes(r.id)?' new':''}"><i></i>${esc(r.name)}${(r.role|0)>=3?' <small>(propietario)</small>':''}</span>`).join(''):'<span class="hint" style="margin:0">Ahora mismo no hay nadie conectado.</span>';
  admShow(`<div class="grid admw"><div class="admh"><span class="live"><i></i>En vivo</span><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div>
  <div class="tiles">${tile('on',onl.length,'En línea')}${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}</div>
@@ -1590,8 +1598,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='95';
-const APPN='Eliminada la burbuja de usuarios en línea para evitar consultas continuas.';
+const APPV='96';
+const APPN='ALPHA es el único superusuario: concede el permiso Admin, responder incidencias y dar permisos. Quien puede dar permisos no puede conceder Admin.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1662,13 +1670,13 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN()].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN(),(session.inc|0)+'.'+(session.gp|0)].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGOI}<b>La Mesa Larga</b></button>
  <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi${home?' cur':''}" data-act="gohome" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button>
- ${canAdm()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${it('adm','Panel de administración')}${it('incid','Incidencias'+(isAdmin()&&rpOpenN()?' ('+rpOpenN()+')':''))}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
+ ${canMenu()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${canList()?it('adm','Panel de administración'):''}${canInc()?it('incid','Incidencias'+(rpOpenN()?' ('+rpOpenN()+')':'')):''}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
  <div class="tbr">${bellBtn("tbi tbbell")}<button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':'Cambiar a Game Master'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
  <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
  setTimeout(()=>tbInd(),30);
@@ -1986,10 +1994,10 @@ let rpMine=[],rpAll=[],rpImg='',rpTab='open';const RPCAT=[['ui','Fallo en la int
 const rpOpenN=()=>rpAll.filter(r=>r.status!=='done').length;
 const BELL='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function exPend(){try{return (typeof exits!=='undefined'&&exits||[]).filter(x=>!exAck(x.id))}catch(e){return[]}}
-function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(isAdmin()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length}
+function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(canInc()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length}
 function bellBtn(c){const n=notifN();return `<button type="button" class="${c}" data-act="notif" aria-label="Notificaciones${n?' ('+n+' sin leer)':''}" title="Notificaciones">${BELL}${n?`<i class="bdg">${n}</i>`:''}</button>`}
 function bellUpd(){const n=notifN();document.querySelectorAll('.bell,.tbbell').forEach(b=>{let i=b.querySelector('.bdg');if(n){if(!i){i=document.createElement('i');i.className='bdg';b.appendChild(i)}i.textContent=n}else if(i)i.remove();b.setAttribute('aria-label','Notificaciones'+(n?' ('+n+' sin leer)':''))})}
-function notifDlg(){const adm=isAdmin(),rd=store.rpRead=store.rpRead||[];
+function notifDlg(){const adm=canInc(),rd=store.rpRead=store.rpRead||[];
  const mine=(rpMine||[]).slice(),mdone=mine.filter(r=>r.status==='done'),mopen=mine.filter(r=>r.status!=='done');
  const hist=adm?(rpAll||[]).filter(r=>r.status==='done'):mdone,openL=adm?(rpAll||[]).filter(r=>r.status!=='done'):mopen;
  const newIds=mdone.filter(r=>!rd.includes(r.id)).map(r=>r.id);
@@ -2006,12 +2014,12 @@ const rpDate=t=>{try{return new Date(+t).toLocaleString('es-ES',{day:'2-digit',m
 async function rpLoad(){if(!session)return;try{rpMine=(await fsQuery('reportes','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0));
   const sd=store.rpSeen=store.rpSeen||[];const nw=rpMine.filter(r=>r.status==='done'&&!sd.includes(r.id));
   if(nw.length){rpPop(nw[0]);nw.forEach(r=>sd.push(r.id));save()}}catch(e){}
- if(isAdmin()){try{const prev=new Set(rpAll.map(r=>r.id));rpAll=(await fsList('reportes')).sort((a,b)=>(b.created|0)-(a.created|0));if(rpLoad.f){const n=rpAll.filter(r=>!prev.has(r.id)&&r.status!=='done');if(n.length)toast('Nuevo aviso de '+(n[0].name||'un usuario'))}rpLoad.f=1;}catch(e){}}bellUpd()}
+ if(canInc()){try{const prev=new Set(rpAll.map(r=>r.id));rpAll=(await fsList('reportes')).sort((a,b)=>(b.created|0)-(a.created|0));if(rpLoad.f){const n=rpAll.filter(r=>!prev.has(r.id)&&r.status!=='done');if(n.length)toast('Nuevo aviso de '+(n[0].name||'un usuario'))}rpLoad.f=1;}catch(e){}}bellUpd()}
 function rpPop(r){const o=document.getElementById('npcpop');if(o)o.remove();const d=document.createElement('aside');d.id='npcpop';d.setAttribute('role','status');
- d.innerHTML=`<div class="ppi">${LOGOI}</div><div class="ppt"><b>ALPHA ha respondido a tu aviso</b><span>${esc(rpCatName(r.cat))}: ya está solucionado</span><div class="row"><button class="btn pri sm" data-act="notif">Ver respuesta</button></div></div><button class="ppx" data-act="npcpx" aria-label="Cerrar aviso">✕</button>`;
+ d.innerHTML=`<div class="ppi">${LOGOI}</div><div class="ppt"><b>${esc(r.by||'ALPHA')} ha respondido a tu aviso</b><span>${esc(rpCatName(r.cat))}: ya está solucionado</span><div class="row"><button class="btn pri sm" data-act="notif">Ver respuesta</button></div></div><button class="ppx" data-act="npcpx" aria-label="Cerrar aviso">✕</button>`;
  document.body.appendChild(d);d._t=setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),260)},3000)}
-function rpCard(r,adm){const done=r.status==='done';return `<article class="rpc${done?' dn':''}"><div class="rph"><b>${adm?esc(r.name||'Usuario'):esc(rpCatName(r.cat))}</b><span class="rps ${done?'ok':'wait'}">${done?'Solucionado':'Pendiente'}</span></div><small>${adm?esc(rpCatName(r.cat))+' · ':''}${rpDate(r.created)}</small><p class="rpt">${esc(r.text||'')}</p>${r.img?`<img class="rpi" src="${esc(r.img)}" alt="Imagen adjunta" data-act="rpzoom">`:''}${done&&r.reply?`<div class="rpr"><b>Respuesta de ALPHA</b><p>${esc(r.reply)}</p></div>`:''}${adm&&!done?`<label class="f">Respuesta para ${esc(r.name||'el usuario')}<textarea data-nolimit="1" data-rr="${esc(r.id)}" rows="3" maxlength="2000" placeholder="Cuéntale qué has arreglado"></textarea></label><div class="row"><button type="button" class="btn pri sm" data-act="rpdone" data-id="${esc(r.id)}">Marcar como solucionado y responder</button></div>`:''}</article>`}
-function rptDlg(pre){rpImg='';const adm=isAdmin();
+function rpCard(r,adm){const done=r.status==='done';return `<article class="rpc${done?' dn':''}"><div class="rph"><b>${adm?esc(r.name||'Usuario'):esc(rpCatName(r.cat))}</b><span class="rps ${done?'ok':'wait'}">${done?'Solucionado':'Pendiente'}</span></div><small>${adm?esc(rpCatName(r.cat))+' · ':''}${rpDate(r.created)}</small><p class="rpt">${esc(r.text||'')}</p>${r.img?`<img class="rpi" src="${esc(r.img)}" alt="Imagen adjunta" data-act="rpzoom">`:''}${done&&r.reply?`<div class="rpr"><b>Respuesta de ${esc(r.by||'ALPHA')}</b><p>${esc(r.reply)}</p></div>`:''}${adm&&!done?`<label class="f">Respuesta para ${esc(r.name||'el usuario')}<textarea data-nolimit="1" data-rr="${esc(r.id)}" rows="3" maxlength="2000" placeholder="Cuéntale qué has arreglado"></textarea></label><div class="row"><button type="button" class="btn pri sm" data-act="rpdone" data-id="${esc(r.id)}">Marcar como solucionado y responder</button></div>`:''}</article>`}
+function rptDlg(pre){rpImg='';const adm=canInc();
  showDlg('¿Algo no funciona?',`<form id="rptform" class="grid" novalidate><p class="hint" style="margin:0">Cuéntanos qué ha fallado. Solo lo verá ALPHA, que lo arreglará y te responderá aquí cuando esté solucionado.</p>
  <label class="f">¿Qué ocurre?<select name="cat">${RPCAT.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join('')}</select></label>
  <label class="f">Descríbelo<textarea name="tx" rows="6" maxlength="3000" data-nolimit="1" placeholder="Qué estabas haciendo, qué esperabas y qué pasó"></textarea></label>
@@ -2492,10 +2500,10 @@ document.addEventListener('click',e=>{
   case 'rprep':{const r=(rpMine||[]).find(x=>x.id===b.dataset.id);rptDlg('Sobre mi aviso «'+(r?String(r.text||'').slice(0,60):'')+'»: ');break}
   case 'admrp':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
   case 'rptab':rpTab=b.dataset.v;if($('#dlg').classList.contains('admd'))admView(true);else rptDlg();break;
-  case 'admtab':admTab=b.dataset.v;admSig='';if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}else admView(true);break;
+  case 'admtab':admTab=b.dataset.v;admSig='';if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}else{if(!regCache)admLoad();else admView(true)}break;
   case 'rpzoom':b.classList.toggle('big');break;
   case 'rpimgx':rpImg='';{const a=$('#rppv'),n=$('#rpname');if(a)a.innerHTML='';if(n)n.textContent=''}break;
-  case 'rpdone':{const id=b.dataset.id,ta=document.querySelector('textarea[data-rr="'+id+'"]'),rs=String((ta&&ta.value)||'').trim();if(rs.length<2){toast('Escribe una respuesta para el usuario');break}b.disabled=true;fs('PATCH','reportes/'+id,fbEnc({status:'done',reply:rs.slice(0,2000),updated:Date.now()}),maskQ({status:1,reply:1,updated:1})).then(()=>rpLoad()).then(()=>{toast('Aviso marcado como solucionado');if($('#dlg').classList.contains('admd'))admView(true);else if($('#dlg').classList.contains('nfd'))notifDlg();else rptDlg()}).catch(()=>{b.disabled=false;toast('No se pudo guardar la respuesta')});break}
+  case 'rpdone':{const id=b.dataset.id,ta=document.querySelector('textarea[data-rr="'+id+'"]'),rs=String((ta&&ta.value)||'').trim();if(rs.length<2){toast('Escribe una respuesta para el usuario');break}b.disabled=true;fs('PATCH','reportes/'+id,fbEnc({status:'done',reply:rs.slice(0,2000),by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,reply:1,by:1,updated:1})).then(()=>rpLoad()).then(()=>{toast('Aviso marcado como solucionado');if($('#dlg').classList.contains('admd'))admView(true);else if($('#dlg').classList.contains('nfd'))notifDlg();else rptDlg()}).catch(()=>{b.disabled=false;toast('No se pudo guardar la respuesta')});break}
   case 'partend':{showDlg('¿Finalizar la partida?',`<p class="hint" style="margin:0">La partida seguirá en «Mis partidas», pero <b>nada de ella podrá modificarse</b>: ni jugadores, ni NPC, ni vida, ni fichas. Los personajes que no hayan fallecido vuelven a estar disponibles para sus jugadores. No se puede deshacer.</p><div class="row"><button class="btn pri" data-act="partendok" data-id="${esc(b.dataset.id)}">Finalizar partida</button></div>`,true);break}
   case 'partendok':{const id=b.dataset.id;fs('PATCH','partidas/'+id,fbEnc({end:'1',endAt:Date.now()}),maskQ({end:1,endAt:1})).then(()=>{const q=parts.find(x=>x.id===id);if(q)q.end='1';try{$('#dlg').close()}catch(x){}toast('Partida finalizada');partSig='';render(1)}).catch(()=>toast('No se pudo finalizar la partida'));break}
   case 'pjhp':{const pid=b.dataset.p,u=b.dataset.u;if(isEnd(pid))break;const k=pid+'_'+u,mx=+b.dataset.mx||1;const n=Math.max(0,Math.min(mx,(hpMap[k]|0)-(+b.dataset.d)));hpMap[k]=n;render(1);fs('PATCH','pjs/'+k,fbEnc({hp:n}),maskQ({hp:1})).catch(()=>toast('No se pudo guardar la vida'));break}
@@ -2550,7 +2558,8 @@ document.addEventListener('click',e=>{
   case 'npcpx':{const pp=document.getElementById('npcpop');if(pp)pp.remove();break}
   case 'rvopen':{{const pp=document.getElementById('npcpop');if(pp)pp.remove()}const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;showDlg(esc(n.name||'NPC'),npcSheet(npcNorm(n),true),true);break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
-  case 'incid':if(!isAdmin()){toast('Las incidencias solo las gestiona ALPHA');break}admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
+  case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}incDlg();break;
+  case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
   case 'gohome':store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render();break;
@@ -2567,7 +2576,8 @@ document.addEventListener('click',e=>{
   case 'admre':admDlg();break;
   case 'admrow':admOpen=admOpen===b.dataset.u?null:b.dataset.u;admState=null;admView(true);break;
   case 'admf':admF=b.dataset.v;admView(true);break;
-  case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r;if(u!==session.uid&&r>=0&&r<=2){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{const x=regCache&&regCache.find(y=>y.id===u);if(x)x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break;
+  case 'admrole':if(canGive()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
+  case 'admperm':if(canGive()){const u=b.dataset.u,k=b.dataset.k,v=+b.dataset.v?1:0,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&(k==='inc'||(k==='gp'&&isAdmin()))&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){const o={};o[k]=v;fs('PATCH','users/'+u,fbEnc(o),maskQ({[k]:1})).then(()=>{x[k]=v;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}try{await fs('DELETE','presencia/'+u)}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
