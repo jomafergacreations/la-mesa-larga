@@ -1757,6 +1757,15 @@ html[data-cyb] body.hub .hh.cyh{font-family:'Orbitron',var(--sans),sans-serif;fo
 #cyfx .cc{position:absolute;top:-45vh;white-space:pre;font:400 var(--fs,14px)/1.15 'Share Tech Mono',ui-monospace,monospace;color:#FCEE0A;opacity:.24;text-shadow:0 0 6px rgba(252,238,10,.6);will-change:transform}
 #cyin{position:fixed;inset:0;z-index:99991;pointer-events:none;overflow:hidden;background:#FCEE0A;opacity:0;animation:cyInBg .95s linear forwards}
 #cyin i{position:absolute;left:-10%;width:120%;top:var(--y);height:var(--h);background:var(--c);opacity:0;transform:translateX(var(--x));animation:cySl .85s steps(6,end) var(--d) forwards}
+#cyout{position:fixed;inset:0;z-index:99991;display:grid;place-items:center;background:#07070A;font-family:'Share Tech Mono',ui-monospace,monospace;opacity:0;animation:cyOutBg 1.4s linear forwards}
+#cyout .cyot{width:min(420px,calc(100% - 40px));color:#FCEE0A;font-size:.95rem;line-height:1.8}
+#cyout .cyol{width:0;overflow:hidden;white-space:nowrap;animation:cyType .28s steps(26,end) var(--d) forwards}
+#cyout .cyol em{font-style:normal;color:#00F0FF}#cyout .cyol.wn{color:#FF2A6D}
+#cyout .cypb{height:14px;border:1px solid #FCEE0A;padding:2px;margin-top:14px}
+#cyout .cypb i{display:block;height:100%;width:100%;background:repeating-linear-gradient(90deg,#FCEE0A 0 8px,transparent 8px 11px);animation:cyShrink .5s steps(14,end) .7s forwards}
+@keyframes cyOutBg{0%{opacity:0}16%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@keyframes cyType{to{width:100%}}
+@keyframes cyShrink{to{width:0}}
 @keyframes cyInBg{0%{opacity:0;background:#FCEE0A}22%{opacity:1;background:#FCEE0A}44%{opacity:1;background:#07070A}78%{opacity:1;background:#07070A}100%{opacity:0;background:#07070A}}
 @keyframes cySl{0%{opacity:0;transform:translateX(var(--x))}30%{opacity:1}65%{opacity:1;transform:translateX(calc(var(--x) * -.5))}100%{opacity:0;transform:none}}
 </style>
@@ -2256,8 +2265,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='135';
-const APPN='Nueva burbuja Cyberpunk en el menú principal, con su propio estilo neón y una pantalla de arranque que anuncia que llegará próximamente.';
+const APPV='136';
+const APPN='Al pulsar Inicio, cada universo tiene su propia animación de salida: el salto estelar en Cosmere y el cierre de terminal en Cyberpunk.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2410,6 +2419,12 @@ function cyberIntro(){if(lfRM()||document.getElementById('cyin'))return;
  const o=document.createElement('div');o.id='cyin';o.setAttribute('aria-hidden','true');let h='';const C=['#FCEE0A','#07070A','#00F0FF','#FF2A6D','#FCEE0A','#07070A'];
  for(let i=0;i<9;i++)h+=`<i style="--y:${(i*11+Math.random()*4).toFixed(1)}%;--h:${(4+Math.random()*9).toFixed(1)}%;--x:${((Math.random()-.5)*60).toFixed(0)}%;--d:${(Math.random()*.3).toFixed(2)}s;--c:${C[i%C.length]}"></i>`;
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1000)}
+function cyberOut(then){if(lfRM()||document.getElementById('cyout')){then();return}
+ const o=document.createElement('div');o.id='cyout';o.setAttribute('aria-hidden','true');
+ o.innerHTML='<div class="cyot"><div class="cyol" style="--d:.15s">&gt; cerrando sesión…</div><div class="cyol" style="--d:.45s">&gt; descargando módulo… <em>[ OK ]</em></div><div class="cyol wn" style="--d:.75s">&gt; desconectando</div><div class="cypb"><i></i></div></div>';
+ document.body.appendChild(o);setTimeout(then,1000);setTimeout(()=>o.remove(),1400)}
+/* salida propia de cada universo al pulsar Inicio / volver */
+function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(session&&document.documentElement.dataset.cos){warpIntro(true);setTimeout(then,420);return}}then()}
 function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
  if(!on){if(f)f.remove();delete r.dataset.cyb;return}
  r.dataset.cyb='1';if(f)return;
@@ -3524,7 +3539,7 @@ document.addEventListener('click',e=>{
   case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
-  case 'gohome':store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render();break;
+  case 'gohome':exitFx(()=>{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render()});break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
   case 'avdel':store.avatar='';save();avRefresh(true);{const d=$('#dlg');const m=$('#avmsg');if(m){m.textContent='Imagen quitada.';m.className='msg ok'}const r=d.querySelector('.avrow .row');if(r){const x=r.querySelector('[data-act=avdel]');if(x)x.remove()}}break;
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
@@ -3571,7 +3586,7 @@ document.addEventListener('click',e=>{
   case 'selask':{const ch=store.chars.filter(x=>selIds.has(x.id));if(!ch.length)break;const all=ch.length===store.chars.length;const d=$('#dlg');d.className='dlgdel';d.innerHTML=`<div class="grid"><h3>${all?'¿Borrar TODAS tus fichas?':'¿Borrar '+ch.length+(ch.length===1?' ficha?':' fichas?')}</h3><p class="hint" style="margin:0">${all?'Se borrarán las '+ch.length+' fichas de este juego':'Se borrarán de tu cuenta'}: <b>${ch.slice(0,8).map(x=>esc(x.name||'Sin nombre')).join(', ')}${ch.length>8?' y '+(ch.length-8)+' más':''}</b>. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="selok">Sí, borrar</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'selok':{const ids=new Set(selIds);try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}store.chars.filter(o=>ids.has(o.id)&&o.pid).forEach(o=>{fs('DELETE','pjs/'+o.pid+'_'+session.uid).catch(()=>{})});store.chars=store.chars.filter(x=>!ids.has(x.id));selIds.clear();selMode=false;save();render(1);toast(ids.size===1?'Ficha borrada':ids.size+' fichas borradas');break}
   case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
-  case 'menu':if(session&&document.documentElement.dataset.cos&&!lfRM()){warpIntro(true);setTimeout(()=>{scr='menu';render()},420)}else{scr='menu';render()}break;
+  case 'menu':exitFx(()=>{scr='menu';render()});break;
   case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{store.cur=null;scr='cosmere';render()}break;
   case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
   case 'rol':store.cur=null;scr='rol';render();break;
