@@ -2132,6 +2132,16 @@ html[data-lm=l] #bye:not(.dun):not(.cyb):not(.cos){color:#14306B;background:radi
 #bye.dun .byefx i{animation:byeSand var(--t) linear var(--d) infinite}#bye.cos .byefx i{animation:byeTw var(--t) ease-in-out var(--d) infinite}#bye.cyb::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px);animation:byeFlk .12s steps(2) infinite}}
 @keyframes byeIn{from{opacity:0}to{opacity:1}}@keyframes byeUp{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}@keyframes byeSpin{to{transform:rotate(360deg)}}@keyframes byeOut{from{opacity:1}to{opacity:0;transform:scale(1.03)}}@keyframes byeBar{to{transform:scaleX(1)}}
 @keyframes byeSand{from{transform:translateX(-10vw)}to{transform:translateX(110vw)}}@keyframes byeTw{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:.95;transform:scale(1.5)}}@keyframes byeFlk{50%{opacity:.6}}
+
+/* ---------- Móvil: nada se sale de la pantalla ---------- */
+:where(.grid,.panel,.list,.alist,.det,.tlist,.npcatk,.npcro,.cyroot,.dnroot,.cyso,.dnso,.authhub,.invdlg,.invlist,.reqbox,.hpbox,.rplist,.rpc,.rpadm,.rpok,.empty,.chapter,.sealw,.cyterm,.cylog,.tt,.f,.mtab,.mtcaps,.gmb){grid-template-columns:minmax(0,1fr)}
+:where(.cyroot,.dnroot,.cyterm,.cylog,.cyso,.dnso,.panel,.card,.glass,.authhub){min-width:0;max-width:100%}
+#app{overflow-wrap:break-word}body{overflow-x:clip}
+.cyl span{overflow-wrap:anywhere}.cypp{min-width:0}.cypb{flex:1;min-width:0}.cypp b{flex:none}
+.cyso b{font-size:clamp(1.25rem,6.2vw,3.2rem);letter-spacing:.06em;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+.cyeye,.dneye{overflow-wrap:anywhere}
+.hb,.top,.tbin{min-width:0}
+img,video{max-width:100%}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2629,8 +2639,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='142';
-const APPN='Al cerrar sesión ahora hay una animación de despedida propia de cada universo (y de día o de noche), y en Cosmere el título de la burbuja queda a la misma altura que en las demás.';
+const APPV='143';
+const APPN='Arreglo para móvil: ya no se cortan textos ni paneles por el borde derecho (Cyberpunk, Dune y el resto de pantallas).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
