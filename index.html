@@ -1915,8 +1915,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='120';
-const APPN='Al empezar la partida eliges personaje (queda bloqueado), el Atium se añade solo, animación propia del Atium y letra más grande en el tablero.';
+const APPV='121';
+const APPN='Corregido: el turno 1 empieza en el paso 1 del entrenamiento.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2131,7 +2131,7 @@ let MT=mtLoad(),mtSel=null;
 function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'null')}catch(e){}
  o=o||{};const st={};MTL.forEach(m=>{const v=o.st&&o.st[m.id];st[m.id]=['burn','flare','flip'].includes(v)?v:'ready'});
  const n=x=>Number.isFinite(+x)?Math.max(0,Math.round(+x)):0;
- return{ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:Math.max(1,Math.min(MT_STEPS,n(o.step)||1)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
+ return{v:2,ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:o.v===2?Math.min(MT_STEPS,n(o.step)):Math.min(MT_STEPS,n(o.turn)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
 function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
 function mtLimit(){let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
 function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn').length+MT.atu}
@@ -2154,7 +2154,7 @@ function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Al empezar la partida eleg
  return `<div class="mtbase"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<ul class="mtab">${row('I','Si quemas '+sg.n+'…','<div class="mtfxr">'+mtFxH(c.fx1)+'</div>',6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<div class="mtfxr">'+mtFxH(MT_FX3)+'</div>',14)}</ul>`}
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
-function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
+function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
 function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Más allá de tu límite de quemas, se aviva (se gira).',a:''};
  const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
  let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
@@ -2209,7 +2209,7 @@ function mtAtFx(k){const p=document.getElementById('mtatp');if(!p||lfRM())return
 function mtStep(n){if(n<1||n>MT_STEPS||n===MT.step)return;MT.step=n;mtSave();mtPaint();toast('Entrenamiento: paso '+n+' · quemas '+mtLimit())}
 function mtAtium(d){const v=MT.at+d;if(v<0)return;MT.at=v;mtSave();mtPaint()}
 function mtAtUse(d){if(d>0){if(MT.at<1)return;if(mtBurning()>=mtLimit()){toast('No te quedan quemas libres para usar Atium');return}MT.at--;MT.atu++}else{if(MT.atu<1)return;MT.atu--;MT.at++}mtSave();mtPaint();if(d>0)mtAtFx('use')}
-function mtReset(){mtAskClose();MT.ch=null;MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=1;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
+function mtReset(){mtAskClose();MT.ch=null;MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=0;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
