@@ -1491,6 +1491,10 @@ html[data-dev=tablet] .lfsolo .lfv,html[data-dev=desktop] .lfsolo .lfv{height:4.
 .mttr{margin:0 0 16px;overscroll-behavior-x:contain}
 .mtcap,.mtcp,.mtpk,.lfmsg,.mtn,.mtds{overflow-wrap:anywhere}
 html:has(.lfroot){overscroll-behavior-x:none}
+html[data-dev=phone],html[data-dev=phone] body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+@supports(overflow:clip){html[data-dev=phone],html[data-dev=phone] body{overflow-x:clip}}
+html[data-dev=phone] #app,html[data-dev=phone] .wrap{max-width:100%;overflow-x:clip}
+html[data-dev=phone] img,html[data-dev=phone] svg,html[data-dev=phone] video,html[data-dev=phone] iframe{max-width:100%}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -2005,8 +2009,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='128';
-const APPN='Móvil: la pantalla de creación de mazos ya no se desplaza de lado.';
+const APPV='129';
+const APPN='Móvil: sin desplazamiento lateral en toda la app.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
