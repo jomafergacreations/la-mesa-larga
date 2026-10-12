@@ -1342,6 +1342,16 @@ html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{min-width:0;width:100%}
  @keyframes mtSig{0%,100%{outline-offset:4px}50%{outline-offset:7px}}
  @keyframes mtOff{0%{box-shadow:0 0 0 2px #fff,0 0 22px 6px var(--mc)}30%{box-shadow:0 0 0 2px var(--mc),0 0 8px 1px var(--mc)}45%{box-shadow:0 0 0 2px var(--mc),0 0 16px 3px var(--mc)}100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent}}
 }
+.mtbase small{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8e9499}
+.mtabt{flex:1;min-width:0}.mtabt p{margin:2px 0 0}
+.mtlab{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#C8B27A}
+.mtfxr{display:inline-flex;flex-wrap:wrap;gap:8px;margin-top:3px;vertical-align:middle}
+.mtfx{position:relative;display:inline-flex;align-items:center;gap:4px;padding:2px 9px 2px 7px;border-radius:99px;background:rgba(0,0,0,.3);border:1px solid #565c61}
+.mtfx i{display:block;line-height:0}.mtfx i svg{width:16px;height:16px;display:block}
+.mtfx b{font-family:var(--sans);font-size:.95rem;color:#F0ECEA}
+.mtfx.heal i{color:#6FCF8D}.mtfx.combat i{color:#E5575F}.mtfx.coin i{color:#E3C27A}.mtfx.mission i{color:#D9C9A0}
+.mtfx .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mtnow .mtfxr{margin:0 0 0 6px}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -1856,8 +1866,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='118';
-const APPN='Tablero de metales según el manual: personaje y metal base, entrenamiento, quemas, avivar y refrescar, y Atium.';
+const APPV='119';
+const APPN='Fichas de personaje con sus habilidades: Vin, Kelsier, Marsh y Shan (efectos I, II y III de sus cartas).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2060,7 +2070,11 @@ const MTL=[
  {id:'laton',n:'Latón',p:'cinc',d:'Aplaca las emociones de los demás.',u:'Puntos de misión y monedas; permite eliminar cartas.',dc:'#E9C13A',gc:'#FFF7DA',bc:'#D9A92B',g:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>'},
  {id:'hierro',n:'Hierro',p:'acero',d:'Tira de fuentes de metal.',u:'Combate; permite devolver cartas del descarte a lo alto de tu mazo.',dc:'#3F78D1',gc:'#F2F6FF',bc:'#4A74BF',g:'<path d="M2 12h8M6.500 8l3.500 4-3.500 4M22 12h-8M17.500 8 14 12l3.500 4"/>'},
  {id:'acero',n:'Acero',p:'hierro',d:'Empuja fuentes de metal.',u:'Combate y monedas; permite eliminar cartas del mercado.',dc:'#E9EEF8',gc:'#2F63C6',bc:'#4A74BF',g:'<path d="M10 12H2M5.500 8 2 12l3.500 4M14 12h8M18.500 8 22 12l-3.500 4"/>'}];
-const MTC={vin:{n:'Vin',r:'La Guerrera',m:'peltre'},kelsier:{n:'Kelsier',r:'El Superviviente',m:'acero'},marsh:{n:'Marsh',r:'El Espía',m:'bronce'},shan:{n:'Shan',r:'La Noble',m:'cinc'}};
+const MTC={vin:{n:'Vin',r:'La Guerrera',m:'peltre',fx1:[['heal',1],['combat',1],['coin',1]]},kelsier:{n:'Kelsier',r:'El Superviviente',m:'acero',fx1:[['combat',2]]},marsh:{n:'Marsh',r:'El Espía',m:'bronce',fx1:[['mission',1]]},shan:{n:'Shan',r:'La Noble',m:'cinc',fx1:[['coin',2]]}};
+const MT_FX3=[['combat',3],['mission',3]];
+const MT_FXN={heal:'Curación',combat:'Combate',coin:'Monedas',mission:'Puntos de misión'};
+const MT_FXI={heal:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="currentColor"/></svg>',combat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 16M19 4L5 20" fill="none" stroke="currentColor" stroke-width="3.200" stroke-linecap="round"/></svg>',coin:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="currentColor"/></svg>',mission:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.500" fill="currentColor"/></svg>'};
+function mtFxH(l){return l.map(x=>`<span class="mtfx ${x[0]}"><i>${MT_FXI[x[0]]}</i><b aria-hidden="true">${x[1]}</b><span class="sr">${MT_FXN[x[0]]} ${x[1]}</span></span>`).join('')}
 const MT_LAB={ready:'Listo',burn:'Quemando',flare:'Avivado',flip:'Volteado',used:'Usado'};
 const MT_FLAME='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c3 4 6 6.500 6 11a6 6 0 0 1-12 0c0-2 1-3.500 2-5 .5 1.500 1.500 2 2.500 2C10 7.500 10.500 5 12 2z" fill="currentColor"/></svg>';
 const MT_ATI='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor" opacity=".18"/><path d="M12 3.500l2 6.500 6.500 2-6.500 2-2 6.500-2-6.500-6.500-2 6.500-2z" fill="currentColor"/></svg>';
@@ -2087,8 +2101,8 @@ function mtTrackH(){let h='';for(let i=1;i<=MT_STEPS;i++){const r=MT_REW[i],cl=i
  return h}
 function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Elige tu personaje para ver tu metal base y sus habilidades.</p>';
  const c=MTC[MT.ch],sg=MTL.find(x=>x.id===c.m),on=MT.st[c.m]==='burn'||MT.st[c.m]==='flare';
- const ab=[['I',`Si estás quemando ${sg.n}, ganas el efecto de tu carta de personaje (una sola vez por turno, aunque lo quemes varias veces).`,6],['II','Una vez por turno, al comprar una carta de acción puedes eliminarla al instante y completar su efecto superior sin quemar metal.',9],['III','Si quemas Atium (como Atium o como otro metal), ganas el efecto de tu carta de personaje.',14]];
- return `<div class="mtbase"><span>Metal base de ${c.n}</span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! Aplica el efecto de tu carta de personaje.</p>':''}<ul class="mtab">${ab.map(a=>`<li class="${mtAb(a[0])?'on':''}"><span class="mtrm">${a[0]}</span><span>${a[1]}<em>${mtAb(a[0])?'Desbloqueada':'Se desbloquea en el paso '+a[2]}</em></span></li>`).join('')}</ul>`}
+ const row=(k,lab,body,n)=>`<li class="${mtAb(k)?'on':''}"><span class="mtrm">${k}</span><span class="mtabt"><small class="mtlab">${lab}</small>${body}<em>${mtAb(k)?'Desbloqueada':'Se desbloquea en el paso '+n}</em></span></li>`;
+ return `<div class="mtbase"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<ul class="mtab">${row('I','Si quemas '+sg.n+'…','<div class="mtfxr">'+mtFxH(c.fx1)+'</div>',6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<div class="mtfxr">'+mtFxH(MT_FX3)+'</div>',14)}</ul>`}
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
 function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
