@@ -1223,6 +1223,52 @@ html[data-dev=desktop] .lfgrid[data-n="3"] .lfc:last-child,html[data-dev=tablet]
  @keyframes lfdmg{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 70%,transparent);background-color:color-mix(in srgb,var(--warn) 25%,var(--surface))}15%{transform:translateX(-7px)}30%{transform:translateX(6px)}45%{transform:translateX(-5px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}100%{transform:none;box-shadow:0 0 0 16px transparent;background-color:var(--surface)}}
  @keyframes lfnew{0%{transform:scale(.92) rotateX(40deg);opacity:.3;box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}60%{transform:scale(1.04);opacity:1;box-shadow:0 0 0 14px color-mix(in srgb,var(--accent) 0%,transparent)}100%{transform:none;opacity:1;box-shadow:none}}
 }
+
+/* tema Nacidos de la Bruma para Creación de mazos */
+body.hub:has(.lfroot){--h-bg:var(--bg);--h-card:var(--surface);--h-ink:var(--ink);--h-mut:var(--muted);--h-line:var(--line)}
+.lfroot{position:relative}
+.lfeye{font-family:var(--sc);font-size:.95rem;letter-spacing:.5em;text-indent:.5em;text-transform:uppercase;color:var(--muted);margin:2px 0 4px;text-align:center}
+.lfh{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--head);text-align:center;font-size:clamp(1.7rem,7.4vw,2.6rem);line-height:1.15;text-shadow:0 2px 14px color-mix(in srgb,var(--gold) 28%,transparent)}
+.lffil{height:1px;width:min(240px,56vw);margin:12px auto 12px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.lfroot .hs{text-align:center;font-family:var(--serif);font-style:italic;color:var(--muted)}
+.lfc{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 88%,var(--mist-a)),var(--surface));border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--surface) 92%,transparent),inset 0 0 0 4px color-mix(in srgb,var(--gold) 28%,transparent),0 14px 28px -20px rgba(20,12,16,.6)}
+.lfc::before{content:'';position:absolute;left:18%;right:18%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.lfd{text-shadow:0 0 18px color-mix(in srgb,var(--gold) 38%,transparent)}
+.lfbar{background:color-mix(in srgb,var(--line) 60%,transparent)}
+.lfbar i{background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 70%,#7a5a1e),var(--gold) 60%,color-mix(in srgb,var(--gold) 55%,#fff));box-shadow:0 0 10px color-mix(in srgb,var(--gold) 55%,transparent)}
+.lfc.low .lfbar i{background:linear-gradient(90deg,#7a2a1a,var(--warn));box-shadow:0 0 10px color-mix(in srgb,var(--warn) 55%,transparent)}
+.lfbt{background:color-mix(in srgb,var(--field) 80%,transparent);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+.lfbt:hover{border-color:var(--gold)}
+.lfnew{border-radius:99px}
+#dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
+#dmist .dm{position:absolute;border-radius:50%;opacity:.9}
+#dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
+#dmist .m2{left:-10%;top:42%;width:130%;height:38%;background:radial-gradient(closest-side,rgba(235,230,226,.6),rgba(235,230,226,0))}
+#dmist .m3{left:-30%;top:66%;width:110%;height:36%;background:radial-gradient(closest-side,rgba(255,255,255,.5),rgba(255,255,255,0))}
+#dmist .mg{left:-10%;right:-10%;bottom:-6%;width:120%;height:30%;border-radius:0;background:linear-gradient(0deg,rgba(235,230,226,.75),rgba(235,230,226,0))}
+#dmist .dk{position:absolute;top:-10px;width:var(--sz);height:var(--sz);border-radius:40% 60% 55% 45%;background:currentColor;opacity:0}
+#dmist .dk.far{filter:blur(1px);opacity:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #dmist{color:rgba(232,228,224,.6)}
+ :root:not([data-theme="light"]) #dmist .m1,:root:not([data-theme="light"]) #dmist .m2,:root:not([data-theme="light"]) #dmist .m3{background:radial-gradient(closest-side,rgba(200,205,212,.16),rgba(200,205,212,0))}
+ :root:not([data-theme="light"]) #dmist .mg{background:linear-gradient(0deg,rgba(190,196,204,.2),rgba(190,196,204,0))}}
+:root[data-theme="dark"] #dmist{color:rgba(232,228,224,.6)}
+:root[data-theme="dark"] #dmist .m1,:root[data-theme="dark"] #dmist .m2,:root[data-theme="dark"] #dmist .m3{background:radial-gradient(closest-side,rgba(200,205,212,.16),rgba(200,205,212,0))}
+:root[data-theme="dark"] #dmist .mg{background:linear-gradient(0deg,rgba(190,196,204,.2),rgba(190,196,204,0))}
+@media(prefers-reduced-motion:no-preference){
+ #dmist .m1{animation:dmA 38s ease-in-out infinite alternate}
+ #dmist .m2{animation:dmB 52s ease-in-out -14s infinite alternate}
+ #dmist .m3{animation:dmA 46s ease-in-out -26s infinite alternate-reverse}
+ #dmist .mg{animation:dmG 14s ease-in-out infinite alternate}
+ #dmist .dk{animation:dkFall linear infinite}
+ #dmist .dk.far{animation-name:dkFallFar}
+ .lfeye,.lfh,.lffil{animation:mUp .8s cubic-bezier(.2,.8,.2,1) both}.lfh{animation-delay:.08s}.lffil{animation-delay:.2s}
+ @keyframes dmA{from{transform:translateX(-14%)}to{transform:translateX(16%)}}
+ @keyframes dmB{from{transform:translateX(12%) scale(1.05)}to{transform:translateX(-14%) scale(.92)}}
+ @keyframes dmG{from{opacity:.55;transform:translateX(-3%)}to{opacity:1;transform:translateX(3%)}}
+ @keyframes dkFall{0%{opacity:0;transform:translate(0,0) rotate(0)}8%{opacity:.85}50%{transform:translate(calc(var(--dx)*.4),55vh) rotate(calc(var(--rot)*.5))}90%{opacity:.5}100%{opacity:0;transform:translate(var(--dx),108vh) rotate(var(--rot))}}
+ @keyframes dkFallFar{0%{opacity:0;transform:translate(0,0)}10%{opacity:.4}90%{opacity:.25}100%{opacity:0;transform:translate(var(--dx),108vh)}}
+}
+@media(prefers-reduced-motion:reduce){#dmist{display:none}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -1640,7 +1686,7 @@ const GLYPH_B='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const EMBLEM='<svg class="emb" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true"><circle cx="60" cy="60" r="56" stroke-width="2"/><circle cx="60" cy="60" r="50" stroke-width="1" opacity=".55"/><path d="M60 22c-8 12-13 18-13 26a13 13 0 0 0 26 0c0-8-5-14-13-26z" fill="currentColor" stroke="none"/><path d="M24 70q18-14 36 0t36 0" stroke-width="2.2"/><path d="M28 82q16-12 32 0t32 0" stroke-width="2" opacity=".75"/><path d="M34 94q13-10 26 0t26 0" stroke-width="1.8" opacity=".5"/></svg>';
 const eraTag=e=>`<span class="era${e===2?' e2':''}">Era ${e}</span>`;
 const corners='<span class="cn tl">'+CORNER+'</span><span class="cn tr">'+CORNER+'</span><span class="cn bl">'+CORNER+'</span><span class="cn br">'+CORNER+'</span>';
-function anim(c){const a=$('#app');if(!a||booting)return;const nbm=!!(session&&(c||scr==='nb'));ambient(nbm);fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'));const key=!session?'auth':c?'ed':scr;let d='';
+function anim(c){const a=$('#app');if(!a||booting)return;const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
  lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d)a.classList.add('go-'+d);
  if(c){if(pg)a.classList.add('pg-'+pg);
@@ -1708,8 +1754,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='114';
-const APPN='Nueva sección Creación de mazos con contador de vida (máximo 49, cada partida empieza en 36).';
+const APPV='115';
+const APPN='Creación de mazos con temática de Nacidos de la Bruma: bruma y ceniza animadas, contador de vida (máximo 49, partida nueva en 36).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1863,26 +1909,26 @@ function lfLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(LF_KEY)||'nul
  return{n,hp,nm}}
 function lfSave(){try{localStorage.setItem(LF_KEY,JSON.stringify(LF))}catch(e){}}
 const lfRM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
-function lfCard(i){const h=LF.hp[i];return `<div class="lfc${h<=0?' dead':''}" id="lfc${i}" data-i="${i}"><input class="lfn" data-lfn="${i}" value="${esc(LF.nm[i])}" maxlength="16" aria-label="Nombre del jugador ${i+1}" autocomplete="off">
+function lfCard(i){const h=LF.hp[i];return `<div class="lfc${h<=0?' dead':h<=10?' low':''}" id="lfc${i}" data-i="${i}"><input class="lfn" data-lfn="${i}" value="${esc(LF.nm[i])}" maxlength="16" aria-label="Nombre del jugador ${i+1}" autocomplete="off">
   <div class="lfv" id="lfv${i}" role="status" aria-live="polite" aria-label="Vida de ${esc(LF.nm[i])}"><span class="lfd">${h}</span></div>
   <div class="lfbar" aria-hidden="true"><i id="lfbar${i}" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
   <div class="lfb"><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-5" aria-label="Restar 5 de vida">−5</button><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-1" aria-label="Restar 1 de vida">−1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="1" aria-label="Sumar 1 de vida">+1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="5" aria-label="Sumar 5 de vida">+5</button></div></div>`}
 function deckScreen(){let cs='';for(let i=0;i<LF.n;i++)cs+=lfCard(i);
- return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Creación de mazos</h1><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}.</p>
+ return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}.</p>
  <div class="lfbox"><div class="lfctl"><div class="lfpl"><span>Jugadores</span><button type="button" class="lfbt" data-act="lfn" data-d="-1" aria-label="Quitar un jugador">−</button><b id="lfnn" aria-live="polite">${LF.n}</b><button type="button" class="lfbt" data-act="lfn" data-d="1" aria-label="Añadir un jugador">+</button></div>
  <button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida (${LF_START})</button></div>
- <div class="lfgrid" id="lfgrid" data-n="${LF.n}">${cs}</div></div>`}
+ <div class="lfgrid" id="lfgrid" data-n="${LF.n}">${cs}</div></div></div>`}
 function lfRoll(i,nv,dir){const v=document.getElementById('lfv'+i);if(!v)return;const old=v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(old)old.textContent=nv;return}
  const n=document.createElement('span');n.className='lfd lfin '+(dir>0?'fromb':'fromt');n.textContent=nv;
  if(old){old.classList.add('out',dir>0?'totop':'tobot');setTimeout(()=>old.remove(),280)}
  v.appendChild(n);setTimeout(()=>n.classList.remove('lfin','fromb','fromt'),20)}
-function lfPaint(i){const c=document.getElementById('lfc'+i);if(!c)return;const h=LF.hp[i];c.classList.toggle('dead',h<=0);
+function lfPaint(i){const c=document.getElementById('lfc'+i);if(!c)return;const h=LF.hp[i];c.classList.toggle('dead',h<=0);c.classList.toggle('low',h>0&&h<=10);
  const b=document.getElementById('lfbar'+i);if(b)b.style.width=(h/LF_MAX*100).toFixed(1)+'%'}
 function lfFx(i,cls){const c=document.getElementById('lfc'+i);if(!c||lfRM())return;c.classList.remove('fxheal','fxdmg');void c.offsetWidth;c.classList.add(cls)}
 function lfChange(i,d){const old=LF.hp[i],nv=Math.max(0,Math.min(LF_MAX,old+d));
  if(nv===old){toast(d>0?'Máximo '+LF_MAX+' de vida':'La vida ya está en 0');return}
- LF.hp[i]=nv;lfSave();lfRoll(i,nv,nv>old?1:-1);lfPaint(i);lfFx(i,nv>old?'fxheal':'fxdmg')}
+ LF.hp[i]=nv;lfSave();lfRoll(i,nv,nv>old?1:-1);lfPaint(i);lfFx(i,nv>old?'fxheal':'fxdmg');if(nv<old)lfAsh(i)}
 function lfNew(){LF.hp=LF.hp.map(()=>LF_START);lfSave();
  for(let i=0;i<LF.n;i++){const c=document.getElementById('lfc'+i);if(!c)continue;c.classList.remove('dead');
   const v=document.getElementById('lfv'+i),d=v&&v.querySelector('.lfd:not(.out)');
@@ -1892,6 +1938,15 @@ function lfNew(){LF.hp=LF.hp.map(()=>LF_START);lfSave();
   const step=t=>{const k=Math.max(0,Math.min(1,(t-t0)/dur)),e=1-Math.pow(1-k,3);if(d)d.textContent=Math.round(from+(LF_START-from)*e);
    const b=document.getElementById('lfbar'+i);if(b)b.style.width=((from+(LF_START-from)*e)/LF_MAX*100).toFixed(1)+'%';if(k<1)requestAnimationFrame(step);else lfPaint(i)};
   requestAnimationFrame(step)}}
+
+function deckAtmo(on){let a=document.getElementById('dmist');if(!on){if(a)a.remove();return}if(a)return;
+ a=document.createElement('div');a.id='dmist';a.setAttribute('aria-hidden','true');
+ let h='<i class="dm m1"></i><i class="dm m2"></i><i class="dm m3"></i><i class="dm mg"></i>';
+ for(let i=0;i<26;i++){const z=1.5+Math.random()*3.8,far=z<2.6;
+  h+=`<b class="dk${far?' far':''}" style="left:${(Math.random()*104-2).toFixed(1)}%;--sz:${z.toFixed(1)}px;--dx:${(-50+Math.random()*130).toFixed(0)}px;--rot:${(Math.random()*360).toFixed(0)}deg;animation-duration:${(far?16+Math.random()*12:9+Math.random()*9).toFixed(1)}s;animation-delay:-${(Math.random()*24).toFixed(1)}s"></b>`}
+ a.innerHTML=h;document.body.appendChild(a)}
+function lfAsh(i){if(lfRM())return;const c=document.getElementById('lfc'+i);if(!c)return;const r=c.getBoundingClientRect();
+ for(let k=0;k<10;k++){const a=document.createElement('b');a.className='dust';a.style.cssText=`left:${r.left+r.width*(.25+Math.random()*.5)}px;top:${r.top+r.height*(.2+Math.random()*.4)}px;--dx:${(Math.random()*90-45).toFixed(0)}px;--dy:${(-40-Math.random()*80).toFixed(0)}px;--s:${(2+Math.random()*4).toFixed(1)}px;animation-delay:${(Math.random()*.18).toFixed(2)}s`;document.body.appendChild(a);setTimeout(()=>a.remove(),1100)}}
 function lfPlayers(d){const n=Math.max(2,Math.min(6,LF.n+d));if(n===LF.n){toast(d>0?'Máximo 6 jugadores':'Mínimo 2 jugadores');return}
  const old=LF.n;LF.n=n;lfSave();const g=document.getElementById('lfgrid'),nn=document.getElementById('lfnn');if(!g)return;nn.textContent=n;g.dataset.n=n;
  if(n>old){for(let i=old;i<n;i++){LF.hp[i]=LF_START;g.insertAdjacentHTML('beforeend',lfCard(i));const c=document.getElementById('lfc'+i);if(c&&!lfRM())c.classList.add('fxnew')}lfSave()}
@@ -2709,7 +2764,7 @@ document.addEventListener('click',e=>{
 
 
  if(b.classList.contains('bub')&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
-  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');if(a==='nb'){const r=b.getBoundingClientRect();mistIntro(r.left+r.width/2,r.top+r.height/2)}metalFx(b,b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6');setTimeout(()=>b.click(),300);return}}
+  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');if(a==='nb'||a==='deck'){const r=b.getBoundingClientRect();mistIntro(r.left+r.width/2,r.top+r.height/2)}metalFx(b,b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6');setTimeout(()=>b.click(),300);return}}
 
  if(a==='gohome'&&e.isTrusted&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){if(b.dataset.go)return;b.dataset.go='1';b.classList.add('hop');setTimeout(()=>b.click(),240);return}
  if(a==='atab')pg='t';
@@ -2856,7 +2911,7 @@ document.addEventListener('click',e=>{
   case 'cosmere':store.cur=null;scr='cosmere';render();break;
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
-  case 'deck':scr='deck';render();break;
+  case 'deck':mistIntro();scr='deck';render();break;
   case 'lf':lfChange(+b.dataset.i,+b.dataset.d);break;
   case 'lfn':lfPlayers(+b.dataset.d);break;
   case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida ('+LF_START+')';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida ('+LF_START+')';y.classList.remove('arm')}},3000)}break}
