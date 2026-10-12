@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!c)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=87"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=87">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=88"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=88">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1095,6 +1095,21 @@ body.authdark .lgt .seg{background:rgba(255,255,255,.08);border:1px solid var(--
 .admtabs{margin-bottom:12px}.admtabs button{display:inline-flex;gap:6px;align-items:center;justify-content:center}.bdg2{font-style:normal;font:800 .7rem/1 var(--sans,system-ui);background:#D9480F;color:#fff;border-radius:99px;padding:3px 7px}
 .admtabs.seg,#dlg .admtabs{display:flex;gap:6px}#dlg .admtabs button{flex:1;min-height:42px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:transparent;color:inherit;font:700 .9rem var(--sans,system-ui);cursor:pointer}#dlg .admtabs button[aria-pressed="true"]{background:var(--pc);color:#fff;border-color:var(--pc)}
 #dlg .admroot .seg{display:flex;gap:6px}#dlg .admroot .seg button{flex:1;min-height:42px;border-radius:12px;border:1px solid rgba(120,125,140,.4);background:transparent;color:inherit;font:700 .9rem var(--sans,system-ui);cursor:pointer}#dlg .admroot .seg button[aria-pressed="true"]{background:var(--pc);color:#fff;border-color:var(--pc)}
+
+/* v88 notificaciones + tablet */
+.hb .bell{margin-left:auto;position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--h-line,rgba(120,125,140,.4));background:var(--h-card,rgba(255,255,255,.7));color:var(--h-ink,#121B2E);cursor:pointer;flex:none}
+.hb .bell+.hlp{margin-left:10px}
+.bell .bdg,.tbbell .bdg{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:99px;background:#D9480F;color:#fff;font:800 .7rem/19px var(--sans,system-ui);text-align:center;font-style:normal;padding:0 5px}
+.tbbell{position:relative}
+.bell:hover{transform:translateY(-1px)}.bell:focus-visible{outline:2px solid var(--pc);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.bell .bdg,.tbbell .bdg{animation:bdgp 2s ease-in-out infinite}@keyframes bdgp{50%{transform:scale(1.15)}}.nfi{animation:nfin .35s ease both}@keyframes nfin{from{opacity:0;transform:translateY(8px)}}}
+.nfp{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:rgba(217,72,15,.1);border:1px solid rgba(217,72,15,.3)}
+.nfi{position:relative}.nfi.nw .rpc{border-color:#D9480F}.nwb{position:absolute;top:-8px;right:12px;z-index:1;background:#D9480F;color:#fff;font:800 .68rem var(--sans,system-ui);font-style:normal;padding:2px 8px;border-radius:99px}
+html[data-dev=tablet] .bubbles,html[data-dev=desktop] .bubbles{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+html[data-dev=tablet] body.hub .wrap{max-width:none;padding-left:clamp(28px,4vw,56px);padding-right:clamp(28px,4vw,56px)}
+html[data-dev=tablet] .hb{gap:12px}
+html[data-dev=tablet] .hb .bell{margin-left:0}html[data-dev=tablet] .hb .hlp{margin-left:0}
+html[data-dev=tablet] .hb .hn{flex:1;min-width:0}html[data-dev=tablet] #npcpop{top:calc(176px + env(safe-area-inset-top,0px))}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1201,7 +1216,7 @@ let saveT=null,dirty=false,flushing=null;
 const FKEY=u=>'mesa-larga-fichas-'+u;
 function save(){if(!session)return;{const c=cur();if(c&&c._pj)pjDirty.add(c._pj.pid+'_'+c._pj.uid)}clearTimeout(saveT);saveT=setTimeout(flush,1200)}
 function flush(){if(!session)return Promise.resolve();clearTimeout(saveT);if(flushing)return flushing.then(()=>{if(dirty)return flush()});
- const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p',gmGame:store.gmGame||'nb',ui:{exAck:(store.exAck||[]).slice(-200),popEx:(store.popEx||[]).slice(-200),popInv:(store.popInv||[]).slice(-200),rpSeen:store.rpSeen||null,seeded:store.seeded?1:0}});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
+ const s=session;const data=JSON.stringify({chars:store.chars,avatar:store.avatar||'',npcs:store.npcs||[],mode:store.mode==='gm'?'gm':'p',gmGame:store.gmGame||'nb',ui:{exAck:(store.exAck||[]).slice(-200),popEx:(store.popEx||[]).slice(-200),popInv:(store.popInv||[]).slice(-200),rpSeen:store.rpSeen||null,rpRead:(store.rpRead||[]).slice(-300),seeded:store.seeded?1:0}});const t=Date.now();dirty=true;lsSet(FKEY(s.uid),JSON.stringify({t,d:data}));
  if(data.length>900000){toast('Tus fichas ocupan demasiado: borra alguna o quita la imagen de usuario');dirty=false;return Promise.resolve()}
  flushing=(async()=>{try{await fs('PATCH','fichas/'+s.uid,fbEnc({data,updated:t}));dirty=false;flush.w=0;pushShared();pushLinked();pushPJ()}catch(e){if(!flush.w){flush.w=1;try{toast(e.code==='NET'?'Sin conexión: tus cambios se guardarán cuando vuelva':'No se pudo guardar en la nube. Lo reintentaremos.')}catch(x){}}}finally{flushing=null}})();return flushing}
 async function loadFichas(s){let cloud=null,err=null;
@@ -1250,7 +1265,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
+ session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1573,8 +1588,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='87';
-const APPN='Arreglado el salto al recargar, la burbuja del móvil que se abría sola y los avisos repetidos del GM; nueva pestaña Reportes en Administración para ver y contestar los avisos.';
+const APPV='88';
+const APPN='Ajustada la interfaz en tablet; nuevo icono de notificaciones con histórico de incidencias resueltas para jugadores y administradores; frases de inicio más potentes para el Game Master.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1616,10 +1631,17 @@ const WMSG={
  sobremesa:{t:'Buenas tardes',i:'light',v:['La sobremesa pide una partida.','Después de comer, mejor sentados a la mesa.','Tarde perfecta para sacar las fichas.']},
  tarde:{t:'Buenas tardes',i:'sun',v:['¿Qué toca jugar esta tarde?','El sol baja y la mesa se calienta.','Hora de reunir a la mesa larga.']},
  noche:{t:'Buenas noches',i:'dark',v:['La noche es joven. ¿A qué jugamos?','Luces bajas, dados altos.','Una partida antes de dormir sienta bien.']}};
+const WGM={
+ madrugada:['La mesa te espera, Maestro: el mundo no se escribe solo.','Mientras todos duermen, tú tejes destinos.','Una gran historia nace de una noche en vela.'],
+ amanecer:['Hoy el destino de tu mesa lo decides tú.','Que despierte el mundo: tus jugadores confían en ti.','Un nuevo día, una nueva leyenda por dirigir.'],
+ manana:['Tú sostienes el mundo: prepara la próxima gran aventura.','Cada decisión que tomes hoy será leyenda en la mesa.','El Game Master no juega: crea el mundo en el que se juega.'],
+ sobremesa:['Que tiemblen los héroes: el Game Master ya está al mando.','Reúne a tu mesa y haz historia.','Tu mundo, tus reglas, su aventura.'],
+ tarde:['Se acerca la hora de dirigir: el mundo depende de ti.','Afila tu narración: esta tarde se forja una leyenda.','Un buen Game Master convierte una tarde en una epopeya.'],
+ noche:['Cae la noche y el mundo despierta bajo tu mando.','Que la sombra se alargue: tú diriges la historia.','Hoy los dados responden ante ti. Dirige con valentía.']};
 function wperiod(h){return h<6?'madrugada':h<10?'amanecer':h<14?'manana':h<18?'sobremesa':h<21?'tarde':'noche'}
 function welcome(){const d=new Date(),h=d.getHours(),k=wperiod(h),m=WMSG[k];
- const doy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);let sub=m.v[doy%m.v.length];
- const wd=d.getDay();if((wd===6||wd===0)&&(k==='manana'||k==='tarde'||k==='sobremesa'))sub='Es fin de semana: ¡día de mesa larga!';
+ const doy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);const gm=store.mode==='gm';let sub=(gm?WGM[k]:m.v)[doy%3];
+ const wd=d.getDay();if((wd===6||wd===0)&&(k==='manana'||k==='tarde'||k==='sobremesa'))sub=gm?'Es fin de semana: tu mesa espera una gran historia, Maestro.':'Es fin de semana: ¡día de mesa larga!';
  const pad=n=>String(n).padStart(2,'0');
  return {k,title:m.t,sub,icon:m.i==='sun'?PSUN:TI[m.i],time:pad(h)+':'+pad(d.getMinutes()),date:(x=>x.charAt(0).toUpperCase()+x.slice(1))(d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}))}}
 function welcomeHTML(){const w=welcome();return `<div class="wel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b id="wtit">${w.title}, ${esc(session.name)}</b><span id="wsub">${esc(w.sub)}</span></div></div>`}
@@ -1638,14 +1660,14 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole()].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN()].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGOI}<b>La Mesa Larga</b></button>
  <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi${home?' cur':''}" data-act="gohome" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button>
  ${canAdm()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${it('adm','Panel de administración')}${it('admon','Usuarios en línea')}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
- <div class="tbr"><button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':'Cambiar a Game Master'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
+ <div class="tbr">${bellBtn("tbi tbbell")}<button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':'Cambiar a Game Master'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
  <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
  setTimeout(()=>tbInd(),30);
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
@@ -1690,7 +1712,7 @@ const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span><button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
  if(scr==='npc')return npcEditor();
@@ -1960,14 +1982,29 @@ async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv
 /* ¿Algo no funciona? */
 let rpMine=[],rpAll=[],rpImg='',rpTab='open';const RPCAT=[['ui','Fallo en la interfaz'],['rules','Normas de un juego'],['params','Parámetros o fichas'],['other','Otro']];
 const rpOpenN=()=>rpAll.filter(r=>r.status!=='done').length;
+const BELL='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(isAdmin()?rpOpenN():0)}
+function bellBtn(c){const n=notifN();return `<button type="button" class="${c}" data-act="notif" aria-label="Notificaciones${n?' ('+n+' sin leer)':''}" title="Notificaciones">${BELL}${n?`<i class="bdg">${n}</i>`:''}</button>`}
+function bellUpd(){const n=notifN();document.querySelectorAll('.bell,.tbbell').forEach(b=>{let i=b.querySelector('.bdg');if(n){if(!i){i=document.createElement('i');i.className='bdg';b.appendChild(i)}i.textContent=n}else if(i)i.remove();b.setAttribute('aria-label','Notificaciones'+(n?' ('+n+' sin leer)':''))})}
+function notifDlg(){const adm=isAdmin(),rd=store.rpRead=store.rpRead||[];
+ const mine=(rpMine||[]).slice(),mdone=mine.filter(r=>r.status==='done'),mopen=mine.filter(r=>r.status!=='done');
+ const hist=adm?(rpAll||[]).filter(r=>r.status==='done'):mdone,openL=adm?(rpAll||[]).filter(r=>r.status!=='done'):mopen;
+ const newIds=mdone.filter(r=>!rd.includes(r.id)).map(r=>r.id);
+ showDlg('Notificaciones',`<div class="grid">${adm?`<div class="nfp"><b>${openL.length?openL.length+' aviso'+(openL.length>1?'s':'')+' pendiente'+(openL.length>1?'s':''):'Sin avisos pendientes'}</b>${openL.length?`<button type="button" class="btn pri sm" data-act="admrp">Abrir Reportes</button>`:''}</div>`:(openL.length?`<h3 style="margin:0">Pendientes de respuesta</h3><div class="rplist">${openL.map(r=>rpCard(r,false)).join('')}</div>`:'')}
+ <h3 style="margin:6px 0 0">Histórico de incidencias resueltas${hist.length?' ('+hist.length+')':''}</h3>
+ <div class="rplist">${hist.map(r=>`<div class="nfi${newIds.includes(r.id)?' nw':''}">${newIds.includes(r.id)?'<em class="nwb">Nueva</em>':''}${rpCard(r,adm)}</div>`).join('')||'<p class="hint">Aún no hay incidencias resueltas.</p>'}</div>
+ <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div></div>`,true);
+ $('#dlg').classList.add('rptd');
+ const o=document.getElementById('npcpop');if(o)o.remove();
+ if(newIds.length){newIds.forEach(i=>rd.push(i));save();bellUpd()}}
 const rpCatName=k=>(RPCAT.find(c=>c[0]===k)||['','Otro'])[1];
 const rpDate=t=>{try{return new Date(+t).toLocaleString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
 async function rpLoad(){if(!session)return;try{rpMine=(await fsQuery('reportes','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0));
-  const first=!store.rpSeen;const sd=store.rpSeen=store.rpSeen||[];const nw=rpMine.filter(r=>r.status==='done'&&!sd.includes(r.id));
-  if(nw.length){if(!first)rpPop(nw[0]);nw.forEach(r=>sd.push(r.id));save()}else if(first)save()}catch(e){}
- if(isAdmin()){try{const prev=new Set(rpAll.map(r=>r.id));rpAll=(await fsList('reportes')).sort((a,b)=>(b.created|0)-(a.created|0));if(rpLoad.f){const n=rpAll.filter(r=>!prev.has(r.id)&&r.status!=='done');if(n.length)toast('Nuevo aviso de '+(n[0].name||'un usuario'))}rpLoad.f=1;}catch(e){}}}
+  const sd=store.rpSeen=store.rpSeen||[];const nw=rpMine.filter(r=>r.status==='done'&&!sd.includes(r.id));
+  if(nw.length){rpPop(nw[0]);nw.forEach(r=>sd.push(r.id));save()}}catch(e){}
+ if(isAdmin()){try{const prev=new Set(rpAll.map(r=>r.id));rpAll=(await fsList('reportes')).sort((a,b)=>(b.created|0)-(a.created|0));if(rpLoad.f){const n=rpAll.filter(r=>!prev.has(r.id)&&r.status!=='done');if(n.length)toast('Nuevo aviso de '+(n[0].name||'un usuario'))}rpLoad.f=1;}catch(e){}}bellUpd()}
 function rpPop(r){const o=document.getElementById('npcpop');if(o)o.remove();const d=document.createElement('aside');d.id='npcpop';d.setAttribute('role','status');
- d.innerHTML=`<div class="ppi">${LOGOI}</div><div class="ppt"><b>ALPHA ha respondido a tu aviso</b><span>${esc(rpCatName(r.cat))}: ya está solucionado</span><div class="row"><button class="btn pri sm" data-act="rpt">Ver respuesta</button></div></div><button class="ppx" data-act="npcpx" aria-label="Cerrar aviso">✕</button>`;
+ d.innerHTML=`<div class="ppi">${LOGOI}</div><div class="ppt"><b>ALPHA ha respondido a tu aviso</b><span>${esc(rpCatName(r.cat))}: ya está solucionado</span><div class="row"><button class="btn pri sm" data-act="notif">Ver respuesta</button></div></div><button class="ppx" data-act="npcpx" aria-label="Cerrar aviso">✕</button>`;
  document.body.appendChild(d);d._t=setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),260)},14000)}
 function rpCard(r,adm){const done=r.status==='done';return `<article class="rpc${done?' dn':''}"><div class="rph"><b>${adm?esc(r.name||'Usuario'):esc(rpCatName(r.cat))}</b><span class="rps ${done?'ok':'wait'}">${done?'Solucionado':'Pendiente'}</span></div><small>${adm?esc(rpCatName(r.cat))+' · ':''}${rpDate(r.created)}</small><p class="rpt">${esc(r.text||'')}</p>${r.img?`<img class="rpi" src="${esc(r.img)}" alt="Imagen adjunta" data-act="rpzoom">`:''}${done&&r.reply?`<div class="rpr"><b>Respuesta de ALPHA</b><p>${esc(r.reply)}</p></div>`:''}${adm&&!done?`<label class="f">Respuesta para ${esc(r.name||'el usuario')}<textarea data-nolimit="1" data-rr="${esc(r.id)}" rows="3" maxlength="2000" placeholder="Cuéntale qué has arreglado"></textarea></label><div class="row"><button type="button" class="btn pri sm" data-act="rpdone" data-id="${esc(r.id)}">Marcar como solucionado y responder</button></div>`:''}</article>`}
 function rptDlg(){rpImg='';const adm=isAdmin();
@@ -2442,6 +2479,8 @@ document.addEventListener('click',e=>{
   case 'partinv_old':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
   case 'invcancel':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{loadPart(partId).then(()=>render(1));toast('Invitación cancelada')}).catch(()=>toast('No se pudo cancelar'));break
   case 'rpt':rptDlg();break;
+  case 'notif':notifDlg();rpLoad().then(()=>{if($('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
+  case 'admrp':admTab='rp';admState=null;admDlg();break;
   case 'rptab':rpTab=b.dataset.v;if($('#dlg').classList.contains('admd'))admView(true);else rptDlg();break;
   case 'admtab':admTab=b.dataset.v;admSig='';if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}else admView(true);break;
   case 'rpzoom':b.classList.toggle('big');break;
