@@ -1290,8 +1290,9 @@ body.hub:has(.lfroot){--h-bg:var(--bg);--h-card:var(--surface);--h-ink:var(--ink
 .mtdisc{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:var(--dc);color:var(--gc);box-shadow:inset 0 -4px 8px rgba(0,0,0,.22),inset 0 3px 6px rgba(255,255,255,.35),0 3px 8px rgba(0,0,0,.5);transition:filter .7s ease,opacity .7s ease,box-shadow .7s ease,transform .3s}
 .mtdisc svg{width:58%;height:58%}
 .mtc[data-s="ready"] .mtdisc{filter:brightness(.82) saturate(.9)}
-.mtc[data-s="burn"] .mtdisc,.mtc[data-s="flare"] .mtdisc{filter:none;box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.4),0 0 0 2px color-mix(in srgb,var(--mc) 70%,#fff),0 0 20px 5px color-mix(in srgb,var(--mc) 75%,transparent)}
-.mtc[data-s="flare"] .mtdisc{box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.5),0 0 0 3px #fff,0 0 28px 9px color-mix(in srgb,var(--mc) 85%,transparent)}
+.mtc[data-s="burn"] .mtdisc{filter:none;box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.4),0 0 0 2px color-mix(in srgb,var(--mc) 70%,#fff),0 0 20px 5px color-mix(in srgb,var(--mc) 75%,transparent)}
+.mtc[data-s="flare"] .mtdisc{filter:grayscale(.85) brightness(.45);opacity:.9;box-shadow:inset 0 0 0 4px #1b1e20,0 0 0 2px color-mix(in srgb,var(--mc) 55%,#1b1e20),0 3px 8px rgba(0,0,0,.5)}
+.mtc[data-s="flare"] .mtsm{display:none}
 .mtc[data-s="flip"] .mtdisc,.mtc[data-s="used"] .mtdisc{filter:grayscale(.9) brightness(.5);opacity:.8;box-shadow:inset 0 0 0 4px #1b1e20,0 3px 8px rgba(0,0,0,.5)}
 .mtc[data-s="used"] .mtdisc{opacity:.6}
 .mtsg{position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;display:none;place-items:center;background:var(--gold);color:#1E2225;font-size:.7rem;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.5)}
@@ -1454,10 +1455,36 @@ body.has-tb .lfside{top:84px}
 .mtrm{transition:box-shadow .3s,color .3s,text-shadow .3s}
 .mtab>li.open .mtrm{box-shadow:0 0 0 2px #C8B27A,0 0 16px 4px rgba(214,216,255,.55);color:#fff;text-shadow:0 0 8px rgba(214,216,255,.9)}
 @media(prefers-reduced-motion:no-preference){
- .mtab>li.open::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(214,216,255,.38) 50%,transparent 70%);transform:translateX(-120%);animation:mtSweepAb .8s ease-out forwards}
- .mtab>li.open .mtabi{animation:mtMistAb .6s ease-out .1s both}
+ .mtab>li.open.anim::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(214,216,255,.38) 50%,transparent 70%);transform:translateX(-120%);animation:mtSweepAb .8s ease-out forwards}
+ .mtab>li.open.anim .mtabi{animation:mtMistAb .6s ease-out .1s both}
  @keyframes mtSweepAb{to{transform:translateX(120%)}}
  @keyframes mtMistAb{0%{opacity:0;filter:blur(6px);transform:translateY(8px)}100%{opacity:1;filter:blur(0);transform:none}}
+}
+.mtchh{all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:48px;display:flex;align-items:center;gap:10px;margin-bottom:8px;color:#B9B3B4;-webkit-tap-highlight-color:transparent}
+.mtchh>span:first-child{flex:1}
+.mtchh:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:8px}
+.mtchh .mtchev{margin-left:0}.mtchh .mtchev.up{transform:rotate(180deg)}
+.mtchp{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .35s ease,visibility .35s}
+.mtchw.open .mtchp{grid-template-rows:1fr;visibility:visible}
+.mtchi{min-height:0;overflow:hidden}
+@media(prefers-reduced-motion:no-preference){
+ .mtc.mtflp .mtd{perspective:260px}
+ .mtc.mtflp .mtdisc{animation:mtFlip 1s cubic-bezier(.3,.1,.2,1)}
+ @keyframes mtFlip{0%{transform:rotateY(0) scale(1);filter:none}40%{transform:rotateY(540deg) translateY(-12px) scale(1.18);filter:brightness(1.2)}100%{transform:rotateY(1080deg) translateY(0) scale(1);filter:grayscale(.85) brightness(.45)}}
+}
+@media(prefers-reduced-motion:reduce){.mtchp{transition:none}}
+/* tablet = PC: vida a un lado, tablero al otro */
+html[data-dev=tablet] .lfsplit,html[data-dev=desktop] .lfsplit{display:grid;grid-template-columns:minmax(270px,340px) minmax(0,1fr);gap:18px;align-items:start}
+html[data-dev=tablet] .lfside,html[data-dev=desktop] .lfside{margin:0;top:12px}
+html[data-dev=tablet] body.has-tb .lfside,html[data-dev=desktop] body.has-tb .lfside{top:84px}
+html[data-dev=tablet] .lfsolo .lfd,html[data-dev=desktop] .lfsolo .lfd{font-size:3.8rem}
+html[data-dev=tablet] .lfsolo .lfv,html[data-dev=desktop] .lfsolo .lfv{height:4.2rem}
+@media(max-width:1199px){
+ html[data-dev=tablet] .mtg,html[data-dev=desktop] .mtg{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 8px}
+ html[data-dev=tablet] .mtds,html[data-dev=desktop] .mtds{display:none}
+ html[data-dev=tablet] .mttr,html[data-dev=desktop] .mttr{overflow-x:auto}
+ html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{width:max-content;min-width:100%}
+ html[data-dev=tablet] .mts,html[data-dev=desktop] .mts{width:42px;min-width:42px}
 }
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
@@ -1973,8 +2000,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='126';
-const APPN='Los botones de vida (−5, −1, +1, +5) vuelven debajo del número.';
+const APPV='127';
+const APPN='Al avivar, la moneda da la vuelta y se oscurece; desplegable de habilidades desde el personaje; en tablet vida y tablero van lado a lado como en PC.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2208,13 +2235,14 @@ function mtTrackH(){let h='';for(let i=1;i<=MT_STEPS;i++){const r=MT_REW[i],cl=i
   h+=`<div class="mts${cl}" role="img" aria-label="Paso ${i}${tx}"${i===MT.step?' aria-current="step"':''}><span class="mtk">${i}</span>${ic}</div>`}
  return h}
 const MT_CAP={heal:'Recuperas esa cantidad de vida.',combat:'Esa cantidad de daño. Lo repartes al final de tu turno entre aliados y rivales.',coin:'Esa cantidad de monedas para comprar cartas del mercado y Boxings. No pasan al siguiente turno.',mission:'Avanzas esa cantidad de puntos en una o varias pistas de misión.'};
-let mtOpen={};
+let mtOpen={},mtChOpen=true;
 function mtCapsH(l){return '<ul class="mtcaps">'+l.map(x=>`<li><span class="mtfx ${x[0]}"><i>${MT_FXI[x[0]]}</i><b aria-hidden="true">${x[1]}</b></span><span class="mtcapt"><b>${MT_FXN[x[0]]} ${x[1]}</b>${MT_CAP[x[0]]}</span></li>`).join('')+'</ul>'}
 function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Al empezar la partida elegirás tu personaje. Aquí verás su metal base y sus habilidades.</p>';
  const c=MTC[MT.ch],sg=MTL.find(x=>x.id===c.m),on=MT.st[c.m]==='burn'||MT.st[c.m]==='flare';
  const row=(k,lab,body,n)=>{const o=!!mtOpen[k],un=mtAb(k);return `<li class="${un?'on':''}${o?' open':''}"><button type="button" class="mtabh" data-act="mtab" data-k="${k}" aria-expanded="${o}" aria-controls="mtabp${k}"><span class="mtrm">${k}</span><span class="mtabt"><small class="mtlab">${lab}</small><em>${un?'Desbloqueada':'Se desbloquea en el paso '+n}</em></span><span class="mtchev" aria-hidden="true">▾</span></button><div class="mtabp" id="mtabp${k}" role="region" aria-label="Habilidad ${k}"><div class="mtabi">${body}</div></div></li>`};
- return `<div class="mtbase"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<ul class="mtab">${row('I','Si quemas '+sg.n+'…','<p class="mtwhen">Se activa una sola vez por turno, aunque quemes o avives '+sg.n+' varias veces.</p>'+mtCapsH(c.fx1),6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<p class="mtwhen">Se activa al quemar Atium, ya sea como Atium o como sustituto de otro metal.</p>'+mtCapsH(MT_FX3),14)}</ul>`}
-function mtAbTog(k){mtOpen[k]=!mtOpen[k];const h=document.querySelector('.mtabh[data-k="'+k+'"]');if(!h)return;h.setAttribute('aria-expanded',mtOpen[k]);h.parentNode.classList.toggle('open',mtOpen[k])}
+ return `<button type="button" class="mtbase mtchh" data-act="mtch" aria-expanded="${mtChOpen}" aria-controls="mtchp"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b><span class="mtchev${mtChOpen?' up':''}" aria-hidden="true">▾</span></button>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<div class="mtchw${mtChOpen?' open':''}"><div class="mtchp" id="mtchp" role="region" aria-label="Habilidades de ${c.n}"><div class="mtchi"><ul class="mtab">${row('I','Si quemas '+sg.n+'…','<p class="mtwhen">Se activa una sola vez por turno, aunque quemes o avives '+sg.n+' varias veces.</p>'+mtCapsH(c.fx1),6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<p class="mtwhen">Se activa al quemar Atium, ya sea como Atium o como sustituto de otro metal.</p>'+mtCapsH(MT_FX3),14)}</ul></div></div></div>`}
+function mtAbTog(k){mtOpen[k]=!mtOpen[k];const h=document.querySelector('.mtabh[data-k="'+k+'"]');if(!h)return;h.setAttribute('aria-expanded',mtOpen[k]);h.parentNode.classList.toggle('open',mtOpen[k]);h.parentNode.classList.toggle('anim',mtOpen[k])}
+function mtChTog(){mtChOpen=!mtChOpen;const h=document.querySelector('.mtchh');if(!h)return;h.setAttribute('aria-expanded',mtChOpen);h.querySelector('.mtchev').classList.toggle('up',mtChOpen);const w=document.querySelector('.mtchw');if(w){w.classList.toggle('open',mtChOpen);w.classList.toggle('anim',mtChOpen)}}
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
 function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
@@ -2244,8 +2272,9 @@ function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>docu
  $i('mtcp').innerHTML=mtCharH();$i('mttr').innerHTML='<div class="mttk">'+mtTrackH()+'</div>';$i('mtatp').innerHTML=mtAtH();
  const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;mtScroll()}
 function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
- b.classList.remove('mtpop','mtoff');void b.offsetWidth;
- if(k==='on'){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
+ b.classList.remove('mtpop','mtoff','mtflp');void b.offsetWidth;
+ if(k==='flare'){b.classList.add('mtflp');setTimeout(()=>b.classList.remove('mtflp'),1100)}
+ else if(k==='on'){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
  else{b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}
 function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;
  if(s==='used'){mtPaint();toast('Ya usaste este metal este turno');return}
@@ -2271,7 +2300,7 @@ function mtAskFlare(id){const m=MTL.find(x=>x.id===id);if(!m||MT.st[id]!=='burn'
  o.innerHTML=`<div class="mtpk"><h2 id="mtflt">${m.n}: ¿avivar o dejar de quemar?</h2><p class="mtwarn"><b>Avivar:</b> la ficha se gira, y <b>no podrás volver a usarlo hasta que lo recuperes</b>: tendrás que refrescarlo descartando una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.</p><p>Seguirá contando como quemado este turno para los efectos y te dejará una quema libre.</p><p><b>Dejar de quemar:</b> el metal vuelve a estar disponible y puedes quemarlo de nuevo.</p><div class="mtpbtns"><button type="button" class="btn pri" data-act="mtflrok" data-m="${id}">Avivar</button><button type="button" class="btn" data-act="mtflrno" data-m="${id}">Dejar de quemar</button><button type="button" class="btn ghost" data-act="mtflrx">Cancelar</button></div></div>`;
  document.body.appendChild(o);const f=o.querySelector('.btn.ghost');if(f)f.focus()}
 function mtStopBurn(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='ready';mtSel=id;mtSave();mtPaint();mtFx(id,'off');toast('Has dejado de quemar '+m.n)}
-function mtDoFlare(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'on');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes')}
+function mtDoFlare(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'flare');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes')}
 function mtAskClose(){const o=document.getElementById('mtpick');if(o)o.remove();const f=document.getElementById('mtflare');if(f)f.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
 function mtPick(c){if(!MTC[c]||MT.turn>0)return;mtAskClose();MT.ch=c;mtSave();mtPaint();toast('Partida iniciada con '+MTC[c].n);mtNext()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(document.getElementById('mtpick')||document.getElementById('mtflare')))mtAskClose()});
@@ -3246,6 +3275,7 @@ document.addEventListener('click',e=>{
   case 'mtpick':mtPick(b.dataset.c);break;
   case 'mtpickx':mtAskClose();break;
   case 'mtab':mtAbTog(b.dataset.k);break;
+  case 'mtch':mtChTog();break;
   case 'mtflr':mtAskFlare(b.dataset.m);break;
   case 'mtflrok':mtDoFlare(b.dataset.m);break;
   case 'mtflrx':mtAskClose();break;
