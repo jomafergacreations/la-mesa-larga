@@ -1352,6 +1352,55 @@ html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{min-width:0;width:100%}
 .mtfx.heal i{color:#6FCF8D}.mtfx.combat i{color:#E5575F}.mtfx.coin i{color:#E3C27A}.mtfx.mission i{color:#D9C9A0}
 .mtfx .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .mtnow .mtfxr{margin:0 0 0 6px}
+.mtai{position:relative}
+.mtatp{position:relative;overflow:hidden}
+.mtgh{position:absolute;inset:0;display:grid;place-items:center;color:#C9C4F0;opacity:0;pointer-events:none}.mtgh svg{width:22px;height:22px}
+.mtpick{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:rgba(10,12,14,.82)}
+.mtpk{width:min(480px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:22px 18px 18px;border-radius:20px;background:linear-gradient(180deg,#44494D,#2E3235);border:1px solid var(--gold);box-shadow:0 20px 60px rgba(0,0,0,.6);color:#E7E3E1;text-align:center}
+.mtpk h2{font-family:var(--display);font-size:1.3rem;letter-spacing:.04em;color:#DDBF86;line-height:1.25}
+.mtpk p{font-family:var(--serif);font-style:italic;font-size:1.08rem;color:#B9B3B4;margin:8px 0 16px}
+.mtpg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.mtpb{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:104px;padding:12px 8px;border-radius:14px;border:2px solid #6a7075;background:rgba(0,0,0,.22);transition:border-color .2s,transform .15s}
+.mtpb:hover,.mtpb:focus-visible{border-color:var(--gold);outline:none;transform:translateY(-2px)}
+.mtpb b{font-family:var(--display);font-size:1.25rem;letter-spacing:.03em}
+.mtpb small{font-family:var(--sans);font-size:.95rem;color:#B0A9AA}
+.mtpb em{font-style:normal;font-family:var(--sans);font-size:.88rem;font-weight:700;padding:2px 12px;border-radius:99px;background:var(--mc);color:#fff;margin-top:5px}
+.mtpk .btn.ghost{background:transparent;color:#D8D6D6;border-color:#6a7075;min-height:46px;font-size:1rem}
+/* interfaz más grande en el tablero */
+.mth b{font-size:1.15rem}.mth small{font-size:.95rem}
+.mtb .btn.sm{font-size:1rem;min-height:46px;padding:0 16px}
+.mtcp{font-size:1.05rem;padding:14px 16px;line-height:1.45}
+.mtbase{font-size:1rem}.mtbase small{font-size:.82rem}.mtbase b{font-size:1rem;padding:4px 14px}
+.mtnow{font-size:1.02rem}
+.mtab{gap:14px}
+.mtlab{font-size:.9rem}.mtab em{font-size:.92rem}
+.mtrm{width:34px;height:34px;font-size:.85rem;margin:5px 6px 0 6px}
+.mtfx{padding:3px 11px 3px 9px}.mtfx i svg{width:20px;height:20px}.mtfx b{font-size:1.15rem}
+.mts{width:42px}.mtk{width:34px;height:34px;font-size:.88rem}.mtri{height:40px}.mtri svg{width:22px;height:22px}.mtri b{font-size:.76rem}.mtri.ro b{font-size:1rem}
+html[data-dev=tablet] .mts,html[data-dev=desktop] .mts{width:calc((100% - 40px)/21);min-width:42px}
+.mtd{width:clamp(54px,17vw,68px)}
+.mtg{gap:26px 8px}
+.mtn{font-size:.85rem;letter-spacing:.02em;padding:6px 2px}
+html[data-dev=tablet] .mtn,html[data-dev=desktop] .mtn{font-size:.95rem;letter-spacing:.05em}
+.mtst{font-size:.82rem}
+.mtds{font-size:.95rem;line-height:1.3}
+.mtatp{padding:12px 14px}.mtai{width:42px;height:42px}.mtat1 b{font-size:1.05rem}.mtat1 small{font-size:.92rem}
+.mtcap{font-size:1.12rem;line-height:1.4}
+.mtrule{font-size:.9rem}
+.mtnoc{font-size:1.08rem}
+@media(prefers-reduced-motion:no-preference){
+ .mtpk{animation:mUp .35s cubic-bezier(.2,.8,.2,1) both}
+ .mtatp.mtatfx{animation:mtAtFlash 1.1s ease-out}
+ .mtatp.mtatfx .mtai{animation:mtAtSpin 1s cubic-bezier(.2,.8,.2,1)}
+ .mtatp.mtatfx::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(214,216,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:mtAtSweep .9s ease-out .1s forwards;pointer-events:none}
+ .mtgh{animation:mtGhost .9s ease-out both}
+ .mtatp.mtatgain .mtai{animation:mtAtGain .7s cubic-bezier(.2,1.2,.3,1)}
+ @keyframes mtAtFlash{0%{box-shadow:inset 0 0 0 0 rgba(214,216,255,0)}25%{box-shadow:inset 0 0 36px 8px rgba(214,216,255,.55)}100%{box-shadow:inset 0 0 0 0 rgba(214,216,255,0)}}
+ @keyframes mtAtSpin{0%{transform:rotate(0) scale(1)}35%{transform:rotate(200deg) scale(1.35);box-shadow:inset 0 0 0 2px #fff,0 0 22px 6px rgba(214,216,255,.8)}100%{transform:rotate(360deg) scale(1)}}
+ @keyframes mtAtSweep{to{transform:translateX(120%)}}
+ @keyframes mtGhost{0%{opacity:.7;transform:rotate(var(--a)) translateX(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateX(70px) scale(1.6)}}
+ @keyframes mtAtGain{0%{transform:scale(.6);opacity:.4}60%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -1866,8 +1915,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='119';
-const APPN='Fichas de personaje con sus habilidades: Vin, Kelsier, Marsh y Shan (efectos I, II y III de sus cartas).';
+const APPV='120';
+const APPN='Al empezar la partida eliges personaje (queda bloqueado), el Atium se añade solo, animación propia del Atium y letra más grande en el tablero.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2082,7 +2131,7 @@ let MT=mtLoad(),mtSel=null;
 function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'null')}catch(e){}
  o=o||{};const st={};MTL.forEach(m=>{const v=o.st&&o.st[m.id];st[m.id]=['burn','flare','flip'].includes(v)?v:'ready'});
  const n=x=>Number.isFinite(+x)?Math.max(0,Math.round(+x)):0;
- return{ch:MTC[o.ch]?o.ch:null,step:Math.max(1,Math.min(MT_STEPS,n(o.step)||1)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
+ return{ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:Math.max(1,Math.min(MT_STEPS,n(o.step)||1)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
 function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
 function mtLimit(){let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
 function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn').length+MT.atu}
@@ -2099,7 +2148,7 @@ function mtTrackH(){let h='';for(let i=1;i<=MT_STEPS;i++){const r=MT_REW[i],cl=i
   const tx=r==='b'?'; quemas un metal más':r==='a'?'; ganas 1 Atium':r==='c'?'; ganas 1 Atium cada turno':r?'; habilidad '+r:'';
   h+=`<button type="button" class="mts${cl}" data-act="mtstep" data-n="${i}" aria-label="Paso ${i}${tx}"${i===MT.step?' aria-current="step"':''}><span class="mtk">${i}</span>${ic}</button>`}
  return h}
-function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Elige tu personaje para ver tu metal base y sus habilidades.</p>';
+function mtCharH(){if(!MT.ch)return '<p class="mtnoc">Al empezar la partida elegirás tu personaje. Aquí verás su metal base y sus habilidades.</p>';
  const c=MTC[MT.ch],sg=MTL.find(x=>x.id===c.m),on=MT.st[c.m]==='burn'||MT.st[c.m]==='flare';
  const row=(k,lab,body,n)=>`<li class="${mtAb(k)?'on':''}"><span class="mtrm">${k}</span><span class="mtabt"><small class="mtlab">${lab}</small>${body}<em>${mtAb(k)?'Desbloqueada':'Se desbloquea en el paso '+n}</em></span></li>`;
  return `<div class="mtbase"><span>${c.n} · ${c.r}<small>Metal base</small></span><b style="--mc:${sg.bc}">${sg.n}</b></div>${on&&mtAb('I')?'<p class="mtnow">¡Efecto I activo este turno! <span class="mtfxr">'+mtFxH(c.fx1)+'</span></p>':''}${MT.atu>0&&mtAb('III')?'<p class="mtnow">¡Efecto III activo este turno! <span class="mtfxr">'+mtFxH(MT_FX3)+'</span></p>':''}<ul class="mtab">${row('I','Si quemas '+sg.n+'…','<div class="mtfxr">'+mtFxH(c.fx1)+'</div>',6)}${row('II','1 vez por turno','<p>Al comprar una carta de Acción o de Aliado, puedes resolver su capacidad primaria inmediatamente y, luego, eliminarla.</p>',9)}${row('III','Si quemas Atium…','<div class="mtfxr">'+mtFxH(MT_FX3)+'</div>',14)}</ul>`}
@@ -2114,8 +2163,7 @@ function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un meta
  else if(s==='used')t+=' Ya lo usaste este turno: no puedes volver a usarlo hasta el siguiente.';
  return{t,a}}
 function mtBoard(){const c=mtCapH();setTimeout(mtScroll,80);
- return `<section class="mtb" aria-label="Tablero de metales"><div class="mth"><div><b>Tablero de metales</b><small id="mtsub">${mtSubH()}</small></div><button type="button" class="btn sm pri" id="mtnext" data-act="mtnext">${MT.turn?'Siguiente turno':'Empezar turno 1'}</button></div>
- <div class="mtch" role="radiogroup" aria-label="Personaje">${Object.keys(MTC).map(k=>`<button type="button" role="radio" aria-checked="${MT.ch===k}" data-act="mtch" data-c="${k}"><b>${MTC[k].n}</b><small>${MTC[k].r}</small></button>`).join('')}</div>
+ return `<section class="mtb" aria-label="Tablero de metales"><div class="mth"><div><b>Tablero de metales</b><small id="mtsub">${mtSubH()}</small></div><button type="button" class="btn sm pri" id="mtnext" data-act="mtnext">${MT.turn?'Siguiente turno':'Empezar partida'}</button></div>
  <div class="mtcp" id="mtcp">${mtCharH()}</div>
  <div class="mttr" id="mttr"><div class="mttk">${mtTrackH()}</div></div>
  <div class="mtg">${MTL.map(mtCell).join('')}</div>
@@ -2127,8 +2175,7 @@ function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>docu
  MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(!b)return;const s=mtSt(m.id),on=s==='burn'||s==='flare',sig=mtSig()===m.id;
   b.dataset.s=s;b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',m.n+', '+MT_LAB[s]+'. '+m.d);const t=b.querySelector('.mtst');if(t)t.textContent=MT_LAB[s];
   b.classList.toggle('mtsig',sig);b.classList.toggle('mtsigon',sig&&on&&mtAb('I'))});
- $i('mtsub').textContent=mtSubH();$i('mtnext').textContent=MT.turn?'Siguiente turno':'Empezar turno 1';
- document.querySelectorAll('.mtch [data-c]').forEach(x=>x.setAttribute('aria-checked',MT.ch===x.dataset.c));
+ $i('mtsub').textContent=mtSubH();$i('mtnext').textContent=MT.turn?'Siguiente turno':'Empezar partida';
  $i('mtcp').innerHTML=mtCharH();$i('mttr').innerHTML='<div class="mttk">'+mtTrackH()+'</div>';$i('mtatp').innerHTML=mtAtH();
  const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;mtScroll()}
 function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
@@ -2145,17 +2192,24 @@ function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);
 function mtRefresh(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';if(!MT.used.includes(id))MT.used.push(id);mtSave();mtPaint();mtFx(id,'off');toast('Refrescado, pero ya lo usaste este turno')}
 function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off')}
 function mtEndTurn(){MTL.forEach(m=>{const s=MT.st[m.id];if(s==='burn')MT.st[m.id]='ready';else if(s==='flare')MT.st[m.id]='flip'});MT.used=[];MT.atu=0}
-function mtNext(){if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn;
+function mtNext(){if(!MT.ch){mtAsk();return}if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
  if(MT.step<MT_STEPS){MT.step++;const r=MT_REW[MT.step];
-  if(r==='b')msg+=' · ahora quemas '+mtLimit()+' metales';else if(r==='a'){MT.at++;msg+=' · +1 Atium'}
+  if(r==='b')msg+=' · ahora quemas '+mtLimit()+' metales';else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
   else if(r==='c')msg+=' · fin del entrenamiento: 1 Atium cada turno';else if(r)msg+=' · habilidad '+r+' desbloqueada'}
- else{MT.at++;msg+=' · +1 Atium'}
- mtSel=null;mtSave();mtPaint();toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
-function mtChar(c){if(!MTC[c])return;MT.ch=c;mtSave();mtPaint()}
+ else{MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
+ mtSel=null;mtSave();mtPaint();if(gain)mtAtFx('gain');toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
+function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.createElement('div');o.id='mtpick';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtpickt');
+ o.innerHTML=`<div class="mtpk"><h2 id="mtpickt">¿Con qué personaje vas a jugar?</h2><p>Cuando empiece la partida no podrás cambiarlo.</p><div class="mtpg">${Object.keys(MTC).map(k=>{const c=MTC[k],m=MTL.find(x=>x.id===c.m);return `<button type="button" class="mtpb" data-act="mtpick" data-c="${k}" style="--mc:${m.bc}"><b>${c.n}</b><small>${c.r}</small><em>${m.n}</em></button>`}).join('')}</div><button type="button" class="btn ghost" data-act="mtpickx">Cancelar</button></div>`;
+ document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
+function mtAskClose(){const o=document.getElementById('mtpick');if(o)o.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
+function mtPick(c){if(!MTC[c]||MT.turn>0)return;mtAskClose();MT.ch=c;mtSave();mtPaint();toast('Partida iniciada con '+MTC[c].n);mtNext()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('mtpick'))mtAskClose()});
+function mtAtFx(k){const p=document.getElementById('mtatp');if(!p||lfRM())return;p.classList.remove('mtatfx','mtatgain');void p.offsetWidth;p.classList.add(k==='use'?'mtatfx':'mtatgain');setTimeout(()=>p.classList.remove('mtatfx','mtatgain'),1400);
+ if(k==='use'){const a=p.querySelector('.mtai');if(a)for(let i=0;i<3;i++){const g=document.createElement('i');g.className='mtgh';g.style.setProperty('--a',(-35+i*35)+'deg');g.style.animationDelay=(i*70)+'ms';g.innerHTML=MT_ATI;a.appendChild(g);setTimeout(()=>g.remove(),1100)}}}
 function mtStep(n){if(n<1||n>MT_STEPS||n===MT.step)return;MT.step=n;mtSave();mtPaint();toast('Entrenamiento: paso '+n+' · quemas '+mtLimit())}
 function mtAtium(d){const v=MT.at+d;if(v<0)return;MT.at=v;mtSave();mtPaint()}
-function mtAtUse(d){if(d>0){if(MT.at<1)return;if(mtBurning()>=mtLimit()){toast('No te quedan quemas libres para usar Atium');return}MT.at--;MT.atu++}else{if(MT.atu<1)return;MT.atu--;MT.at++}mtSave();mtPaint()}
-function mtReset(){MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=1;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
+function mtAtUse(d){if(d>0){if(MT.at<1)return;if(mtBurning()>=mtLimit()){toast('No te quedan quemas libres para usar Atium');return}MT.at--;MT.atu++}else{if(MT.atu<1)return;MT.atu--;MT.at++}mtSave();mtPaint();if(d>0)mtAtFx('use')}
+function mtReset(){mtAskClose();MT.ch=null;MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=1;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -3119,7 +3173,8 @@ document.addEventListener('click',e=>{
   case 'lf':lfChange(+b.dataset.d);break;
   case 'mt':mtTap(b.dataset.m);break;
   case 'mtnext':mtNext();break;
-  case 'mtch':mtChar(b.dataset.c);break;
+  case 'mtpick':mtPick(b.dataset.c);break;
+  case 'mtpickx':mtAskClose();break;
   case 'mtstep':mtStep(+b.dataset.n);break;
   case 'mtat':mtAtium(+b.dataset.d);break;
   case 'mtatu':mtAtUse(+b.dataset.d);break;
