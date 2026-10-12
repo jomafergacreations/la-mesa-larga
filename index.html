@@ -1450,6 +1450,16 @@ body.has-tb .lfside{top:84px}
  .lfsolo .lfv{height:4.2rem}
 }
 @media(prefers-reduced-motion:reduce){.mtabp,.mtchev{transition:none}}
+.mtab>li{position:relative;overflow:hidden;border-radius:10px}
+.mtabh:focus-visible{outline-offset:-2px}
+.mtrm{transition:box-shadow .3s,color .3s,text-shadow .3s}
+.mtab>li.open .mtrm{box-shadow:0 0 0 2px #C8B27A,0 0 16px 4px rgba(214,216,255,.55);color:#fff;text-shadow:0 0 8px rgba(214,216,255,.9)}
+@media(prefers-reduced-motion:no-preference){
+ .mtab>li.open::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(214,216,255,.38) 50%,transparent 70%);transform:translateX(-120%);animation:mtSweepAb .8s ease-out forwards}
+ .mtab>li.open .mtabi{animation:mtMistAb .6s ease-out .1s both}
+ @keyframes mtSweepAb{to{transform:translateX(120%)}}
+ @keyframes mtMistAb{0%{opacity:0;filter:blur(6px);transform:translateY(8px)}100%{opacity:1;filter:blur(0);transform:none}}
+}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -1964,8 +1974,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='124';
-const APPN='Vida y tablero en una sola pantalla, habilidades con desplegable, al tocar un metal quemado preguntamos Avivar o Dejar de quemar, y los turnos solo avanzan con Pasar turno.';
+const APPV='125';
+const APPN='Animación del desplegable de habilidades: destello metálico, bruma que se disipa y número romano que brilla.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
