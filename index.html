@@ -1201,7 +1201,7 @@ html[data-dev=desktop] .lfgrid[data-n="2"],html[data-dev=tablet] .lfgrid[data-n=
 html[data-dev=desktop] .lfgrid[data-n="3"] .lfc:last-child,html[data-dev=tablet] .lfgrid[data-n="3"] .lfc:last-child{grid-column:auto}
 .lfc{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 12px 12px;display:flex;flex-direction:column;gap:10px;align-items:center;position:relative;overflow:hidden;transition:border-color .25s,opacity .25s}
 .lfc.dead{opacity:.6;border-color:var(--warn)}
-.lfc.dead::after{content:'Derrotado';position:absolute;top:8px;right:10px;font-family:var(--sans);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--warn)}
+.lfc.dead::after{content:'Has perdido';position:absolute;top:8px;right:10px;font-family:var(--sans);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--warn)}
 .lfn{width:100%;text-align:center;background:transparent;border:0;border-bottom:1px dashed var(--line);font-family:var(--sans);font-weight:700;font-size:1rem;color:var(--muted);padding:2px 4px}
 .lfn:focus{outline:none;border-bottom-color:var(--accent);color:var(--ink)}
 .lfv{position:relative;height:4.4rem;width:100%;overflow:hidden;display:grid;place-items:center}
@@ -1240,6 +1240,13 @@ body.hub:has(.lfroot){--h-bg:var(--bg);--h-card:var(--surface);--h-ink:var(--ink
 .lfbt{background:color-mix(in srgb,var(--field) 80%,transparent);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
 .lfbt:hover{border-color:var(--gold)}
 .lfnew{border-radius:99px}
+.lfsolo{max-width:420px;margin-inline:auto;padding:20px 16px 16px}
+.lfsolo .lfv{height:6.4rem}.lfsolo .lfd{font-size:5.4rem}
+.lfsolo .lfbt{min-height:56px}
+.lfbt:disabled{opacity:.35;cursor:not-allowed}
+.lfmsg{margin:0;text-align:center;font-family:var(--sans);font-weight:700;font-size:.95rem;color:var(--warn)}
+.lfmsg[hidden]{display:none}
+.lfctl{justify-content:center}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -1754,8 +1761,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='115';
-const APPN='Creación de mazos con temática de Nacidos de la Bruma: bruma y ceniza animadas, contador de vida (máximo 49, partida nueva en 36).';
+const APPV='116';
+const APPN='Contador de vida personal: cada jugador ve solo el suyo y, al llegar a 0, pierde y no puede recuperar vida hasta una nueva partida.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1899,46 +1906,32 @@ function screen(){
   ${hubTile('t1',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}`}
 
 
-/* ---------- Creación de mazos: contador de vida ---------- */
+/* ---------- Creación de mazos: contador de vida (cada jugador ve solo el suyo) ---------- */
 const LF_MAX=49,LF_START=36,LF_KEY='lml_lifectr';
 let LF=lfLoad(),lfArm=0,lfArmT=0;
 function lfLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(LF_KEY)||'null')}catch(e){}
- const n=o&&o.n>=2&&o.n<=6?o.n|0:2;const hp=[],nm=[];
- for(let i=0;i<6;i++){const h=o&&Array.isArray(o.hp)?+o.hp[i]:LF_START;hp.push(Number.isFinite(h)?Math.max(0,Math.min(LF_MAX,Math.round(h))):LF_START);
-  const t=o&&Array.isArray(o.nm)&&typeof o.nm[i]==='string'?o.nm[i].slice(0,16):'';nm.push(t||('Jugador '+(i+1)))}
- return{n,hp,nm}}
-function lfSave(){try{localStorage.setItem(LF_KEY,JSON.stringify(LF))}catch(e){}}
+ let h=o?(Array.isArray(o.hp)?+o.hp[0]:+o.hp):LF_START;if(!Number.isFinite(h))h=LF_START;
+ return{hp:Math.max(0,Math.min(LF_MAX,Math.round(h)))}}
+function lfSave(){try{localStorage.setItem(LF_KEY,JSON.stringify({hp:LF.hp}))}catch(e){}}
 const lfRM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
-function lfCard(i){const h=LF.hp[i];return `<div class="lfc${h<=0?' dead':h<=10?' low':''}" id="lfc${i}" data-i="${i}"><input class="lfn" data-lfn="${i}" value="${esc(LF.nm[i])}" maxlength="16" aria-label="Nombre del jugador ${i+1}" autocomplete="off">
-  <div class="lfv" id="lfv${i}" role="status" aria-live="polite" aria-label="Vida de ${esc(LF.nm[i])}"><span class="lfd">${h}</span></div>
-  <div class="lfbar" aria-hidden="true"><i id="lfbar${i}" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
-  <div class="lfb"><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-5" aria-label="Restar 5 de vida">−5</button><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-1" aria-label="Restar 1 de vida">−1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="1" aria-label="Sumar 1 de vida">+1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="5" aria-label="Sumar 5 de vida">+5</button></div></div>`}
-function deckScreen(){let cs='';for(let i=0;i<LF.n;i++)cs+=lfCard(i);
- return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}.</p>
- <div class="lfbox"><div class="lfctl"><div class="lfpl"><span>Jugadores</span><button type="button" class="lfbt" data-act="lfn" data-d="-1" aria-label="Quitar un jugador">−</button><b id="lfnn" aria-live="polite">${LF.n}</b><button type="button" class="lfbt" data-act="lfn" data-d="1" aria-label="Añadir un jugador">+</button></div>
- <button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida (${LF_START})</button></div>
- <div class="lfgrid" id="lfgrid" data-n="${LF.n}">${cs}</div></div></div>`}
-function lfRoll(i,nv,dir){const v=document.getElementById('lfv'+i);if(!v)return;const old=v.querySelector('.lfd:not(.out)');
+function lfCard(){const h=LF.hp,x=h<=0?' disabled':'';
+ return `<div class="lfc lfsolo${h<=0?' dead':h<=10?' low':''}" id="lfc0"><div class="lfn">Tu vida</div>
+  <div class="lfv" id="lfv0" role="status" aria-live="polite" aria-label="Tu vida"><span class="lfd">${h}</span></div>
+  <div class="lfbar" aria-hidden="true"><i id="lfbar0" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
+  <div class="lfb"><button type="button" class="lfbt lfdn" data-act="lf" data-d="-5" aria-label="Restar 5 de vida"${x}>−5</button><button type="button" class="lfbt lfdn" data-act="lf" data-d="-1" aria-label="Restar 1 de vida"${x}>−1</button><button type="button" class="lfbt lfup" data-act="lf" data-d="1" aria-label="Sumar 1 de vida"${x}>+1</button><button type="button" class="lfbt lfup" data-act="lf" data-d="5" aria-label="Sumar 5 de vida"${x}>+5</button></div>
+  <p class="lfmsg" id="lfmsg"${h<=0?'':' hidden'}>Has perdido. Solo puedes empezar una nueva partida.</p></div>`}
+function deckScreen(){
+ return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}. Solo tú ves tu vida.</p>
+ <div class="lfbox">${lfCard()}<div class="lfctl"><button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida</button></div></div></div>`}
+function lfRoll(nv,dir){const v=document.getElementById('lfv0');if(!v)return;const old=v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(old)old.textContent=nv;return}
  const n=document.createElement('span');n.className='lfd lfin '+(dir>0?'fromb':'fromt');n.textContent=nv;
  if(old){old.classList.add('out',dir>0?'totop':'tobot');setTimeout(()=>old.remove(),280)}
  v.appendChild(n);setTimeout(()=>n.classList.remove('lfin','fromb','fromt'),20)}
-function lfPaint(i){const c=document.getElementById('lfc'+i);if(!c)return;const h=LF.hp[i];c.classList.toggle('dead',h<=0);c.classList.toggle('low',h>0&&h<=10);
- const b=document.getElementById('lfbar'+i);if(b)b.style.width=(h/LF_MAX*100).toFixed(1)+'%'}
-function lfFx(i,cls){const c=document.getElementById('lfc'+i);if(!c||lfRM())return;c.classList.remove('fxheal','fxdmg');void c.offsetWidth;c.classList.add(cls)}
-function lfChange(i,d){const old=LF.hp[i],nv=Math.max(0,Math.min(LF_MAX,old+d));
- if(nv===old){toast(d>0?'Máximo '+LF_MAX+' de vida':'La vida ya está en 0');return}
- LF.hp[i]=nv;lfSave();lfRoll(i,nv,nv>old?1:-1);lfPaint(i);lfFx(i,nv>old?'fxheal':'fxdmg');if(nv<old)lfAsh(i)}
-function lfNew(){LF.hp=LF.hp.map(()=>LF_START);lfSave();
- for(let i=0;i<LF.n;i++){const c=document.getElementById('lfc'+i);if(!c)continue;c.classList.remove('dead');
-  const v=document.getElementById('lfv'+i),d=v&&v.querySelector('.lfd:not(.out)');
-  if(lfRM()){if(d)d.textContent=LF_START;lfPaint(i);continue}
-  c.classList.remove('fxnew');void c.offsetWidth;c.style.setProperty('--lfi',i);c.classList.add('fxnew');
-  const from=d?(+d.textContent||0):0,t0=performance.now()+i*80,dur=700;
-  const step=t=>{const k=Math.max(0,Math.min(1,(t-t0)/dur)),e=1-Math.pow(1-k,3);if(d)d.textContent=Math.round(from+(LF_START-from)*e);
-   const b=document.getElementById('lfbar'+i);if(b)b.style.width=((from+(LF_START-from)*e)/LF_MAX*100).toFixed(1)+'%';if(k<1)requestAnimationFrame(step);else lfPaint(i)};
-  requestAnimationFrame(step)}}
-
+function lfPaint(){const c=document.getElementById('lfc0');if(!c)return;const h=LF.hp;c.classList.toggle('dead',h<=0);c.classList.toggle('low',h>0&&h<=10);
+ c.querySelectorAll('.lfbt').forEach(x=>{x.disabled=h<=0});const m=document.getElementById('lfmsg');if(m)m.hidden=h>0;
+ const b=document.getElementById('lfbar0');if(b)b.style.width=(h/LF_MAX*100).toFixed(1)+'%'}
+function lfFx(cls){const c=document.getElementById('lfc0');if(!c||lfRM())return;c.classList.remove('fxheal','fxdmg');void c.offsetWidth;c.classList.add(cls)}
 function deckAtmo(on){let a=document.getElementById('dmist');if(!on){if(a)a.remove();return}if(a)return;
  a=document.createElement('div');a.id='dmist';a.setAttribute('aria-hidden','true');
  let h='<i class="dm m1"></i><i class="dm m2"></i><i class="dm m3"></i><i class="dm mg"></i>';
@@ -1947,11 +1940,19 @@ function deckAtmo(on){let a=document.getElementById('dmist');if(!on){if(a)a.remo
  a.innerHTML=h;document.body.appendChild(a)}
 function lfAsh(i){if(lfRM())return;const c=document.getElementById('lfc'+i);if(!c)return;const r=c.getBoundingClientRect();
  for(let k=0;k<10;k++){const a=document.createElement('b');a.className='dust';a.style.cssText=`left:${r.left+r.width*(.25+Math.random()*.5)}px;top:${r.top+r.height*(.2+Math.random()*.4)}px;--dx:${(Math.random()*90-45).toFixed(0)}px;--dy:${(-40-Math.random()*80).toFixed(0)}px;--s:${(2+Math.random()*4).toFixed(1)}px;animation-delay:${(Math.random()*.18).toFixed(2)}s`;document.body.appendChild(a);setTimeout(()=>a.remove(),1100)}}
-function lfPlayers(d){const n=Math.max(2,Math.min(6,LF.n+d));if(n===LF.n){toast(d>0?'Máximo 6 jugadores':'Mínimo 2 jugadores');return}
- const old=LF.n;LF.n=n;lfSave();const g=document.getElementById('lfgrid'),nn=document.getElementById('lfnn');if(!g)return;nn.textContent=n;g.dataset.n=n;
- if(n>old){for(let i=old;i<n;i++){LF.hp[i]=LF_START;g.insertAdjacentHTML('beforeend',lfCard(i));const c=document.getElementById('lfc'+i);if(c&&!lfRM())c.classList.add('fxnew')}lfSave()}
- else for(let i=n;i<old;i++){const c=document.getElementById('lfc'+i);if(c)c.remove()}}
-document.addEventListener('input',e=>{const t=e.target;if(!t||t.dataset===undefined||t.dataset.lfn===undefined)return;const i=+t.dataset.lfn;LF.nm[i]=t.value.slice(0,16);lfSave()});
+function lfChange(d){const old=LF.hp;
+ if(old<=0){toast('Has perdido: no puedes recuperar vida');return}
+ const nv=Math.max(0,Math.min(LF_MAX,old+d));
+ if(nv===old){toast('Máximo '+LF_MAX+' de vida');return}
+ LF.hp=nv;lfSave();lfRoll(nv,nv>old?1:-1);lfPaint();lfFx(nv>old?'fxheal':'fxdmg');if(nv<old)lfAsh(0);if(nv===0)toast('Has perdido')}
+function lfNew(){LF.hp=LF_START;lfSave();const c=document.getElementById('lfc0');if(!c)return;
+ const v=document.getElementById('lfv0'),d=v&&v.querySelector('.lfd:not(.out)');
+ if(lfRM()){if(d)d.textContent=LF_START;lfPaint();return}
+ c.classList.remove('fxnew');void c.offsetWidth;c.classList.add('fxnew');
+ const from=d?(+d.textContent||0):0,t0=performance.now(),dur=700;lfPaint();
+ const step=t=>{const k=Math.max(0,Math.min(1,(t-t0)/dur)),e=1-Math.pow(1-k,3);if(d)d.textContent=Math.round(from+(LF_START-from)*e);
+  const b=document.getElementById('lfbar0');if(b)b.style.width=((from+(LF_START-from)*e)/LF_MAX*100).toFixed(1)+'%';if(k<1)requestAnimationFrame(step);else lfPaint()};
+ requestAnimationFrame(step)}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -2912,9 +2913,8 @@ document.addEventListener('click',e=>{
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
-  case 'lf':lfChange(+b.dataset.i,+b.dataset.d);break;
-  case 'lfn':lfPlayers(+b.dataset.d);break;
-  case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida ('+LF_START+')';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida ('+LF_START+')';y.classList.remove('arm')}},3000)}break}
+  case 'lf':lfChange(+b.dataset.d);break;
+  case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida';y.classList.remove('arm')}},3000)}break}
   case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
   case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
   case 'qnext':if(curQ(c).v(c))qGo(c,1);break;
