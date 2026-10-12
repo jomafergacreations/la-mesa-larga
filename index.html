@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=94"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=94">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=95"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=95">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1112,14 +1112,6 @@ html[data-dev=tablet] .hb .bell{margin-left:0}html[data-dev=tablet] .hb .hlp{mar
 html[data-dev=tablet] .hb .hn{flex:1;min-width:0}html[data-dev=tablet] #npcpop{top:calc(176px + env(safe-area-inset-top,0px))}
 body.has-tb .hb .bell{display:none}body.has-tb .hb .bell+.hlp{margin-left:auto}
 
-#onbub{position:fixed;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;display:inline-flex;align-items:center;gap:7px;padding:7px 13px 7px 10px;border-radius:99px;border:1px solid rgba(120,125,140,.35);background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#121B2E;font:700 .8rem var(--sans,system-ui);cursor:pointer;box-shadow:0 6px 18px rgba(20,30,60,.16)}
-#onbub i{width:9px;height:9px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 0 rgba(22,163,74,.6)}
-#onbub b{font-size:.95rem}#onbub span{font-weight:600;opacity:.75}
-@media(prefers-reduced-motion:no-preference){#onbub i{animation:onp 2s infinite}@keyframes onp{70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}#onbub{animation:nfin .4s ease both}}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #onbub{background:rgba(24,32,51,.85);color:#EAF0FF;border-color:rgba(255,255,255,.14)}}
-:root[data-theme="dark"] #onbub{background:rgba(24,32,51,.85);color:#EAF0FF;border-color:rgba(255,255,255,.14)}
-html[data-dev=phone] #onbub{bottom:calc(96px + env(safe-area-inset-bottom,0px));right:14px;padding:6px 10px 6px 8px}html[data-dev=phone] #onbub span{display:none}
-body.pend #onbub{display:none}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1275,7 +1267,7 @@ async function finishSess(){const s=cand;
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;setTimeout(()=>{beat();onbPoll()},1500);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
+ session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
  skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -1598,8 +1590,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='94';
-const APPN='Los avisos de abandono se descartan al pulsar Entendido y las ventanas se cierran al pulsar fuera de ellas.';
+const APPV='95';
+const APPN='Eliminada la burbuja de usuarios en línea para evitar consultas continuas.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1996,12 +1988,6 @@ const BELL='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><
 function exPend(){try{return (typeof exits!=='undefined'&&exits||[]).filter(x=>!exAck(x.id))}catch(e){return[]}}
 function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(isAdmin()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length}
 function bellBtn(c){const n=notifN();return `<button type="button" class="${c}" data-act="notif" aria-label="Notificaciones${n?' ('+n+' sin leer)':''}" title="Notificaciones">${BELL}${n?`<i class="bdg">${n}</i>`:''}</button>`}
-let onN=0;
-async function onbPoll(){let el=document.getElementById('onbub');if(!session||!canAdm()||document.hidden){if(el&&!session)el.remove();if(!session||!canAdm())return;}
- try{const l=await fsList('presencia');onN=l.filter(isOn).length}catch(e){return}
- el=document.getElementById('onbub');if(!el){el=document.createElement('button');el.id='onbub';el.type='button';el.setAttribute('data-act','admon');document.body.appendChild(el)}
- el.setAttribute('aria-label',onN+' usuario'+(onN===1?'':'s')+' en línea');el.title='Usuarios en línea';el.innerHTML='<i></i><b>'+onN+'</b><span>en línea</span>'}
-setInterval(onbPoll,20000);setTimeout(onbPoll,3500);
 function bellUpd(){const n=notifN();document.querySelectorAll('.bell,.tbbell').forEach(b=>{let i=b.querySelector('.bdg');if(n){if(!i){i=document.createElement('i');i.className='bdg';b.appendChild(i)}i.textContent=n}else if(i)i.remove();b.setAttribute('aria-label','Notificaciones'+(n?' ('+n+' sin leer)':''))})}
 function notifDlg(){const adm=isAdmin(),rd=store.rpRead=store.rpRead||[];
  const mine=(rpMine||[]).slice(),mdone=mine.filter(r=>r.status==='done'),mopen=mine.filter(r=>r.status!=='done');
