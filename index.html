@@ -1419,9 +1419,8 @@ body.has-tb .lfside{top:84px}
 .lfhd{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
 .lfhd .lfn{width:auto;border:0;padding:0;text-align:left;font-size:1.05rem;color:var(--ink)}
 .lfhd .lfnew{min-height:40px;font-size:.95rem;padding:0 14px}
-.lfrow{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
-.lfrow .lfb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:auto}
-.lfrow .lfv{flex:1;min-width:64px;height:3.6rem}
+.lfsolo .lfb{grid-template-columns:repeat(4,minmax(0,1fr))}
+.lfsolo .lfv{width:100%;height:3.6rem}
 .lfsolo .lfd{font-size:3.3rem}
 .lfsolo .lfbt{min-height:52px;min-width:50px;font-size:1.05rem}
 .lfc.dead::after{content:none}
@@ -1974,8 +1973,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='125';
-const APPN='Animación del desplegable de habilidades: destello metálico, bruma que se disipa y número romano que brilla.';
+const APPV='126';
+const APPN='Los botones de vida (−5, −1, +1, +5) vuelven debajo del número.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2130,7 +2129,8 @@ const lfRM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').
 function lfCard(){const h=LF.hp,x=h<=0?' disabled':'';
  const bt=(d,c,l)=>`<button type="button" class="lfbt ${c}" data-act="lf" data-d="${d}" aria-label="${d<0?'Restar':'Sumar'} ${Math.abs(d)} de vida"${x}>${l}</button>`;
  return `<div class="lfc lfsolo${h<=0?' dead':h<=10?' low':''}" id="lfc0"><div class="lfhd"><div class="lfn">Tu vida</div><button type="button" class="btn sm pri lfnew" id="lfnew" data-act="lfnew">Nueva partida</button></div>
-  <div class="lfrow"><div class="lfb">${bt(-5,'lfdn','−5')}${bt(-1,'lfdn','−1')}</div><div class="lfv" id="lfv0" role="status" aria-live="polite" aria-label="Tu vida"><span class="lfd">${h}</span></div><div class="lfb">${bt(1,'lfup','+1')}${bt(5,'lfup','+5')}</div></div>
+  <div class="lfv" id="lfv0" role="status" aria-live="polite" aria-label="Tu vida"><span class="lfd">${h}</span></div>
+  <div class="lfb">${bt(-5,'lfdn','−5')}${bt(-1,'lfdn','−1')}${bt(1,'lfup','+1')}${bt(5,'lfup','+5')}</div>
   <div class="lfbar" aria-hidden="true"><i id="lfbar0" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
   <p class="lfmsg" id="lfmsg"${h<=0?'':' hidden'}>Has perdido. Solo puedes empezar una nueva partida.</p></div>`}
 function deckScreen(){
