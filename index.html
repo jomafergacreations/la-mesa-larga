@@ -1247,6 +1247,45 @@ body.hub:has(.lfroot){--h-bg:var(--bg);--h-card:var(--surface);--h-ink:var(--ink
 .lfmsg{margin:0;text-align:center;font-family:var(--sans);font-weight:700;font-size:.95rem;color:var(--warn)}
 .lfmsg[hidden]{display:none}
 .lfctl{justify-content:center}
+
+.mtb{margin:8px auto 40px;max-width:1080px;padding:16px 12px 14px;border-radius:22px;background:linear-gradient(180deg,#44494D,#2E3235);border:1px solid color-mix(in srgb,var(--gold) 45%,#2b2e31);box-shadow:inset 0 0 0 3px #34383B,inset 0 0 0 4px color-mix(in srgb,var(--gold) 25%,transparent),0 18px 34px -20px rgba(10,6,8,.7);color:#D8D6D6}
+.mth{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:22px}
+.mth b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:#DDBF86}
+.mth small{font-family:var(--sans);font-size:.8rem;color:#B0A9AA}
+.mth .btn{background:transparent;color:#D8D6D6;border-color:#6a7075}
+.mtg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 8px}
+.mtc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-height:44px;-webkit-tap-highlight-color:transparent}
+.mtc:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:12px}
+.mtd{position:relative;width:clamp(48px,15vw,60px);aspect-ratio:1}
+.mtdisc{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;background:var(--dc);color:var(--gc);box-shadow:inset 0 -4px 8px rgba(0,0,0,.22),inset 0 3px 6px rgba(255,255,255,.35),0 3px 8px rgba(0,0,0,.5);filter:grayscale(.85) brightness(.55);opacity:.8;transition:filter .7s ease,opacity .7s ease,box-shadow .7s ease,transform .3s}
+.mtdisc svg{width:58%;height:58%}
+.mtc[aria-pressed="true"] .mtdisc{filter:none;opacity:1;box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.4),0 0 0 2px color-mix(in srgb,var(--mc) 70%,#fff),0 0 20px 5px color-mix(in srgb,var(--mc) 75%,transparent)}
+.mtn{align-self:stretch;padding:5px 2px;background:var(--mc);color:#fff;font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.mtds{display:none;font-family:var(--serif);font-style:italic;font-size:.74rem;line-height:1.25;color:#A8A3A4;padding:0 4px}
+.mtl{width:11px;height:11px;transform:rotate(45deg);border:2px solid #70777c;border-radius:2px;background:transparent;transition:background .5s,border-color .5s,box-shadow .5s}
+.mtc[aria-pressed="true"] .mtl{background:var(--mc);border-color:color-mix(in srgb,var(--mc) 60%,#fff);box-shadow:0 0 10px 2px color-mix(in srgb,var(--mc) 70%,transparent)}
+.mtcap{margin:18px 0 0;min-height:2.6em;text-align:center;font-family:var(--serif);font-style:italic;font-size:.98rem;color:#B9B3B4}
+.mtsm,.mtring{pointer-events:none}
+.mtsm{position:absolute;left:50%;top:6px;width:0;height:0}
+.mtsm i{position:absolute;left:-8px;top:0;width:16px;height:16px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--mc) 80%,#fff),transparent);filter:blur(3px);opacity:0}
+.mtsm i:nth-child(2){left:-16px}.mtsm i:nth-child(3){left:2px}
+.mtring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mc);box-shadow:0 0 14px var(--mc),inset 0 0 10px var(--mc);opacity:0}
+html[data-dev=tablet] .mtg,html[data-dev=desktop] .mtg{grid-template-columns:repeat(8,minmax(0,1fr));gap:0 6px}
+html[data-dev=tablet] .mtds,html[data-dev=desktop] .mtds{display:block}
+html[data-dev=tablet] .mtcap,html[data-dev=desktop] .mtcap{display:none}
+html[data-dev=tablet] .mtn,html[data-dev=desktop] .mtn{font-size:.8rem;padding:7px 2px}
+@media(prefers-reduced-motion:no-preference){
+ .mtc[aria-pressed="true"] .mtsm i{animation:mtSmoke 2.6s ease-out infinite}
+ .mtc[aria-pressed="true"] .mtsm i:nth-child(2){animation-delay:.9s;animation-duration:3s}
+ .mtc[aria-pressed="true"] .mtsm i:nth-child(3){animation-delay:1.7s;animation-duration:2.8s}
+ .mtc.mtpop .mtdisc{animation:mtPop .45s cubic-bezier(.2,1.2,.3,1)}
+ .mtring{animation:mtRing .75s ease-out}
+ .mtc.mtoff .mtdisc{animation:mtOff .75s ease-out}
+ @keyframes mtSmoke{0%{opacity:0;transform:translate(0,4px) scale(.7)}25%{opacity:.55}100%{opacity:0;transform:translate(8px,-38px) scale(2)}}
+ @keyframes mtPop{0%{transform:scale(.86)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+ @keyframes mtRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
+ @keyframes mtOff{0%{box-shadow:0 0 0 2px #fff,0 0 22px 6px var(--mc)}30%{box-shadow:0 0 0 2px var(--mc),0 0 8px 1px var(--mc)}45%{box-shadow:0 0 0 2px var(--mc),0 0 16px 3px var(--mc)}100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent}}
+}
 #dmist{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:rgba(60,52,54,.55)}
 #dmist .dm{position:absolute;border-radius:50%;opacity:.9}
 #dmist .m1{left:-40%;top:6%;width:120%;height:34%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
@@ -1761,8 +1800,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='116';
-const APPN='Contador de vida personal: cada jugador ve solo el suyo y, al llegar a 0, pierde y no puede recuperar vida hasta una nueva partida.';
+const APPV='117';
+const APPN='Nuevo tablero de metales de Nacidos de la Bruma en Creación de mazos: marca los metales que puedes usar este turno.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1921,8 +1960,7 @@ function lfCard(){const h=LF.hp,x=h<=0?' disabled':'';
   <div class="lfb"><button type="button" class="lfbt lfdn" data-act="lf" data-d="-5" aria-label="Restar 5 de vida"${x}>−5</button><button type="button" class="lfbt lfdn" data-act="lf" data-d="-1" aria-label="Restar 1 de vida"${x}>−1</button><button type="button" class="lfbt lfup" data-act="lf" data-d="1" aria-label="Sumar 1 de vida"${x}>+1</button><button type="button" class="lfbt lfup" data-act="lf" data-d="5" aria-label="Sumar 5 de vida"${x}>+5</button></div>
   <p class="lfmsg" id="lfmsg"${h<=0?'':' hidden'}>Has perdido. Solo puedes empezar una nueva partida.</p></div>`}
 function deckScreen(){
- return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}. Solo tú ves tu vida.</p>
- <div class="lfbox">${lfCard()}<div class="lfctl"><button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida</button></div></div></div>`}
+ return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div> <div class="lfbox">${lfCard()}<div class="lfctl"><button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida</button></div></div>${mtBoard()}</div>`}
 function lfRoll(nv,dir){const v=document.getElementById('lfv0');if(!v)return;const old=v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(old)old.textContent=nv;return}
  const n=document.createElement('span');n.className='lfd lfin '+(dir>0?'fromb':'fromt');n.textContent=nv;
@@ -1945,7 +1983,7 @@ function lfChange(d){const old=LF.hp;
  const nv=Math.max(0,Math.min(LF_MAX,old+d));
  if(nv===old){toast('Máximo '+LF_MAX+' de vida');return}
  LF.hp=nv;lfSave();lfRoll(nv,nv>old?1:-1);lfPaint();lfFx(nv>old?'fxheal':'fxdmg');if(nv<old)lfAsh(0);if(nv===0)toast('Has perdido')}
-function lfNew(){LF.hp=LF_START;lfSave();const c=document.getElementById('lfc0');if(!c)return;
+function lfNew(){LF.hp=LF_START;lfSave();mtClear(true);const c=document.getElementById('lfc0');if(!c)return;
  const v=document.getElementById('lfv0'),d=v&&v.querySelector('.lfd:not(.out)');
  if(lfRM()){if(d)d.textContent=LF_START;lfPaint();return}
  c.classList.remove('fxnew');void c.offsetWidth;c.classList.add('fxnew');
@@ -1953,6 +1991,41 @@ function lfNew(){LF.hp=LF_START;lfSave();const c=document.getElementById('lfc0')
  const step=t=>{const k=Math.max(0,Math.min(1,(t-t0)/dur)),e=1-Math.pow(1-k,3);if(d)d.textContent=Math.round(from+(LF_START-from)*e);
   const b=document.getElementById('lfbar0');if(b)b.style.width=((from+(LF_START-from)*e)/LF_MAX*100).toFixed(1)+'%';if(k<1)requestAnimationFrame(step);else lfPaint()};
  requestAnimationFrame(step)}
+
+
+/* ---------- Creación de mazos: tablero de metales ---------- */
+const MT_KEY='lml_metals';
+const MTL=[
+ {id:'peltre',n:'Peltre',d:'Aumenta la fuerza física y la resiliencia.',dc:'#E6E1DA',gc:'#D1384A',bc:'#C9394B',g:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M12 8v7M8.500 11.500h7"/>'},
+ {id:'estano',n:'Estaño',d:'Amplifica los cinco sentidos.',dc:'#D13A4C',gc:'#D9D5D9',bc:'#C9394B',g:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'},
+ {id:'bronce',n:'Bronce',d:'Identifica la localización de otros metales que estén siendo quemados.',dc:'#3E9B84',gc:'#F0773A',bc:'#D9622F',g:'<circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M8 8a5.500 5.500 0 0 0 0 8M16 8a5.500 5.500 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/>'},
+ {id:'cobre',n:'Cobre',d:'Te oculta de los que queman bronce.',dc:'#E57B34',gc:'#2E8F78',bc:'#D9622F',g:'<circle cx="12" cy="12" r="8"/><path d="M5.500 18.500l13-13"/>'},
+ {id:'cinc',n:'Cinc',d:'Enciende las emociones de los demás.',dc:'#ECE8E1',gc:'#B88C3E',bc:'#D9A92B',g:'<path d="M12 3c3 4 5 6.600 5 9.500A5 5 0 0 1 12 17.500 5 5 0 0 1 7 12.500C7 9.600 9 7 12 3z"/><path d="M12 21v-3.500"/>'},
+ {id:'laton',n:'Latón',d:'Aplaca las emociones de los demás.',dc:'#E9C13A',gc:'#FFF7DA',bc:'#D9A92B',g:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>'},
+ {id:'hierro',n:'Hierro',d:'Tira de fuentes de metal.',dc:'#3F78D1',gc:'#F2F6FF',bc:'#4A74BF',g:'<path d="M2 12h8M6.500 8l3.500 4-3.500 4M22 12h-8M17.500 8 14 12l3.500 4"/>'},
+ {id:'acero',n:'Acero',d:'Empuja fuentes de metal.',dc:'#E9EEF8',gc:'#2F63C6',bc:'#4A74BF',g:'<path d="M10 12H2M5.500 8 2 12l3.500 4M14 12h8M18.500 8 22 12l-3.500 4"/>'}];
+let MT=mtLoad();
+function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'null')}catch(e){}
+ return{on:o&&Array.isArray(o.on)?o.on.filter(x=>MTL.some(m=>m.id===x)):[]}}
+function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
+function mtCell(m){const on=MT.on.includes(m.id);
+ return `<button type="button" class="mtc" data-act="mt" data-m="${m.id}" aria-pressed="${on}" aria-label="${m.n}: ${m.d}" style="--mc:${m.bc};--dc:${m.dc};--gc:${m.gc}">
+  <span class="mtd"><span class="mtsm" aria-hidden="true"><i></i><i></i><i></i></span><span class="mtdisc"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${m.g}</svg></span></span>
+  <span class="mtn">${m.n}</span><span class="mtds">${m.d}</span><span class="mtl" aria-hidden="true"></span></button>`}
+function mtBoard(){return `<section class="mtb" aria-label="Metales de este turno"><div class="mth"><div><b>Metales de este turno</b><small><span id="mtcnt">${MT.on.length}</span> de ${MTL.length} activos</small></div><button type="button" class="btn sm ghost" data-act="mtclr">Nuevo turno</button></div>
+ <div class="mtg">${MTL.map(mtCell).join('')}</div><p class="mtcap" id="mtcap" aria-live="polite">Toca un metal para activarlo o apagarlo.</p></section>`}
+function mtToggle(id){const m=MTL.find(x=>x.id===id);if(!m)return;const i=MT.on.indexOf(id),on=i<0;
+ if(on)MT.on.push(id);else MT.on.splice(i,1);mtSave();
+ const b=document.querySelector('.mtc[data-m="'+id+'"]');if(b){b.setAttribute('aria-pressed',on);
+  if(!lfRM()){const d=b.querySelector('.mtd');
+   if(on){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.remove('mtoff');b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
+   else{b.classList.remove('mtpop');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}}
+ const c=document.getElementById('mtcnt');if(c)c.textContent=MT.on.length;
+ const cap=document.getElementById('mtcap');if(cap)cap.textContent=m.n+' '+(on?'activo':'apagado')+' · '+m.d}
+function mtClear(quiet){if(!MT.on.length){if(!quiet)toast('No hay metales activos');return}
+ const prev=MT.on.slice();MT.on=[];mtSave();
+ prev.forEach(id=>{const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;b.setAttribute('aria-pressed','false');if(!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}});
+ const c=document.getElementById('mtcnt');if(c)c.textContent=0;const cap=document.getElementById('mtcap');if(cap)cap.textContent='Toca un metal para activarlo o apagarlo.'}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -2914,6 +2987,8 @@ document.addEventListener('click',e=>{
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
   case 'lf':lfChange(+b.dataset.d);break;
+  case 'mt':mtToggle(b.dataset.m);break;
+  case 'mtclr':mtClear();break;
   case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida';y.classList.remove('arm')}},3000)}break}
   case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
   case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
