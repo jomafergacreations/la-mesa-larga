@@ -1030,7 +1030,7 @@ html[data-dev=phone] .bub .ti{top:20px;left:22px;width:58px;height:58px;border-r
 html[data-dev=phone] .bub .go{right:20px;top:22px;width:40px;height:40px}
 html[data-dev=phone] .bubbles{padding-bottom:90px}
 #stormfx{position:fixed;inset:0;z-index:99998;overflow:hidden;display:grid;place-content:center;justify-items:center;gap:10px;background:linear-gradient(#0B1020,#1B2442 70%,#26335C);color:#E8EEFF;font-family:var(--sans);text-align:center;pointer-events:auto}
-#stormfx.out{opacity:0;transition:opacity .45s}
+#stormfx canvas{position:absolute;inset:0}#stormfx.out{opacity:0;transition:opacity .45s}
 #stormfx .dr{position:absolute;top:-12vh;width:2px;height:12vh;background:linear-gradient(transparent,rgba(170,200,255,.8));transform:rotate(12deg)}
 #stormfx .fl{position:absolute;inset:0;background:#DDE8FF;opacity:0}
 #stormfx svg.bolt{position:absolute;top:0;height:60vh;width:auto;opacity:0;filter:drop-shadow(0 0 12px #BFD4FF)}
@@ -1040,6 +1040,9 @@ html[data-dev=phone] .bubbles{padding-bottom:90px}
 @keyframes flashf{0%,100%{opacity:0}6%{opacity:.85}12%{opacity:.1}18%{opacity:.7}30%{opacity:0}}
 @keyframes boltf{0%,100%{opacity:0}6%{opacity:1}14%{opacity:.2}18%{opacity:1}34%{opacity:0}}
 @media(prefers-reduced-motion:no-preference){#stormfx .dr{animation:rainf var(--t) linear infinite;animation-delay:var(--dl)}#stormfx .fl{animation:flashf 1.7s infinite}#stormfx svg.bolt{animation:boltf 1.7s infinite}#stormfx svg.b2{animation-delay:.85s}#stormfx .fl.f2{animation-delay:.85s}}
+.nmrow{display:flex;gap:10px;align-items:flex-end}.nmrow .f{flex:1;min-width:0}.nmrnd{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:0 14px;min-height:46px}.nmrnd svg{width:20px;height:20px}
+@media(max-width:380px){.nmrnd span{display:none}}
+@media(prefers-reduced-motion:no-preference){.nmrnd:active svg{animation:dicerot .5s ease-in-out}}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1511,8 +1514,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=1024&&!coarse)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='76';
-const APPN='En El archivo de las tormentas la animación y el texto se mantienen y debajo aparece Próximamente.';
+const APPV='78';
+const APPN='Botón de nombre aleatorio al crear personaje, el personaje fallecido desaparece de tu lista y tormenta más realista con rayos finos.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1736,11 +1739,29 @@ async function pushShared(){if(!session)return;for(const n of (store.npcs||[])){
 function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){done();return}
  const o=document.createElement('div');o.id='dicefx';o.setAttribute('role','status');o.innerHTML='<div class="dr">'+[0,1,2].map(i=>`<span style="--i:${i}">${DIEI}</span>`).join('')+'</div><b>Tirando los dados…</b>';document.body.appendChild(o);
  setTimeout(()=>{done();o.classList.add('out');setTimeout(()=>o.remove(),300)},1050)}
-function stormFx(done){document.getElementById('stormfx')&&document.getElementById('stormfx').remove();
- const o=document.createElement('div');o.id='stormfx';o.setAttribute('aria-hidden','true');let h='<i class="fl"></i><i class="fl f2"></i>';
- for(let i=0;i<70;i++)h+=`<i class="dr" style="left:${Math.random()*115-5}vw;--t:${(.5+Math.random()*.5).toFixed(2)}s;--dl:-${(Math.random()*1).toFixed(2)}s"></i>`;
- h+='<svg class="bolt" style="left:22%" viewBox="0 0 40 100"><path d="M24 0 12 40h10L8 100 34 38H22L32 0z" fill="#F4F8FF"/></svg><svg class="bolt b2" style="left:68%" viewBox="0 0 40 100"><path d="M24 0 12 40h10L8 100 34 38H22L32 0z" fill="#F4F8FF"/></svg>';
- o.innerHTML=h+'<b>El archivo de las tormentas</b><span>Se acerca la Tormenta Eterna…</span><em class="sooner">Próximamente</em><button type="button" class="btn sb" data-act="rol">‹ Volver</button>';document.body.appendChild(o);done()}
+function stormFx(done){const old=document.getElementById('stormfx');if(old)old.remove();
+ const o=document.createElement('div');o.id='stormfx';o.setAttribute('aria-hidden','true');o.innerHTML='<canvas></canvas><b>El archivo de las tormentas</b><span>Se acerca la Tormenta Eterna…</span><em class="sooner">Próximamente</em><button type="button" class="btn sb" data-act="rol">‹ Volver</button>';document.body.appendChild(o);done();
+ let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}
+ const cv=o.querySelector('canvas'),x=cv.getContext('2d');let W=0,H=0,dpr=Math.min(2,window.devicePixelRatio||1);
+ const fit=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';x.setTransform(dpr,0,0,dpr,0,0)};fit();
+ const L=[[.35,1.2,.22],[.6,2,.35],[1,3.2,.5]];const drops=[];for(let i=0;i<(W<600?140:260);i++){const l=L[i%3];drops.push({x:Math.random()*(W+200)-100,y:Math.random()*H,l,len:l[1]*7+Math.random()*8,sp:l[1]*(7+Math.random()*3)*60})}
+ const clouds=[...Array(6)].map(()=>({x:Math.random()*W,y:Math.random()*H*.35,r:W*(.35+Math.random()*.35),v:(Math.random()-.5)*6}));
+ let bolts=[],flash=0,next=.25,t0=performance.now(),last=t0;
+ const bolt=(x0,y0,x1,y1,d,out,w)=>{if(d===0){out.push([x0,y0,x1,y1,w]);return}const mx=(x0+x1)/2,my=(y0+y1)/2,dx=x1-x0,dy=y1-y0,n=Math.hypot(dx,dy),off=(Math.random()-.5)*n*.5;const px=mx-dy/n*off,py=my+dx/n*off;bolt(x0,y0,px,py,d-1,out,w);bolt(px,py,x1,y1,d-1,out,w);if(d>=3&&Math.random()<.22){const a=Math.atan2(y1-py,x1-px)+(Math.random()-.5)*1.1,len=n*(.35+Math.random()*.3);bolt(px,py,px+Math.cos(a)*len,py+Math.sin(a)*len+len*.3,d-2,out,w*.55)}};
+ const strike=()=>{const sx=W*(.12+Math.random()*.76),segs=[];bolt(sx,-10,sx+(Math.random()-.5)*W*.3,H*(.5+Math.random()*.3),7,segs,1.7);bolts.push({segs,age:0,life:.55});flash=.55+Math.random()*.3};
+ const frame=now=>{if(!o.isConnected)return;const dt=Math.min(.05,(now-last)/1000);last=now;
+  const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#05070D');g.addColorStop(.6,'#0E1424');g.addColorStop(1,'#182038');x.fillStyle=g;x.fillRect(0,0,W,H);
+  for(const c of clouds){c.x+=c.v*dt;const rg=x.createRadialGradient(c.x,c.y,0,c.x,c.y,c.r);rg.addColorStop(0,'rgba(70,82,115,.28)');rg.addColorStop(1,'rgba(70,82,115,0)');x.fillStyle=rg;x.fillRect(0,0,W,H)}
+  if(flash>0){x.fillStyle='rgba(190,205,255,'+(flash*.35)+')';x.fillRect(0,0,W,H);flash=Math.max(0,flash-dt*2.4)}
+  x.lineCap='round';
+  for(const d of drops){d.y+=d.sp*dt;d.x-=d.sp*dt*.18;if(d.y>H+20){d.y=-20;d.x=Math.random()*(W+200)}x.strokeStyle='rgba(175,195,235,'+d.l[2]+')';x.lineWidth=d.l[0];x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x+d.len*.18,d.y-d.len);x.stroke()}
+  next-=dt;if(next<=0){if(now-t0<1450){strike();if(Math.random()<.4)setTimeout(()=>o.isConnected&&now-t0<1450&&strike(),120);next=.4+Math.random()*.4}else next=99}
+  bolts=bolts.filter(b=>(b.age+=dt)<b.life);
+  for(const b of bolts){const k=b.age/b.life,a=(k<.15?1:Math.max(0,1-(k-.15)/.85))*(Math.random()<.18&&k<.5?.35:1);
+   x.shadowColor='rgba(170,195,255,'+a+')';x.shadowBlur=14;x.strokeStyle='rgba(235,242,255,'+a+')';for(const s of b.segs){x.lineWidth=s[4];x.beginPath();x.moveTo(s[0],s[1]);x.lineTo(s[2],s[3]);x.stroke()}x.shadowBlur=0}
+  if(!red)requestAnimationFrame(frame)};
+ o._strike=strike;if(red){next=99;frame(performance.now())}else requestAnimationFrame(frame);
+ window.addEventListener('resize',fit)}
 function stormOff(){const o=document.getElementById('stormfx');if(o){o.classList.add('out');setTimeout(()=>o.remove(),480)}}
 function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
@@ -1813,7 +1834,7 @@ function ppartScreen(){const p=myParts.find(x=>x.id===partId);if(!p){scr='menu';
 
 async function doLeave(f){const m=$('#lvmsg'),id=f.dataset.p,rs=String(f.elements.rs.value||'').trim(),pp=myParts.find(x=>x.id===id);if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
  try{await fs('PATCH','salidas/'+id+'_'+session.uid,fbEnc({pid:id,pname:pp?pp.name:'',gm:pp?pp.gm:'',uid:session.uid,name:session.name,reason:rs.slice(0,120),kind:'left',created:Date.now()}));
-  await kickPlayer(id,session.uid);store.chars.forEach(c=>{if(c.pid===id){c.dead=1;delete c.pid;delete c.rev;delete c._ph}});save();try{$('#dlg').close()}catch(x){}partSig='';await loadParts();render(1);toast('Has salido de la partida: tu personaje ha fallecido')}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+  await kickPlayer(id,session.uid);store.chars=store.chars.filter(c=>c.pid!==id);if(store.cur&&!store.chars.some(c=>c.id===store.cur))store.cur=null;save();try{$('#dlg').close()}catch(x){}partSig='';await loadParts();render(1);toast('Has salido de la partida: tu personaje ha fallecido')}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doKick(f){const m=$('#kkmsg'),pid=f.dataset.p,u=f.dataset.u,rs=String(f.elements.rs.value||'').trim(),pp=parts.find(x=>x.id===pid),mm=(partMem[pid]||[]).find(x=>x.uid===u);if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
  try{await fs('PATCH','salidas/'+pid+'_'+u,fbEnc({pid,pname:pp?pp.name:'',gm:session.uid,gmName:session.name,uid:u,name:mm?mm.name:'',reason:rs.slice(0,120),kind:'kicked',created:Date.now()}));
   await kickPlayer(pid,u);try{$('#dlg').close()}catch(x){}await loadPart(pid);render(1);toast('Jugador expulsado')}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
@@ -1968,7 +1989,7 @@ function sOrig(c){
  const anc=[['humano','Humano','Un talento adicional de camino heroico'],['kandra','Kandra','6 puntos de atributo y una Bendición'],...(c.era===2?[['koloss','Sangre koloss','Fuerza hasta 4; +1 salud']]:[])];
  return `<section class="panel"><h3>Paso 1. Orígenes${helpBtn('origenes')}</h3>
  <p class="hint lead">Tu ascendencia es de quién desciendes; tu cultura, dónde creciste. Pueden no coincidir.</p>
- <label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label>
+ <div class="nmrow"><label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><button type="button" class="btn nmrnd" data-act="rname" aria-label="Generar un nombre aleatorio" title="Nombre aleatorio">${DIEI}<span>Aleatorio</span></button></div>
  <p class="hint" style="margin:0">Jugador: <b>${esc(c.player||(session&&session.name)||'')}</b> (tu nombre de usuario)</p>
  <div class="f"><span style="font-weight:600;font-size:.92rem">Era de la partida</span><div class="seg">
   <button data-act="era" data-v="1" aria-pressed="${c.era===1}"><b>${eraTag(1)} Imperio Final</b><span>Imperio Final y Colapso</span></button>
@@ -2140,7 +2161,7 @@ const addQ=o=>Q.push(Object.assign({show:()=>true,v:()=>true,h:()=>''},o));
 addQ({id:'era',sec:'Orígenes',t:()=>'¿En qué era se ambienta vuestra partida?',h:()=>'Lo decide la DJ. Cambia las culturas, ascendencias y caminos que puedes elegir.',
  r:c=>seg([{v:'1',b:eraTag(1)+' Imperio Final y Colapso',s:'El lord Legislador gobierna, o acaba de caer.'},{v:'2',b:eraTag(2)+' Tras el Catacendro',s:'Elendel, los Áridos y las armas de fuego.'}],String(c.era),'era')});
 addQ({id:'name',sec:'Orígenes',t:()=>'¿Cómo se llama tu personaje?',h:()=>'Los nombres tienen poder. Puede inspirarse en su cultura, pero no tiene por qué.',
- r:c=>`<label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><p class="hint" style="margin:0">Jugador: <b>${esc(c.player||(session&&session.name)||'')}</b> (tu nombre de usuario)</p>`,v:c=>!!c.name.trim()});
+ r:c=>`<div class="nmrow"><label class="f">Nombre del personaje<input type="text" id="f-name" data-f="name" value="${esc(c.name)}" autocomplete="off"></label><button type="button" class="btn nmrnd" data-act="rname" aria-label="Generar un nombre aleatorio" title="Nombre aleatorio">${DIEI}<span>Aleatorio</span></button></div><p class="hint" style="margin:0">Jugador: <b>${esc(c.player||(session&&session.name)||'')}</b> (tu nombre de usuario)</p>`,v:c=>!!c.name.trim()});
 addQ({id:'anc',sec:'Orígenes',t:()=>'¿De quién desciende tu personaje?',h:()=>'La ascendencia es la especie. Tu cultura se elige después y puede ser distinta.',
  r:c=>seg([{v:'humano',b:'Humano',s:'Un talento adicional de un camino heroico.'},{v:'kandra',b:'Kandra',s:'Solo 6 puntos de atributo, pero con una Bendición. Imitan a otros cuerpos.'},...(c.era===2?[{v:'koloss',b:'Sangre koloss',s:'Fuerza hasta 4 y +1 de salud.'}]:[])],c.ancestry,'anc')});
 addQ({id:'bless',sec:'Orígenes',show:c=>c.ancestry==='kandra',t:()=>'¿Qué Bendición lleva tu kandra?',h:()=>'Es un par de clavos hemalúrgicos que da sapiencia y un beneficio. Se aplica incluso bajo un disfraz.',
@@ -2339,7 +2360,7 @@ document.addEventListener('click',e=>{
   case 'invyes':{const i=invs.find(x=>x.id===b.dataset.id);if(!i)break;linkDlg(i.pid,i.pname,true,i.id);break}
   case 'invno':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{invs=invs.filter(x=>x.id!==b.dataset.id);partSig='';render(1);toast('Invitación rechazada')}).catch(()=>toast('No se pudo rechazar'));break
   case 'pjlink':{const p=myParts.find(x=>x.id===b.dataset.p);if(p)linkDlg(p.id,p.name,false);break}
-  case 'partleave':{const id=b.dataset.p,p=myParts.find(x=>x.id===id);showDlg('Salir de la partida',`<form id="leaveform" class="grid" data-p="${esc(id)}" novalidate><p class="hint" style="margin:0">Saldrás de <b>${esc(p?p.name:'la partida')}</b>. <b>Tu personaje se dará por fallecido y no podrás volver a entrar en esta partida</b>: el Game Master no podrá invitarte de nuevo. Recibirá el motivo que escribas.</p><label class="f">Motivo para abandonar<textarea name="rs" rows="3" maxlength="120" required></textarea></label><div id="lvmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Salir de la partida</button></div></form>`,true);break}
+  case 'partleave':{const id=b.dataset.p,p=myParts.find(x=>x.id===id);showDlg('Salir de la partida',`<form id="leaveform" class="grid" data-p="${esc(id)}" novalidate><p class="hint" style="margin:0">Saldrás de <b>${esc(p?p.name:'la partida')}</b>. <b>Tu personaje fallecerá y desaparecerá de tu lista, y no podrás volver a entrar en esta partida</b>: el Game Master no podrá invitarte de nuevo. Recibirá el motivo que escribas.</p><label class="f">Motivo para abandonar<textarea name="rs" rows="3" maxlength="120" required></textarea></label><div id="lvmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Salir de la partida</button></div></form>`,true);break}
   case 'kick':{const p=b.dataset.p,u=b.dataset.u,m=(partMem[p]||[]).find(x=>x.uid===u);showDlg('Expulsar de la partida',`<form id="kickform" class="grid" data-p="${esc(p)}" data-u="${esc(u)}" novalidate><p class="hint" style="margin:0"><b>${esc(m?m.name:'El jugador')}</b> dejará de estar en la partida y se llevará una copia de su ficha. Verá el motivo que escribas y podrá quitar la partida de su lista.</p><label class="f">Motivo de la expulsión<textarea name="rs" rows="3" maxlength="120" required></textarea></label><div id="kkmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Expulsar</button></div></form>`,true);break}
   case 'kickdel':fs('DELETE','salidas/'+b.dataset.id).then(()=>{kicks=kicks.filter(x=>x.id!==b.dataset.id);partSig='';render(1);toast('Eliminada de tu lista')}).catch(()=>toast('No se pudo eliminar'));break
   case 'exok':(store.exAck=store.exAck||[]).push(b.dataset.id);save();closeEx();partSig='';render(1);break
@@ -2422,6 +2443,7 @@ document.addEventListener('click',e=>{
   case 'qprev':qGo(c,-1);break;
   case 'qform':if(isLk(c,+b.dataset.i||0)){lockedFx(b);break}c.mode='f';c.step=+b.dataset.i||0;save();render();break;
   case 'qmode':{c.mode='q';const l=qList(c);const f=l.find(q=>!q.opt&&!q.v(c));c.q=(f||l[l.length-1]).id;save();render();break}
+  case 'rname':{const c=cur();if(!c)break;let n=npcName();for(let i=0;i<4&&n===c.name;i++)n=npcName();c.name=n.slice(0,60);save();render(1);b.classList.add('spin');const t=$('#ttl');if(t)t.textContent=c.name;break}
   case 'qset':setPath(c,b.dataset.f,v);save();render(1);break;
   case 'qmetal':c.metalChoice=v;if(c.path&&((v==='si')!==!!METAL[c.path])){c.path='';c.powers={alo:[],fer:[]}}save();render(1);break;
   case 'qatt':{const k=b.dataset.k,i=ORD.indexOf(k),bud=attrBudget(c);c.attrs[k]=+v;let used=0;for(let j=0;j<=i;j++)used+=c.attrs[ORD[j]];
