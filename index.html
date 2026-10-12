@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=100"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=100">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=102"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=102">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1666,8 +1666,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='100';
-const APPN='Manuales sin límite de tamaño: la app analiza el archivo en tu dispositivo, guarda en la nube solo el resumen y deja el original en este dispositivo para abrirlo cuando quieras.';
+const APPV='102';
+const APPN='Manuales: el archivo ya no se copia en la app, solo se recuerda su ruta en tu dispositivo; el manual completo se abre en una pestaña nueva y puedes alternar entre resumen y manual completo.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1863,7 +1863,7 @@ function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(nul
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
 
 /* ---------- Manuales del GM: el resumen va a la nube y el archivo original se queda en este dispositivo ---------- */
-const MAN_N=10;let manList=null,manUp=false,manLocal=new Set();const manUrl=new Map();
+const MAN_N=10;let manList=null,manUp=false,manLocal=new Map();
 const manAllowed=()=>!!session&&store.mode==='gm';
 function manType(f){const n=(f.name||'').toLowerCase();if(f.type&&/^(application\/pdf|text\/plain|text\/markdown|image\/(png|jpeg|webp|gif))$/.test(f.type))return f.type;if(/\.pdf$/.test(n))return'application/pdf';if(/\.md$/.test(n))return'text/markdown';if(/\.txt$/.test(n))return'text/plain';return''}
 const manSz=n=>n>=1073741824?(n/1073741824).toFixed(1)+' GB':n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
@@ -1897,35 +1897,60 @@ function manSumHtml(m){let r=null;try{r=m.sum?JSON.parse(m.sum):null}catch(e){}
  if(!r||(!(r.s&&r.s.length)&&!(r.o&&r.o.length)))return `<section class="mansum"><h4>Resumen</h4><p class="hint" style="margin:0">${/^image/.test(m.type)?'Las imágenes no tienen resumen automático.':'No se ha podido extraer texto de este archivo (puede ser un documento escaneado), así que no hay resumen.'}</p></section>`;
  return `<section class="mansum"><h4>Resumen automático${r.p?' · '+r.p+' páginas':''}</h4>${r.o&&r.o.length?`<h5>Contenido</h5><ul class="manol">${r.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${r.s&&r.s.length?`<h5>Ideas principales</h5><ul class="manss">${r.s.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}<small class="hint">Extracto generado automáticamente a partir del texto del manual. Para consultar una regla exacta abre el manual completo.</small></section>`}
 async function manLoad(){if(!session)return;try{manList=(await fsQuery('manuales','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0))}catch(e){if(!Array.isArray(manList))manList=[]}
- try{manLocal=new Set(await idbKeys())}catch(e){manLocal=new Set()}}
-function manRows(open){const L=manList||[];return L.length?`<div class="alist mancards">${L.map(m=>{const lc=manLocal.has(m.id)||(m.n|0)>0;return `<div class="arow mancard"><div class="ahead" style="cursor:default"><span class="aav">${manIco(m.type)}</span><span class="anm"><b>${esc(m.name)}</b><small>${manSz(m.size|0)} · ${lc?'archivo en este dispositivo':'sin archivo en este dispositivo'}</small></span><button type="button" class="btn sm pri" data-act="manopen" data-id="${esc(m.id)}">Abrir</button><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(m.id)}">Borrar</button></div></div>`}).join('')}</div>`:`<p class="hint" style="margin:0">${manList===null?'Cargando tus manuales…':'Aún no has subido ningún manual.'}</p>`}
+ try{const mp=new Map();for(const k of await idbKeys()){let v=null;try{v=await idbGet(k)}catch(e){}mp.set(k,v&&typeof v.getFile==='function'?'h':'b')}manLocal=mp}catch(e){manLocal=new Map()}}
+const manFSA=()=>typeof window.showOpenFilePicker==='function';
+function manState(m){return manLocal.get(m.id)||((m.n|0)>0?'c':'')}
+function manRows(open){const L=manList||[];return L.length?`<div class="alist mancards">${L.map(m=>{const st=manState(m);const lb=st==='h'?'archivo vinculado en este dispositivo (no ocupa espacio)':st==='b'?'copia dentro de la app (ocupa espacio)':st==='c'?'copia en la nube':'archivo sin vincular';return `<div class="arow mancard"><div class="ahead" style="cursor:default"><span class="aav">${manIco(m.type)}</span><span class="anm"><b>${esc(m.name)}</b><small>${manSz(m.size|0)} · ${lb}</small></span><button type="button" class="btn sm pri" data-act="manopen" data-id="${esc(m.id)}">Abrir</button><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(m.id)}">Borrar</button></div></div>`}).join('')}</div>`:`<p class="hint" style="margin:0">${manList===null?'Cargando tus manuales…':'Aún no has subido ningún manual.'}</p>`}
 function manSec(){if(manList===null)manLoad().then(()=>{if(scr==='menu'&&store.mode==='gm'&&!store.cur&&!document.querySelector('dialog[open]'))render(1)});
- return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><label class="btn pri" for="manfile">+ Subir manual</label><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden></div><p class="hint">Sube tus manuales (PDF, texto o imágenes, sin límite de tamaño). La app los analiza en tu dispositivo, guarda en la nube solo el resumen y deja el archivo original en este dispositivo para abrirlo cuando lo necesites. Solo tú, como Game Master, puedes verlos.</p><div id="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
+ return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><button type="button" class="btn pri" data-act="manpick">+ Subir manual</button><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden></div><p class="hint">Elige un manual (PDF, texto o imagen, sin límite de tamaño). La app lo analiza, guarda en la nube solo el resumen y recuerda dónde está el archivo en tu dispositivo para abrirlo cuando lo necesites, sin copiarlo ni ocupar espacio. Solo tú, como Game Master, puedes verlo.</p><div id="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
 function manDlg(){if(!manAllowed())return;showDlg('Manuales del Game Master',`<p class="hint" style="margin:0">Solo tú puedes consultar estos manuales.</p>${manRows(true)}${manList&&manList.length?'':'<p class="hint">Súbelos desde el inicio del modo Game Master.</p>'}`,true);$('#dlg').classList.add('mand');if(manList===null)manLoad().then(()=>{if($('#dlg').open&&$('#dlg').classList.contains('mand'))manDlg()})}
 function manProg(t,pc){const e=document.getElementById('manprog');if(e)e.innerHTML=t?`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`:''}
-document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='manfile'&&t.id!=='manlink'))return;const f=t.files&&t.files[0],lid=t.dataset.id;t.value='';if(!f||!manAllowed())return;
- const ty=manType(f);if(!ty){toast('Formato no admitido: usa PDF, TXT, MD o imagen');return}
- if(t.id==='manlink'){try{await idbPut(lid,f);manLocal.add(lid);const o=manUrl.get(lid);if(o){try{URL.revokeObjectURL(o.url)}catch(x){}manUrl.delete(lid)}toast('Archivo vinculado en este dispositivo');manOpen(lid)}catch(x){toast('No se pudo guardar el archivo en este dispositivo')}return}
+const MAN_PICK={types:[{description:'Manuales',accept:{'application/pdf':['.pdf'],'text/plain':['.txt'],'text/markdown':['.md'],'image/*':['.png','.jpg','.jpeg','.webp','.gif']}}]};
+async function manPickFile(){if(!manFSA())return 'input';try{const [h]=await window.showOpenFilePicker(MAN_PICK);return {h,f:await h.getFile()}}catch(e){return null}}
+async function manPickNew(){if(!manAllowed()||manUp)return;const r=await manPickFile();if(r==='input'){const i=document.getElementById('manfile');if(i)i.click();return}if(r)manProcess(r.f,r.h)}
+async function manProcess(f,h){const ty=manType(f);if(!ty){toast('Formato no admitido: usa PDF, TXT, MD o imagen');return}
  if(manUp)return;if((manList||[]).length>=MAN_N){toast('Máximo '+MAN_N+' manuales: borra alguno antes');return}
  manUp=true;const id=uid()+uid(),mid=session.uid+'_'+id;
- try{manProg('Preparando…',2);const sm=await manAnalyze(f,ty);manProg('Guardando…',95);let kept=true;
-  try{await idbPut(mid,f);try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(x){}}catch(x){kept=false}
+ try{manProg('Preparando…',2);const sm=await manAnalyze(f,ty);manProg('Guardando…',95);let kept=false;
+  if(h){try{await idbPut(mid,h);kept=true}catch(x){}}
   await fs('PATCH','manuales/'+mid,fbEnc({uid:session.uid,name:f.name.slice(0,120),type:ty,size:f.size,n:0,sum:sm,created:Date.now()}));
-  manProg('¡Manual subido!',100);setTimeout(()=>manProg(''),1500);manList=null;await manLoad();toast(kept?'Manual guardado: resumen en la nube y archivo en este dispositivo':'Resumen guardado, pero no se pudo guardar el archivo en este dispositivo');if(scr==='menu'&&!store.cur)render(1)}
+  manProg('¡Manual guardado!',100);setTimeout(()=>manProg(''),1500);manList=null;await manLoad();toast(kept?'Resumen guardado y archivo vinculado en este dispositivo':'Resumen guardado. Este navegador no puede recordar la ruta: elige el archivo cada vez que quieras abrirlo');if(scr==='menu'&&!store.cur)render(1)}
  catch(x){manProg('');toast(x&&x.code==='NET'?'Sin conexión: no se pudo guardar':'No se pudo guardar el manual (revisa las reglas de Firestore)')}
- manUp=false});
-async function manGetUrl(m){let u=manUrl.get(m.id);if(u)return u;let blob=null;try{blob=await idbGet(m.id)}catch(e){}
- if(!blob&&(m.n|0)>0){try{const parts=new Array(m.n|0);await manPool(m.n|0,4,async i=>{const d=await fs('GET','manchunks/'+m.id+'_'+i);if(!d)throw 0;const bin=atob(fbDec(d).d||''),a=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)a[k]=bin.charCodeAt(k);parts[i]=a});blob=new Blob(parts,{type:m.type})}catch(e){blob=null}}
- if(!blob)return null;u={url:URL.createObjectURL(blob.type?blob:new Blob([blob],{type:m.type})),text:/^text/.test(m.type)?await blob.text():''};manUrl.set(m.id,u);return u}
-async function manOpen(id){if(!manAllowed())return;const m=(manList||[]).find(x=>x.id===id);if(!m)return;
- const u=await manGetUrl(m),isImg=/^image/.test(m.type);
- const act=u?`${isImg?'':`<button type="button" class="btn sm pri" data-act="manfull" data-id="${esc(id)}">${m.type==='application/pdf'?'Ver manual completo (PDF)':'Ver texto completo'}</button>`}<a class="btn sm" href="${u.url}" target="_blank" rel="noopener">Abrir en pestaña nueva</a>`:`<label class="btn sm pri" for="manlink">Vincular el archivo en este dispositivo</label><input type="file" id="manlink" data-id="${esc(id)}" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden>`;
- showDlg(esc(m.name),`<div class="row"><button type="button" class="btn sm" data-act="manview">‹ Manuales</button>${act}<button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(id)}">Borrar manual</button></div>${u?'':'<p class="hint">El archivo original no está en este dispositivo (se subió desde otro). Pulsa «Vincular» y elige el mismo archivo para abrirlo aquí; el resumen funciona siempre.</p>'}${isImg&&u?`<div class="manimg"><img src="${u.url}" alt="${esc(m.name)}"></div>`:manSumHtml(m)}<div id="manbox"></div>`,true);$('#dlg').classList.add('mand','manv')}
-async function manShowFull(id){const m=(manList||[]).find(x=>x.id===id),u=m&&await manGetUrl(m),bx=$('#manbox');if(!u||!bx)return;
- bx.innerHTML=m.type==='application/pdf'?`<iframe class="manview" src="${u.url}" title="${esc(m.name)}"></iframe>`:/^image/.test(m.type)?`<div class="manimg"><img src="${u.url}" alt="${esc(m.name)}"></div>`:`<pre class="mantxt">${esc(u.text)}</pre>`;
- const sm=document.querySelector('.mansum');if(sm)sm.classList.add('min');bx.scrollIntoView({behavior:'smooth',block:'start'})}
+ manUp=false}
+document.addEventListener('change',async e=>{const t=e.target;if(!t||(t.id!=='manfile'&&t.id!=='manlink'))return;const f=t.files&&t.files[0],lid=t.dataset.id;t.value='';if(!f||!manAllowed())return;
+ if(t.id==='manfile'){manProcess(f,null);return}
+ const m=(manList||[]).find(x=>x.id===lid);if(!m)return;const u=URL.createObjectURL(f);window.open(u,'_blank');setTimeout(()=>{try{URL.revokeObjectURL(u)}catch(x){}},120000)});
+/* obtener el archivo: ruta vinculada (sin copiar), copia antigua o nube antigua */
+async function manFile(m,gesture){let v=null;try{v=await idbGet(m.id)}catch(e){}
+ if(v&&typeof v.getFile==='function'){try{let p=await v.queryPermission({mode:'read'});if(p!=='granted')p=await v.requestPermission({mode:'read'});if(p!=='granted')return {err:'perm'};return {f:await v.getFile()}}catch(e){return {err:'gone'}}}
+ if(v instanceof Blob)return {f:v};
+ if((m.n|0)>0){try{const parts=new Array(m.n|0);await manPool(m.n|0,4,async i=>{const d=await fs('GET','manchunks/'+m.id+'_'+i);if(!d)throw 0;const bin=atob(fbDec(d).d||''),a=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)a[k]=bin.charCodeAt(k);parts[i]=a});return {f:new Blob(parts,{type:m.type})}}catch(e){}}
+ return {err:'none'}}
+let manMode='sum';
+function manBody(m){const st=manState(m);
+ if(manMode==='sum')return manSumHtml(m);
+ const hint=st==='h'?'El manual se abre desde el archivo de tu dispositivo, en una pestaña nueva del navegador.':st==='b'||st==='c'?'Tienes una copia dentro de la app. Vincula el archivo original para liberar ese espacio.':'Este navegador no recuerda la ruta del archivo: elígelo cuando quieras abrirlo.';
+ const btns=manFSA()?`<button type="button" class="btn pri" data-act="manext" data-id="${esc(m.id)}">Abrir manual completo</button><button type="button" class="btn sm" data-act="manrelink" data-id="${esc(m.id)}">${st==='h'?'Cambiar archivo vinculado':'Vincular archivo y liberar espacio'}</button>`:`<label class="btn pri" for="manlink">Elegir archivo y abrir el manual completo</label><input type="file" id="manlink" data-id="${esc(m.id)}" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden>`;
+ return `<section class="mansum"><h4>Manual completo</h4><p class="hint" style="margin:0 0 10px">${hint}</p><div class="row">${btns}</div></section>`}
+function manOpen(id,mode){if(!manAllowed())return;const m=(manList||[]).find(x=>x.id===id);if(!m)return;manMode=mode||'sum';
+ showDlg(esc(m.name),`<div class="row"><button type="button" class="btn sm" data-act="manview">‹ Manuales</button><div class="seg manseg" role="tablist"><button type="button" data-act="mansum" data-id="${esc(id)}" aria-pressed="${manMode==='sum'}">Resumen</button><button type="button" data-act="manfull" data-id="${esc(id)}" aria-pressed="${manMode==='full'}">Manual completo</button></div><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(id)}">Borrar manual</button></div><div id="manbox">${manBody(m)}</div>`,true);$('#dlg').classList.add('mand','manv')}
+async function manExt(id){const m=(manList||[]).find(x=>x.id===id);if(!m)return;const w=window.open('','_blank');const r=await manFile(m);
+ if(r.f){const u=URL.createObjectURL(r.f.type||!m.type?r.f:new Blob([r.f],{type:m.type}));if(w)w.location.href=u;else window.open(u,'_blank');setTimeout(()=>{try{URL.revokeObjectURL(u)}catch(x){}},300000);return}
+ if(w)try{w.close()}catch(x){}toast(r.err==='perm'?'Necesito permiso para leer el archivo: vuelve a pulsar y acepta':'No encuentro el archivo: vincúlalo de nuevo')}
+async function manRelink(id){const r=await manPickFile();if(!r||r==='input')return;try{await idbPut(id,r.h);manLocal.set(id,'h');toast('Archivo vinculado; copia interna eliminada');const m=(manList||[]).find(x=>x.id===id);if(m&&$('#manbox'))$('#manbox').innerHTML=manBody(m)}catch(e){toast('No se pudo vincular el archivo')}}
+function manRmDlg(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
+ showDlg('Borrar manual',`<p style="margin:0">¿Seguro que quieres borrar <b>${esc(m.name)}</b>?</p><p class="hint" style="margin:6px 0 0">Se eliminarán el resumen y el archivo guardado en este dispositivo. Esta acción no se puede deshacer.</p><div id="manrmp" aria-live="polite"></div><div class="row"><button type="button" class="btn danger" data-act="manrm2" data-id="${esc(id)}">Sí, borrar</button><button type="button" class="btn" data-act="manrmno">No, cancelar</button></div>`,true)}
+function manRmProg(t,pc){const e=document.getElementById('manrmp');if(e)e.innerHTML=`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`}
+const manWait=ms=>new Promise(r=>setTimeout(r,ms));
 async function manRm(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
- try{for(let i=0;i<(m.n|0);i++)await fs('DELETE','manchunks/'+id+'_'+i);await fs('DELETE','manuales/'+id);try{await idbDel(id)}catch(e){}manLocal.delete(id);const u=manUrl.get(id);if(u){try{URL.revokeObjectURL(u.url)}catch(e){}manUrl.delete(id)}manList=(manList||[]).filter(x=>x.id!==id);toast('Manual borrado');if($('#dlg').open&&$('#dlg').classList.contains('mand'))manDlg();if(scr==='menu'&&!store.cur)render(1)}catch(e){toast('No se pudo borrar el manual')}}
+ document.querySelectorAll('#dlg [data-act=manrm2],#dlg [data-act=manrmno]').forEach(x=>x.disabled=true);
+ try{manRmProg('Borrando el archivo de este dispositivo…',10);try{await idbDel(id)}catch(e){}manLocal.delete(id);manRmProg('Archivo desvinculado de este dispositivo',45);await manWait(350);
+  const nc=m.n|0;for(let i=0;i<nc;i++){await fs('DELETE','manchunks/'+id+'_'+i);manRmProg('Borrando datos de la nube… '+(i+1)+'/'+nc,45+30*(i+1)/nc)}
+  manRmProg('Borrando el resumen de la nube…',80);await fs('DELETE','manuales/'+id);
+  manRmProg('¡Manual borrado!',100);await manWait(700);
+  manList=(manList||[]).filter(x=>x.id!==id);toast('Manual borrado');
+  if($('#dlg').open&&$('#dlg').querySelector('#manrmp'))manDlg();if(scr==='menu'&&!store.cur)render(1)}
+ catch(e){manRmProg('No se pudo completar el borrado. Inténtalo de nuevo.',0);document.querySelectorAll('#dlg [data-act=manrm2],#dlg [data-act=manrmno]').forEach(x=>x.disabled=false)}}
 
 const PENI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.500 6.500l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
@@ -2711,9 +2736,15 @@ document.addEventListener('click',e=>{
   case 'admrow':admOpen=admOpen===b.dataset.u?null:b.dataset.u;admState=null;admView(true);break;
   case 'admf':admF=b.dataset.v;admView(true);break;
   case 'manview':manDlg();break;
-  case 'manfull':manShowFull(b.dataset.id);break;
+  case 'manpick':manPickNew();break;
+  case 'manfull':{const m=(manList||[]).find(x=>x.id===b.dataset.id);if(m){manMode='full';const bx=$('#manbox');if(bx)bx.innerHTML=manBody(m);document.querySelectorAll('.manseg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.act==='manfull'));if(manFSA())manExt(m.id)}break}
+  case 'mansum':{const m=(manList||[]).find(x=>x.id===b.dataset.id);if(m){manMode='sum';const bx=$('#manbox');if(bx)bx.innerHTML=manBody(m);document.querySelectorAll('.manseg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.act==='mansum'))}break}
+  case 'manext':manExt(b.dataset.id);break;
+  case 'manrelink':manRelink(b.dataset.id);break;
   case 'manopen':manOpen(b.dataset.id);break;
-  case 'manrm':if(b.dataset.c!=='1'){b.dataset.c='1';const t0=b.textContent;b.textContent='¿Seguro?';setTimeout(()=>{if(b.isConnected){b.dataset.c='';b.textContent=t0}},3000)}else manRm(b.dataset.id);break;
+  case 'manrm':manRmDlg(b.dataset.id);break;
+  case 'manrm2':manRm(b.dataset.id);break;
+  case 'manrmno':manDlg();break;
   case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}try{await fs('DELETE','presencia/'+u)}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
