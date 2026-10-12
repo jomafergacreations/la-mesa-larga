@@ -2,7 +2,7 @@
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=96"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=96">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=97"><link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png?v=97">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1112,6 +1112,75 @@ html[data-dev=tablet] .hb .bell{margin-left:0}html[data-dev=tablet] .hb .hlp{mar
 html[data-dev=tablet] .hb .hn{flex:1;min-width:0}html[data-dev=tablet] #npcpop{top:calc(176px + env(safe-area-inset-top,0px))}
 body.has-tb .hb .bell{display:none}body.has-tb .hb .bell+.hlp{margin-left:auto}
 
+
+/* manuales */
+.mansec{margin-top:22px}
+.mancards .mancard{animation:manin .45s cubic-bezier(.2,.8,.2,1) both}.mancards .mancard:nth-child(2){animation-delay:.06s}.mancards .mancard:nth-child(3){animation-delay:.12s}.mancards .mancard:nth-child(n+4){animation-delay:.18s}
+@keyframes manin{from{opacity:0;transform:translateY(10px)}}
+.manbar{height:8px;border-radius:99px;background:rgba(120,125,140,.25);overflow:hidden;margin:8px 0 4px}.manbar i{display:block;height:100%;background:linear-gradient(90deg,var(--pc,#2563EB),#0F9D9A);transition:width .35s ease}
+#dlg.mand{width:min(980px,calc(100vw - 20px))}#dlg.manv[open]{animation:manv .35s cubic-bezier(.2,.8,.2,1)}@keyframes manv{from{opacity:0;transform:scale(.97)}}
+.manview{width:100%;height:68vh;border:1px solid rgba(120,125,140,.35);border-radius:14px;background:#fff;margin-top:10px}
+.manimg{max-height:68vh;overflow:auto;margin-top:10px}.manimg img{max-width:100%;border-radius:12px;display:block}
+.mantxt{white-space:pre-wrap;word-break:break-word;max-height:68vh;overflow:auto;margin:10px 0 0;padding:14px;border-radius:14px;border:1px solid rgba(120,125,140,.35);font:.9rem/1.5 var(--sans,system-ui)}
+@media(prefers-reduced-motion:reduce){.mancards .mancard,#dlg.manv[open]{animation:none}.manbar i{transition:none}}
+
+.mansum{margin-top:12px;padding:14px 16px;border-radius:16px;border:1px solid rgba(120,125,140,.35);background:rgba(120,125,140,.08);animation:manin .4s ease both}.mansum h4{margin:0 0 6px;font-size:1.05rem}.mansum h5{margin:12px 0 4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.mansum ul{margin:0;padding-left:20px;display:grid;gap:6px}.manss li{line-height:1.45}.manol{columns:2;column-gap:28px}@media(max-width:560px){.manol{columns:1}}
+.mansum.min{max-height:140px;overflow:hidden;position:relative}.mansum.min::after{content:'';position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,var(--bg,rgba(255,255,255,.9)))}
+.hb .hn em.supr{background:linear-gradient(90deg,#F59E0B,#D9480F);color:#fff;letter-spacing:.14em;padding:1px 8px;border-radius:99px;display:inline-block;align-self:flex-start;width:fit-content}
+/* modo GM: tema claro */
+html[data-mode=gm][data-theme="light"]:root body.hub{--h-bg:#FFF3EA;--h-card:#FFFFFF;--h-ink:#3A1620;--h-mut:#7A4A3A;--h-line:#EBBFAA;background:var(--h-bg);color:var(--h-ink)}
+html[data-mode=gm][data-theme="light"] #hbg .au{opacity:.55}
+html[data-mode=gm][data-theme="light"] #hbg .bgd{opacity:.1;color:#C2502F}
+html[data-mode=gm][data-theme="light"] body.hub .hh,html[data-mode=gm][data-theme="light"] body.hub .hn b{color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .hs,html[data-mode=gm][data-theme="light"] body.hub .hint,html[data-mode=gm][data-theme="light"] body.hub .hback{color:#7A4A3A}
+html[data-mode=gm][data-theme="light"] body.hub .hh2{border-left-color:#D9603F;color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .glass,html[data-mode=gm][data-theme="light"] body.hub .gmb,html[data-mode=gm][data-theme="light"] body.hub .card,html[data-mode=gm][data-theme="light"] body.hub .npcpanel{background:rgba(255,255,255,.86);border-color:rgba(217,96,63,.45);color:#3A1620}
+html[data-mode=gm][data-theme="light"] body.hub .glass h3,html[data-mode=gm][data-theme="light"] body.hub .glass .f,html[data-mode=gm][data-theme="light"] body.hub .gmb b,html[data-mode=gm][data-theme="light"] body.hub .card h3{color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .gmb small,html[data-mode=gm][data-theme="light"] body.hub .card .meta,html[data-mode=gm][data-theme="light"] body.hub .card .hint{color:#7A4A3A}
+html[data-mode=gm][data-theme="light"] body.hub .glass input[type=text],html[data-mode=gm][data-theme="light"] body.hub .glass select,html[data-mode=gm][data-theme="light"] body.hub .glass textarea{background:#fff;color:#3A1620;border-color:rgba(217,96,63,.5)}
+html[data-mode=gm][data-theme="light"] body.hub .card:not(.chapter) h3{background:none;color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .stat{background:rgba(217,96,63,.1);color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .btn:not(.pri):not(.danger){background:rgba(217,96,63,.1);color:#7A2A18;border-color:rgba(217,96,63,.55)}
+html[data-mode=gm][data-theme="light"] body.hub .btn.ghost{background:transparent}
+html[data-mode=gm][data-theme="light"] body.hub .apb.ok{color:#15803D}html[data-mode=gm][data-theme="light"] body.hub .apb.wait{color:#B45309}
+html[data-mode=gm][data-theme="light"] .tbin{background:rgba(255,246,240,.92)!important;border-color:#D9603F!important}
+html[data-mode=gm][data-theme="light"] #topbar .tbbrand,html[data-mode=gm][data-theme="light"] #topbar .tbi{color:#4A1624}
+html[data-mode=gm][data-theme="light"] #topbar .tbi.cur{color:#B23A1C;background:rgba(217,96,63,.16)}
+html[data-mode=gm][data-theme="light"] #topbar .tbd{background:#FFF6F0;border-color:#D9603F}html[data-mode=gm][data-theme="light"] #topbar .tbd button{color:#4A1624}
+html[data-mode=gm][data-theme="light"] #fdock{background-color:rgba(255,246,240,.92)}html[data-mode=gm][data-theme="light"] #fdock .fd{color:#4A1624}
+html[data-mode=gm][data-theme="light"] .invrow{color:#4A1624}
+html[data-mode=gm][data-theme="light"] body.hub .stat b{color:#B23A1C}html[data-mode=gm][data-theme="light"] body.hub .stat span{color:#7A4A3A}
+html[data-mode=gm][data-theme="light"] body.hub .tag:not(.rv),html[data-mode=gm][data-theme="light"] body.hub .era{color:#7A2A18;border-color:rgba(122,42,24,.4)}
+html[data-mode=gm][data-theme="light"] body.hub .btn.danger{color:#B42318;border-color:#D9603F;background:transparent}
+html[data-mode=gm][data-theme="light"] .hb .bell,html[data-mode=gm][data-theme="light"] .hb .hlp{background:rgba(255,255,255,.85);color:#4A1624;border-color:rgba(217,96,63,.45)}
+@media (prefers-color-scheme:light){
+html[data-mode=gm]:not([data-theme="dark"]):root body.hub{--h-bg:#FFF3EA;--h-card:#FFFFFF;--h-ink:#3A1620;--h-mut:#7A4A3A;--h-line:#EBBFAA;background:var(--h-bg);color:var(--h-ink)}
+html[data-mode=gm]:not([data-theme="dark"]) #hbg .au{opacity:.55}
+html[data-mode=gm]:not([data-theme="dark"]) #hbg .bgd{opacity:.1;color:#C2502F}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .hh,html[data-mode=gm]:not([data-theme="dark"]) body.hub .hn b{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .hs,html[data-mode=gm]:not([data-theme="dark"]) body.hub .hint,html[data-mode=gm]:not([data-theme="dark"]) body.hub .hback{color:#7A4A3A}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .hh2{border-left-color:#D9603F;color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass,html[data-mode=gm]:not([data-theme="dark"]) body.hub .gmb,html[data-mode=gm]:not([data-theme="dark"]) body.hub .card,html[data-mode=gm]:not([data-theme="dark"]) body.hub .npcpanel{background:rgba(255,255,255,.86);border-color:rgba(217,96,63,.45);color:#3A1620}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass h3,html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass .f,html[data-mode=gm]:not([data-theme="dark"]) body.hub .gmb b,html[data-mode=gm]:not([data-theme="dark"]) body.hub .card h3{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .gmb small,html[data-mode=gm]:not([data-theme="dark"]) body.hub .card .meta,html[data-mode=gm]:not([data-theme="dark"]) body.hub .card .hint{color:#7A4A3A}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass input[type=text],html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass select,html[data-mode=gm]:not([data-theme="dark"]) body.hub .glass textarea{background:#fff;color:#3A1620;border-color:rgba(217,96,63,.5)}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .card:not(.chapter) h3{background:none;color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .stat{background:rgba(217,96,63,.1);color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .btn:not(.pri):not(.danger){background:rgba(217,96,63,.1);color:#7A2A18;border-color:rgba(217,96,63,.55)}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .btn.ghost{background:transparent}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .apb.ok{color:#15803D}html[data-mode=gm]:not([data-theme="dark"]) body.hub .apb.wait{color:#B45309}
+html[data-mode=gm]:not([data-theme="dark"]) .tbin{background:rgba(255,246,240,.92)!important;border-color:#D9603F!important}
+html[data-mode=gm]:not([data-theme="dark"]) #topbar .tbbrand,html[data-mode=gm]:not([data-theme="dark"]) #topbar .tbi{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) #topbar .tbi.cur{color:#B23A1C;background:rgba(217,96,63,.16)}
+html[data-mode=gm]:not([data-theme="dark"]) #topbar .tbd{background:#FFF6F0;border-color:#D9603F}html[data-mode=gm]:not([data-theme="dark"]) #topbar .tbd button{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) #fdock{background-color:rgba(255,246,240,.92)}html[data-mode=gm]:not([data-theme="dark"]) #fdock .fd{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) .invrow{color:#4A1624}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .stat b{color:#B23A1C}html[data-mode=gm]:not([data-theme="dark"]) body.hub .stat span{color:#7A4A3A}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .tag:not(.rv),html[data-mode=gm]:not([data-theme="dark"]) body.hub .era{color:#7A2A18;border-color:rgba(122,42,24,.4)}
+html[data-mode=gm]:not([data-theme="dark"]) body.hub .btn.danger{color:#B42318;border-color:#D9603F;background:transparent}
+html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([data-theme="dark"]) .hb .hlp{background:rgba(255,255,255,.85);color:#4A1624;border-color:rgba(217,96,63,.45)}
+}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -1171,9 +1240,9 @@ let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTa
 const isAdmin=()=>!!session&&!!session.owner;
 const myRole=()=>isAdmin()?3:(session&&session.role)|0;
 const canAdm=()=>!!session&&myRole()>=1;
-const canInc=()=>!!session&&(isAdmin()||(session.inc|0)===1);
-const canGive=()=>!!session&&(isAdmin()||(session.gp|0)===1);
-const canList=()=>!!session&&(myRole()>=1||canGive());
+const canInc=()=>!!session&&myRole()>=2;
+const canGive=()=>isAdmin();
+const canList=()=>!!session&&myRole()>=1;
 const canMenu=()=>canList()||canInc();
 const ROLEN=['Sin permisos','Ver cuentas','Administrador','Propietario'];
 /* ---------- cuentas en la nube: Firebase Auth + Firestore (REST) ---------- */
@@ -1240,8 +1309,7 @@ function beat(){if(!session||document.hidden)return;const n=Date.now();fs('PATCH
 async function watchMe(){if(!session||document.hidden||session.owner)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
-  const ni=u.inc|0,ng=u.gp|0;if(ni!==(session.inc|0)||ng!==(session.gp|0)){const oi=session.inc|0;session.inc=ni;session.gp=ng;dockSig='';if(ni&&!oi)toast('Ahora puedes responder incidencias');rpAll=[];rpLoad.f=0;try{topbarSync()}catch(e){}fdockUpdate(cur());render(1)}
-  const nr=u.role|0,old=session.role|0;
+    const nr=u.role|0,old=session.role|0;
   if(nr!==old){session.role=nr;dockSig='';
    if(nr<1){const x=document.querySelector('#dlg[open] .admroot');if(x){try{$('#dlg').close()}catch(e){}}}
    toast(nr>old?'Tus permisos han cambiado: ahora eres '+ROLEN[nr].toLowerCase():'Tus permisos han cambiado: ahora tienes «'+ROLEN[nr]+'»');
@@ -1380,12 +1448,12 @@ function admView(force){
  const rows=list.map(r=>{const k=r.id,self=k===session.uid,rl=r.role|0,open=admOpen===k,act=admState&&admState.u===k?admState.mode:'';
   const can=!self&&me>=2&&rl<me;let det='';
   if(open){let ctl='';
-   const tgtOk=!self&&rl<(isAdmin()?3:2)&&(isAdmin()||((r.gp|0)!==1&&canGive()));
-   if(tgtOk)ctl+=`<div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${(isAdmin()?[0,1,2]:[0,1]).map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div><div class="seg" role="group" aria-label="Incidencias de ${esc(r.name)}"><button type="button" data-act="admperm" data-u="${esc(k)}" data-k="inc" data-v="${(r.inc|0)?0:1}" aria-pressed="${(r.inc|0)===1}">Responder incidencias${(r.inc|0)?': sí':''}</button>${isAdmin()?`<button type="button" data-act="admperm" data-u="${esc(k)}" data-k="gp" data-v="${(r.gp|0)?0:1}" aria-pressed="${(r.gp|0)===1}">Dar permisos${(r.gp|0)?': sí':''}</button>`:''}</div>`;
+   const tgtOk=!self&&rl<3&&isAdmin();
+   if(tgtOk)ctl+=`<div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(k)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>`;
    if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
    det=`<div class="det">${isAdmin()&&r.email?`<span>Correo: <b>${esc(r.email)}</b></span>`:''}<span>Creada: ${fdate(r.created)}</span><span>Última entrada: ${fdate(r.seen||r.created)}</span>${ctl?`<div class="row">${ctl}</div>`:`<span class="hint" style="margin:0">${self?'Esta eres tú.':'No tienes permisos para gestionar esta cuenta.'}</span>`}
    ${act==='del'?`<div class="grid"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`:''}</div>`}
-  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}${(r.inc|0)?'<span class="tag">Incidencias</span>':''}${(r.gp|0)?'<span class="tag">Permisos</span>':''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
+  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
  const chips=onl.length?onl.map(r=>`<span class="onp${prevOn&&!prevOn.includes(r.id)?' new':''}"><i></i>${esc(r.name)}${(r.role|0)>=3?' <small>(propietario)</small>':''}</span>`).join(''):'<span class="hint" style="margin:0">Ahora mismo no hay nadie conectado.</span>';
  admShow(`<div class="grid admw"><div class="admh"><span class="live"><i></i>En vivo</span><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div>
  <div class="tiles">${tile('on',onl.length,'En línea')}${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}</div>
@@ -1598,8 +1666,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='96';
-const APPN='ALPHA es el único superusuario: concede el permiso Admin, responder incidencias y dar permisos. Quien puede dar permisos no puede conceder Admin.';
+const APPV='97';
+const APPN='Nueva sección Manuales para el Game Master: subida de PDF, texto o imágenes con resumen automático y manual completo, solo visible para el GM. ALPHA es SUPER y el rol Admin incluye responder incidencias.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1670,7 +1738,7 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN(),(session.inc|0)+'.'+(session.gp|0)].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,store.avatar?store.avatar.length:0,getTheme(),myRole(),notifN()].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
@@ -1722,7 +1790,7 @@ const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 
 const CARDS='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="6" width="11" height="14" rx="1.500" transform="rotate(-10 9 13)" fill="none" stroke="currentColor" stroke-width="1.600"/><rect x="9.500" y="4" width="11" height="14" rx="1.500" transform="rotate(8 15 11)" fill="none" stroke="currentColor" stroke-width="1.600"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?`<img src="${store.avatar}" alt="">`:`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}"><span class="ti">${ic}</span><span class="tt"><b>${t}</b><span>${d}</span>${soon?'<em>Próximamente</em>':''}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 function screen(){
  if(scr==='npc')return npcEditor();
@@ -1791,8 +1859,67 @@ function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
 function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">En la partida</span>':''}</div>${npcSummary(n)}
  <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
-function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
+function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${manSec()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
+
+/* ---------- Manuales del GM (privados, guardados en la nube por trozos) ---------- */
+const MAN_MAX=8*1024*1024,MAN_CH=600000,MAN_N=6;let manList=null,manUp=false;const manFull=new Map();const manCache=new Map();
+const manAllowed=()=>!!session&&store.mode==='gm';
+function manType(f){const n=(f.name||'').toLowerCase();if(f.type&&/^(application\/pdf|text\/plain|text\/markdown|image\/(png|jpeg|webp|gif))$/.test(f.type))return f.type;if(/\.pdf$/.test(n))return'application/pdf';if(/\.md$/.test(n))return'text/markdown';if(/\.txt$/.test(n))return'text/plain';return''}
+const manSz=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+const manIco=t=>t==='application/pdf'?'PDF':/^image/.test(t)?'IMG':'TXT';
+
+/* resumen automático (extractivo, en el dispositivo) */
+let pdfjsP=null;const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+function pdfLoad(){if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);return pdfjsP||(pdfjsP=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src=PDFJS+'pdf.min.js';sc.onload=async()=>{try{const w=await(await fetch(PDFJS+'pdf.worker.min.js')).text();window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([w],{type:'text/javascript'}))}catch(e){}ok(window.pdfjsLib)};sc.onerror=()=>{pdfjsP=null;no(new Error('pdfjs'))};document.head.appendChild(sc)}))}
+const MSTOP=new Set('de la que el en y a los del se las por un para con no una su al lo como más pero sus le ya o este sí porque esta entre cuando muy sin sobre también me hasta hay donde quien desde todo nos durante todos uno les ni contra otros ese eso ante ellos e esto antes algunos qué unos yo otro otras otra él tanto esa estos mucho quienes nada muchos cual poco ella estar estas algunas algo nosotros mi mis tú te ti tu tus ellas es son ser puede pueden si cada así donde tiene tienen será serán han ha fue era the of and to in is'.split(' '));
+function manSummarize(text,outline,pages){
+ const clean=String(text||'').replace(/\s+/g,' ').trim();const o=(outline||[]).map(x=>String(x).trim()).filter(x=>x.length>1&&x.length<90).slice(0,24);
+ let sents=(clean.match(/[^.!?¿¡]{45,300}[.!?]/g)||[]).slice(0,5000).map(x=>x.trim());
+ if(!sents.length&&!o.length)return '';
+ const fr=Object.create(null);for(const w of clean.toLowerCase().match(/[a-záéíóúñü]{4,}/g)||[])if(!MSTOP.has(w))fr[w]=(fr[w]||0)+1;
+ const sc=sents.map((x,i)=>{const ws=x.toLowerCase().match(/[a-záéíóúñü]{4,}/g)||[];let t=0;for(const w of ws)if(!MSTOP.has(w))t+=fr[w]||0;return{i,x,v:t/Math.sqrt(ws.length+4)}});
+ const top=sc.sort((a,b)=>b.v-a.v).slice(0,8).sort((a,b)=>a.i-b.i).map(q=>q.x.length>260?q.x.slice(0,257)+'…':q.x);
+ return JSON.stringify({p:pages|0,o:o,s:top})}
+function flatOutline(a,out,d){(a||[]).forEach(x=>{if(x&&x.title)out.push(String(x.title));if(x&&x.items&&d<1)flatOutline(x.items,out,d+1)});return out}
+async function manAnalyze(f,ty){try{
+ if(/^image/.test(ty))return '';
+ if(ty==='application/pdf'){const lib=await pdfLoad(),doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;let txt='',lim=Math.min(doc.numPages,200);
+  for(let i=1;i<=lim&&txt.length<600000;i++){const pg=await doc.getPage(i),tc=await pg.getTextContent();txt+=tc.items.map(z=>z.str).join(' ')+' ';manProg('Analizando el manual… '+i+'/'+lim,3+(i/lim)*2)}
+  let ol=[];try{ol=flatOutline(await doc.getOutline(),[],0)}catch(e){}
+  return manSummarize(txt,ol,doc.numPages)}
+ return manSummarize(await f.text(),[],0)}catch(e){return ''}}
+function manSumHtml(m){let r=null;try{r=m.sum?JSON.parse(m.sum):null}catch(e){}
+ if(!r||(!(r.s&&r.s.length)&&!(r.o&&r.o.length)))return `<section class="mansum"><h4>Resumen</h4><p class="hint" style="margin:0">${/^image/.test(m.type)?'Las imágenes no tienen resumen automático.':'No se ha podido extraer texto de este archivo (puede ser un documento escaneado), así que no hay resumen. Puedes abrirlo completo.'}</p></section>`;
+ return `<section class="mansum"><h4>Resumen automático${r.p?' · '+r.p+' páginas':''}</h4>${r.o&&r.o.length?`<h5>Contenido</h5><ul class="manol">${r.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${r.s&&r.s.length?`<h5>Ideas principales</h5><ul class="manss">${r.s.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}<small class="hint">Extracto generado automáticamente a partir del texto del manual. Para consultar una regla exacta abre el manual completo.</small></section>`}
+async function manLoad(){if(!session)return;try{manList=(await fsQuery('manuales','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0))}catch(e){if(!Array.isArray(manList))manList=[]}}
+function manRows(open){const L=manList||[];return L.length?`<div class="alist mancards">${L.map(m=>`<div class="arow mancard"><div class="ahead" style="cursor:default"><span class="aav">${manIco(m.type)}</span><span class="anm"><b>${esc(m.name)}</b><small>${manSz(m.size|0)} · ${rpDate(m.created)}</small></span><button type="button" class="btn sm pri" data-act="manopen" data-id="${esc(m.id)}">Abrir</button>${open?'':`<button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(m.id)}">Borrar</button>`}</div></div>`).join('')}</div>`:`<p class="hint" style="margin:0">${manList===null?'Cargando tus manuales…':'Aún no has subido ningún manual.'}</p>`}
+function manSec(){if(manList===null)manLoad().then(()=>{if(scr==='menu'&&store.mode==='gm'&&!store.cur&&!document.querySelector('dialog[open]'))render(1)});
+ return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><label class="btn pri" for="manfile">+ Subir manual</label><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown,image/*" hidden></div><p class="hint">Sube tus manuales (PDF, texto o imágenes de hasta 8 MB) y consúltalos aquí, también durante las partidas. Solo tú, como Game Master, puedes verlos.</p><div id="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
+function manDlg(){if(!manAllowed())return;showDlg('Manuales del Game Master',`<p class="hint" style="margin:0">Solo tú puedes consultar estos manuales.</p>${manRows(true)}${manList&&manList.length?'':'<p class="hint">Súbelos desde el inicio del modo Game Master.</p>'}`,true);$('#dlg').classList.add('mand');if(manList===null)manLoad().then(()=>{if($('#dlg').open&&$('#dlg').classList.contains('mand'))manDlg()})}
+function manProg(t,pc){const e=document.getElementById('manprog');if(e)e.innerHTML=t?`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`:''}
+function manB64(f){return new Promise((ok,no)=>{const r=new FileReader();r.onerror=no;r.onload=()=>ok(String(r.result).split(',')[1]||'');r.readAsDataURL(f)})}
+document.addEventListener('change',async e=>{const t=e.target;if(!t||t.id!=='manfile')return;const f=t.files&&t.files[0];t.value='';if(!f||!manAllowed())return;
+ const ty=manType(f);if(!ty){toast('Formato no admitido: usa PDF, TXT, MD o imagen');return}
+ if(f.size>MAN_MAX){toast('El archivo supera los 8 MB');return}if(manUp)return;if((manList||[]).length>=MAN_N){toast('Máximo '+MAN_N+' manuales: borra alguno antes');return}
+ manUp=true;const id=uid()+uid(),mid=session.uid+'_'+id;
+ try{manProg('Preparando…',2);const b=await manB64(f),n=Math.max(1,Math.ceil(b.length/MAN_CH));
+  for(let i=0;i<n;i++){await fs('PATCH','manchunks/'+mid+'_'+i,fbEnc({uid:session.uid,d:b.slice(i*MAN_CH,(i+1)*MAN_CH)}));manProg('Subiendo '+(i+1)+' de '+n+'…',5+90*(i+1)/n)}
+  manProg('Analizando el manual…',96);let sm=await manAnalyze(f,ty);if(sm.length>7000)sm=sm.slice(0,0);await fs('PATCH','manuales/'+mid,fbEnc({uid:session.uid,name:f.name.slice(0,120),type:ty,size:f.size,n:n,sum:sm,created:Date.now()}));
+  manProg('¡Manual subido!',100);setTimeout(()=>manProg(''),1500);manList=null;await manLoad();toast('Manual subido');if(scr==='menu'&&!store.cur)render(1)}
+ catch(x){manProg('');toast(x&&x.code==='NET'?'Sin conexión: no se pudo subir':'No se pudo subir el manual (revisa las reglas de Firestore)')}
+ manUp=false});
+async function manOpen(id){if(!manAllowed())return;const m=(manList||[]).find(x=>x.id===id);if(!m)return;
+ let u=manCache.get(id);
+ if(!u){toast('Abriendo manual…');try{let b='';for(let i=0;i<(m.n|0);i++){const d=await fs('GET','manchunks/'+id+'_'+i);if(!d)throw 0;b+=fbDec(d).d||''}
+  const bin=atob(b),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  u={url:URL.createObjectURL(new Blob([arr],{type:m.type})),text:/^text/.test(m.type)?new TextDecoder().decode(arr):''};manCache.set(id,u)}catch(x){toast('No se pudo abrir el manual');return}}
+ const full=m.type==='application/pdf'?`<iframe class="manview" src="${u.url}" title="${esc(m.name)}"></iframe>`:/^image/.test(m.type)?`<div class="manimg"><img src="${u.url}" alt="${esc(m.name)}"></div>`:`<pre class="mantxt">${esc(u.text)}</pre>`;
+ manFull.set(id,full);const isImg=/^image/.test(m.type);
+ showDlg(esc(m.name),`<div class="row"><button type="button" class="btn sm" data-act="manview">‹ Manuales</button>${isImg?'':`<button type="button" class="btn sm pri" data-act="manfull" data-id="${esc(id)}">${m.type==='application/pdf'?'Ver manual completo (PDF)':'Ver texto completo'}</button>`}<a class="btn sm" href="${u.url}" target="_blank" rel="noopener">Abrir en pestaña nueva</a></div>${isImg?full:manSumHtml(m)}<div id="manbox"></div>`,true);$('#dlg').classList.add('mand','manv')}
+async function manRm(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
+ try{for(let i=0;i<(m.n|0);i++)await fs('DELETE','manchunks/'+id+'_'+i);await fs('DELETE','manuales/'+id);const u=manCache.get(id);if(u){try{URL.revokeObjectURL(u.url)}catch(e){}manCache.delete(id)}manList=(manList||[]).filter(x=>x.id!==id);toast('Manual borrado');if(scr==='menu'&&!store.cur)render(1)}catch(e){toast('No se pudo borrar el manual')}}
+
 const PENI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.500 6.500l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
  const sk=SKILLS.filter(s=>(+n.skills[s[0]]||0)>0).map(s=>`<li><b>${s[1]}</b> ${sg(npcMod(n,s[0]))} <small>(${n.skills[s[0]]} grado${n.skills[s[0]]>1?'s':''})</small></li>`).join('');
@@ -1964,7 +2091,7 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
  <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Son privados hasta que los metas en la partida: en ese momento se revelan automáticamente a tus jugadores, y seguirán visibles hasta que los retires.</p>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
- <section class="glass" style="margin-top:16px"><div class="row">${p.end==='1'?'<span class="apb wait">Partida finalizada · solo lectura</span>':`<button class="btn" data-act="partend" data-id="${p.id}">Finalizar partida</button>`}<button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
+ <section class="glass" style="margin-top:16px"><div class="row"><button type="button" class="btn" data-act="manview">Consultar manuales</button>${p.end==='1'?'<span class="apb wait">Partida finalizada · solo lectura</span>':`<button class="btn" data-act="partend" data-id="${p.id}">Finalizar partida</button>`}<button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}"><h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
@@ -2576,8 +2703,11 @@ document.addEventListener('click',e=>{
   case 'admre':admDlg();break;
   case 'admrow':admOpen=admOpen===b.dataset.u?null:b.dataset.u;admState=null;admView(true);break;
   case 'admf':admF=b.dataset.v;admView(true);break;
-  case 'admrole':if(canGive()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
-  case 'admperm':if(canGive()){const u=b.dataset.u,k=b.dataset.k,v=+b.dataset.v?1:0,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&(k==='inc'||(k==='gp'&&isAdmin()))&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){const o={};o[k]=v;fs('PATCH','users/'+u,fbEnc(o),maskQ({[k]:1})).then(()=>{x[k]=v;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
+  case 'manview':manDlg();break;
+  case 'manfull':{const bx=$('#manbox'),h=manFull.get(b.dataset.id);if(bx&&h){bx.innerHTML=h;const sm=document.querySelector('.mansum');if(sm)sm.classList.add('min');bx.scrollIntoView({behavior:'smooth',block:'start'})}break}
+  case 'manopen':manOpen(b.dataset.id);break;
+  case 'manrm':if(b.dataset.c!=='1'){b.dataset.c='1';b.textContent='¿Seguro?';setTimeout(()=>{if(b.isConnected){b.dataset.c='';b.textContent='Borrar'}},3000)}else manRm(b.dataset.id);break;
+  case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}try{await fs('DELETE','presencia/'+u)}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
