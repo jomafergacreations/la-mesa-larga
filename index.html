@@ -2245,7 +2245,7 @@ async function tok(){const s=S();if(!s)throw{code:'AUTH'};
  return s.idToken}
 async function fs(m,p,body,q){const t=await tok();let r;
  try{r=await fetch(fbU(p,q),{method:m,headers:Object.assign({Authorization:'Bearer '+t},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined})}catch(e){throw{code:'NET'}}
- if(r.status===404)return null;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
+ if(r.status===404)return null;if(r.status===429)fsCool=Date.now()+300000;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
 async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
 const RESERVED=n=>nameK(n)==='alpha';
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
@@ -2281,12 +2281,12 @@ async function loadFichas(s){let cloud=null,err=null;
  const use=loc&&(!cloud||loc.t>cloud.t)?loc:cloud;if(use===loc&&loc)dirty=true;
  try{return use?JSON.parse(use.d):{chars:[],avatar:''}}catch(e){return{chars:[],avatar:''}}}
 window.addEventListener('online',()=>{if(dirty)flush()});
-const ONLINE_MS=70000;
+var fsCool=0;const ONLINE_MS=130000;
 const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
-function beat(){if(!session||document.hidden)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
+function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
 
 /* permisos en vivo: si un administrador cambia tu rol o borra tu cuenta, la app se actualiza sola */
-async function watchMe(){if(!session||document.hidden||session.owner)return;
+async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
     const nr=u.role|0,old=session.role|0;
@@ -2294,8 +2294,8 @@ async function watchMe(){if(!session||document.hidden||session.owner)return;
    if(nr<1){const x=document.querySelector('#dlg[open] .admroot');if(x){try{$('#dlg').close()}catch(e){}}}
    toast(nr>old?'Tus permisos han cambiado: ahora eres '+ROLEN[nr].toLowerCase():'Tus permisos han cambiado: ahora tienes «'+ROLEN[nr]+'»');
    fdockUpdate(cur());render(1)}}catch(e){}}
-setInterval(watchMe,7000);
-setInterval(beat,25000);document.addEventListener('visibilitychange',()=>{if(!session)return;if(document.hidden){fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{})}else beat()});
+setInterval(watchMe,30000);
+setInterval(beat,55000);document.addEventListener('visibilitychange',()=>{if(!session)return;if(document.hidden){fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{})}else beat()});
 setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
 function ckGet(k){try{const m=document.cookie.split('; ').find(x=>x.indexOf(k+'=')===0);return m?decodeURIComponent(m.slice(k.length+1)):''}catch(e){return ''}}
 function ckSet(k,v){try{document.cookie=k+'='+encodeURIComponent(v)+'; max-age=31536000; path=/; SameSite=None; Secure'}catch(e){}}
@@ -2688,8 +2688,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='145';
-const APPN='La despedida al cerrar sesión desde Cosmere ya no se entrecorta: ahora va fluida.';
+const APPV='146';
+const APPN='Menos consultas a la base de datos para no agotar el límite diario: la app consulta con menos frecuencia y se frena sola si el servidor está saturado.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3304,7 +3304,7 @@ let apState={},reqState={},banMap={},denyState={},exits=[],kicks=[];const exSeen
 const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
 async function fsQuery(col,field,val){const t=await tok();let r;
  try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
- if(!r.ok)throw{code:'FS'+r.status};const j=await r.json();return j.filter(x=>x.document).map(x=>fbDec(x.document))}
+ if(r.status===429)fsCool=Date.now()+300000;if(!r.ok)throw{code:'FS'+r.status};const j=await r.json();return j.filter(x=>x.document).map(x=>fbDec(x.document))}
 function pullInto(c,r){let nc;try{nc=normalize(JSON.parse(r.data))}catch(e){return}nc.id=c.id;nc.pid=c.pid;nc.rev=r.rev|0;nc.step=c.step;nc.mode=c.mode;nc._ph=pjData(nc);
  const i=store.chars.findIndex(x=>x.id===c.id);if(i>=0)store.chars[i]=nc;save();if(session&&!document.hidden)render(1)}
 function flashCard(){setTimeout(()=>{if(!flashId)return;const el=document.querySelector('.card[data-cid="'+flashId+'"]');if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}const t=document.querySelector('.chapter');if(t&&store.cur===flashId){t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash')}flashId=null},60)}
@@ -3503,7 +3503,7 @@ function invDraw(){const box=document.querySelector('#dlg[open] .invdlg');if(!bo
  const a=box.querySelector('[data-act=invsel]'),b=box.querySelector('[data-act=invall]');a.textContent='Invitar seleccionados ('+n+')';a.disabled=!n;b.textContent='Invitar a todos ('+free+')';b.disabled=!free}
 function openInvite(){invSel=new Set();invQ='';invRows=[];
  showDlg('Invitar jugadores',`<div class="invdlg"><p class="hint" style="margin:0">Elige a quién invitar. Verás quién está conectado ahora mismo, y recibirán un aviso en su pantalla para aceptar o rechazar.</p><input type="search" class="invq" placeholder="Buscar usuario…" aria-label="Buscar usuario" autocomplete="off"><div class="invsum" aria-live="polite"></div><div class="invlist"><p class="hint">Cargando…</p></div><div class="row"><button class="btn pri" data-act="invsel" disabled>Invitar seleccionados (0)</button><button class="btn" data-act="invall" disabled>Invitar a todos</button></div></div>`,true);
- invLoad();clearInterval(invTm);invTm=setInterval(invLoad,6000)}
+ invLoad();clearInterval(invTm);invTm=setInterval(()=>{if(Date.now()>=fsCool&&!document.hidden)invLoad()},15000)}
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('invq')){invQ=t.value;invDraw()}});
 document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.iu){if(t.checked)invSel.add(t.dataset.iu);else invSel.delete(t.dataset.iu);invDraw()}});
 async function sendInvites(all){const p=parts.find(x=>x.id===partId);if(!p)return;const targets=invRows.filter(r=>!r.st&&(all||invSel.has(r.uid)));if(!targets.length)return;
