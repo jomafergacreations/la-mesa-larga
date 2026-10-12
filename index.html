@@ -1188,6 +1188,42 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 .card.sel{outline:3px solid var(--pc);outline-offset:-3px}.selb{width:100%}.top .btn[disabled]{opacity:.5;cursor:not-allowed}
 </style>
 
+<style id="lifecss">
+.lfbox{padding-bottom:40px}
+.lfctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:14px 0 18px}
+.lfpl{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:700}
+.lfpl b{min-width:1.4em;text-align:center;font-size:1.3rem}
+.lfnew.arm{background:var(--warn);border-color:var(--warn);color:#fff}
+.lfgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lfgrid[data-n="3"] .lfc:last-child{grid-column:1/-1}
+html[data-dev=desktop] .lfgrid,html[data-dev=tablet] .lfgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+html[data-dev=desktop] .lfgrid[data-n="2"],html[data-dev=tablet] .lfgrid[data-n="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+html[data-dev=desktop] .lfgrid[data-n="3"] .lfc:last-child,html[data-dev=tablet] .lfgrid[data-n="3"] .lfc:last-child{grid-column:auto}
+.lfc{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 12px 12px;display:flex;flex-direction:column;gap:10px;align-items:center;position:relative;overflow:hidden;transition:border-color .25s,opacity .25s}
+.lfc.dead{opacity:.6;border-color:var(--warn)}
+.lfc.dead::after{content:'Derrotado';position:absolute;top:8px;right:10px;font-family:var(--sans);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--warn)}
+.lfn{width:100%;text-align:center;background:transparent;border:0;border-bottom:1px dashed var(--line);font-family:var(--sans);font-weight:700;font-size:1rem;color:var(--muted);padding:2px 4px}
+.lfn:focus{outline:none;border-bottom-color:var(--accent);color:var(--ink)}
+.lfv{position:relative;height:4.4rem;width:100%;overflow:hidden;display:grid;place-items:center}
+.lfd{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:3.6rem;line-height:1;color:var(--head);font-variant-numeric:tabular-nums}
+.lfbar{width:100%;height:8px;border-radius:99px;background:var(--mist);overflow:hidden}
+.lfbar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:width .3s}
+.lfb{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+.lfbt{min-height:48px;min-width:48px;border-radius:12px;border:2px solid var(--line);background:var(--field);font-family:var(--sans);font-weight:800;font-size:1.05rem;color:var(--ink);padding:0 4px}
+.lfbt.lfdn{color:var(--warn)}.lfbt.lfup{color:var(--ok)}
+.lfbt:active{transform:scale(.94)}
+@media(prefers-reduced-motion:no-preference){
+ .lfd{transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .26s}
+ .lfd.lfin.fromb{transform:translateY(100%);opacity:0}.lfd.lfin.fromt{transform:translateY(-100%);opacity:0}
+ .lfd.out.totop{transform:translateY(-100%);opacity:0}.lfd.out.tobot{transform:translateY(100%);opacity:0}
+ .lfc.fxheal{animation:lfheal .6s ease-out}
+ .lfc.fxdmg{animation:lfdmg .5s ease-out}
+ .lfc.fxnew{animation:lfnew .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--lfi,0)*80ms)}
+ @keyframes lfheal{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 70%,transparent);background-color:color-mix(in srgb,var(--ok) 25%,var(--surface))}100%{box-shadow:0 0 0 16px transparent;background-color:var(--surface)}}
+ @keyframes lfdmg{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 70%,transparent);background-color:color-mix(in srgb,var(--warn) 25%,var(--surface))}15%{transform:translateX(-7px)}30%{transform:translateX(6px)}45%{transform:translateX(-5px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}100%{transform:none;box-shadow:0 0 0 16px transparent;background-color:var(--surface)}}
+ @keyframes lfnew{0%{transform:scale(.92) rotateX(40deg);opacity:.3;box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}60%{transform:scale(1.04);opacity:1;box-shadow:0 0 0 14px color-mix(in srgb,var(--accent) 0%,transparent)}100%{transform:none;opacity:1;box-shadow:none}}
+}
+</style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast" hidden></div>
@@ -1672,8 +1708,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='113';
-const APPN='Botones Seleccionar y Seleccionar todas para borrar varias fichas de una vez (con confirmación).';
+const APPV='114';
+const APPN='Nueva sección Creación de mazos con contador de vida (máximo 49, cada partida empieza en 36).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -1808,12 +1844,59 @@ function screen(){
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
   ${hubTile('t2',BOOK,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb')}
   ${hubTile('t3',STORM,'El archivo de las tormentas','Fichas de Roshar.','soon_arch',1)}</div>`;
- if(scr==='deck'||scr==='arch')return hubBar([scr==='deck'?'cosmere':'rol',scr==='deck'?'Cosmere':'Rol'])+`<h1 class="hh">${scr==='deck'?'Creación de mazos':'El archivo de las tormentas'}</h1><p class="hs">Esta parte todavía está en preparación. Cuando esté lista aparecerá aquí.</p>`;
+ if(scr==='deck')return deckScreen();
+ if(scr==='arch')return hubBar(['rol','Rol'])+`<h1 class="hh">El archivo de las tormentas</h1><p class="hs">Esta parte todavía está en preparación. Cuando esté lista aparecerá aquí.</p>`;
  if(scr==='cosmere')return hubBar(['menu','Inicio'])+`<h1 class="hh">Cosmere</h1><p class="hs">¿Qué quieres hacer?</p><div class="bubbles">
-  ${hubTile('t1',CARDS,'Creación de mazos','Mazos de Nacidos de la Bruma.','deck',1)}
+  ${hubTile('t1',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck')}
   ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
   ${hubTile('t1',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere')}</div>${partsPlayer()}`}
+
+
+/* ---------- Creación de mazos: contador de vida ---------- */
+const LF_MAX=49,LF_START=36,LF_KEY='lml_lifectr';
+let LF=lfLoad(),lfArm=0,lfArmT=0;
+function lfLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(LF_KEY)||'null')}catch(e){}
+ const n=o&&o.n>=2&&o.n<=6?o.n|0:2;const hp=[],nm=[];
+ for(let i=0;i<6;i++){const h=o&&Array.isArray(o.hp)?+o.hp[i]:LF_START;hp.push(Number.isFinite(h)?Math.max(0,Math.min(LF_MAX,Math.round(h))):LF_START);
+  const t=o&&Array.isArray(o.nm)&&typeof o.nm[i]==='string'?o.nm[i].slice(0,16):'';nm.push(t||('Jugador '+(i+1)))}
+ return{n,hp,nm}}
+function lfSave(){try{localStorage.setItem(LF_KEY,JSON.stringify(LF))}catch(e){}}
+const lfRM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+function lfCard(i){const h=LF.hp[i];return `<div class="lfc${h<=0?' dead':''}" id="lfc${i}" data-i="${i}"><input class="lfn" data-lfn="${i}" value="${esc(LF.nm[i])}" maxlength="16" aria-label="Nombre del jugador ${i+1}" autocomplete="off">
+  <div class="lfv" id="lfv${i}" role="status" aria-live="polite" aria-label="Vida de ${esc(LF.nm[i])}"><span class="lfd">${h}</span></div>
+  <div class="lfbar" aria-hidden="true"><i id="lfbar${i}" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
+  <div class="lfb"><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-5" aria-label="Restar 5 de vida">−5</button><button type="button" class="lfbt lfdn" data-act="lf" data-i="${i}" data-d="-1" aria-label="Restar 1 de vida">−1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="1" aria-label="Sumar 1 de vida">+1</button><button type="button" class="lfbt lfup" data-act="lf" data-i="${i}" data-d="5" aria-label="Sumar 5 de vida">+5</button></div></div>`}
+function deckScreen(){let cs='';for(let i=0;i<LF.n;i++)cs+=lfCard(i);
+ return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Creación de mazos</h1><p class="hs">Contador de vida · máximo ${LF_MAX} · cada partida empieza en ${LF_START}.</p>
+ <div class="lfbox"><div class="lfctl"><div class="lfpl"><span>Jugadores</span><button type="button" class="lfbt" data-act="lfn" data-d="-1" aria-label="Quitar un jugador">−</button><b id="lfnn" aria-live="polite">${LF.n}</b><button type="button" class="lfbt" data-act="lfn" data-d="1" aria-label="Añadir un jugador">+</button></div>
+ <button type="button" class="btn pri lfnew" id="lfnew" data-act="lfnew">Nueva partida (${LF_START})</button></div>
+ <div class="lfgrid" id="lfgrid" data-n="${LF.n}">${cs}</div></div>`}
+function lfRoll(i,nv,dir){const v=document.getElementById('lfv'+i);if(!v)return;const old=v.querySelector('.lfd:not(.out)');
+ if(lfRM()){if(old)old.textContent=nv;return}
+ const n=document.createElement('span');n.className='lfd lfin '+(dir>0?'fromb':'fromt');n.textContent=nv;
+ if(old){old.classList.add('out',dir>0?'totop':'tobot');setTimeout(()=>old.remove(),280)}
+ v.appendChild(n);setTimeout(()=>n.classList.remove('lfin','fromb','fromt'),20)}
+function lfPaint(i){const c=document.getElementById('lfc'+i);if(!c)return;const h=LF.hp[i];c.classList.toggle('dead',h<=0);
+ const b=document.getElementById('lfbar'+i);if(b)b.style.width=(h/LF_MAX*100).toFixed(1)+'%'}
+function lfFx(i,cls){const c=document.getElementById('lfc'+i);if(!c||lfRM())return;c.classList.remove('fxheal','fxdmg');void c.offsetWidth;c.classList.add(cls)}
+function lfChange(i,d){const old=LF.hp[i],nv=Math.max(0,Math.min(LF_MAX,old+d));
+ if(nv===old){toast(d>0?'Máximo '+LF_MAX+' de vida':'La vida ya está en 0');return}
+ LF.hp[i]=nv;lfSave();lfRoll(i,nv,nv>old?1:-1);lfPaint(i);lfFx(i,nv>old?'fxheal':'fxdmg')}
+function lfNew(){LF.hp=LF.hp.map(()=>LF_START);lfSave();
+ for(let i=0;i<LF.n;i++){const c=document.getElementById('lfc'+i);if(!c)continue;c.classList.remove('dead');
+  const v=document.getElementById('lfv'+i),d=v&&v.querySelector('.lfd:not(.out)');
+  if(lfRM()){if(d)d.textContent=LF_START;lfPaint(i);continue}
+  c.classList.remove('fxnew');void c.offsetWidth;c.style.setProperty('--lfi',i);c.classList.add('fxnew');
+  const from=d?(+d.textContent||0):0,t0=performance.now()+i*80,dur=700;
+  const step=t=>{const k=Math.max(0,Math.min(1,(t-t0)/dur)),e=1-Math.pow(1-k,3);if(d)d.textContent=Math.round(from+(LF_START-from)*e);
+   const b=document.getElementById('lfbar'+i);if(b)b.style.width=((from+(LF_START-from)*e)/LF_MAX*100).toFixed(1)+'%';if(k<1)requestAnimationFrame(step);else lfPaint(i)};
+  requestAnimationFrame(step)}}
+function lfPlayers(d){const n=Math.max(2,Math.min(6,LF.n+d));if(n===LF.n){toast(d>0?'Máximo 6 jugadores':'Mínimo 2 jugadores');return}
+ const old=LF.n;LF.n=n;lfSave();const g=document.getElementById('lfgrid'),nn=document.getElementById('lfnn');if(!g)return;nn.textContent=n;g.dataset.n=n;
+ if(n>old){for(let i=old;i<n;i++){LF.hp[i]=LF_START;g.insertAdjacentHTML('beforeend',lfCard(i));const c=document.getElementById('lfc'+i);if(c&&!lfRM())c.classList.add('fxnew')}lfSave()}
+ else for(let i=n;i<old;i++){const c=document.getElementById('lfc'+i);if(c)c.remove()}}
+document.addEventListener('input',e=>{const t=e.target;if(!t||t.dataset===undefined||t.dataset.lfn===undefined)return;const i=+t.dataset.lfn;LF.nm[i]=t.value.slice(0,16);lfSave()});
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -2774,6 +2857,9 @@ document.addEventListener('click',e=>{
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':scr='deck';render();break;
+  case 'lf':lfChange(+b.dataset.i,+b.dataset.d);break;
+  case 'lfn':lfPlayers(+b.dataset.d);break;
+  case 'lfnew':{const x=document.getElementById('lfnew');if(lfArm){lfArm=0;clearTimeout(lfArmT);if(x){x.textContent='Nueva partida ('+LF_START+')';x.classList.remove('arm')}lfNew()}else{lfArm=1;if(x){x.textContent='¿Seguro? Toca otra vez';x.classList.add('arm')}lfArmT=setTimeout(()=>{lfArm=0;const y=document.getElementById('lfnew');if(y){y.textContent='Nueva partida ('+LF_START+')';y.classList.remove('arm')}},3000)}break}
   case 'soon_arch':stormFx(()=>{scr='arch';render()});break;
   case 'go':if(isLk(c,+b.dataset.i)){lockedFx(b);break}c.step=+b.dataset.i;save();render();break;
   case 'qnext':if(curQ(c).v(c))qGo(c,1);break;
