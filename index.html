@@ -2298,7 +2298,7 @@ async function loadFichas(s){let cloud=null,err=null;
 window.addEventListener('online',()=>{if(dirty)flush()});
 var fsCool=0;const ONLINE_MS=130000;
 const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
-function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
+function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).then(sidCheck).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
 
 /* permisos en vivo: si un administrador cambia tu rol o borra tu cuenta, la app se actualiza sola */
 async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
@@ -2325,23 +2325,34 @@ function skRem(){return !!(lsGet(SKEY)||ckGet(SKEY))}
 let wantRem=false;
 const UKEY='mesa-larga-usuario';
 function lastUser(){return lsGet(UKEY)||ckGet(UKEY)||''}
-async function enter(a,rem){ // a: respuesta de signIn/refresh. Devuelve ok | unverified | deleted | name
+function newSid(){try{const a=new Uint8Array(12);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return String(Date.now())+Math.random().toString(16).slice(2)}}
+function devLabel(){const u=navigator.userAgent||'';const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?(/Mobile/.test(u)?'móvil Android':'tablet Android'):/Mac/.test(u)?(navigator.maxTouchPoints>1?'iPad':'Mac'):/Windows/.test(u)?'PC con Windows':/Linux/.test(u)?'PC con Linux':'otro dispositivo';return os}
+function kickedDlg(){const d=$('#dlg');d.className='';d.innerHTML='<div class="grid"><h3>Tu sesión se ha cerrado</h3><p class="hint" style="margin:0">Has iniciado sesión en otro dispositivo, así que hemos cerrado la sesión en este. Tus fichas están guardadas. Puedes volver a entrar cuando quieras.</p><div class="row"><button class="btn pri" data-act="closedlg">Entendido</button></div></div>';try{d.showModal()}catch(x){d.setAttribute('open','')}}
+let kicking=false;
+async function kickOut(){if(!session||kicking)return;kicking=true;try{try{await flush()}catch(x){}document.querySelectorAll('dialog[open]').forEach(x=>{if(x.id!=='updf'){try{x.close()}catch(e){x.removeAttribute('open')}}});
+ if(!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}kickedDlg()}finally{kicking=false}}
+function sidCheck(d){try{if(!session||!session.sid||!d)return;const p=fbDec(d);if(p.sid&&p.sid!==session.sid){kickOut();return}if(!p.sid)fs('PATCH','users/'+session.uid,fbEnc({sid:session.sid,sidDev:devLabel(),sidAt:Date.now()}),maskQ({sid:1,sidDev:1,sidAt:1})).catch(()=>{})}catch(e){}}
+async function enter(a,rem,sidIn,restore){ // a: respuesta de signIn/refresh. Devuelve ok | unverified | deleted | name
  const lk=await aCall('lookup',{idToken:a.idToken});const u=(lk.users||[])[0]||{};const email=String(u.email||a.email||'').toLowerCase();
  if(!u.emailVerified){pend=Object.assign(pend||{},{email,idToken:a.idToken,rem:!!rem});return 'unverified'}
- cand={uid:u.localId||a.localId,user:u.localId||a.localId,email,name:email===OWNER?'ALPHA':(u.displayName||email.split('@')[0]),idToken:a.idToken,rt:a.refreshToken,exp:Date.now()+(+a.expiresIn||3600)*1000,role:0,owner:email===OWNER,rem:!!rem};
+ cand={uid:u.localId||a.localId,user:u.localId||a.localId,email,name:email===OWNER?'ALPHA':(u.displayName||email.split('@')[0]),idToken:a.idToken,rt:a.refreshToken,exp:Date.now()+(+a.expiresIn||3600)*1000,role:0,owner:email===OWNER,rem:!!rem,sid:sidIn||'',restore:!!restore};
  return finishSess()}
 async function finishSess(){const s=cand;
  if(!s.owner){const st=await loadProfile();if(st==='deleted'){cand=null;skClear();return 'deleted'}
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
+ {let rp={};try{const ru=await fs('GET','users/'+s.uid);if(ru)rp=fbDec(ru)}catch(e){rp={}}
+  if(rp.sid&&rp.sid!==s.sid){if(s.restore){cand=null;skClear();return 'kicked'}if(!s.force){cand.other={dev:rp.sidDev||'otro dispositivo'};return 'other'}}
+  if(!s.sid||rp.sid!==s.sid)s.sid=newSid();
+  try{await fs('PATCH','users/'+s.uid,fbEnc({sid:s.sid,sidDev:devLabel(),sidAt:Date.now()}),maskQ({sid:1,sidDev:1,sidAt:1}))}catch(e){s.sid=''}}
  let data=await loadFichas(s);
  session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
- skSet({rt:s.rt},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
+ skSet({rt:s.rt,sid:s.sid||''},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
  let r;try{r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(o.rt)})}catch(e){throw{code:'NET'}}
  if(!r.ok){skClear();return false}const j=await r.json();
- const res=await enter({idToken:j.id_token,refreshToken:j.refresh_token,expiresIn:j.expires_in,localId:j.user_id},skRem());
+ const res=await enter({idToken:j.id_token,refreshToken:j.refresh_token,expiresIn:j.expires_in,localId:j.user_id},skRem(),o.sid||'',true);if(res==='kicked')setTimeout(()=>kickedDlg(),700);
  if(res==='deleted'){setTimeout(()=>toast('Esta cuenta ha sido eliminada'),600)}if(res==='unverified'){authTab='verify';vPoll()}if(res==='name')authTab='name';return res==='ok'}
  catch(e){setTimeout(()=>{try{toast(e&&e.code==='NET'?'Sin conexión: no se pudo recuperar la sesión.':'No se pudo recuperar la sesión guardada. Entra de nuevo.')}catch(x){}},800);return false}}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -2351,7 +2362,8 @@ async function afterEnter(res){
  if(res==='ok'){pend=null;clearInterval(vT);authTab='login';render();toast('Sesión iniciada');return}
  if(res==='unverified'){if(authTab!=='verify'){authTab='verify';render();vPoll()}else flash('Todavía no hemos recibido la verificación. Abre el enlace del correo y vuelve aquí.','err');return}
  if(res==='deleted'){authTab='login';render();flash('Esta cuenta ha sido eliminada por un administrador.','err');return}
- if(res==='name'){authTab='name';render();return}}
+ if(res==='name'){authTab='name';render();return}
+ if(res==='other'){const dv=(cand&&cand.other&&cand.other.dev)||'otro dispositivo';const d=$('#dlg');d.className='';d.innerHTML='<div class="grid"><h3>Ya tienes una sesión iniciada</h3><p class="hint" style="margin:0">Tu cuenta está abierta en otro dispositivo ('+esc(dv)+'). Si continúas, <b>se cerrará la sesión allí</b> y solo podrás usar la app en este.</p><div class="row"><button class="btn pri" data-act="sesdo">Continuar y cerrar la otra sesión</button><button class="btn" data-act="sesno">Cancelar</button></div></div>';try{d.showModal()}catch(x){d.setAttribute('open','')}}}
 async function vContinue(){const p=pend;if(!p)return;const a=await aCall('signInWithPassword',{email:p.email,password:p.pw,returnSecureToken:true});await afterEnter(await enter(a,p.rem))}
 function vPoll(){clearInterval(vT);let busy=0;vT=setInterval(async()=>{if(authTab!=='verify'||!pend||session||busy){if(authTab!=='verify'||session)clearInterval(vT);return}busy=1;
  try{let ok=false;try{const lk=await aCall('lookup',{idToken:pend.idToken});ok=!!((lk.users||[])[0]||{}).emailVerified}catch(e){if(e.code!=='NET'){const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken}}
@@ -2703,8 +2715,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='160';
-const APPN='Dune: el rótulo de la burbuja queda alineado a la izquierda como el de Cyberpunk.';
+const APPV='161';
+const APPN='Sesión única: si ya tienes la sesión abierta en otro dispositivo se te avisa, y al entrar aquí se cierra en el anterior.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -4068,7 +4080,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=lfRM();const nm=session&&session.name||'';const dv=document.documentElement.dataset;const u=dv.dun?'dun':dv.cyb?'cyb':dv.cos?'cos':'';const MS={dun:['Las arenas te despiden','Guardando tus fichas…'],cyb:['> cerrando sesión…','guardando datos y cortando enlace'],cos:['Hasta la próxima, viajero','Guardando tus fichas…'],'':['Hasta pronto','Guardando tus fichas…']}[u];const by=document.createElement('div');by.id='bye';by.className=u;by.setAttribute('role','status');by.setAttribute('aria-live','polite');let fx='';if(u==='dun'||u==='cos'){for(let k=0;k<22;k++)fx+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--s:'+(1+Math.random()*2.5).toFixed(1)+'px;--t:'+(2.4+Math.random()*3).toFixed(1)+'s;--d:-'+(Math.random()*4).toFixed(1)+'s"></i>'}by.innerHTML='<span class="byefx" aria-hidden="true">'+fx+'</span><div class="byei"><span class="byeo" aria-hidden="true"></span><b>'+MS[0]+(nm&&!u?', '+esc(nm):'')+'</b><small>'+MS[1]+'</small><span class="byebar" aria-hidden="true"><i></i></span></div>';document.body.appendChild(by);document.documentElement.classList.add('byeing');const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1500-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}document.documentElement.classList.remove('byeing');by.classList.add('out');setTimeout(()=>by.remove(),red?0:700)})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=lfRM();const nm=session&&session.name||'';const dv=document.documentElement.dataset;const u=dv.dun?'dun':dv.cyb?'cyb':dv.cos?'cos':'';const MS={dun:['Las arenas te despiden','Guardando tus fichas…'],cyb:['> cerrando sesión…','guardando datos y cortando enlace'],cos:['Hasta la próxima, viajero','Guardando tus fichas…'],'':['Hasta pronto','Guardando tus fichas…']}[u];const by=document.createElement('div');by.id='bye';by.className=u;by.setAttribute('role','status');by.setAttribute('aria-live','polite');let fx='';if(u==='dun'||u==='cos'){for(let k=0;k<22;k++)fx+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--s:'+(1+Math.random()*2.5).toFixed(1)+'px;--t:'+(2.4+Math.random()*3).toFixed(1)+'s;--d:-'+(Math.random()*4).toFixed(1)+'s"></i>'}by.innerHTML='<span class="byefx" aria-hidden="true">'+fx+'</span><div class="byei"><span class="byeo" aria-hidden="true"></span><b>'+MS[0]+(nm&&!u?', '+esc(nm):'')+'</b><small>'+MS[1]+'</small><span class="byebar" aria-hidden="true"><i></i></span></div>';document.body.appendChild(by);document.documentElement.classList.add('byeing');const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1500-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{await fs('PATCH','users/'+session.uid,fbEnc({ping:0,sid:''}),maskQ({ping:1,sid:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}document.documentElement.classList.remove('byeing');by.classList.add('out');setTimeout(()=>by.remove(),red?0:700)})();break;
   case 'acct':acctDlg();break;
   case 'adm':admState=null;admDlg();break;
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
@@ -4102,6 +4114,8 @@ document.addEventListener('click',e=>{
   case 'dup':{if(charFull('nb'))break;const o=store.chars.find(x=>x.id===b.dataset.id);if(!o)break;const n=normalize(JSON.parse(JSON.stringify(o)));delete n.pid;delete n.rev;delete n._ph;n.name=(o.name||'Personaje')+' (copia)';n.done=false;n.mode='f';n.step=0;n.dupOf=dupSig(o);store.chars.push(n);store.cur=n.id;save();render();toast('Ficha duplicada: es editable hasta que la vuelvas a finalizar');break}
   case 'askdel':{const ch=store.chars.find(x=>x.id===b.dataset.id);if(!ch)break;const d=$('#dlg');d.className='dlgdel';d.innerHTML=`<div class="grid"><h3>¿Borrar esta ficha?</h3><p class="hint" style="margin:0"><b>${esc(ch.name||'Sin nombre')}</b> se borrará de tu cuenta. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="del" data-id="${ch.id}">Sí, borrar</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'del':delChar(b.dataset.id);break;
+  case 'sesdo':{try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}if(!cand)break;cand.force=true;(async()=>{try{await afterEnter(await finishSess())}catch(e){toast('No se pudo iniciar sesión. Inténtalo de nuevo.')}})();break}
+  case 'sesno':{try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}cand=null;pend=null;authTab='login';render();break}
   case 'selmode':selMode=true;selIds.clear();render(1);break;
   case 'selx':selMode=false;selIds.clear();render(1);break;
   case 'selc':{const id=b.dataset.id;if(selIds.has(id))selIds.delete(id);else selIds.add(id);render(1);break}
