@@ -1208,6 +1208,19 @@ body.pjdead .chapter{opacity:.8}.hpbox.dead{opacity:.85;border:1px solid #B3261E
 @keyframes fxRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent,#C59E57) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
 @keyframes dlgout{to{opacity:0;transform:translateY(10px) scale(.97)}}
 @keyframes bdout{to{opacity:0}}
+
+/* v00.01.47 · salida de Nacidos de la Bruma */
+#mistout{position:fixed;inset:0;z-index:99989;overflow:hidden;pointer-events:none;font-family:var(--serif,Georgia,serif);opacity:0;animation:moFade 1.25s ease-in-out forwards;background:radial-gradient(70% 50% at 50% 108%,rgba(232,84,48,.45),transparent 72%),linear-gradient(#09080c,#17121b 70%,#241416)}
+#mistout .mo1,#mistout .mo2{position:absolute;left:0;width:200%;height:55%;background:radial-gradient(36% 50% at 18% 60%,rgba(208,203,218,.42),transparent 70%),radial-gradient(34% 44% at 52% 42%,rgba(208,203,218,.3),transparent 70%),radial-gradient(38% 50% at 82% 64%,rgba(208,203,218,.38),transparent 70%);background-size:50% 100%;background-repeat:repeat-x}
+#mistout .mo1{bottom:-6%;opacity:.9;animation:moDrift 1.25s ease-out both}
+#mistout .mo2{top:-12%;opacity:.5;transform:scaleY(-1);animation:moDrift2 1.25s ease-out both}
+#mistout .mot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:0 24px;animation:moTxt 1.25s ease-in-out both}
+#mistout .mot small{font:600 .85rem var(--sans,system-ui);letter-spacing:.5em;text-indent:.5em;text-transform:uppercase;color:#B7C6E6}
+#mistout .mot b{font-weight:700;font-size:clamp(1.4rem,6vw,2.4rem);letter-spacing:.1em;text-transform:uppercase;color:#E8D3A0;text-shadow:0 2px 20px rgba(0,0,0,.7)}
+@keyframes moFade{0%{opacity:0}45%{opacity:1}62%{opacity:1}100%{opacity:0}}
+@keyframes moDrift{from{transform:translateX(0) translateY(30%)}to{transform:translateX(-25%) translateY(0)}}
+@keyframes moDrift2{from{transform:scaleY(-1) translateX(-20%) translateY(30%)}to{transform:scaleY(-1) translateX(0) translateY(0)}}
+@keyframes moTxt{0%,15%{opacity:0;transform:translateY(10px)}45%,62%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-14px)}}
 </style>
 
 <style id="lifecss">
@@ -3083,9 +3096,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.46';
-const APPN='Actualización media.';
-const APPD='Ficha de NPC: Investidura, ajustes de concentración e investidura, sin máximos en atributos y habilidades, Tipo de daño en ataques y textos largos.';
+const APPV='00.01.47';
+const APPN='Actualización menor.';
+const APPD='Restaurada la animación de salida de Nacidos de la Bruma (fondo, bruma y texto); antes solo aparecía el texto.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
