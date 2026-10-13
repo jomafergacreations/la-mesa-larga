@@ -2172,6 +2172,22 @@ html.byeing #app,html.byeing #topbar,html.byeing #fdock,html.byeing #gx,html.bye
 .bub.dun .dnbt{--dg1:#FFF6DA;--dg2:#FFE0A0;--dg3:#F2B65A;display:block}.bub.dun .dnbl{display:block;width:min(150px,46vw);height:auto;margin:2px 0 4px -4px;overflow:visible;filter:drop-shadow(0 2px 6px rgba(50,20,6,.85))}
 html[data-lm=l] .bub.dun .dnbt{--dg1:#3A1A06;--dg2:#6B3210;--dg3:#9A4A14}html[data-lm=l] .bub.dun .dnbl{filter:drop-shadow(0 1px 3px rgba(255,240,200,.8))}
 
+
+/* v00.01.04 */
+#avgal{display:grid;gap:20px;padding:8px 4px 4px}.avgrid{gap:14px}.avcols{gap:14px;padding:4px}
+.acc2{display:grid;gap:16px}.accL,.accR{min-width:0}
+@media(min-width:900px){dialog.acctd{width:min(980px,92vw);max-width:92vw;max-height:92dvh;overflow:auto;padding:26px 28px 104px}.acc2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}.accL,.accR{gap:20px;align-content:start}.accR{padding:20px 22px;border:1px solid rgba(120,125,140,.32);border-radius:16px}.accL .avgrid{grid-template-columns:repeat(6,minmax(0,1fr))}.accR form,.accR>.grid{padding-bottom:18px;border-bottom:1px solid rgba(120,125,140,.25)}.accR>:last-child{padding-bottom:0;border-bottom:0}}
+.subg{display:grid;gap:8px;margin:2px 0 8px 14px;padding-left:14px;border-left:2px solid var(--line)}.subg>small{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.admnav .ani{position:relative;transition:background-color .2s,color .2s,transform .2s}.admnav .ani::before{content:"";position:absolute;left:0;top:25%;bottom:25%;width:3px;border-radius:3px;background:var(--accent);transform:scaleY(0);transition:transform .25s}.admnav .ani[aria-current=page]::before{transform:scaleY(1)}.admnav .ani svg{transition:transform .25s}
+.adp .tile,.adp .gmc,.adp .arow,.adp .btn,.adp .onp{transition:transform .2s,border-color .2s,background-color .2s,box-shadow .2s}
+@media(prefers-reduced-motion:no-preference){
+.admnav .ani:hover{transform:translateX(3px)}.admnav .ani:hover svg{transform:scale(1.12)}
+.adp .tile:hover{transform:translateY(-3px);box-shadow:0 12px 24px -16px #000}.adp .gmc:hover,.adp .arow:hover{border-color:rgba(59,130,246,.55)}.adp .btn:hover{transform:translateY(-1px)}.adp .btn:active{transform:scale(.97)}
+.admroot.adin>.grid>*{animation:adpin .38s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--k,0)*45ms)}
+.admroot.adin .tile,.admroot.adin .gmc,.admroot.adin .arow{animation:adpin .4s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--k,0)*40ms)}
+.adp .onp.new{animation:adpin .4s both}
+.admnav{animation:adnav .45s cubic-bezier(.2,.7,.2,1) both}@keyframes adnav{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -2316,10 +2332,13 @@ const AKEY='fichas-scadrial-cuentas-v1',SKEY='fichas-scadrial-sesion-v1',LEGACY=
 let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTab='login',authBusy=false,fails=0,booting=true;
 const isAdmin=()=>!!session&&!!session.owner;
 let simNoGM=false,gmAll=[],gmReqPend=false,gamesCfg={};
-const GAMES=[['cosmere','Cosmere','Mazos y rol: Nacidos de la Bruma, creación de mazos y el archivo de las tormentas.',1],['cyber','Cyberpunk','Aún sin contenido jugable.',0],['dune','Dune','Aún sin contenido jugable.',0]];
-const GSCR={cosmere:'cosmere',rol:'cosmere',nb:'cosmere',deck:'cosmere',arch:'cosmere',npc:'cosmere',part:'cosmere',ppart:'cosmere',pjview:'cosmere',cyber:'cyber',dune:'dune'};
+const GAMES=[['cosmere','Cosmere','Mazos y rol: Nacidos de la Bruma, creación de mazos y el archivo de las tormentas.',1],['cyber','Cyberpunk','Aún sin contenido jugable.',0],['dune','Dune','Aún sin contenido jugable.',0],['deck','Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.',1,'cosmere'],['nb','Nacidos de la Bruma','Creación y gestión de fichas de personaje.',1,'cosmere'],['arch','El archivo de las tormentas','Fichas de Roshar (aún en preparación).',0,'cosmere']];
+const COSF=['cosmere','deck','nb','arch'];
+const gParent=id=>((GAMES.find(x=>x[0]===id)||[])[4])||'';
+function gameUnp(id){return !gamePub(id)||(gParent(id)?gameUnp(gParent(id)):false)}
+const GSCR={cosmere:'cosmere',rol:'cosmere',nb:'nb',deck:'deck',arch:'arch',npc:'cosmere',part:'cosmere',ppart:'cosmere',pjview:'cosmere',cyber:'cyber',dune:'dune'};
 function gamePub(id){const v=gamesCfg[id];if(v===undefined||v===null||v==='')return !!(GAMES.find(g=>g[0]===id)||[])[3];return (+v)===1}
-function canSeeGame(id){if(gamePub(id))return true;if(!session)return false;if(isAdmin())return !simNoGM;return (session.role|0)>=2&&(session.prev|0)===1}
+function canSeeGame(id){const pr=gParent(id);if(pr&&!canSeeGame(pr))return false;if(gamePub(id))return true;if(!session)return false;if(isAdmin())return !simNoGM;return (session.role|0)>=2&&(session.prev|0)===1}
 const pubList=()=>{const now=Date.now();return GAMES.filter(g=>gamePub(g[0])&&(+gamesCfg[g[0]+'At']||0)>0&&now-(+gamesCfg[g[0]+'At'])<30*864e5).map(g=>{const at=+gamesCfg[g[0]+'At'];return{g:g[0],n:g[1],at,k:g[0]+':'+at}}).sort((a,b)=>b.at-a.at)};
 const pubUnread=()=>{if(!session||session.owner)return[];const rd=store.pubRead||[];return pubList().filter(x=>!rd.includes(x.k))};
 const gIcon=g=>g==='cyber'?CYBER:g==='dune'?DUNE:ORB;
@@ -2401,8 +2420,9 @@ function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=D
 async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
-    {const v0=canSeeGame('cosmere');session.prev=u.prev|0;await loadGames();const v1=canSeeGame('cosmere');setTimeout(pubCheck,300);
-   if(v0!==v1){dockSig='';if(!v1){if(GSCR[scr]==='cosmere'||store.cur){store.cur=null;store.npcCur=null;scr='menu'}toast('Cosmere deja de estar disponible por ahora')}else toast('Cosmere ya está disponible');render(1)}}
+    {const sg=()=>COSF.map(canSeeGame).join(),v0=sg(),c0=canSeeGame('cosmere');session.prev=u.prev|0;await loadGames();const v1=sg(),c1=canSeeGame('cosmere');setTimeout(pubCheck,300);
+   if(v0!==v1){dockSig='';const gg=GSCR[scr];if((COSF.includes(gg)&&!canSeeGame(gg))||(store.cur&&!canSeeGame('nb'))){store.cur=null;store.npcCur=null;scr=canSeeGame('cosmere')?'cosmere':'menu'}
+    toast(c0!==c1?(c1?'Cosmere ya está disponible':'Cosmere deja de estar disponible por ahora'):'Se han actualizado los juegos disponibles');render(1)}}
     {const g0=canGM();session.gm=u.gm|0;session.gmTmp=u.gmTmp|0;session.gmLic=String(u.gmLic||'');const g1=canGM();
    if(g1!==g0){dockSig='';if(g1){gmReqPend=false;toast('Un administrador ha aprobado tu solicitud: ya puedes ser Game Master')}else{toast('Ya no tienes licencia de Game Master');if(store.mode==='gm'){store.mode='p';store.cur=null;store.npcCur=null;scr='menu';try{save()}catch(e){}}}fdockUpdate(cur());render(1)}
    else if(gmReqPend){try{const q=await fs('GET','gmsol/'+session.uid);if(q&&fbDec(q).status==='denied'){gmReqPend=false;toast('Tu solicitud de Game Master ha sido denegada')}}catch(e){}}}
@@ -2552,8 +2572,10 @@ function rolHtml(){const L=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3),st
  const row=r=>{const rl=r.role|0,on=(r.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(r.name)}</b><span class="gms">${esc(r.email||'')}</span></div><div class="row"><div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(r.id)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>${rl===2?`<button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(r.id)}" data-v="${on?0:1}">${on?'Quitar acceso a juegos sin publicar':'Dar acceso a juegos sin publicar'}</button>`:''}</div></div>`};
  return `<div class="grid"><p class="hint" style="margin:0"><b>Ver</b>: puede consultar las cuentas. <b>Admin</b>: además gestiona incidencias, autoriza Game Masters y elimina cuentas. Solo tú das o quitas roles.</p><b>Equipo (${st.length})</b><div class="alist">${st.map(row).join('')||'<p class="hint">Todavía no hay nadie con permisos.</p>'}</div><b>Dar un rol a otra cuenta</b><div class="row"><select id="rolsel" aria-label="Cuenta">${oth.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')||'<option value="">No hay cuentas</option>'}</select><button class="btn sm" data-act="rolpick" data-r="1">Dar «Ver»</button><button class="btn sm pri" data-act="rolpick" data-r="2">Dar «Admin»</button></div></div>`}
 function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alist"><div class="gmc"><div class="gmh"><b>Simular usuario</b></div><p class="hint" style="margin:0">Sal del panel y mira la app como la ve un usuario normal; sirve para comprobar los cambios de cada actualización.</p><div class="row"><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div class="gmc"><div class="gmh"><b>Vista sin permisos</b><span class="tag">${simNoGM?'Activada':'Desactivada'}</span></div><p class="hint" style="margin:0">Al activarla ves la app sin licencia de Game Master y sin acceso a juegos sin publicar.</p><div class="row"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}">${simNoGM?'Desactivar':'Activar'}</button></div></div></div><b>Información</b><div class="alist"><div class="gmc"><div class="gmh"><b>Versión</b><span class="tag">v${esc(APPV)}</span></div><p class="hint" style="margin:0">${esc(APPN)}</p></div></div></div>`}
+let admLastTab='';
+function admStag(p){p.querySelectorAll('.tile,.gmc,.arow,.grid>*').forEach((e,k)=>e.style.setProperty('--k',Math.min(k,14)));if(admLastTab!==admTab){admLastTab=admTab;p.classList.remove('adin');void p.offsetWidth;p.classList.add('adin');clearTimeout(admStag.t);admStag.t=setTimeout(()=>p.classList.remove('adin'),900)}}
 function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('#dlg').classList.contains('admd')}
-function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}p.innerHTML=html}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
+function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}p.innerHTML=html;admStag(p)}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
 function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}
 async function gmCheck(){if(!session||session.owner)return;try{const d=await fs('GET','gmsol/'+session.uid);if(d&&fbDec(d).status==='pending')gmReqPend=true}catch(e){}}
 async function gmLoad(){try{gmAll=await fsList('gmsol')}catch(e){}}
@@ -2562,10 +2584,10 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
  if(q&&q.status==='pending'){gmReqPend=true;h=`<p style="margin:0">Tu solicitud (<b>${T[q.type]||''}</b>) está <b>pendiente</b>: un administrador tiene que autorizarla. Te avisaremos cuando la apruebe.</p><div class="row"><button class="btn danger" data-act="gmcancel">Cancelar solicitud</button></div>`}
  else h=`<p style="margin:0">Para dirigir partidas como Game Master necesitas la autorización de un administrador.</p>${q&&q.status==='denied'?'<p class="warn-t" style="margin:0">Tu última solicitud fue denegada.</p>':''}${q&&q.status==='revoked'?'<p class="warn-t" style="margin:0">Se te retiró la licencia anterior.</p>':''}<textarea id="gmmsg" maxlength="200" rows="2" placeholder="Motivo (opcional)"></textarea><div class="row"><button class="btn pri" data-act="gmsend" data-t="tmp">Pedir licencia temporal</button><button class="btn" data-act="gmsend" data-t="perm">Pedir permanente</button></div><p class="hint" style="margin:0">La temporal sirve para dirigir <b>una sola partida</b> y termina cuando esa partida se elimina.</p>`;
  showDlg('Ser Game Master',h,true)}
-function gamesAdmHtml(){const admins=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)===2).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
- const cards=GAMES.map(([id,n,d])=>{const p=gamePub(id);return `<div class="gmc ${p?'approved':'pending'}"><div class="gmh"><b>${esc(n)}</b><span class="tag">${p?'Publicado':'Sin publicar'}</span>${p&&+gamesCfg[id+'At']?`<span class="gms">Publicado el ${rpDate(gamesCfg[id+'At'])}</span>`:''}</div><p class="hint" style="margin:0">${esc(d)}</p><div class="row"><button class="btn sm ${p?'danger':'pri'}" data-act="gpub" data-g="${id}" data-v="${p?0:1}">${p?'Retirar a los usuarios':'Publicar juego'}</button></div></div>`}).join('');
- const al=admins.map(a=>{const on=(a.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(a.name)}</b><span class="gms">${on?'Puede ver juegos sin publicar':'Sin acceso a juegos sin publicar'}</span></div><div class="row"><button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(a.id)}" data-v="${on?0:1}">${on?'Quitar acceso':'Dar acceso'}</button></div></div>`}).join('');
- return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso.</p><b>Juegos</b><div class="alist">${cards}</div><p class="hint" style="margin:0">El acceso de cada administrador a los juegos sin publicar se concede en <b>Roles y permisos</b>.</p></div>`}
+function gamesAdmHtml(){
+ const card=([id,n,d],sub)=>{const p=gamePub(id),blk=sub&&!gamePub(gParent(id));return `<div class="gmc ${p?'approved':'pending'}${sub?' sub':''}"><div class="gmh"><b>${esc(n)}</b><span class="tag">${p?'Publicado':'Sin publicar'}</span>${p&&+gamesCfg[id+'At']?`<span class="gms">Publicado el ${rpDate(gamesCfg[id+'At'])}</span>`:''}${p&&blk?'<span class="gms">Oculto: el juego principal no está publicado</span>':''}</div><p class="hint" style="margin:0">${esc(d)}</p><div class="row"><button class="btn sm ${p?'danger':'pri'}" data-act="gpub" data-g="${id}" data-v="${p?0:1}">${p?'Retirar a los usuarios':'Publicar juego'}</button></div></div>`};
+ const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
+ return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso en <b>Roles y permisos</b>. Cada juego de dentro de Cosmere se puede publicar o retirar de forma independiente.</p><div class="alist">${cards}</div></div>`}
 function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(+(b.updated||b.created)||0)-(+(a.updated||a.created)||0)),by=x=>esc(x.by||'');
  const T={tmp:'Temporal · una partida',perm:'Permanente'},ST={pending:'Pendiente',approved:'Aprobada',denied:'Denegada',revoked:'Retirada'};
  const cards=L.map(x=>`<div class="gmc ${esc(x.status)}"><div class="gmh"><b>${esc(x.name||'Usuario')}</b><span class="tag">${T[x.type]||''}</span><span class="gms">${ST[x.status]||''}${x.status!=='pending'&&x.by?' · '+by(x):''}</span></div>${x.msg?`<p class="hint" style="margin:4px 0">«${esc(x.msg)}»</p>`:''}<small>${fdate(x.updated||x.created)}</small>${x.status==='pending'?`<div class="row"><button class="btn sm pri" data-act="gmok" data-u="${esc(x.uid)}" data-t="${esc(x.type)}">Aprobar</button><button class="btn sm danger" data-act="gmno" data-u="${esc(x.uid)}">Denegar</button></div>`:''}${x.status==='approved'?`<div class="row"><button class="btn sm ghost" data-act="gmrev" data-u="${esc(x.uid)}">Retirar licencia</button></div>`:''}</div>`).join('');
@@ -2626,16 +2648,17 @@ setInterval(()=>{if(!session||!canAdm()||isAdmin()||document.hidden||admState)re
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='admq'){admQ=e.target.value;admView(true)}});
 function acctDlg(){
  const pwf=(id,l,a)=>`<label class="f">${l}<input type="password" name="${id}" autocomplete="${a}" required></label>`;
- showDlg('Cuenta de '+esc(session.name),`<div class="grid">
+ showDlg('Cuenta de '+esc(session.name),`<div class="grid"><div class="acc2"><div class="accL grid">
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
  <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div>
  ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>ALPHA</b>: está bloqueado y solo lo ven los administradores.</p>':''}
  ${`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
+ </div><div class="accR grid">
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
 ${session.owner?'':`<form id="renform" class="grid" novalidate><b>Nombre de usuario</b><label class="f">Nombre<input type="text" name="rn" value="${esc(session.name)}" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="rmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar nombre</button></div></form>`}
 
  <form id="pwform" class="grid" novalidate><b>Cambiar contraseña</b>${pwf('p0','Contraseña actual','current-password')}${pwf('p1','Contraseña nueva','new-password')}${pwf('p2','Repite la nueva','new-password')}<div id="pmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar contraseña</button></div><p class="hint" style="margin:0">Si no te acuerdas de la actual, cierra sesión y usa «¿Has olvidado tu contraseña?».</p></form>
- ${session.owner?'':`<form id="delform" class="grid" novalidate><b>Borrar la cuenta</b><p class="hint">Se borran la cuenta y todas sus fichas, también de la nube. No se puede deshacer.</p>${pwf('d0','Tu contraseña','current-password')}<div id="dmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Borrar cuenta y fichas</button></div></form>`}</div>`,true);
+ ${session.owner?'':`<form id="delform" class="grid" novalidate><b>Borrar la cuenta</b><p class="hint">Se borran la cuenta y todas sus fichas, también de la nube. No se puede deshacer.</p>${pwf('d0','Tu contraseña','current-password')}<div id="dmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Borrar cuenta y fichas</button></div></form>`}</div></div></div>`,true);
  const d=$('#dlg');d.classList.add('acctd');const b=document.createElement('button');b.type='button';b.className='cbub';b.setAttribute('data-act','closedlg');b.setAttribute('aria-label','Cerrar cuenta');b.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';d.appendChild(b)}
 async function reauth(pw){const a=await aCall('signInWithPassword',{email:session.email,password:pw,returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem)}
 async function doPw(f){const m=$('#pmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const e=n=>f.elements[n].value;
@@ -2867,8 +2890,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.03';
-const APPN='Nuevo panel de ALPHA con menú lateral por apartados: Resumen, Cuentas, Roles y permisos, Game Masters, Juegos, Incidencias y Ajustes.';
+const APPV='00.01.04';
+const APPN='Los juegos del Cosmere (mazos, Nacidos de la Bruma y el archivo) se publican y retiran por separado; Mi cuenta se adapta a PC y el panel de ALPHA tiene animaciones suaves.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3112,8 +3135,8 @@ function duneScreen(){
  return hubBar(['menu','Inicio'])+`<div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh" aria-label="Dune">${dnWord("dnwg",2.6,"dnlg")}</h1></div>
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
-function soonScreen(g){const N=(GAMES.find(x=>x[0]===g)||[0,'Juego'])[1];return hubBar(['menu','Inicio'])+`<h1 class="hh">${esc(N)}</h1><div class="glass soonbox"><div class="soonic" aria-hidden="true">${SHLD}</div><h2>Próximamente</h2><p class="hs" style="margin:0">Este juego todavía no está disponible. Lo verás aquí en cuanto se publique.</p></div>`}
-function screen(){const g=GSCR[scr];if(g==='cosmere'){if(!canSeeGame(g))return soonScreen(g);if(!gamePub(g))return `<div class="prevrib" role="note">Vista previa · este juego aún no está publicado para los usuarios</div>`+screen0()}return screen0()}
+function soonScreen(g){const N=(GAMES.find(x=>x[0]===g)||[0,'Juego'])[1];return hubBar(gParent(g)==='cosmere'?(g==='deck'?['cosmere','Cosmere']:['rol','Rol']):['menu','Inicio'])+`<h1 class="hh">${esc(N)}</h1><div class="glass soonbox"><div class="soonic" aria-hidden="true">${SHLD}</div><h2>Próximamente</h2><p class="hs" style="margin:0">Este juego todavía no está disponible. Lo verás aquí en cuanto se publique.</p></div>`}
+function screen(){const g=GSCR[scr];if(COSF.includes(g)){if(!canSeeGame(g))return soonScreen(g);if(gameUnp(g))return `<div class="prevrib" role="note">Vista previa · este juego aún no está publicado para los usuarios</div>`+screen0()}return screen0()}
 function screen0(){
  if(scr==='admin')return adminScreen();
  if(scr==='npc')return npcEditor();
@@ -3125,13 +3148,13 @@ function screen0(){
  if(store.mode==='gm'&&scr==='menu')return gmHome();
  if(scr==='nb')return home();
  if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
-  ${hubTile('t2',NAIL,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb')}
-  ${hubTile('t3',STORM,'El archivo de las tormentas','Fichas de Roshar.','soon_arch',1)}</div>`;
+  ${hubTile('t2',NAIL,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb',canSeeGame('nb')?0:1)}
+  ${hubTile('t3',STORM,'El archivo de las tormentas','Fichas de Roshar.','soon_arch',canSeeGame('arch')?0:1)}</div>`;
  if(scr==='deck')return deckScreen();
  if(scr==='arch')return hubBar(['rol','Rol'])+`<h1 class="hh">El archivo de las tormentas</h1><p class="hs">Esta parte todavía está en preparación. Cuando esté lista aparecerá aquí.</p>`;
  if(scr==='cosmere')return hubBar(['menu','Inicio'])+`<h1 class="hh">Cosmere</h1><p class="hs">¿Qué quieres hacer?</p><div class="bubbles">
-  ${hubTile('t1',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck')}
-  ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol')}</div>`;
+  ${hubTile('t1',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)}
+  ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1)}</div>`;
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
   ${hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1)}
   ${hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1)}
@@ -4369,7 +4392,7 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  avPickImg(f).then(u=>{store.avatar=avOk(u);save();avRefresh(true);const mm=$('#avmsg');if(mm){mm.textContent='Imagen actualizada.';mm.className='msg ok'}const r=document.querySelector('.avrow .row');if(r&&!r.querySelector('[data-act=avdel]'))r.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-act="avdel">Quitar</button>')}).catch(()=>{const mm=$('#avmsg');if(mm){mm.textContent='No se pudo leer esa imagen.';mm.className='msg err'}});return}
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
 loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
-{const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('cosmere')){store.cur=null;store.npcCur=null;if(GSCR[scr]==='cosmere')scr='cosmere'}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
+{const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('nb')){store.cur=null;store.npcCur=null}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
 (function(){ // pausa las animaciones infinitas que no se ven (fuera de pantalla o pestaña oculta)
  if(!('IntersectionObserver' in window)||!document.getAnimations)return;
  const seen=new WeakSet(),vis=new WeakMap();let hid=document.hidden;
