@@ -3147,9 +3147,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.53';
+const APPV='00.01.54';
 const APPN='Actualización menor.';
-const APPD='Nuevo campo de texto largo Estados y lesiones en la ficha de NPC y en la hoja de personaje del jugador.';
+const APPD='Habilidades de NPC: el botón menos se bloquea cuando el modificador final llega a 0.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3709,7 +3709,7 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
  ${[['Rasgos y talentos',n.traits],['Aspecto',n.look],['Motivación',n.motive],['Estados y lesiones',n.inj],['Equipo',n.gear],['Notas',n.notes]].filter(x=>x[1]).map(([t,v])=>`<h4>${t}</h4><p class="pre" style="margin:0">${esc(v)}</p>`).join('')}</div>`}
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
  const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" data-nolimit="1" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
- const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
+ const stp=(act,k,val,lbl,dis)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}"${dis?' disabled':''}>−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
  return hubBar([n.pid?'npcback':'menu',n.pid?'Volver a la partida':'Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · en la partida':''}</p><div class="npctop">${n.dead?`<button class="btn pri" data-act="npcrevive" data-id="${n.id}">Revivir NPC</button><small><b>NPC fallecido:</b> su ficha está bloqueada hasta que lo revivas.</small>`:`<button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdie" data-id="${n.id}">Marcar como fallecido</button><small>Se guarda también solo mientras escribes.</small>`}</div>
  <section class="npcpanel glass"${n.dead?' inert style="opacity:.55"':''}><div class="grid">
  <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
@@ -3722,7 +3722,7 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <div class="f">Ajuste de concentración${stp('npccon','c',(n.conAdj>0?'+':'')+(n.conAdj||0),'concentración')}</div>
  <div class="f">Ajuste de investidura${stp('npcinv','i',(n.invAdj>0?'+':'')+(n.invAdj||0),'investidura')}</div>
  </div>
- <h3>Habilidades <small id="npcgr">${d.grades} grados</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
+ <h3>Habilidades <small id="npcgr">${d.grades} grados</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1],(+n.skills[s[0]]||0)+n.attrs[s[2]]<=0)}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
  <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><input type="text" data-nf="atk.${i}.t" value="${esc(a.t||'')}" placeholder="Tipo de daño" aria-label="Tipo de daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
  ${fld('inj','Estados y lesiones','Aturdido, herido, envenenado…',3)}${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
@@ -4493,7 +4493,7 @@ document.addEventListener('click',e=>{
   case 'npccon':{const n=npcCur();if(!n)break;n.conAdj=Math.max(-30,Math.min(60,(+n.conAdj||0)+(+b.dataset.d)));save();render(1);break}
   case 'npcinv':{const n=npcCur();if(!n)break;n.invAdj=Math.max(-30,Math.min(60,(+n.invAdj||0)+(+b.dataset.d)));save();render(1);break}
   case 'npchp':{const n=npcCur();if(!n)break;n.hpAdj=Math.max(-30,Math.min(60,(+n.hpAdj||0)+(+b.dataset.d)));save();render(1);break}
-  case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k;n.skills[k]=Math.max(-99,Math.min(99,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
+  case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k;if((+b.dataset.d)<0&&(+n.skills[k]||0)+n.attrs[SK[k][2]]<=0)break;n.skills[k]=Math.max(-99,Math.min(99,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
   case 'npcatkadd':{const n=npcCur();if(!n)break;n.attacks.push({n:'',b:'',d:'',t:''});save();render(1);{const i=document.querySelectorAll('.npcatk .item');const l=i[i.length-1];if(l){const f=l.querySelector('input');if(f)f.focus()}}break}
   case 'npcatkdel':{const n=npcCur();if(!n)break;n.attacks.splice(+b.dataset.i,1);save();render(1);break}
   case 'ppopen':{partId=b.dataset.p;scr='ppart';render();fetchRevealed();break}
