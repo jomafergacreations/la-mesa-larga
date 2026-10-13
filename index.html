@@ -1855,7 +1855,7 @@ html[data-dun][data-dev][data-dev]:root #fdock .fd,html[data-dun][data-dev][data
 #dnfx .dngu{position:absolute;left:-60%;top:var(--y);width:60%;height:15%;background:linear-gradient(90deg,rgba(240,190,110,0),rgba(240,190,110,.24) 50%,rgba(240,190,110,0));filter:blur(14px)}
 #dnfx .dnstorm{position:absolute;inset:0;opacity:0;background:radial-gradient(60% 50% at 30% 62%,rgba(226,160,86,.6),transparent 70%),radial-gradient(70% 50% at 82% 40%,rgba(226,160,86,.45),transparent 70%)}
 html[data-dun] body.hub .hh.dnh{text-indent:.32em;font-family:'Michroma','Syncopate','Eurostile',var(--sans),sans-serif;font-weight:400;letter-spacing:.32em;text-transform:uppercase;font-size:clamp(1.9rem,10.5vw,3.4rem);line-height:1.05;margin:0;padding-bottom:6px;background:linear-gradient(180deg,#FFF3D2 0%,#F2B65A 56%,#B8651F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;text-shadow:none}
-.dnhw{width:fit-content;filter:url(#dnheat) drop-shadow(0 4px 18px rgba(233,169,87,.35))}
+.dnhw{width:fit-content}
 .dnroot{position:relative;display:grid;gap:18px;max-width:720px}
 .dneye{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:#8EC5F0}
 .dnrip{display:block;width:100%;height:18px;overflow:visible}
@@ -1910,8 +1910,8 @@ html[data-dun] body.hub .hh.dnh{text-indent:.32em;font-family:'Michroma','Syncop
 @keyframes dnRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #dnout .dnot{font:400 clamp(.85rem,3.6vw,1.2rem)/1.3 'Michroma','Syncopate','Eurostile',var(--sans),sans-serif;letter-spacing:.32em;text-transform:uppercase;text-align:center;padding:0 24px;color:#F6E3BE;opacity:0;animation:dnOt 1.2s ease .15s forwards;position:relative;z-index:1}
 #dnin,#dnout{position:fixed;inset:0;z-index:99991;pointer-events:none;overflow:hidden;display:block}
-#dnin canvas,#dnout canvas{position:absolute;inset:0;width:100%;height:100%}
-#dnin .dsl,#dnout .dsl{position:absolute;left:-30%;top:-10%;width:160%;height:120%;background-repeat:repeat;mix-blend-mode:normal;will-change:transform}
+#dnin canvas,#dnout canvas{position:absolute;inset:0;width:100%;height:100%;will-change:contents}#dnin .dsw,#dnout .dsw{will-change:opacity}
+#dnin .dsl,#dnout .dsl{position:absolute;left:0;top:0;width:calc(100% + 700px);height:100%;background-repeat:repeat;will-change:transform,opacity;backface-visibility:hidden}
 #dnin .dsw,#dnout .dsw{position:absolute;inset:0;background:radial-gradient(90% 70% at 55% 45%,rgba(214,150,70,.92),rgba(168,105,42,.96) 70%,rgba(120,70,24,.98))}
 #dnout .dnot{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:3}
 @keyframes dnOt{0%{opacity:0}35%,70%{opacity:1}100%{opacity:0}}
@@ -1982,7 +1982,7 @@ html[data-lm=l] #dnfx .dnstorm{background:radial-gradient(60% 50% at 30% 62%,rgb
 html[data-lm=l] #dnfx .dnw svg{filter:none}
 html[data-dun][data-lm=l][data-dev][data-dev]:root body.hub{--h-bg:#F3E2B8;--h-card:rgba(255,248,230,.85);--h-ink:#4A2A10;--h-mut:#7A4A1E;--h-line:#D8B77A;--pc:#C26A1B;background:#F3E2B8;color:#4A2A10}
 html[data-dun][data-lm=l] body.hub .hh.dnh{background:linear-gradient(180deg,#7A3A0E 0%,#B8571A 55%,#E39A3A 100%);-webkit-background-clip:text;background-clip:text}
-html[data-lm=l] .dnhw{filter:url(#dnheat) drop-shadow(0 2px 12px rgba(255,255,255,.75))}
+
 html[data-lm=l] .dneye{color:#1F5A92}
 html[data-lm=l] .dnrip path{stroke:#A8561A}
 html[data-lm=l] .dnpan{background:linear-gradient(180deg,rgba(255,248,228,.86),rgba(250,236,200,.82));border-color:rgba(168,86,26,.45);box-shadow:0 0 30px -12px rgba(168,86,26,.5),inset 0 0 40px rgba(255,255,255,.4)}
@@ -2026,7 +2026,7 @@ html[data-lm=d] #dnfx .dnstorm{background:radial-gradient(60% 50% at 30% 62%,rgb
 html[data-lm=d] #dnfx .dnw svg{filter:brightness(.55) saturate(.8)}
 html[data-dun][data-lm=d][data-dev][data-dev]:root body.hub{--h-bg:#05060F;--h-card:rgba(12,18,48,.85);--h-ink:#E8EEFF;--h-mut:#A9B8E6;--h-line:rgba(143,170,230,.3);--pc:#8EC5F0;background:#05060F;color:#E8EEFF}
 html[data-dun][data-lm=d] body.hub .hh.dnh{background:linear-gradient(180deg,#FFFFFF 0%,#D9E4FF 50%,#8FAAE8 100%);-webkit-background-clip:text;background-clip:text}
-html[data-lm=d] .dnhw{filter:url(#dnheat) drop-shadow(0 4px 18px rgba(143,170,230,.45))}
+
 html[data-lm=d] .dneye{color:#8EC5F0}
 html[data-lm=d] .dnrip path{stroke:#8FAAE8}
 html[data-lm=d] .dnpan{background:linear-gradient(180deg,rgba(14,20,52,.75),rgba(7,10,32,.82));border-color:rgba(143,170,230,.4);box-shadow:0 0 34px -10px rgba(143,170,230,.4),inset 0 0 40px rgba(143,170,230,.06)}
@@ -2701,8 +2701,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='156';
-const APPN='Dune: el título «DUNE» pasa a un rótulo propio de trazo fino y letras abiertas, inspirado en el cartel.';
+const APPV='157';
+const APPN='Dune: la animación de entrada y salida es más fluida y estable (menos carga gráfica).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2914,21 +2914,24 @@ function duneFx(on){const r=document.documentElement;let f=document.getElementBy
   +'<i class="dnstorm"></i>'+u+g;
  document.body.appendChild(f)}
 function sandStorm(o,dur,peakA,peakB){
- const N="url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .02' numOctaves='4' seed='SEED' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .72 0 0 0 0 .38 0 0 0 2.2 -.75'/%3E%3C/filter%3E%3Crect width='600' height='400' filter='url(%23n)'/%3E%3C/svg%3E\")";
+ const N="url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .02' numOctaves='3' seed='SEED' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .72 0 0 0 0 .38 0 0 0 2.2 -.75'/%3E%3C/filter%3E%3Crect width='600' height='400' filter='url(%23n)'/%3E%3C/svg%3E\")";
  const sw=document.createElement('div');sw.className='dsw';sw.style.opacity=0;o.appendChild(sw);
- const L=[];[[3,26,1.5,1],[9,34,2.4,.8],[17,22,3.6,.7]].forEach((c,k)=>{const d=document.createElement('div');d.className='dsl';d.style.backgroundImage=N.replace('SEED',c[0]);d.style.backgroundSize=(c[1]*20)+'px '+(c[1]*13)+'px';d.style.opacity=0;d.style.filter='blur('+(k*1.4)+'px)';o.appendChild(d);L.push([d,c[2]*420,c[3]])});
- const cv=document.createElement('canvas');o.appendChild(cv);const dpr=Math.min(2,devicePixelRatio||1),W=innerWidth,H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;const x=cv.getContext('2d');x.scale(dpr,dpr);
- const n=Math.round(Math.min(900,W*H/1100)),P=[];const col=['233,181,103','246,215,154','201,138,59','255,236,190'];
- for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,v:(.7+Math.random()*1.3)*W*1.5,l:6+Math.random()*34,w:.5+Math.random()*1.6,a:.25+Math.random()*.6,c:col[i%4],ph:Math.random()*6.28,sw:8+Math.random()*30});
+ const L=[];[[3,600,1.5,1],[11,520,2.6,.8]].forEach(c=>{const d=document.createElement('div');d.className='dsl';d.style.backgroundImage=N.replace('SEED',c[0]);d.style.backgroundSize=c[1]+'px '+Math.round(c[1]*.667)+'px';d.style.opacity=0;o.appendChild(d);L.push([d,c[2]*420,c[3],c[1]])});
+ const cv=document.createElement('canvas');o.appendChild(cv);const W=innerWidth,H=innerHeight;cv.width=W;cv.height=H;const x=cv.getContext('2d',{alpha:true});
+ const n=Math.round(Math.min(380,W*H/2400)),P=[];const col=['233,181,103','246,215,154','201,138,59','255,236,190'];
+ for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,v:(.7+Math.random()*1.3)*W*1.5,l:6+Math.random()*30,ph:Math.random()*6.28,sw:8+Math.random()*26,g:i%4,t:i%2});
  const t0=performance.now();let last=t0;
  const I=t=>{const k=t/dur;return k<peakA?Math.pow(k/peakA,1.7):k<peakB?1:Math.max(0,1-Math.pow((k-peakB)/(1-peakB),1.3))};
- function frame(now){if(!o.isConnected)return;const t=now-t0,dt=Math.min(.05,(now-last)/1000);last=now;const g=I(t);
-  sw.style.opacity=Math.min(1,Math.max(0,(g-.35)/.55)).toFixed(3);
-  L.forEach((l,k)=>{l[0].style.transform='translate3d('+(-(t/1000)*l[1])%(600)+'px,'+(Math.sin(t/500+k)*14)+'px,0)';l[0].style.opacity=(g*l[2]*.85).toFixed(3)});
-  x.clearRect(0,0,W,H);x.lineCap='round';
-  const cnt=Math.floor(P.length*Math.min(1,.15+g));
-  for(let i=0;i<cnt;i++){const p=P[i];p.x+=p.v*dt*(.6+g*.7);p.y+=Math.sin(now/260+p.ph)*p.sw*dt+p.v*dt*.06;if(p.x>W+60){p.x=-60-Math.random()*80;p.y=Math.random()*H}if(p.y>H+10)p.y=-10;
-   x.strokeStyle='rgba('+p.c+','+(p.a*(.35+g*.65)).toFixed(2)+')';x.lineWidth=p.w;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(p.x-p.l*(.6+g),p.y-p.l*.08);x.stroke()}
+ const sm=v=>v*v*(3-2*v);
+ function frame(now){if(!o.isConnected)return;const t=now-t0,dt=Math.min(.034,(now-last)/1000);last=now;const g=sm(Math.min(1,I(t)));
+  sw.style.opacity=Math.min(1,Math.max(0,(g-.35)/.55)).toFixed(2);
+  L.forEach((l,k)=>{const tx=-((t/1000)*l[1])%l[3];l[0].style.transform='translate3d('+tx.toFixed(1)+'px,0,0)';l[0].style.opacity=(g*l[2]*.85).toFixed(2)});
+  x.clearRect(0,0,W,H);x.lineCap='round';x.lineWidth=1.2;
+  const cnt=Math.floor(P.length*Math.min(1,.2+g)),sp=(.6+g*.7);
+  const bk={};
+  for(let i=0;i<cnt;i++){const p=P[i];p.x+=p.v*dt*sp;p.y+=Math.sin(now/260+p.ph)*p.sw*dt+p.v*dt*.06;if(p.x>W+60){p.x=-60-Math.random()*80;p.y=Math.random()*H}if(p.y>H+10)p.y=-10;
+   const key=p.g*2+p.t;(bk[key]||(bk[key]=[])).push(p)}
+  for(const key in bk){const gi=key>>1,t2=key&1;x.strokeStyle='rgba('+col[gi]+','+((t2?.8:.45)*(.35+g*.65)).toFixed(2)+')';x.beginPath();for(const p of bk[key]){x.moveTo(p.x,p.y);x.lineTo(p.x-p.l*(.6+g),p.y-p.l*.08)}x.stroke()}
   requestAnimationFrame(frame)}
  requestAnimationFrame(frame)}
 function duneIntro(){if(lfRM()||document.getElementById('dnin'))return;
@@ -2938,7 +2941,7 @@ function duneOut(then){if(lfRM()||document.getElementById('dnout')){then();retur
  const t=document.createElement('div');t.className='dnot';t.textContent='Las arenas se cierran…';o.appendChild(t);t.animate([{opacity:0},{opacity:1,offset:.45},{opacity:1,offset:.7},{opacity:0}],{duration:1500,fill:'forwards'});
  setTimeout(then,1000);setTimeout(()=>o.remove(),1550)}
 function duneScreen(){
- return hubBar(['menu','Inicio'])+`<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="dnheat" x="-4%" y="-12%" width="108%" height="124%"><feTurbulence type="fractalNoise" baseFrequency="0.01 0.05" numOctaves="1" seed="4" result="n"><animate attributeName="baseFrequency" dur="8s" values="0.01 0.05;0.014 0.08;0.01 0.05" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh" aria-label="Dune"><svg class="dnlg" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="dnwg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#dnwg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg></h1></div>
+ return hubBar(['menu','Inicio'])+`<div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh" aria-label="Dune"><svg class="dnlg" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="dnwg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#dnwg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg></h1></div>
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
 function screen(){
@@ -4106,7 +4109,7 @@ document.addEventListener('click',e=>{
   case 'menu':exitFx(()=>{scr='menu';render()});break;
   case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{store.cur=null;scr='cosmere';render()}break;
   case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
-  case 'dune':if(lfRM()){store.cur=null;scr='dune';render()}else{duneIntro();setTimeout(()=>{store.cur=null;scr='dune';render()},420)}break;
+  case 'dune':if(lfRM()){store.cur=null;scr='dune';render()}else{duneIntro();setTimeout(()=>{requestAnimationFrame(()=>{store.cur=null;scr='dune';render()})},470)}break;
   case 'rol':store.cur=null;scr='rol';render();break;
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
