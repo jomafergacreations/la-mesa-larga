@@ -5,6 +5,10 @@ button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lf
 .mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
 .mth .btn,#mtnext{position:relative;z-index:80}
 .mtchw:not(.open){pointer-events:none}
+
+.codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
+.codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
+.findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
 </style>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
@@ -2842,7 +2846,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   set('Importando…');const dk=await kdf(pw,unb64(rec.salt),rec.iter);if(b64(dk.auth)!==rec.auth){set('La contraseña antigua no es correcta.','err');return}
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,invform:doPartInv,linkform:doLink,authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,linkform:doLink,authform:doAuth,pwform:doPw,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -3034,8 +3038,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.20';
-const APPN='Sin efectos al pulsar botones, y sin estado «en línea» (menos lecturas y escrituras).';
+const APPV='00.01.21';
+const APPN='Las partidas tienen código de unión y los jugadores se unen con «Buscar partida». Adiós a las invitaciones.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3722,7 +3726,7 @@ function setMode(m){if(m===store.mode)return;if(m==='gm'&&!canGM()){gmReqDlg();r
 
 /* ---------- Partidas ---------- */
 const hpMap={};let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
-let apState={},reqState={},banMap={},denyState={},exits=[],kicks=[];const exSeen=new Set(),kkSeen=new Set();const pjDirty=new Set(),partSeen={},invSeen=new Set();
+let joinP=null;let apState={},reqState={},banMap={},denyState={},exits=[],kicks=[];const exSeen=new Set(),kkSeen=new Set();const pjDirty=new Set(),partSeen={},invSeen=new Set();
 const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
 async function fsQuery(col,field,val){const t=await tok();let r;
  try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
@@ -3743,7 +3747,7 @@ function pullPJ(key,r){const old=store.pjc[key],p=parts.find(x=>x.id===r.pid);co
 async function loadParts(){if(!session)return;
  try{const mine=await fsQuery('partidas','gm',session.uid);parts=mine.sort((a,b)=>(a.created|0)-(b.created|0));
   const mem=await fsQuery('miembros','uid',session.uid);const mp=[];for(const m of mem){const d=await fs('GET','partidas/'+m.pid);if(d)mp.push(Object.assign(fbDec(d),{cid:m.cid,mid:m.id}));else fs('DELETE','miembros/'+m.id).catch(()=>{})}myParts=mp;
-  invs=(await fsQuery('invitaciones','to',session.uid)).filter(i=>i.status==='pending');
+  invs=[];
   for(const c of store.chars){if(!c.pid)continue;if(!myParts.some(p=>p.id===c.pid)){delete c.pid;delete c.rev;delete c._ph;save()}}
   try{const mj=await fsQuery('pjs','uid',session.uid);apState={};reqState={};banMap={};denyState={};mj.forEach(x=>{hpMap[x.pid+'_'+session.uid]=x.hp|0;denyState[x.pid]=x.deny||'';apState[x.pid]=x.ap||'y';reqState[x.pid]=x.req||'';banMap[x.pid]=x.ban||''});
    for(const c of store.chars){if(c.pid&&apState[c.pid]==='n'){const pn=(myParts.find(q=>q.id===c.pid)||{}).name||'la partida';delete c.pid;delete c.rev;delete c._ph;save();toast('El Game Master de «'+pn+'» pide cambiar o crear otro personaje')}}
@@ -3751,7 +3755,7 @@ async function loadParts(){if(!session)return;
   try{exits=(await fsQuery('salidas','gm',session.uid)).filter(x=>x.kind==='left').sort((a,b)=>(a.created|0)-(b.created|0));kicks=(await fsQuery('salidas','uid',session.uid)).filter(x=>x.kind==='kicked');
    for(const k of kicks){if(!kkSeen.has(k.id)){if(kkSeen.size||loadParts.k2)toast('Te han expulsado de «'+(k.pname||'una partida')+'»');kkSeen.add(k.id)}}loadParts.k2=1}catch(e){}
   if(!store.seeded){store.seeded=true;exits.forEach(x=>(store.popEx=store.popEx||[]).push(x.id));invs.forEach(x=>(store.popInv=store.popInv||[]).push(x.id));save()}
-  await rpLoad();await syncLinked();exPop();
+  await rpLoad();await syncLinked();exPop();ensureCodes();
   invPop();if(store.mode!=='gm')fetchRevealed();
   const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id],reqState[p.id],denyState[p.id],p.end||'',hpMap[p.id+'_'+session.uid]|0]),rpOpenN(),exits.map(x=>x.id),kicks.map(x=>x.id),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'||scr==='ppart'))render(1)}}catch(e){}}
@@ -3759,7 +3763,7 @@ async function syncLinked(){for(const c of store.chars.slice()){if(!c.pid||store
   try{const d=await fs('GET','pjs/'+c.pid+'_'+session.uid);if(!d){delete c.pid;delete c.rev;delete c._ph;save();continue}const r=fbDec(d);if(r.ap==='n')continue;
    if(r.cid&&r.cid!==c.id){const nc=store.chars.find(x=>x.id===r.cid);delete c.pid;delete c.rev;delete c._ph;if(nc){nc.pid=r.pid;nc.rev=0;nc._ph=pjData(nc)}save();try{await fs('PATCH','miembros/'+r.pid+'_'+session.uid,fbEnc({cid:r.cid}),maskQ({cid:1}))}catch(e){}toast('El Game Master ha autorizado tu cambio de personaje');render(1);continue}if((r.rev|0)>(c.rev|0)&&c._ph===pjData(c))pullInto(c,r)}catch(e){}}}
 async function loadPart(pid){if(!session)return;
- try{const [mem,inv,pj]=await Promise.all([fsQuery('miembros','pid',pid),fsQuery('invitaciones','pid',pid),fsQuery('pjs','pid',pid)]);
+ try{const [mem,inv,pj]=await Promise.all([fsQuery('miembros','pid',pid),Promise.resolve([]),fsQuery('pjs','pid',pid)]);
   const pjm={};pj.forEach(x=>{hpMap[x.pid+'_'+x.uid]=x.hp|0;try{pjm[x.uid]={ch:JSON.parse(x.data),rev:x.rev|0,upd:x.updated|0,raw:x}}catch(e){}});
   const sg=JSON.stringify([mem.map(m=>[m.id,m.cid]),inv.map(i=>[i.id,i.status]),pj.map(x=>[x.uid,x.rev,x.hp|0])]);
   const changed=sg!==(loadPart.sg&&loadPart.sg[pid]);(loadPart.sg=loadPart.sg||{})[pid]=sg;
@@ -3816,12 +3820,13 @@ function pjViewScreen(){const v=store.pjv;if(!v){scr='part';return partScreen()}
  <div class="row" style="margin:12px 0"><button class="btn pri" data-act="pjap" data-v="y" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Aprobar personaje</button><button class="btn" data-act="pjap" data-v="n" data-p="${esc(v.pid)}" data-u="${esc(v.uid)}">Rechazar (pedir otro)</button></div>
  <div class="ro">${h}</div>`}
 function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
- const mem=partMem[p.id]||[],inv=(partInv[p.id]||[]).filter(i=>i.status==='pending'),nl=(store.npcs||[]).filter(x=>x.pid===p.id);
+ const mem=partMem[p.id]||[],nl=(store.npcs||[]).filter(x=>x.pid===p.id);
  return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master${p.end==='1'?' · <b>finalizada</b>':''}</p><div class="meta ptags">${partTags(p)}</div>${p.desc?`<p class="hint pdesc">${esc(p.desc)}</p>`:''}
- <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3><button class="btn pri" data-act="partinv">Invitar jugador</button></div>
- <p class="hint">Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
- ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Invita a tus jugadores por su nombre de usuario.</p>'}
- ${exits.filter(x=>x.pid===p.id&&!exAck(x.id)).length?`<h3>Han abandonado la partida</h3><div class="alist">${exits.filter(x=>x.pid===p.id&&!exAck(x.id)).map(x=>`<div class="exbox"><div><b>${esc(x.name||'Jugador')}</b><span>${esc(x.reason||'—')}</span></div><button class="btn sm" data-act="exok" data-id="${x.id}">Entendido</button></div>`).join('')}</div>`:''}${inv.length?`<h3>Invitaciones pendientes</h3><div class="alist">${inv.map(i=>`<div class="arow"><div class="ahead" style="cursor:default"><span class="aav">✉</span><span class="anm"><b>${esc(i.toName||'Jugador')}</b><small>Esperando respuesta</small></span><button class="btn sm ghost" data-act="invcancel" data-id="${i.id}">Cancelar</button></div></div>`).join('')}</div>`:''}</section>
+ <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3></div>
+ <div class="codebox"><span>Código de la partida</span><b id="pcode" aria-label="Código de unión">${esc(p.code||'······')}</b>${p.code?`<button class="btn sm" data-act="codecopy" data-c="${esc(p.code)}">Copiar</button>`:''}</div>
+ <p class="hint">Dale este código a tus jugadores: lo escriben en <b>Buscar partida</b> y se unen a tu sala. Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
+ ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Comparte el código de la partida.</p>'}
+ ${exits.filter(x=>x.pid===p.id&&!exAck(x.id)).length?`<h3>Han abandonado la partida</h3><div class="alist">${exits.filter(x=>x.pid===p.id&&!exAck(x.id)).map(x=>`<div class="exbox"><div><b>${esc(x.name||'Jugador')}</b><span>${esc(x.reason||'—')}</span></div><button class="btn sm" data-act="exok" data-id="${x.id}">Entendido</button></div>`).join('')}</div>`:''}</section>
  <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Son privados hasta que los metas en la partida: en ese momento se revelan automáticamente a tus jugadores, y seguirán visibles hasta que los retires.</p>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
@@ -3829,11 +3834,11 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}">${p.end==='1'?`<button type="button" class="pcx" data-act="partdel" data-id="${p.id}" aria-label="Eliminar la partida finalizada de la lista" title="Eliminar de la lista">✕</button>`:''}<h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
- if(invs.length)h+=`<section class="partsec"><h2 class="hh2">Invitaciones</h2><div class="npcgrid">${invs.map((i,k)=>{const nw=!invSeen.has(i.id);invSeen.add(i.id);return `<article class="card invc${nw?' invnew':''}" style="--i:${k}"><div class="invi">${ENVSVG}</div><h3>${esc(i.pname||'Partida')}</h3><div class="meta ptags">${partTags(i)}</div><p class="hint" style="margin:0">${esc(i.gmName||'Un Game Master')} te invita a jugar.</p><div class="row"><button class="btn pri" data-act="invyes" data-id="${i.id}">Aceptar</button><button class="btn ghost" data-act="invno" data-id="${i.id}">Rechazar</button></div></article>`}).join('')}</div></section>`;
+ h+=`<section class="partsec"><button type="button" class="btn pri findbtn" data-act="partfind">${LUPA}<span>Buscar partida</span></button></section>`;
  if(kicks.length)h+=`<section class="partsec"><h2 class="hh2">Expulsado de</h2><div class="npcgrid">${kicks.map((k,i)=>`<article class="card npcc" style="--i:${i}"><h3>${esc(k.pname||'Partida')}</h3><div class="meta"><span>Expulsado por ${esc(k.gmName||'el Game Master')}</span></div><p class="hint" style="margin:0"><b>Motivo:</b> ${esc(k.reason||'—')}</p><div class="row"><button class="btn ghost" data-act="kickdel" data-id="${k.id}">Eliminar de mi lista</button></div></article>`).join('')}</div></section>`;
  if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':apState[p.id]==='n'?'El Game Master ha pedido otro personaje: no puedes volver a elegir el anterior.':'Sin personaje elegido.'}</p>${c?`<span class="apb ${apState[p.id]==='p'?'wait':'ok'}">${apState[p.id]==='p'?'Pendiente de aprobación del GM':'Aprobado por el GM'}</span>`:''}<div class="row">${c&&apState[p.id]==='y'?(reqState[p.id]==='1'?'<span class="apb wait">Cambio solicitado · esperando al GM</span>':denyState[p.id]==='1'?'<span class="apb wait">El GM denegó tu solicitud de cambio</span>':`<button class="btn" data-act="pjreq" data-p="${p.id}">Solicitar cambio de personaje</button>`):`<button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button>`}<button class="btn pri" data-act="ppopen" data-p="${p.id}">Abrir partida</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
  return h}
-function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const ok=store.chars.filter(c=>!pjOk(c,P,pid)),no=store.chars.filter(c=>pjOk(c,P,pid));
+function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||(joinP&&joinP.id===pid?joinP:null)||{};const ok=store.chars.filter(c=>!pjOk(c,P,pid)),no=store.chars.filter(c=>pjOk(c,P,pid));
  const opts=ok.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
  const why=no.length?`<div class="hint nolink"><b>No pueden participar:</b><ul>${no.map(c=>`<li>${esc(c.name||'Sin nombre')} — ${pjOk(c,P,pid)}</li>`).join('')}</ul></div>`:'';
  showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> solo puedes aportar personajes con la ficha terminada y compatibles con la partida (${P.era?'Era '+P.era:'cualquier era'}). El Game Master podrá ver y modificar la ficha que elijas, salvo Orígenes, Camino e Historia. Puedes salir cuando quieras y te quedas con una copia.</p>${why}
@@ -3841,9 +3846,9 @@ function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||in
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
   {const cu=store.chars.find(x=>x.pid===pid);if(apState[pid]==='y'&&cu&&cid!==cu.id){set('Para cambiar de personaje necesitas la autorización del Game Master.','err');return}}
-  {const P=myParts.find(x=>x.id===pid)||invs.find(x=>x.pid===pid)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
+  {const P=myParts.find(x=>x.id===pid)||(joinP&&joinP.id===pid?joinP:null)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
    }
-  if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{await fs('PATCH','invitaciones/'+key,fbEnc({status:'accepted'}),maskQ({status:1}))}catch(e){}}
+  if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
   if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',req:'',reason:'',deny:'',updated:Date.now()}),maskQ({pid:1,uid:1,cid:1,owner:1,data:1,rev:1,ap:1,req:1,reason:1,deny:1,updated:1}));c.pid=pid;c.rev=0;c._ph=h}
    try{await fs('PATCH','miembros/'+key,fbEnc({cid}),maskQ({cid:1}))}catch(e){}}
@@ -3904,51 +3909,35 @@ async function doReq(f){const m=$('#rmsg'),pid=f.dataset.p,rs=String(f.elements.
 async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
 const lic=!isAdmin()&&(session.role|0)<2&&(session.gm|0)!==1;
  if(lic&&(session.gmLic||!((session.gmTmp|0)>0))){m.textContent=session.gmLic?'Tu licencia temporal es para una sola partida y ya la has usado.':'No tienes licencia de Game Master.';m.className='msg err';return}
- try{const id=uid()+uid();const E=f.elements,era=+E.pe.value===2?2:1,maxlvl=Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,desc:String(E.pd.value||'').slice(0,300)}));if(lic){await fs('PATCH','users/'+session.uid,fbEnc({gmTmp:0,gmLic:id}),maskQ({gmTmp:1,gmLic:1}));session.gmTmp=0;session.gmLic=id}try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
-async function doPartInv(f){const m=$('#imsg2');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const name=nameN(f.elements.un.value);if(name.length<3){set('Escribe el nombre de usuario completo.','err');return}
- const p=parts.find(x=>x.id===partId);if(!p)return;
- try{set('Buscando…');const nd=await fs('GET',nameDoc(name));if(!nd){set('No existe ningún usuario con ese nombre.','err');return}const uidT=fbDec(nd).uid;
-  if(uidT===session.uid){set('No puedes invitarte a ti mismo.','err');return}if(leftSet(p.id).has(uidT)){set('Ese jugador abandonó la partida y no puede volver.','err');return}
-  const key=p.id+'_'+uidT;if((partMem[p.id]||[]).some(x=>x.uid===uidT)){set('Ese jugador ya está en la partida.','err');return}
-  if((partInv[p.id]||[]).some(x=>x.to===uidT&&x.status==='pending')){set('Ya tiene una invitación pendiente.','err');return}
-  await fs('PATCH','invitaciones/'+key,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:uidT,toName:name,status:'pending',created:Date.now()}));
-  try{$('#dlg').close()}catch(x){}envFx('Invitación enviada','send');toast('Invitación enviada a '+name);await loadPart(p.id);render(1)}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo enviar la invitación.','err')}}
-async function kickPlayer(pid,u){for(const col of ['pjs','miembros','invitaciones']){try{await fs('DELETE',col+'/'+pid+'_'+u)}catch(e){}}}
+ try{const id=uid()+uid();const E=f.elements,era=+E.pe.value===2?2:1,maxlvl=Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,desc:String(E.pd.value||'').slice(0,300),code:await newCode()}));if(lic){await fs('PATCH','users/'+session.uid,fbEnc({gmTmp:0,gmLic:id}),maskQ({gmTmp:1,gmLic:1}));session.gmTmp=0;session.gmLic=id}try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+async function kickPlayer(pid,u){for(const col of ['pjs','miembros']){try{await fs('DELETE',col+'/'+pid+'_'+u)}catch(e){}}}
 
-/* ---------- invitar jugadores: lista con conectados y desconectados ---------- */
-let invSel=new Set(),invRows=[],invTm=0,invQ='';
-async function invLoad(){const p=parts.find(x=>x.id===partId);const box=document.querySelector('#dlg[open] .invdlg');if(!p||!box){clearInterval(invTm);invTm=0;return}
- try{const l=(await fsList('users')).filter(x=>!x.deleted);const mem=new Set((partMem[p.id]||[]).map(x=>x.uid)),pen=new Set((partInv[p.id]||[]).filter(i=>i.status==='pending').map(i=>i.to));
-  const lf=leftSet(p.id);invRows=l.filter(r=>r.id!==session.uid&&!lf.has(r.id)&&r.name&&!(r.owner&&!canAdm())).map(r=>({uid:r.id,name:r.name,on:0,st:mem.has(r.id)?'mem':pen.has(r.id)?'pen':''})).sort((a,b)=>(b.on-a.on)||a.name.localeCompare(b.name,'es'));
-  invDraw()}catch(e){box.querySelector('.invlist').innerHTML='<p class="hint">No se pudo cargar la lista. Comprueba la conexión.</p>'}}
-function invDraw(){const box=document.querySelector('#dlg[open] .invdlg');if(!box)return;const q=invQ.toLowerCase();
- const rows=invRows.filter(r=>!q||r.name.toLowerCase().includes(q));const on=invRows.filter(r=>r.on).length;
- box.querySelector('.invsum').innerHTML=`${invRows.length} jugadores`;
- box.querySelector('.invlist').innerHTML=rows.length?rows.map(r=>`<label class="invrow${r.st?' dis':''}"><input type="checkbox" data-iu="${esc(r.uid)}"${r.st?' disabled':''}${invSel.has(r.uid)?' checked':''}><b>${esc(r.name)}</b><small>${r.st==='mem'?'Ya en la partida':r.st==='pen'?'Invitación enviada':''}</small></label>`).join(''):'<p class="hint" style="margin:6px 0">No hay usuarios que coincidan.</p>';
- const n=[...invSel].filter(u=>invRows.some(r=>r.uid===u&&!r.st)).length,free=invRows.filter(r=>!r.st).length;
- const a=box.querySelector('[data-act=invsel]'),b=box.querySelector('[data-act=invall]');a.textContent='Invitar seleccionados ('+n+')';a.disabled=!n;b.textContent='Invitar a todos ('+free+')';b.disabled=!free}
-function openInvite(){invSel=new Set();invQ='';invRows=[];
- showDlg('Invitar jugadores',`<div class="invdlg"><p class="hint" style="margin:0">Elige a quién invitar. Verás quién está conectado ahora mismo, y recibirán un aviso en su pantalla para aceptar o rechazar.</p><input type="search" class="invq" placeholder="Buscar usuario…" aria-label="Buscar usuario" autocomplete="off"><div class="invsum" aria-live="polite"></div><div class="invlist"><p class="hint">Cargando…</p></div><div class="row"><button class="btn pri" data-act="invsel" disabled>Invitar seleccionados (0)</button><button class="btn" data-act="invall" disabled>Invitar a todos</button></div></div>`,true);
- invLoad();clearInterval(invTm);invTm=setInterval(()=>{if(Date.now()>=fsCool&&!document.hidden)invLoad()},15000)}
-document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('invq')){invQ=t.value;invDraw()}});
-document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.iu){if(t.checked)invSel.add(t.dataset.iu);else invSel.delete(t.dataset.iu);invDraw()}});
-async function sendInvites(all){const p=parts.find(x=>x.id===partId);if(!p)return;const targets=invRows.filter(r=>!r.st&&(all||invSel.has(r.uid)));if(!targets.length)return;
- {const cnt=(partMem[p.id]||[]).length+(partInv[p.id]||[]).filter(i=>i.status==='pending').length;if((p.maxp|0)&&cnt+targets.length>(p.maxp|0)){toast('La partida admite '+p.maxp+' jugadores: quedan '+Math.max(0,(p.maxp|0)-cnt)+' plazas');return}}
- const btns=document.querySelectorAll('.invdlg .row .btn');btns.forEach(x=>x.disabled=true);let ok=0;
- for(const r of targets){try{await fs('PATCH','invitaciones/'+p.id+'_'+r.uid,fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmName:session.name,to:r.uid,toName:r.name,status:'pending',created:Date.now(),game:p.game||'nb',era:p.era|0,maxlvl:p.maxlvl|0,maxp:p.maxp|0}));ok++}catch(e){}}
- clearInterval(invTm);invTm=0;try{$('#dlg').close()}catch(x){}
- if(ok){envFx(ok>1?'Invitaciones enviadas':'Invitación enviada','send');toast(ok+(ok>1?' invitaciones enviadas':' invitación enviada'))}else toast('No se pudo enviar. Inténtalo de nuevo.');
- await loadPart(p.id);render(1)}
+
+/* ---------- código de unión a la partida ---------- */
+const CODE_AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function rndCode(){const a=new Uint8Array(6);crypto.getRandomValues(a);return [...a].map(x=>CODE_AL[x%CODE_AL.length]).join('')}
+async function newCode(){for(let i=0;i<6;i++){const c=rndCode();try{const r=await fsQuery('partidas','code',c);if(!r.length)return c}catch(e){return c}}return rndCode()}
+let codeBusy=false;
+async function ensureCodes(){if(codeBusy||!session)return;const miss=parts.filter(p=>!p.code&&p.end!=='1');if(!miss.length)return;codeBusy=true;
+ try{for(const p of miss){const c=await newCode();await fs('PATCH','partidas/'+p.id,fbEnc({code:c}),maskQ({code:1}));p.code=c}partSig='';render(1)}catch(e){}codeBusy=false}
+const normCode=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+const LUPA='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+function findDlg(){showDlg('Buscar partida',`<form id="findform" class="grid" novalidate><p class="hint" style="margin:0">Pídele a tu Game Master el <b>código de la partida</b> (6 caracteres) y escríbelo aquí para unirte a su sala.</p><label class="f">Código de la partida<input name="code" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC123" inputmode="text" style="text-transform:uppercase;letter-spacing:.3em;text-align:center;font-weight:700;font-size:1.3rem"></label><div id="fmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Buscar</button></div></form>`,true);setTimeout(()=>{const i=document.querySelector('#findform [name=code]');if(i)i.focus()},120)}
+async function doFind(f){const m=$('#fmsg'),set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const code=normCode(f.elements.code.value);
+ if(code.length<6){set('El código tiene 6 caracteres.','err');return}
+ try{set('Buscando…');const r=await fsQuery('partidas','code',code);const p=r[0];
+  if(!p){set('No existe ninguna partida con ese código.','err');return}
+  if(p.end==='1'){set('Esa partida ya ha finalizado.','err');return}
+  if(p.gm===session.uid){set('Esa partida es tuya: tú eres su Game Master.','err');return}
+  if(myParts.some(x=>x.id===p.id)){set('Ya estás en esa partida.','err');return}
+  try{const ks=await fsQuery('salidas','uid',session.uid);if(ks.some(x=>x.pid===p.id&&(x.kind==='kicked'||x.kind==='left'))){set('No puedes volver a unirte a esa partida.','err');return}}catch(e){}
+  if((p.maxp|0)){const mem=await fsQuery('miembros','pid',p.id);if(mem.length>=(p.maxp|0)){set('La partida está completa.','err');return}}
+  joinP=p;try{$('#dlg').close()}catch(x){}linkDlg(p.id,p.name,true,'')}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo buscar la partida. Inténtalo de nuevo.','err')}}
 
 /* ---------- aviso emergente de invitación (esquina) ---------- */
 const ppSeen=new Set();
-function invPop(){if(!session||!invs.length)return;if(document.getElementById('invpop'))return;const pi=(store.popInv=store.popInv||[]);const i=invs.find(x=>!ppSeen.has(x.id)&&!pi.includes(x.id));if(!i)return;
- ppSeen.add(i.id);pi.push(i.id);save();const d=document.createElement('aside');d.id='invpop';d.setAttribute('role','alertdialog');d.setAttribute('aria-label','Invitación a una partida');
- d.innerHTML=`<div class="ppi">${ENVSVG}</div><div class="ppt"><b>${esc(i.gmName||'Un Game Master')} te invita</b><span>a la partida «${esc(i.pname||'Partida')}»</span><div class="row"><button class="btn pri sm" data-act="ppyes" data-id="${i.id}">Aceptar</button><button class="btn sm" data-act="ppno" data-id="${i.id}">Rechazar</button></div></div><button class="ppx" data-act="ppx" aria-label="Cerrar aviso">✕</button>`;
- document.body.appendChild(d);
- try{if(navigator.vibrate)navigator.vibrate(60)}catch(e){}
- d._t=setTimeout(()=>closePop(),3000)}
-function closePop(then){const d=document.getElementById('invpop');if(!d){if(then)then();return}clearTimeout(d._t);d.classList.add('out');setTimeout(()=>{d.remove();invPop();if(then)then()},260)}
+function invPop(){}
+function closePop(then){const d=document.getElementById('invpop');if(!d){if(then)then();return}clearTimeout(d._t);d.classList.add('out');setTimeout(()=>{d.remove();if(then)then()},260)}
 let pg='',popSel='',prevPct=null,prevNums=[];
 document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)return;if(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|email|url|tel|)$/.test(t.type||''))){if(t.form&&t.form.id==='impform')return;if(t.dataset&&t.dataset.nolimit)return;if(!t.maxLength||t.maxLength<0||t.maxLength>120)t.maxLength=120}},true);
 /* v74 botón atrás del sistema */
@@ -4357,21 +4346,20 @@ document.addEventListener('click',e=>{
  if(a==='atab')pg='t';
  if(c){const PG={next:'f',qnext:'f',qskip:'f',prev:'b',qprev:'b',qmode:'f',qform:'f'};if(PG[a])pg=PG[a];else if(a==='go')pg=(+b.dataset.i>=c.step)?'f':'b';
   if(b.tagName==='BUTTON'&&(b.hasAttribute('aria-pressed')||b.dataset.d!==undefined)&&a!=='showpw'){const d=b.dataset;popSel='[data-act="'+a+'"]'+['v','k','n','d'].filter(x=>d[x]!==undefined).map(x=>'[data-'+x+'="'+d[x]+'"]').join('');fx=['path','qmetal','bless'].includes(a)||(a==='qset'&&/path|powers/.test(d.f||''))}}
- {const GB=['partinv','invsel','invall','invcancel','kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
+ {const GB=['kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
  switch(a){
   case 'atab':authTab=v;render();break;
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
+  case 'partfind':findDlg();break
+  case 'codecopy':{const c=b.dataset.c;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('Código copiado')).catch(()=>toast('Código: '+c));break}
   case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre y las reglas de la mesa.</p><label class="f">Nombre de la partida<input type="text" name="pn" maxlength="40" autocomplete="off" required></label>
 <label class="f">Juego<select name="pg">${NPCGAMES.map(([k,n,on])=>`<option value="${k}"${on?'':' disabled'}>${n}${on?'':' (próximamente)'}</option>`).join('')}</select></label>
 <div class="f"><span style="font-weight:700">Era</span><div class="seg" role="group" aria-label="Era"><button type="button" data-act="peraset" data-v="1" aria-pressed="true">Era 1 · Imperio Final</button><button type="button" data-act="peraset" data-v="2" aria-pressed="false">Era 2 · Tras el Catacendro</button></div><input type="hidden" name="pe" value="1"><small class="hint">En Era 2 también pueden jugar kandra creados en Era 1.</small></div>
 <div class="f2"><label class="f">Nivel máximo de personaje<input type="number" name="pl" min="0" max="30" value="0" inputmode="numeric"><small class="hint">0 = sin límite</small></label><label class="f">Jugadores máximos<input type="number" name="pm" min="1" max="12" value="6" inputmode="numeric"></label></div>
 <label class="f">Descripción o reglas de la casa (opcional)<textarea name="pd" rows="3" maxlength="300"></textarea></label><div id="pmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Crear partida</button></div></form>`,true);break
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
-  case 'partinv':openInvite();break
-  case 'partinv_old':showDlg('Invitar jugador',`<form id="invform" class="grid" novalidate><p class="hint" style="margin:0">Escribe el nombre de usuario exacto de la persona. Recibirá la invitación en su pantalla de inicio y decidirá si se une.</p><label class="f">Nombre de usuario<input type="text" name="un" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><div id="imsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar invitación</button></div></form>`,true);break
-  case 'invcancel':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{loadPart(partId).then(()=>render(1));toast('Invitación cancelada')}).catch(()=>toast('No se pudo cancelar'));break
   case 'rpt':rptDlg();break;
   case 'notif':notifDlg();rpLoad().then(()=>{if(!Array.from(document.querySelectorAll('#dlg textarea')).some(t=>t.value)&&$('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
   case 'rprep':{const r=(rpMine||[]).find(x=>x.id===b.dataset.id);rptDlg('Sobre mi aviso «'+(r?String(r.text||'').slice(0,60):'')+'»: ');break}
@@ -4388,7 +4376,6 @@ document.addEventListener('click',e=>{
   case 'partdel1':{const id=b.dataset.id,q=parts.find(x=>x.id===id);showDlg('Última comprobación',`<p style="margin:0"><b>¿Seguro que quieres eliminar «${esc(q?q.name:'la partida')}» para siempre?</b></p><p class="hint" style="margin:6px 0 0">Esta es la confirmación final: después de pulsar el botón rojo la partida desaparecerá.</p><div class="row"><button class="btn danger" data-act="partdel2" data-id="${id}">Eliminar definitivamente</button><button class="btn" data-act="closedlg">No, cancelar</button></div>`,true);break}
   case 'partdel2':{const id=b.dataset.id;try{$('#dlg').close()}catch(x){}(async()=>{let step='';const sk=async(n,f)=>{step=n;try{return await f()}catch(e){return null}};
    try{const q=parts.find(x=>x.id===id);const mem=await sk('jugadores',()=>fsQuery('miembros','pid',id))||[];for(const m of mem)await kickPlayer(id,m.uid);
-    const iv=await sk('invitaciones',()=>fsQuery('invitaciones','pid',id))||[];for(const i of iv)await fs('DELETE','invitaciones/'+i.id).catch(()=>{});
     const ex=await sk('salidas',()=>fsQuery('salidas','pid',id))||[];for(const x of ex)await fs('DELETE','salidas/'+x.id).catch(()=>{});
     store.npcs.filter(n=>n.pid===id).forEach(n=>{if(n.shared)fs('DELETE','reveladas/'+n.id).catch(()=>{})});store.npcs=store.npcs.filter(n=>n.pid!==id);save();
     step='partida';await fs('DELETE','partidas/'+id);
@@ -4403,12 +4390,6 @@ document.addEventListener('click',e=>{
   case 'pjap':{const k=b.dataset.p+'_'+b.dataset.u,pid=b.dataset.p;const raw=((partPJ[pid]||{})[b.dataset.u]||{}).raw||{};const f=b.dataset.v==='sw'?{cid:raw.rc,data:raw.rd,rev:0,ap:'y',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:'',rc:'',rd:'',deny:''}:b.dataset.v==='n'?{ap:'n',ban:[raw.ban,raw.cid].filter(Boolean).join(','),req:'',reason:'',deny:''}:{ap:'y',req:'',reason:''};fs('PATCH','pjs/'+k,fbEnc(f),maskQ(Object.fromEntries(Object.keys(f).map(q=>[q,1])))).then(()=>{if(scr==='pjview'){scr='part';store.pjv=null}toast(b.dataset.v==='y'?'Personaje aprobado':b.dataset.v==='sw'?'Cambio autorizado':'Se ha pedido otro personaje al jugador');return loadPart(pid)}).then(()=>render(1)).catch(()=>toast('No se pudo actualizar'));break}
   case 'fbub':break
   case 'ppx':closePop();break
-  case 'ppyes':{const i=invs.find(x=>x.id===b.dataset.id);closePop(()=>{if(i)linkDlg(i.pid,i.pname,true,i.id)});break}
-  case 'ppno':{const id=b.dataset.id;closePop();fs('DELETE','invitaciones/'+id).then(()=>{invs=invs.filter(x=>x.id!==id);partSig='';render(1);toast('Invitación rechazada');if($('#dlg').open&&$('#dlg').classList.contains('nfd'))notifDlg();bellUpd()}).catch(()=>toast('No se pudo rechazar'));break}
-  case 'invsel':sendInvites(false);break
-  case 'invall':sendInvites(true);break
-  case 'invyes':{const i=invs.find(x=>x.id===b.dataset.id);if(!i)break;linkDlg(i.pid,i.pname,true,i.id);break}
-  case 'invno':fs('DELETE','invitaciones/'+b.dataset.id).then(()=>{invs=invs.filter(x=>x.id!==b.dataset.id);partSig='';render(1);toast('Invitación rechazada')}).catch(()=>toast('No se pudo rechazar'));break
   case 'pjlink':{const p=myParts.find(x=>x.id===b.dataset.p);if(p)linkDlg(p.id,p.name,false);break}
   case 'partleave':{const id=b.dataset.p,p=myParts.find(x=>x.id===id);showDlg('Salir de la partida',`<form id="leaveform" class="grid" data-p="${esc(id)}" novalidate><p class="hint" style="margin:0">Saldrás de <b>${esc(p?p.name:'la partida')}</b>. <b>Tu personaje fallecerá y desaparecerá de tu lista, y no podrás volver a entrar en esta partida</b>: el Game Master no podrá invitarte de nuevo. Recibirá el motivo que escribas.</p><label class="f">Motivo para abandonar<textarea name="rs" rows="3" maxlength="120" required></textarea></label><div id="lvmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Salir de la partida</button></div></form>`,true);break}
   case 'kick':{const p=b.dataset.p,u=b.dataset.u,m=(partMem[p]||[]).find(x=>x.uid===u);showDlg('Expulsar de la partida',`<form id="kickform" class="grid" data-p="${esc(p)}" data-u="${esc(u)}" novalidate><p class="hint" style="margin:0"><b>${esc(m?m.name:'El jugador')}</b> dejará de estar en la partida y se llevará una copia de su ficha. Verá el motivo que escribas y podrá quitar la partida de su lista.</p><label class="f">Motivo de la expulsión<textarea name="rs" rows="3" maxlength="120" required></textarea></label><div id="kkmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Expulsar</button></div></form>`,true);break}
