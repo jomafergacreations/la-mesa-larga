@@ -3147,9 +3147,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.51';
+const APPV='00.01.52';
 const APPN='Actualización menor.';
-const APPD='Hoja de NPC: controles, etiquetas, ajustes, estadísticas y ataques alineados con el mismo tamaño y rejilla.';
+const APPD='Habilidades de NPC: el valor editable puede ser negativo, pero el modificador final nunca baja de 0.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3673,7 +3673,7 @@ function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0
 const npcCap=l=>Math.min(5,3+Math.floor(l/3));
 function npcDer(n){const t=n.attrs,kol=n.kind==='koloss'?1:0,l=n.level;
  return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol+(+n.conAdj||0),inv:2+Math.max(t.dis,t.pre)+(+n.invAdj||0),grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
-function npcMod(n,k){return (+n.skills[k]||0)+n.attrs[SK[k][2]]}
+function npcMod(n,k){return Math.max(0,(+n.skills[k]||0)+n.attrs[SK[k][2]])}
 function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.id===o.arch):rnd(NPCARCH);const L=Math.min(30,Math.max(1,+o.level||rint(1,4)));
  const kinds=['humano','humano','humano','humano','kandra','koloss'];const kind=o.kind&&o.kind!=='any'?o.kind:rnd(kinds);
  const a={fue:0,vel:0,int:0,vol:0,dis:0,pre:0},keys=['fue','vel','int','vol','dis','pre'],cap=npcCap(L);let pts=12+Math.floor(L/3);
