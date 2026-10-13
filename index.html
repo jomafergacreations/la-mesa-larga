@@ -1,6 +1,5 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 /* v00.01.19 sin efectos al pulsar */
-button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
 .burst,.hop{animation:none!important}
 .mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
 .mth .btn,#mtnext{position:relative;z-index:80}
@@ -1185,7 +1184,31 @@ html.authlockh,body.authlock{overflow:hidden;overscroll-behavior:none}body.authl
 
 #pjdeadbn{margin:10px 0;padding:10px 14px;border-radius:12px;border:2px solid #B3261E;background:rgba(179,38,30,.1);font-weight:600}
 body.pjdead .chapter{opacity:.8}.hpbox.dead{opacity:.85;border:1px solid #B3261E}
-.gmribbon .gmlic{font-style:normal;margin:0 auto;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.18);font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.gmribbon .gmlic+small{margin-left:0}</style>
+.gmribbon .gmlic{font-style:normal;margin:0 auto;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.18);font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.gmribbon .gmlic+small{margin-left:0}
+/* v00.01.42 · capa de movimiento suave */
+@media(prefers-reduced-motion:no-preference){
+ button,.btn,.chip,select,input,textarea,summary,.seg button{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease,background-color .25s ease,color .25s ease,opacity .25s ease}
+ button:not(:disabled):active,.btn:not(:disabled):active,.chip:active,summary:active{transform:scale(.96)}
+ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent,#C59E57) 28%,transparent)}
+ input[type=checkbox],input[type=radio]{transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+ input[type=checkbox]:active,input[type=radio]:active{transform:scale(.8)}
+ input.fx-on{animation:fxOn .38s cubic-bezier(.3,1.6,.5,1)}
+ input.fx-off{animation:fxOff .28s ease-out}
+ select.fx-sel,input.fx-sel{animation:fxSel .35s ease-out}
+ .fx-ring{animation:fxRing .5s ease-out}
+ summary{cursor:pointer}details>summary{transition:color .2s}details[open]>*:not(summary){animation:tabin .26s cubic-bezier(.2,.8,.2,1) both}
+ [aria-expanded] .chev,[aria-expanded]>.chev{transition:transform .28s cubic-bezier(.2,.8,.2,1)}[aria-expanded=true] .chev{transform:rotate(180deg)}
+ dialog.dclosing{animation:dlgout .18s ease-in forwards}
+ dialog.dclosing::backdrop{animation:bdout .18s ease-in forwards}
+ #toast,.toast{animation:toastin .28s cubic-bezier(.2,.8,.2,1)}
+}
+@keyframes fxOn{0%{transform:scale(.7)}60%{transform:scale(1.28)}100%{transform:scale(1)}}
+@keyframes fxOff{0%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes fxSel{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent,#C59E57) 50%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+@keyframes fxRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent,#C59E57) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+@keyframes dlgout{to{opacity:0;transform:translateY(10px) scale(.97)}}
+@keyframes bdout{to{opacity:0}}
+</style>
 
 <style id="lifecss">
 .lfbox{padding-bottom:40px}
@@ -3056,9 +3079,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.41';
-const APPN='Actualización menor.';
-const APPD='Texto centrado "Licencia temporal/permanente" en la cinta de modo GM; ALPHA ve el tipo de licencia GM de cada cuenta en el panel de control.';
+const APPV='00.01.42';
+const APPN='Actualización media.';
+const APPD='Capa de animaciones suaves para toda interacción: pulsar, marcar casillas, desplegables, menús, apertura y cierre de ventanas. Respeta la opción de reducir movimiento.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4561,4 +4584,19 @@ loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
  setInterval(()=>{if(!hid)scan()},4000);setTimeout(scan,800);
 })();
 (function(){try{if(!('serviceWorker' in navigator))return;const h=location.hostname;if(!(h.endsWith('github.io')||h==='localhost'))return;setTimeout(()=>{navigator.serviceWorker.register('sw.js?v=170',{scope:'./'}).catch(()=>{})},1500)}catch(e){}})();
+
+/* v00.01.42 · animaciones de interacción */
+(function(){var rm=function(){try{return matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}};
+var oc=HTMLDialogElement.prototype.close,os=HTMLDialogElement.prototype.showModal,tm=new WeakMap();
+function fin(d){var t=tm.get(d);if(t){clearTimeout(t);tm.delete(d)}d.classList.remove('dclosing');try{oc.call(d)}catch(e){}}
+HTMLDialogElement.prototype.close=function(v){var d=this;if(!d.open||rm()||d.classList.contains('hlp')||tm.has(d)){if(tm.has(d)&&!d.open)tm.delete(d);return oc.call(d,v)}
+d.classList.add('dclosing');tm.set(d,setTimeout(function(){tm.delete(d);d.classList.remove('dclosing');try{oc.call(d,v)}catch(e){}},180))};
+HTMLDialogElement.prototype.showModal=function(){if(tm.has(this))fin(this);return os.call(this)};
+function fx(el,c,ms){if(rm()||!el)return;el.classList.remove(c);void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},ms||500)}
+document.addEventListener('change',function(e){var t=e.target;if(!t||!t.tagName)return;
+if(t.type==='checkbox'||t.type==='radio')fx(t,t.checked?'fx-on':'fx-off',400);
+else if(t.tagName==='SELECT')fx(t,'fx-sel',400)},true);
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button,.btn,.chip,.seg button,summary');
+if(b&&!b.disabled&&!b.closest('dialog.hlp'))fx(b,'fx-ring',520)},true);
+})();
 </script>
