@@ -2177,6 +2177,48 @@ html.byeing #app,html.byeing #topbar,html.byeing #fdock,html.byeing #gx,html.bye
 @keyframes dnDraw{to{stroke-dashoffset:0}}
 .bub.dun .dnbt{--dg1:#FFF6DA;--dg2:#FFE0A0;--dg3:#F2B65A;display:block}.bub.dun .dnbl{display:block;width:min(150px,46vw);height:auto;margin:2px 0 4px -4px;overflow:visible;filter:drop-shadow(0 2px 6px rgba(50,20,6,.85))}
 html[data-lm=l] .bub.dun .dnbt{--dg1:#3A1A06;--dg2:#6B3210;--dg3:#9A4A14}html[data-lm=l] .bub.dun .dnbl{filter:drop-shadow(0 1px 3px rgba(255,240,200,.8))}
+
+/* ===== Panel de administración (ALPHA) ===== */
+html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
+html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
+html[data-adm] #hbg,html[data-adm] #amb,html[data-adm] #vtag{display:none!important}
+html[data-adm] #topbar .admtag{font-style:normal;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-left:8px;padding:2px 7px;border-radius:5px;background:rgba(59,130,246,.2);color:#93C5FD}
+.adp{max-width:1000px;margin:0 auto;padding:18px 0 120px;font-family:var(--sans)}
+html[data-dev=desktop] .adp{padding-top:96px}
+.adph{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.adph small{display:block;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#93C5FD;margin-bottom:4px}
+.adph h1{font-family:var(--sans);font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
+.adph p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.adp .grid{gap:16px}
+.adp .btn{border-radius:8px;border-color:var(--line);background:var(--surface);font-weight:600}
+.adp .btn.pri{background:var(--accent);border-color:var(--accent)}
+.adp .btn.danger{background:transparent}
+.adp .seg{background:var(--surface);border:1px solid var(--line);border-radius:9px}
+.adp .admtabs{margin-bottom:16px;display:inline-flex}
+.adp .tiles{grid-template-columns:repeat(4,1fr);gap:12px}
+.adp .tile{text-align:left;padding:16px 18px;border-radius:10px;background:var(--surface);border:1px solid var(--line)}
+.adp .tile b{font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums}
+.adp .tile span{display:block;margin-top:2px;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);opacity:1}
+.adp .tile.on b{color:#34D399}.adp .tile.rp b{color:#F59E0B}
+.adp .onl,.adp .arow{border-radius:10px;background:var(--surface);border-color:var(--line)}
+.adp .arow.open{border-color:var(--accent);box-shadow:none}
+.adp .admtools input{border-radius:8px;background:var(--surface);border-color:var(--line)}
+.adp .hint{color:var(--muted)}
+html[data-adm][data-adm] .tbin{background:rgba(21,27,35,.94);border:1px solid #263041;color:#E6EAF0;box-shadow:0 10px 30px -18px #000;border-radius:12px}
+html[data-adm] #topbar .tbbrand,html[data-adm] #topbar .tbi{color:#E6EAF0}
+html[data-adm] #topbar .tbi:hover{background:rgba(59,130,246,.18)}
+html[data-adm] #topbar .tbi.cur{color:#93C5FD;background:rgba(59,130,246,.16)}
+html[data-adm] #topbar .tbind{background:#3B82F6}
+html[data-adm] #topbar .tbd{background:#151B23;color:#E6EAF0;border:1px solid #263041}
+html[data-adm] #topbar .tbd button{color:#E6EAF0}
+html[data-adm] #fdock{background:rgba(21,27,35,.94);border-color:#263041;color:#E6EAF0}
+html[data-adm] #fdock .fd{color:#E6EAF0}
+.adp .seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px}
+.adp .seg button{flex:0 0 auto;min-height:36px;padding:6px 16px;border:0;border-radius:7px;background:transparent;color:var(--muted);text-align:center;box-shadow:none;font-weight:600}
+.adp .seg button[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:none}
+.adp .seg button:hover{transform:none}
+@media(max-width:640px){.adp .tiles{grid-template-columns:repeat(2,1fr)}.adph h1{font-size:1.3rem}}
+@media(prefers-reduced-motion:no-preference){.adp{animation:adpin .35s ease-out both}.adp .tile,.adp .arow{animation:adpin .4s ease-out both}@keyframes adpin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2347,7 +2389,7 @@ async function finishSess(){const s=cand;
   if(!s.sid||rp.sid!==s.sid)s.sid=newSid();
   try{await fs('PATCH','users/'+s.uid,fbEnc({sid:s.sid,sidDev:devLabel(),sidAt:Date.now()}),maskQ({sid:1,sidDev:1,sidAt:1}))}catch(e){s.sid=''}}
  let data=await loadFichas(s);
- session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr='menu';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
+ session=s;cand=null;pend=null;setTimeout(beat,1200);store={pjc:{},chars:Array.isArray(data.chars)?data.chars:[],cur:null,avatar:avOk(data.avatar),npcs:(Array.isArray(data.npcs)?data.npcs:[]).map(npcNorm),mode:data.mode==='gm'?'gm':'p',gmGame:NPCGAMES.some(x=>x[0]===data.gmGame&&x[2])?data.gmGame:'nb',npcCur:null,exAck:Array.isArray(data.ui&&data.ui.exAck)?data.ui.exAck:[],popEx:Array.isArray(data.ui&&data.ui.popEx)?data.ui.popEx:[],popInv:Array.isArray(data.ui&&data.ui.popInv)?data.ui.popInv:[],rpSeen:Array.isArray(data.ui&&data.ui.rpSeen)?data.ui.rpSeen:undefined,rpRead:Array.isArray(data.ui&&data.ui.rpRead)?data.ui.rpRead:undefined,seeded:!!(data.ui&&data.ui.seeded)};scr=s.owner?'admin':'menu';admTab='acc';regCache=null;revealed=[];revSig='';parts=[];myParts=[];invs=[];partSig='';setTimeout(()=>{fetchRevealed();loadParts()},400);
  skSet({rt:s.rt,sid:s.sid||''},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
@@ -2437,8 +2479,15 @@ let admTab='acc';
 function admTabs(){return (canInc()&&canList())?`<div class="seg admtabs" role="tablist"><button type="button" data-act="admtab" data-v="acc" aria-pressed="${admTab==='acc'}">Cuentas</button><button type="button" data-act="admtab" data-v="rp" aria-pressed="${admTab==='rp'}">Incidencias${rpOpenN()?` <i class="bdg2">${rpOpenN()}</i>`:''}</button></div>`:''}
 function rpAdmHtml(){const L=rpAll.filter(r=>(r.status==='done')===(rpTab==='done'));return `<div class="grid"><p class="hint" style="margin:0">Avisos que envían los usuarios con «¿Algo no funciona?». Solo tú puedes verlos. Al responder, el usuario recibe tu mensaje y el aviso queda como solucionado.</p><div class="seg" role="tablist"><button type="button" data-act="rptab" data-v="open" aria-pressed="${rpTab==='open'}">Pendientes (${rpOpenN()})</button><button type="button" data-act="rptab" data-v="done" aria-pressed="${rpTab==='done'}">Solucionados</button></div><div class="rplist">${L.map(r=>rpCard(r,true)).join('')||'<p class="hint">No hay avisos aquí.</p>'}</div></div>`}
 function topbarSync(){const t=document.getElementById('topbar');if(t)t.dataset.sig=''}
-function admShow(html){const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
-function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}
+function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('#dlg').classList.contains('admd')}
+function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p)p.innerHTML=admTabs()+html;return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
+function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}
+function adminScreen(){if(!isAdmin()){scr='menu';return screen()}
+ return `<div class="adp"><div class="adph"><div><small>Propietario</small><h1>Panel de administración</h1><p>Cuentas, conexiones e incidencias de La Mesa Larga.</p></div><div class="adpa"><button type="button" class="btn sm" data-act="admgame">Vista de juego</button></div></div><div id="admpage" class="admroot"></div></div>`}
+function goAdmin(tab){exitFx(()=>{store.cur=null;store.npcCur=null;admTab=tab==='rp'?'rp':'acc';admSig='';admOpen=null;admState=null;regCache=null;scr='admin';dockSig='';try{const d=$('#dlg');if(d.open)d.close()}catch(e){}try{save()}catch(e){}render()})}
+function admPaint(){if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admLive()&&admTab==='rp')admShow(rpAdmHtml())}).catch(()=>{});return}
+ if(regCache){admSig='';admView(true)}else{admShow('<p class="hint">Cargando las cuentas…</p>');admLoad()}
+ rpLoad().then(()=>{if(admLive()&&admTab!=='rp')admView(true)}).catch(()=>{})}
 function admDlg(){if(!canList()){incDlg();return}regCache=null;admSig='';admOpen=null;admTab='acc';admShow('<p class="hint">Cargando las cuentas de la app…</p>');admLoad()}
 async function admLoad(){try{regCache=await fsList('users');admT=Date.now()}catch(e){regCache=null;admShow('<div class="grid"><p class="hint warn-t">No se pudo cargar la lista ('+esc(e.code||'error')+'). Revisa tu conexión y los permisos.</p><div class="row"><button class="btn" data-act="admre">Reintentar</button></div></div>');return}admView(true)}
 function admView(force){
@@ -2464,7 +2513,7 @@ function admView(force){
   return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
  const chips=onl.length?onl.map(r=>`<span class="onp${prevOn&&!prevOn.includes(r.id)?' new':''}"><i></i>${esc(r.name)}${(r.role|0)>=3?' <small>(propietario)</small>':''}</span>`).join(''):'<span class="hint" style="margin:0">Ahora mismo no hay nadie conectado.</span>';
  admShow(`<div class="grid admw"><div class="admh"><span class="live"><i></i>En vivo</span><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div>
- <div class="tiles">${tile('on',onl.length,'En línea')}${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}</div>
+ <div class="tiles">${tile('on',onl.length,'En línea')}${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}${scr==='admin'?tile('rp',rpOpenN(),'Incidencias'):''}</div>
  <div class="onl"><b>Conectados ahora</b><div class="onc">${chips}</div></div>
  <p class="hint" style="margin:0">${isAdmin()?'Pulsa una cuenta para ver sus datos y gestionarla. Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>); un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Pulsa una cuenta para ver sus datos. Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Pulsa una cuenta para ver sus datos.'}</p>
  <div class="admtools"><input id="admq" type="search" placeholder="Buscar por nombre${isAdmin()?' o correo':''}…" value="${esc(admQ)}" autocomplete="off"><div class="seg">${[['all','Todos'],['on','En línea'],['st','Con permisos']].map(([v,l])=>`<button type="button" data-act="admf" data-v="${v}" aria-pressed="${admF===v}">${l}</button>`).join('')}</div></div>
@@ -2473,7 +2522,7 @@ function admView(force){
  if(keep){const i=$('#admq');if(i){i.focus();try{i.setSelectionRange(keep[0],keep[1])}catch(e){}}}}
 function admAgo(){const e=$('#admago');if(!e)return;const t=Math.max(0,Math.round((Date.now()-admT)/1000));e.textContent=t<3?'actualizado ahora':'actualizado hace '+t+' s'}
 setInterval(admAgo,1000);
-setInterval(()=>{if(!session||!canAdm()||document.hidden||admState)return;if(!document.querySelector('#dlg[open] .admroot'))return;fsList('users').then(l=>{regCache=l;admT=Date.now();admView()}).catch(()=>{})},6000);
+setInterval(()=>{if(!session||!canAdm()||document.hidden||admState)return;if(!(document.querySelector('#dlg[open] .admroot')||(scr==='admin'&&document.getElementById('admpage'))))return;fsList('users').then(l=>{regCache=l;admT=Date.now();admView()}).catch(()=>{})},6000);
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='admq'){admQ=e.target.value;admView(true)}});
 function acctDlg(){
  const pwf=(id,l,a)=>`<label class="f">${l}<input type="password" name="${id}" autocomplete="${a}" required></label>`;
@@ -2716,8 +2765,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='162';
-const APPN='Sesión única desactivada de momento; se activará más adelante.';
+const APPV='163';
+const APPN='Nueva interfaz de administración para ALPHA: panel sobrio con cuentas, conectados e incidencias.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2792,6 +2841,11 @@ function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;
  document.body.classList.add('has-tb');
  const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN()].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
+if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
+  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="admpanel" aria-label="Panel de administración">${LOGOI}<b>La Mesa Larga</b><em class="admtag">Admin</em></button>
+  <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi cur" data-act="admpanel" aria-current="page">${SHLD}<span>Panel</span></button><button type="button" class="tbi" data-act="admgame">${HOUSE}<span>Vista de juego</span></button><span class="tbind" aria-hidden="true"></span></nav>
+  <div class="tbr">${bellBtn("tbi tbbell")}<div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it2('acct','Mi cuenta')}${it2('logout','Cerrar sesión')}</div></div></div></div>`;
+  setTimeout(()=>tbInd(),30);if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in');return}
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGOI}<b>La Mesa Larga</b></button>
@@ -2820,6 +2874,7 @@ function fdockUpdate(c){let d=document.getElementById('fdock');
   let bb=document.getElementById('fbub');if(tab&&!hm){if(!bb){bb=document.createElement('button');bb.id='fbub';bb.type='button';bb.dataset.act='fbub';bb.setAttribute('aria-label','Abrir menú');bb.setAttribute('aria-expanded','false');bb.innerHTML=MENUI;document.body.appendChild(bb)}}else if(bb)bb.remove()}
  d.classList.toggle('above',!isTab()&&document.documentElement.dataset.dev!=='phone'&&!!c&&!c.done);{const bb=document.getElementById('fbub');if(bb)bb.classList.toggle('up',!!c&&!c.done);d.classList.toggle('up',!!c&&!c.done)}
  if(sig!==dockSig||first){dockSig=sig;const home=(scr==='menu'&&!c);
+  if(scr==='admin'&&isAdmin()){d.innerHTML=`<button type="button" class="fd cur" data-act="admpanel" aria-current="page">${SHLD}<span>Panel</span></button><button type="button" class="fd" data-act="admgame">${HOUSE}<span>Juego</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`}else
   d.innerHTML=`<button type="button" class="fd homebtn${home?' cur':''}" data-act="gohome" aria-label="Inicio" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button><button type="button" class="fd acctb" data-act="acct" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button><button type="button" class="fd gmbtn${store.mode==='gm'?' cur':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${PENI}<span>${store.mode==='gm'?'Jugador':'GM'}</span></button><button type="button" class="fd tbtn" data-act="tpop" aria-label="Tema" aria-haspopup="true">${TI[getTheme()]}<span>Tema</span></button>${canAdm()?`<button type="button" class="fd" data-act="adm" aria-label="Administración">${SHLD}<span>Admin</span></button>`:''}<button type="button" class="fd" data-act="logout" aria-label="Cerrar sesión">${OUT}<span>Salir</span></button>`;
   if(first&&!d.classList.contains('tabcoll')){d.classList.add('in');setTimeout(()=>{const x=document.getElementById('fdock');if(x)x.classList.remove('in')},1500)}}
  let t=document.getElementById('tpop');if(!t){t=document.createElement('div');t.id='tpop';t.innerHTML=themeSeg();document.body.appendChild(t)}
@@ -2961,6 +3016,7 @@ function duneScreen(){
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
 function screen(){
+ if(scr==='admin')return adminScreen();
  if(scr==='npc')return npcEditor();
  if(scr==='dune')return duneScreen();
  if(scr==='cyber')return cyberScreen();
@@ -4001,12 +4057,12 @@ document.addEventListener('click',e=>{
   case 'rpt':rptDlg();break;
   case 'notif':notifDlg();rpLoad().then(()=>{if(!Array.from(document.querySelectorAll('#dlg textarea')).some(t=>t.value)&&$('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
   case 'rprep':{const r=(rpMine||[]).find(x=>x.id===b.dataset.id);rptDlg('Sobre mi aviso «'+(r?String(r.text||'').slice(0,60):'')+'»: ');break}
-  case 'admrp':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
-  case 'rptab':rpTab=b.dataset.v;if($('#dlg').classList.contains('admd'))admView(true);else rptDlg();break;
-  case 'admtab':admTab=b.dataset.v;admSig='';if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())})}else{if(!regCache)admLoad();else admView(true)}break;
+  case 'admrp':if(isAdmin()){goAdmin('rp');break}admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
+  case 'rptab':rpTab=b.dataset.v;if(admLive())admView(true);else rptDlg();break;
+  case 'admtab':admTab=b.dataset.v;admSig='';if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}else{if(!regCache)admLoad();else admView(true)}break;
   case 'rpzoom':b.classList.toggle('big');break;
   case 'rpimgx':rpImg='';{const a=$('#rppv'),n=$('#rpname');if(a)a.innerHTML='';if(n)n.textContent=''}break;
-  case 'rpdone':{const id=b.dataset.id,ta=document.querySelector('textarea[data-rr="'+id+'"]'),rs=String((ta&&ta.value)||'').trim();if(rs.length<2){toast('Escribe una respuesta para el usuario');break}b.disabled=true;fs('PATCH','reportes/'+id,fbEnc({status:'done',reply:rs.slice(0,2000),by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,reply:1,by:1,updated:1})).then(()=>rpLoad()).then(()=>{toast('Aviso marcado como solucionado');if($('#dlg').classList.contains('admd'))admView(true);else if($('#dlg').classList.contains('nfd'))notifDlg();else rptDlg()}).catch(()=>{b.disabled=false;toast('No se pudo guardar la respuesta')});break}
+  case 'rpdone':{const id=b.dataset.id,ta=document.querySelector('textarea[data-rr="'+id+'"]'),rs=String((ta&&ta.value)||'').trim();if(rs.length<2){toast('Escribe una respuesta para el usuario');break}b.disabled=true;fs('PATCH','reportes/'+id,fbEnc({status:'done',reply:rs.slice(0,2000),by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,reply:1,by:1,updated:1})).then(()=>rpLoad()).then(()=>{toast('Aviso marcado como solucionado');if(admLive())admView(true);else if($('#dlg').classList.contains('nfd'))notifDlg();else rptDlg()}).catch(()=>{b.disabled=false;toast('No se pudo guardar la respuesta')});break}
   case 'partend':{showDlg('¿Finalizar la partida?',`<p class="hint" style="margin:0">La partida seguirá en «Mis partidas», pero <b>nada de ella podrá modificarse</b>: ni jugadores, ni NPC, ni vida, ni fichas. Los personajes que no hayan fallecido vuelven a estar disponibles para sus jugadores. No se puede deshacer.</p><div class="row"><button class="btn pri" data-act="partendok" data-id="${esc(b.dataset.id)}">Finalizar partida</button></div>`,true);break}
   case 'partendok':{const id=b.dataset.id;fs('PATCH','partidas/'+id,fbEnc({end:'1',endAt:Date.now()}),maskQ({end:1,endAt:1})).then(()=>{const q=parts.find(x=>x.id===id);if(q)q.end='1';try{$('#dlg').close()}catch(x){}toast('Partida finalizada');partSig='';render(1)}).catch(()=>toast('No se pudo finalizar la partida'));break}
   case 'pjhp':{const pid=b.dataset.p,u=b.dataset.u;if(isEnd(pid))break;const k=pid+'_'+u,mx=+b.dataset.mx||1;const n=Math.max(0,Math.min(mx,(hpMap[k]|0)-(+b.dataset.d)));hpMap[k]=n;render(1);fs('PATCH','pjs/'+k,fbEnc({hp:n}),maskQ({hp:1})).catch(()=>toast('No se pudo guardar la vida'));break}
@@ -4069,8 +4125,8 @@ document.addEventListener('click',e=>{
   case 'npcpx':{const pp=document.getElementById('npcpop');if(pp)pp.remove();break}
   case 'rvopen':{{const pp=document.getElementById('npcpop');if(pp)pp.remove()}const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;showDlg(esc(n.name||'NPC'),npcSheet(npcNorm(n),true),true);break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
-  case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}incDlg();break;
-  case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&$('#dlg').classList.contains('admd'))admShow(rpAdmHtml())});break;
+  case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}if(isAdmin()){goAdmin('rp');break}incDlg();break;
+  case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
   case 'admon':admF='on';admDlg();break;
   case 'tpop':{const t=document.getElementById('tpop');if(t)t.classList.toggle('open');break}
   case 'gohome':exitFx(()=>{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render()});break;
@@ -4083,7 +4139,9 @@ document.addEventListener('click',e=>{
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
   case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=lfRM();const nm=session&&session.name||'';const dv=document.documentElement.dataset;const u=dv.dun?'dun':dv.cyb?'cyb':dv.cos?'cos':'';const MS={dun:['Las arenas te despiden','Guardando tus fichas…'],cyb:['> cerrando sesión…','guardando datos y cortando enlace'],cos:['Hasta la próxima, viajero','Guardando tus fichas…'],'':['Hasta pronto','Guardando tus fichas…']}[u];const by=document.createElement('div');by.id='bye';by.className=u;by.setAttribute('role','status');by.setAttribute('aria-live','polite');let fx='';if(u==='dun'||u==='cos'){for(let k=0;k<22;k++)fx+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--s:'+(1+Math.random()*2.5).toFixed(1)+'px;--t:'+(2.4+Math.random()*3).toFixed(1)+'s;--d:-'+(Math.random()*4).toFixed(1)+'s"></i>'}by.innerHTML='<span class="byefx" aria-hidden="true">'+fx+'</span><div class="byei"><span class="byeo" aria-hidden="true"></span><b>'+MS[0]+(nm&&!u?', '+esc(nm):'')+'</b><small>'+MS[1]+'</small><span class="byebar" aria-hidden="true"><i></i></span></div>';document.body.appendChild(by);document.documentElement.classList.add('byeing');const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1500-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{await fs('PATCH','users/'+session.uid,SESION_UNICA?fbEnc({ping:0,sid:''}):fbEnc({ping:0}),SESION_UNICA?maskQ({ping:1,sid:1}):maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}document.documentElement.classList.remove('byeing');by.classList.add('out');setTimeout(()=>by.remove(),red?0:700)})();break;
   case 'acct':acctDlg();break;
-  case 'adm':admState=null;admDlg();break;
+  case 'adm':if(isAdmin()){goAdmin('acc');break}admState=null;admDlg();break;
+  case 'admpanel':goAdmin(admTab);break;
+  case 'admgame':{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';dockSig='';render();break}
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
   case 'admno':admState=null;admView(true);break;
   case 'admre':admDlg();break;
@@ -4191,4 +4249,5 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  avPickImg(f).then(u=>{store.avatar=avOk(u);save();avRefresh(true);const mm=$('#avmsg');if(mm){mm.textContent='Imagen actualizada.';mm.className='msg ok'}const r=document.querySelector('.avrow .row');if(r&&!r.querySelector('[data-act=avdel]'))r.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-act="avdel">Quitar</button>')}).catch(()=>{const mm=$('#avmsg');if(mm){mm.textContent='No se pudo leer esa imagen.';mm.className='msg err'}});return}
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
 loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
+{const r1=render;render=function(k){const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
 </script>
