@@ -3038,8 +3038,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.21';
-const APPN='Las partidas tienen código de unión y los jugadores se unen con «Buscar partida». Adiós a las invitaciones.';
+const APPV='00.01.22';
+const APPN='Buscar partida muestra el motivo exacto si falla y no se bloquea por el aforo.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3931,8 +3931,8 @@ async function doFind(f){const m=$('#fmsg'),set=(t,k)=>{m.textContent=t;m.classN
   if(p.gm===session.uid){set('Esa partida es tuya: tú eres su Game Master.','err');return}
   if(myParts.some(x=>x.id===p.id)){set('Ya estás en esa partida.','err');return}
   try{const ks=await fsQuery('salidas','uid',session.uid);if(ks.some(x=>x.pid===p.id&&(x.kind==='kicked'||x.kind==='left'))){set('No puedes volver a unirte a esa partida.','err');return}}catch(e){}
-  if((p.maxp|0)){const mem=await fsQuery('miembros','pid',p.id);if(mem.length>=(p.maxp|0)){set('La partida está completa.','err');return}}
-  joinP=p;try{$('#dlg').close()}catch(x){}linkDlg(p.id,p.name,true,'')}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo buscar la partida. Inténtalo de nuevo.','err')}}
+  if((p.maxp|0)){try{const mem=await fsQuery('miembros','pid',p.id);if(mem.length>=(p.maxp|0)){set('La partida está completa.','err');return}}catch(e){}}
+  joinP=p;try{$('#dlg').close()}catch(x){}linkDlg(p.id,p.name,true,'')}catch(e){set(e.code==='NET'?aMsg(e):e.code==='FS403'?'Firestore no permite buscar partidas por código (faltan reglas). Avisa al administrador.':'No se pudo buscar la partida ('+(e.code||'error')+').','err')}}
 
 /* ---------- aviso emergente de invitación (esquina) ---------- */
 const ppSeen=new Set();
