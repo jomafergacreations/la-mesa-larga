@@ -2298,6 +2298,8 @@ html[data-lm=l] .csopt{color:#2A2312}
  @keyframes nbTrack{from{letter-spacing:.2em}to{letter-spacing:.1em}}
  @keyframes nbLn{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
 }
+
+#mtfin .mtfl{list-style:none;margin:0;padding:0;display:grid;gap:8px}#mtfin .mtfl li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border:1px solid var(--line,rgba(120,125,140,.4));border-radius:10px}#mtfin .mtfl li.none{justify-content:center;opacity:.75}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -3001,8 +3003,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.10';
-const APPN='La solicitud de licencia de GM ya no pide motivo y, si falla, explica la causa.';
+const APPV='00.01.11';
+const APPN='Tablero de metales: los metales avivados cuentan como quemas (no se pueden avivar más que tu límite), puedes deshacer un avivado y al pasar turno se confirman los avivados.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3370,7 +3372,7 @@ function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'nul
  return{v:2,ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:o.v===2?Math.min(MT_STEPS,n(o.step)):Math.min(MT_STEPS,n(o.turn)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
 function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
 function mtLimit(){let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
-function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn').length+MT.atu}
+function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn'||MT.st[m.id]==='flare').length+MT.atu}
 function mtNFlare(){return MTL.filter(m=>MT.st[m.id]==='flare').length}
 function mtAb(k){return MT.step>={I:6,II:9,III:14}[k]}
 function mtSig(){return MT.ch?MTC[MT.ch].m:null}
@@ -3397,7 +3399,7 @@ function mtChTog(){if(mtChOpen===null)mtChOpen=!mtPh();mtChOpen=!mtChOpen;if(mtC
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
 function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
-function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Más allá de tu límite de quemas, se aviva (se gira).',a:''};
+function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Avivarlo también cuenta como quema: no puedes pasar de tu límite por turno.',a:''};
  const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
  let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
  if(s==='flare'){t+=` Para refrescarlo, descarta una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.`;a=`<button type="button" class="btn sm" data-act="mtref" data-m="${m.id}">Refrescar</button><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer</button>`}
@@ -3413,7 +3415,7 @@ function mtBoard(){const c=mtCapH();setTimeout(mtScroll,80);
  <div class="mtg">${MTL.map(mtCell).join('')}</div>
  <div class="mtatp" id="mtatp">${mtAtH()}</div>
  <div class="mtsheet${mtSel?' show':''}" id="mtsheet"><button type="button" class="mtshx" data-act="mtshx" aria-label="Cerrar">×</button><p class="mtcap" id="mtcap" aria-live="polite">${c.t}</p><div class="mtact" id="mtact">${c.a}</div></div>
- <p class="mtrule">Al empezar tu turno avanzas un paso en el entrenamiento. Solo puedes quemar tantos metales como iconos de llama hayas ganado; para más, avívalos. Al acabar el turno, los quemados vuelven al tablero y los avivados vuelven girados hasta que los refresques. Cada metal solo se usa una vez por turno.</p></section>`}
+ <p class="mtrule">Al empezar tu turno avanzas un paso en el entrenamiento. Solo puedes quemar tantos metales como iconos de llama hayas ganado, y los avivados también cuentan como quemados. Al acabar el turno, los quemados vuelven al tablero y los avivados vuelven girados hasta que los refresques. Cada metal solo se usa una vez por turno.</p></section>`}
 function mtScroll(sm){const t=document.getElementById('mttr');if(!t)return;const c=t.querySelector('.cur');if(!c)return;const x=c.offsetLeft-t.clientWidth/2+c.offsetWidth/2;if(sm===true&&!lfRM()&&t.scrollTo)t.scrollTo({left:x,behavior:'smooth'});else t.scrollLeft=x}
 function mtStepFx(){const c=document.querySelector('#mttr .mts.cur');if(!c||lfRM())return;c.classList.add('mtadv');setTimeout(()=>c.classList.remove('mtadv'),1300)}
 function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>document.getElementById(id);
@@ -3431,14 +3433,20 @@ function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m
 function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;if(mtPh()&&mtChOpen)mtChTog();
  if(s==='used'){mtPaint();toast('Ya usaste este metal este turno');return}
  if(s==='ready'){if(mtBurning()<mtLimit()){MT.st[id]='burn';mtLast={id,t:Date.now()};mtSave();mtPaint();mtFx(id,'on')}
-  else{mtPaint();toast('Has alcanzado tu límite de quemas ('+mtLimit()+'). Para usar otro metal, toca uno de los que estás quemando y elige avivarlo o dejar de quemarlo.')}return}
+  else{mtPaint();toast('Has alcanzado tu límite de quemas ('+mtLimit()+'). Los metales avivados también cuentan como quemados. Para usar otro, deja de quemar uno de los que estás usando (o deshaz su avivado).')}return}
  if(s==='burn'){if(mtLast.id===id&&Date.now()-mtLast.t<400)return;mtPaint();mtAskFlare(id);return}
  if(s==='flip'){MT.st[id]='ready';mtSave();mtPaint();mtFx(id,'off');toast('Refrescado: descarta una carta cuyo vial muestre '+m.n+' o '+MTL.find(x=>x.id===m.p).n);return}
  mtPaint()}
 function mtRefresh(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';if(!MT.used.includes(id))MT.used.push(id);mtSave();mtPaint();mtFx(id,'off');toast('Refrescado, pero ya lo usaste este turno')}
-function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off')}
+function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]='burn';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off');mtFinPaint()}
 function mtEndTurn(){MTL.forEach(m=>{const s=MT.st[m.id];if(s==='burn')MT.st[m.id]='ready';else if(s==='flare')MT.st[m.id]='flip'});MT.used=[];MT.atu=0}
-function mtNext(){if(!MT.ch){mtAsk();return}if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
+function mtFinPaint(){const o=document.getElementById('mtfin');if(!o)return;const L=MTL.filter(m=>MT.st[m.id]==='flare');
+ o.querySelector('.mtfl').innerHTML=L.length?L.map(m=>`<li><b>${m.n}</b><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer avivado</button></li>`).join(''):'<li class="none">No has avivado ningún metal este turno.</li>'}
+function mtFinAsk(){if(document.getElementById('mtfin'))return;const o=document.createElement('div');o.id='mtfin';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtfint');
+ o.innerHTML=`<div class="mtpk"><h2 id="mtfint">¿Confirmas los metales avivados?</h2><p class="mtwarn">Al pasar turno, estos metales <b>quedarán girados</b> y no podrás usarlos hasta refrescarlos.</p><ul class="mtfl"></ul><div class="mtpbtns"><button type="button" class="btn pri" data-act="mtfinok">Confirmar y pasar turno</button><button type="button" class="btn ghost" data-act="mtfinx">Volver</button></div></div>`;
+ document.body.appendChild(o);mtFinPaint();const f=o.querySelector('.btn.ghost');if(f)f.focus()}
+function mtFinClose(){const o=document.getElementById('mtfin');if(o)o.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
+function mtNext(force){if(!MT.ch){mtAsk();return}if(MT.turn>0&&!force&&mtNFlare()>0){mtFinAsk();return}mtFinClose();if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
  if(MT.step<MT_STEPS){MT.step++;const r=MT_REW[MT.step];
   if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
   else if(r==='c')msg+=' · fin del entrenamiento: 1 Atium cada turno';else if(r)msg+=' · habilidad '+r+' desbloqueada'}
@@ -3449,11 +3457,11 @@ function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.cr
  document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
 function mtAskFlare(id){const m=MTL.find(x=>x.id===id);if(!m||MT.st[id]!=='burn'||document.getElementById('mtflare'))return;const pr=MTL.find(x=>x.id===m.p);
  const o=document.createElement('div');o.id='mtflare';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtflt');
- o.innerHTML=`<div class="mtpk"><h2 id="mtflt">${m.n}: ¿avivar o dejar de quemar?</h2><p class="mtwarn"><b>Avivar:</b> la ficha se gira, y <b>no podrás volver a usarlo hasta que lo recuperes</b>: tendrás que refrescarlo descartando una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.</p><p>Seguirá contando como quemado este turno para los efectos y te dejará una quema libre.</p><p><b>Dejar de quemar:</b> el metal vuelve a estar disponible y puedes quemarlo de nuevo.</p><div class="mtpbtns"><button type="button" class="btn pri" data-act="mtflrok" data-m="${id}">Avivar</button><button type="button" class="btn" data-act="mtflrno" data-m="${id}">Dejar de quemar</button><button type="button" class="btn ghost" data-act="mtflrx">Cancelar</button></div></div>`;
+ o.innerHTML=`<div class="mtpk"><h2 id="mtflt">${m.n}: ¿avivar o dejar de quemar?</h2><p class="mtwarn"><b>Avivar:</b> la ficha se gira, y <b>no podrás volver a usarlo hasta que lo recuperes</b>: tendrás que refrescarlo descartando una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.</p><p>Seguirá contando como quemado este turno, así que no te libera ninguna quema. Podrás deshacerlo antes de pasar turno.</p><p><b>Dejar de quemar:</b> el metal vuelve a estar disponible y puedes quemarlo de nuevo.</p><div class="mtpbtns"><button type="button" class="btn pri" data-act="mtflrok" data-m="${id}">Avivar</button><button type="button" class="btn" data-act="mtflrno" data-m="${id}">Dejar de quemar</button><button type="button" class="btn ghost" data-act="mtflrx">Cancelar</button></div></div>`;
  document.body.appendChild(o);const f=o.querySelector('.btn.ghost');if(f)f.focus()}
 function mtStopBurn(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='ready';mtSel=id;mtSave();mtPaint();mtFx(id,'off');toast('Has dejado de quemar '+m.n)}
 function mtDoFlare(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'flare');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes')}
-function mtAskClose(){const o=document.getElementById('mtpick');if(o)o.remove();const f=document.getElementById('mtflare');if(f)f.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
+function mtAskClose(){mtFinClose();const o=document.getElementById('mtpick');if(o)o.remove();const f=document.getElementById('mtflare');if(f)f.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
 function mtPick(c){if(!MTC[c]||MT.turn>0)return;mtAskClose();MT.ch=c;mtSave();mtPaint();toast('Partida iniciada con '+MTC[c].n);mtNext()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(document.getElementById('mtpick')||document.getElementById('mtflare')))mtAskClose()});
 function mtAtFx(k){const p=document.getElementById('mtatp');if(!p||lfRM())return;p.classList.remove('mtatfx','mtatgain');void p.offsetWidth;p.classList.add(k==='use'?'mtatfx':'mtatgain');setTimeout(()=>p.classList.remove('mtatfx','mtatgain'),1400);
@@ -4463,6 +4471,8 @@ document.addEventListener('click',e=>{
   case 'lf':lfChange(+b.dataset.d);break;
   case 'mt':mtTap(b.dataset.m);break;
   case 'mtnext':mtNext();break;
+  case 'mtfinok':mtNext(true);break;
+  case 'mtfinx':mtFinClose();break;
   case 'mtpick':mtPick(b.dataset.c);break;
   case 'mtpickx':mtAskClose();break;
   case 'mtab':mtAbTog(b.dataset.k);break;
