@@ -2175,7 +2175,7 @@ html.byeing #app,html.byeing #topbar,html.byeing #fdock,html.byeing #gx,html.bye
 .dnh .dnlg{display:block;width:min(88vw,460px);height:auto;overflow:visible;filter:drop-shadow(0 0 8px rgba(255,214,140,.45))}
 @media(prefers-reduced-motion:no-preference){.dnh .dnlg path{stroke-dasharray:1;stroke-dashoffset:1;animation:dnDraw 1.6s cubic-bezier(.4,0,.2,1) .15s forwards}.dnh .dnlg path:nth-child(2n){animation-delay:.35s}}
 @keyframes dnDraw{to{stroke-dashoffset:0}}
-.bub.dun .dnbt{--dg1:#FFF6DA;--dg2:#FFE0A0;--dg3:#F2B65A;display:block}.bub.dun .dnbl{display:block;width:min(150px,46vw);height:auto;margin:2px auto 4px;overflow:visible;filter:drop-shadow(0 2px 6px rgba(50,20,6,.85))}
+.bub.dun .dnbt{--dg1:#FFF6DA;--dg2:#FFE0A0;--dg3:#F2B65A;display:block}.bub.dun .dnbl{display:block;width:min(150px,46vw);height:auto;margin:2px 0 4px -4px;overflow:visible;filter:drop-shadow(0 2px 6px rgba(50,20,6,.85))}
 html[data-lm=l] .bub.dun .dnbt{--dg1:#3A1A06;--dg2:#6B3210;--dg3:#9A4A14}html[data-lm=l] .bub.dun .dnbl{filter:drop-shadow(0 1px 3px rgba(255,240,200,.8))}
 </style>
 <div class="wrap" id="app"></div>
@@ -2703,8 +2703,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='159';
-const APPN='Dune: la burbuja del menú principal usa también el rótulo DUNE de trazo fino.';
+const APPV='160';
+const APPN='Dune: el rótulo de la burbuja queda alineado a la izquierda como el de Cyberpunk.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
