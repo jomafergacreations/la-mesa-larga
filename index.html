@@ -2188,6 +2188,18 @@ html[data-lm=l] .bub.dun .dnbt{--dg1:#3A1A06;--dg2:#6B3210;--dg3:#9A4A14}html[da
 .adp .onp.new{animation:adpin .4s both}
 .admnav{animation:adnav .45s cubic-bezier(.2,.7,.2,1) both}@keyframes adnav{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
 }
+
+/* v00.01.05: modo ligero dentro del Cosmere (estable en pantallas de muchos Hz) */
+html[data-cos] #gx{contain:strict;transform:translateZ(0)}
+html[data-cos] #gx .gn{filter:none!important;animation:none!important}
+html[data-cos] #gx .gst,html[data-cos] #gx .gsh{animation:none!important}
+html[data-cos] #gx .gsh{display:none!important}
+html[data-cos] .gxb .gxa,html[data-cos] .gxb .gxc,html[data-cos] .gxb .gd{animation:none!important}
+html[data-cos] .gxb svg{filter:none}
+html[data-cos] .bub{animation:none!important}
+html[data-cos] .glass,html[data-cos] .wel,html[data-cos] .hdock,html[data-cos] .tbin,html[data-cos] #fdock,html[data-cos] .tbd,html[data-cos] #invpop,html[data-cos] #npcpop,html[data-cos] #expop{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-cos] .tbin,html[data-cos] #fdock{background:rgba(19,22,65,.94)}
+html[data-cos] .bub{will-change:auto}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -2786,7 +2798,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
  const L=(n,sz,cols)=>{let a=[];for(let i=0;i<n;i++)a.push((Math.random()*100).toFixed(1)+'vw '+(Math.random()*100).toFixed(1)+'vh 0 0 '+cols[i%cols.length]);return `<i class="gst" style="width:${sz}px;height:${sz}px;box-shadow:${a.join(',')}"></i>`};
  g.innerHTML='<i class="gn n1"></i><i class="gn n2"></i><i class="gn n3"></i>'+L(70,1,['rgba(255,255,255,.85)','rgba(200,210,255,.7)'])+L(32,2,['rgba(255,255,255,.95)','rgba(190,200,255,.9)','rgba(255,225,190,.9)'])+L(12,3,['rgba(255,255,255,1)','rgba(170,190,255,1)','rgba(255,200,230,1)']);
  document.body.appendChild(g);
- const shoot=()=>{const gg=document.getElementById('gx');if(!gg){gxT=0;return}if(!lfRM()&&!document.hidden){const s=document.createElement('i');s.className='gsh';s.style.left=(Math.random()*70).toFixed(0)+'vw';s.style.top=(Math.random()*45).toFixed(0)+'vh';gg.appendChild(s);setTimeout(()=>s.remove(),1300)}gxT=setTimeout(shoot,6000+Math.random()*8000)};
+ const shoot=()=>{const gg=document.getElementById('gx');if(!gg){gxT=0;return}if(false){const s=document.createElement('i');s.className='gsh';s.style.left=(Math.random()*70).toFixed(0)+'vw';s.style.top=(Math.random()*45).toFixed(0)+'vh';gg.appendChild(s);setTimeout(()=>s.remove(),1300)}gxT=setTimeout(shoot,6000+Math.random()*8000)};
  gxT=setTimeout(shoot,2500+Math.random()*3000)}
 function warpIntro(out){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';if(out)o.className='wo';o.setAttribute('aria-hidden','true');
  let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
@@ -2890,8 +2902,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.04';
-const APPN='Los juegos del Cosmere (mazos, Nacidos de la Bruma y el archivo) se publican y retiran por separado; Mi cuenta se adapta a PC y el panel de ALPHA tiene animaciones suaves.';
+const APPV='00.01.05';
+const APPN='Dentro del Cosmere se han recortado animaciones y desenfoques (nebulosas, estrellas, estrellas fugaces, giro de la galaxia, flotado de tarjetas) para que vaya fluido en pantallas de muchos hercios.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
