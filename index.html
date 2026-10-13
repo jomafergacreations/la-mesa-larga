@@ -1,4 +1,11 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* v00.01.19 sin efectos al pulsar */
+button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
+.burst,.hop{animation:none!important}
+.mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
+.mth .btn,#mtnext{position:relative;z-index:80}
+.mtchw:not(.open){pointer-events:none}
+</style>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
 <script>(function(){try{var SPLASH_ON=false;if(!SPLASH_ON)return;var d=document.documentElement;if(d.dataset.dev!=='phone')return;if(sessionStorage.getItem('lml_splash'))return;sessionStorage.setItem('lml_splash','1');
@@ -2552,8 +2559,8 @@ async function loadFichas(s){let cloud=null,err=null;
  try{return use?JSON.parse(use.d):{chars:[],avatar:''}}catch(e){return{chars:[],avatar:''}}}
 window.addEventListener('online',()=>{if(dirty)flush()});
 var fsCool=0;const ONLINE_MS=130000;
-const isOn=r=>r&&r.ping&&Date.now()-r.ping<ONLINE_MS;
-function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=Date.now();fs('PATCH','users/'+session.uid,fbEnc({ping:n}),maskQ({ping:1})).then(sidCheck).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({name:session.name,ping:n,owner:!!session.owner})).catch(()=>{})}
+const isOn=()=>false; // estado en línea eliminado (sin lecturas/escrituras de presencia)
+function beat(){}
 
 /* permisos en vivo: si un administrador cambia tu rol o borra tu cuenta, la app se actualiza sola */
 async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
@@ -2571,7 +2578,6 @@ async function watchMe(){if(!session||document.hidden||session.owner||Date.now()
    toast(nr>old?'Tus permisos han cambiado: ahora eres '+ROLEN[nr].toLowerCase():'Tus permisos han cambiado: ahora tienes «'+ROLEN[nr]+'»');
    fdockUpdate(cur());render(1)}}catch(e){}}
 setInterval(watchMe,30000);
-setInterval(beat,55000);document.addEventListener('visibilitychange',()=>{if(!session)return;if(document.hidden){fs('PATCH','users/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{});fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1})).catch(()=>{})}else beat()});
 setInterval(()=>{if(dirty&&session&&!document.hidden)flush()},30000);
 function ckGet(k){try{const m=document.cookie.split('; ').find(x=>x.indexOf(k+'=')===0);return m?decodeURIComponent(m.slice(k.length+1)):''}catch(e){return ''}}
 function ckSet(k,v){try{document.cookie=k+'='+encodeURIComponent(v)+'; max-age=31536000; path=/; SameSite=None; Secure'}catch(e){}}
@@ -2602,7 +2608,7 @@ async function enter(a,rem,sidIn,restore){ // a: respuesta de signIn/refresh. De
 async function finishSess(){const s=cand;
  if(!s.owner){const st=await loadProfile();if(st==='deleted'){cand=null;skClear();return 'deleted'}
   if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
- if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,ping:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,ping:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
+ if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  if(SESION_UNICA){let rp={};try{const ru=await fs('GET','users/'+s.uid);if(ru)rp=fbDec(ru)}catch(e){rp={}}
   if(rp.sid&&rp.sid!==s.sid){if(s.restore){cand=null;skClear();return 'kicked'}if(!s.force){cand.other={dev:rp.sidDev||'otro dispositivo'};return 'other'}}
   if(!s.sid||rp.sid!==s.sid)s.sid=newSid();
@@ -2704,9 +2710,8 @@ function admNav(){const bd={rp:rpOpenN(),gm:gmPendN()};return ADMNAV.map(([g,L])
 function ovHtml(){const allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filter(x=>(x.role|0)<3),onl=allU.filter(isOn),stf=all.filter(x=>(x.role|0)>=1).length,pub=GAMES.filter(g=>gamePub(g[0])).length;
  const tile=(k,v,l,t)=>`<button type="button" class="tile ${k}" data-act="admtab" data-v="${t}"><b>${v}</b><span>${l}</span></button>`;
  const todo=[];if(rpOpenN())todo.push(['rp',rpOpenN()+' incidencia'+(rpOpenN()>1?'s':'')+' sin resolver']);if(gmPendN())todo.push(['gm',gmPendN()+' solicitud'+(gmPendN()>1?'es':'')+' de Game Master']);
- return `<div class="grid"><div class="admh"><span class="live"><i></i>En vivo</span><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div><div class="tiles">${tile('on',onl.length,'En línea','acc')}${tile('n',all.length,'Cuentas','acc')}${tile('st',stf,'Con permisos','rol')}${tile('rp',rpOpenN(),'Incidencias','rp')}${tile('gm',gmPendN(),'Solicitudes GM','gm')}${tile('jg',pub+'/'+GAMES.length,'Juegos publicados','jg')}</div>
- <div class="onl"><b>Requiere tu atención</b><div class="todo">${todo.map(([t,x])=>`<button type="button" class="btn sm" data-act="admtab" data-v="${t}">${x} →</button>`).join('')||'<span class="hint" style="margin:0">Todo al día. No hay nada pendiente.</span>'}</div></div>
- <div class="onl"><b>Conectados ahora</b><div class="onc">${onl.map(r=>`<span class="onp"><i></i>${esc(r.name)}</span>`).join('')||'<span class="hint" style="margin:0">Nadie conectado ahora mismo.</span>'}</div></div></div>`}
+ return `<div class="grid"><div class="admh"><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div><div class="tiles">${tile('n',all.length,'Cuentas','acc')}${tile('st',stf,'Con permisos','rol')}${tile('rp',rpOpenN(),'Incidencias','rp')}${tile('gm',gmPendN(),'Solicitudes GM','gm')}${tile('jg',pub+'/'+GAMES.length,'Juegos publicados','jg')}</div>
+ <div class="onl"><b>Requiere tu atención</b><div class="todo">${todo.map(([t,x])=>`<button type="button" class="btn sm" data-act="admtab" data-v="${t}">${x} →</button>`).join('')||'<span class="hint" style="margin:0">Todo al día. No hay nada pendiente.</span>'}</div></div>`}
 function rolHtml(){const L=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3),st=L.filter(x=>(x.role|0)>=1).sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es')),oth=L.filter(x=>(x.role|0)===0).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
  const row=r=>{const rl=r.role|0,on=(r.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(r.name)}</b><span class="gms">${esc(r.email||'')}</span></div><div class="row"><div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(r.id)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>${rl===2?`<button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(r.id)}" data-v="${on?0:1}">${on?'Quitar acceso a juegos sin publicar':'Dar acceso a juegos sin publicar'}</button>`:''}</div></div>`};
  return `<div class="grid"><p class="hint" style="margin:0"><b>Ver</b>: puede consultar las cuentas. <b>Admin</b>: además gestiona incidencias, autoriza Game Masters y elimina cuentas. Solo tú das o quitas roles.</p><b>Equipo (${st.length})</b><div class="alist">${st.map(row).join('')||'<p class="hint">Todavía no hay nadie con permisos.</p>'}</div><b>Dar un rol a otra cuenta</b><div class="row"><select id="rolsel" aria-label="Cuenta">${oth.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')||'<option value="">No hay cuentas</option>'}</select><button class="btn sm" data-act="rolpick" data-r="1">Dar «Ver»</button><button class="btn sm pri" data-act="rolpick" data-r="2">Dar «Admin»</button></div></div>`}
@@ -2758,7 +2763,7 @@ function admView(force){
  if(!force&&sig===admSig){admAgo();return}admSig=sig;
  const ae=document.activeElement,keep=ae&&ae.id==='admq'?[ae.selectionStart,ae.selectionEnd]:null;
  const q=admQ.trim().toLowerCase();
- let list=all.slice().sort((a,b)=>(isOn(b)?1:0)-(isOn(a)?1:0)||(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
+ let list=all.slice().sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es'));
  if(q)list=list.filter(r=>String(r.name).toLowerCase().includes(q)||String(r.email||'').toLowerCase().includes(q));
  if(admF==='on')list=list.filter(isOn);if(admF==='st')list=list.filter(r=>(r.role|0)>=1);
  const prevOn=admPrev.on;const tile=(k,v,l)=>`<div class="tile ${k}"><b class="${admPrev.st&&admPrev.st[k]!==v?'chg':''}">${v}</b><span>${l}</span></div>`;
@@ -2771,13 +2776,12 @@ function admView(force){
    if(can&&act!=='del')ctl+=`<button class="btn sm danger" data-act="admdel" data-u="${esc(k)}">Eliminar</button>`;
    det=`<div class="det">${isAdmin()&&r.email?`<span>Correo: <b>${esc(r.email)}</b></span>`:''}<span>Game Master: <b>${rl>=2?'por su rol':(r.gm|0)?'Permanente':(r.gmTmp|0)?'Temporal (sin usar)':r.gmLic?'Temporal (en uso)':'No'}</b></span><span>Creada: ${fdate(r.created)}</span><span>Última entrada: ${fdate(r.seen||r.created)}</span>${ctl?`<div class="row">${ctl}</div>`:`<span class="hint" style="margin:0">${self?'Esta eres tú.':'No tienes permisos para gestionar esta cuenta.'}</span>`}
    ${act==='del'?`<div class="grid"><p class="warn-t"><b>¿Eliminar la cuenta ${esc(r.name)}?</b> Se borrarán sus fichas y no podrá volver a entrar. No se puede deshacer.</p><div class="row"><button class="btn danger" data-act="admdel2" data-u="${esc(k)}">Sí, eliminar</button><button class="btn ghost" data-act="admno">No</button></div></div>`:''}</div>`}
-  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>${isOn(r)?'En línea ahora':'Última vez '+fdate(r.ping||r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
+  return `<div class="arow${open?' open':''}"><button type="button" class="ahead" data-act="admrow" data-u="${esc(k)}" aria-expanded="${open}"><span class="aav${isOn(r)?' on':''}">${esc(String(r.name||'?').trim().charAt(0).toUpperCase())}</span><span class="anm"><b>${esc(r.name)}</b><small>Última vez ${fdate(r.seen||r.created)}</small></span>${rl?`<span class="tag">${ROLEN[rl]}</span>`:''}<svg class="chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${det}</div>`}).join('');
  const chips=onl.length?onl.map(r=>`<span class="onp${prevOn&&!prevOn.includes(r.id)?' new':''}"><i></i>${esc(r.name)}${(r.role|0)>=3?' <small>(propietario)</small>':''}</span>`).join(''):'<span class="hint" style="margin:0">Ahora mismo no hay nadie conectado.</span>';
- admShow(`<div class="grid admw"><div class="admh"><span class="live"><i></i>En vivo</span><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div>
- ${scr==='admin'?'':`<div class="tiles">${tile('on',onl.length,'En línea')}${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}</div>
- <div class="onl"><b>Conectados ahora</b><div class="onc">${chips}</div></div>`}
+ admShow(`<div class="grid admw"><div class="admh"><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div>
+ ${scr==='admin'?'':`<div class="tiles">${tile('n',n,n===1?'Cuenta':'Cuentas')}${tile('st',stf,'Con permisos')}</div>`}
  <p class="hint" style="margin:0">${isAdmin()?'Pulsa una cuenta para ver sus datos y gestionarla. Tú decides quién puede ver las cuentas (<b>Ver</b>) y quién además puede eliminarlas (<b>Admin</b>); un administrador no puede tocar a otro administrador ni dar permisos.':me>=2?'Pulsa una cuenta para ver sus datos. Puedes eliminar cuentas de usuarios sin permisos o con permiso solo de ver.':'Pulsa una cuenta para ver sus datos.'}</p>
- <div class="admtools"><input id="admq" type="search" placeholder="Buscar por nombre${isAdmin()?' o correo':''}…" value="${esc(admQ)}" autocomplete="off"><div class="seg">${[['all','Todos'],['on','En línea'],['st','Con permisos']].map(([v,l])=>`<button type="button" data-act="admf" data-v="${v}" aria-pressed="${admF===v}">${l}</button>`).join('')}</div></div>
+ <div class="admtools"><input id="admq" type="search" placeholder="Buscar por nombre${isAdmin()?' o correo':''}…" value="${esc(admQ)}" autocomplete="off"><div class="seg">${[['all','Todos'],['st','Con permisos']].map(([v,l])=>`<button type="button" data-act="admf" data-v="${v}" aria-pressed="${admF===v}">${l}</button>`).join('')}</div></div>
  <div class="alist">${rows||'<p class="hint">No hay cuentas que coincidan.</p>'}</div></div>`);
  admPrev={on:onl.map(r=>r.id),n,st:{on:onl.length,n,st:stf}};admAgo();
  if(keep){const i=$('#admq');if(i){i.focus();try{i.setSelectionRange(keep[0],keep[1])}catch(e){}}}}
@@ -2946,7 +2950,7 @@ function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&
 function render(keep){if(session&&store&&Array.isArray(store.chars))for(const c of store.chars)if(c.player!==session.name)c.player=session.name;document.documentElement.dataset.mode=(session&&store.mode==='gm')?'gm':'p';const y=window.scrollY;prevNums=[...document.querySelectorAll('#side .stat b,.counter .n')].map(x=>x.textContent);{const pi=document.querySelector('.prog i');prevPct=pi?pi.style.width:null}const c=session?cur():null;if(c&&c.done&&c.mode==='q')c.mode='f';document.body.classList.toggle('hub',!!(!(c)&&(!session||scr!=='nb')));$('#app').innerHTML=booting?'<div class="bootl" role="status" aria-label="Cargando">'+LOGOI+'</div>':!session?authView():c?(c.mode==='q'?qview(c):editor(c)):screen();window.scrollTo(0,keep?y:0);anim(c)}
 let fx=false;
 const METALS_FX=['#9FB4C7','#C9CED3','#8B8F96','#C59E57','#B4683B','#A67B3C','#E3C14A','#7F8FA3','#D7B07A'];
-function metalFx(el,cc){try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=el.getBoundingClientRect();if(!r.width)return;
+function metalFx(el,cc){return;try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=el.getBoundingClientRect();if(!r.width)return;
  const col=cc||'#D9B66B';const o=document.createElement('div');o.className='mfx';o.style.cssText=`left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;--c:${col}`;
  let h='<i class="ring"></i>';for(let k=0;k<8;k++){h+=`<b style="--a:${k*45}deg;--d:44px"></b>`}
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1000)}catch(e){}}
@@ -3030,8 +3034,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.18';
-const APPN='En PC, el tablero y la vida ocupan toda la pantalla.';
+const APPV='00.01.20';
+const APPN='Sin efectos al pulsar botones, y sin estado «en línea» (menos lecturas y escrituras).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3276,7 +3280,7 @@ function duneScreen(){
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
 
-document.addEventListener('pointerdown',e=>{try{if(!e.isTrusted||lfRM())return;const r=document.documentElement;if(r.dataset.cw!=='sc'||!r.dataset.cos)return;const t=e.target.closest&&e.target.closest('.btn,.card,.avopt');if(!t||t.disabled)return;const now=Date.now();if(now-(pointerdownT||0)<160)return;pointerdownT=now;metalFx(t,'#9FC3F0')}catch(x){}});
+
 let pointerdownT=0;
 /* ---------- Cosmere: menús homogéneos (como Cyberpunk y Dune) y escenario de Scadrial ---------- */
 const CSGO='<svg class="csgo" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -3446,7 +3450,7 @@ function mtBoard(){const c=mtCapH();setTimeout(mtScroll,80);
  <div class="mtsheet${mtSel?' show':''}" id="mtsheet"><button type="button" class="mtshx" data-act="mtshx" aria-label="Cerrar">×</button><p class="mtcap" id="mtcap" aria-live="polite">${c.t}</p><div class="mtact" id="mtact">${c.a}</div></div>
  <p class="mtrule">Al empezar tu turno avanzas un paso en el entrenamiento. Solo puedes quemar tantos metales como iconos de llama hayas ganado; para más, avívalos. Al acabar el turno, los quemados vuelven al tablero y los avivados vuelven girados hasta que los refresques. Cada metal solo se usa una vez por turno.</p></section>`}
 function mtScroll(sm){const t=document.getElementById('mttr');if(!t)return;const c=t.querySelector('.cur');if(!c)return;const x=c.offsetLeft-t.clientWidth/2+c.offsetWidth/2;if(sm===true&&!lfRM()&&t.scrollTo)t.scrollTo({left:x,behavior:'smooth'});else t.scrollLeft=x}
-function mtStepFx(){const c=document.querySelector('#mttr .mts.cur');if(!c||lfRM())return;c.classList.add('mtadv');setTimeout(()=>c.classList.remove('mtadv'),1300)}
+function mtStepFx(){return;const c=document.querySelector('#mttr .mts.cur');if(!c||lfRM())return;c.classList.add('mtadv');setTimeout(()=>c.classList.remove('mtadv'),1300)}
 function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>document.getElementById(id);
  MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(!b)return;const s=mtSt(m.id),on=s==='burn'||s==='flare',sig=mtSig()===m.id;
   b.dataset.s=s;b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',m.n+', '+MT_LAB[s]+'. '+m.d);const t=b.querySelector('.mtst');if(t)t.textContent=MT_LAB[s];
@@ -3454,7 +3458,7 @@ function mtPaint(){if(!document.getElementById('mtsub'))return;const $i=id=>docu
  $i('mtsub').textContent=mtSubH();$i('mtnext').textContent=MT.turn?'Pasar turno':'Empezar partida';
  $i('mtcp').innerHTML=mtCharH();const tr=$i('mttr'),sl=tr.scrollLeft;tr.innerHTML='<div class="mttk">'+mtTrackH()+'</div>';tr.scrollLeft=sl;$i('mtatp').innerHTML=mtAtH();
  const c=mtCapH();$i('mtcap').textContent=c.t;$i('mtact').innerHTML=c.a;const sh=$i('mtsheet');if(sh)sh.classList.toggle('show',!!mtSel);mtScroll(true)}
-function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
+function mtFx(id,k){return;const b=document.querySelector('.mtc[data-m="'+id+'"]');if(!b)return;const d=b.querySelector('.mtd');
  b.classList.remove('mtpop','mtoff','mtflp');void b.offsetWidth;
  if(k==='flare'){b.classList.add('mtflp');setTimeout(()=>b.classList.remove('mtflp'),1100)}
  else if(k==='on'){const r=document.createElement('i');r.className='mtring';d.appendChild(r);setTimeout(()=>r.remove(),800);b.classList.add('mtpop');setTimeout(()=>b.classList.remove('mtpop'),500)}
@@ -3480,7 +3484,7 @@ function mtNext(force){if(!MT.ch){mtAsk();return}if(MT.turn>0&&!force&&mtNFlare(
   if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
   else if(r==='c'){MT.at++;gain=true;msg+=' · fin del entrenamiento: +1 Atium añadido a tu reserva (y 1 más cada turno)'}else if(r)msg+=' · habilidad '+r+' desbloqueada'}
  else{MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
- mtSel=null;mtSave();mtPaint();mtStepFx();if(gain)mtAtFx('gain');toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
+ mtSel=null;mtSave();mtPaint();if(gain)mtAtFx('gain');toast(msg);}
 function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.createElement('div');o.id='mtpick';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtpickt');
  o.innerHTML=`<div class="mtpk"><h2 id="mtpickt">¿Con qué personaje vas a jugar?</h2><p>Cuando empiece la partida no podrás cambiarlo.</p><div class="mtpg">${Object.keys(MTC).map(k=>{const c=MTC[k],m=MTL.find(x=>x.id===c.m);return `<button type="button" class="mtpb" data-act="mtpick" data-c="${k}" style="--mc:${m.bc}"><b>${c.n}</b><small>${c.r}</small><em>${m.n}</em></button>`}).join('')}</div><button type="button" class="btn ghost" data-act="mtpickx">Cancelar</button></div>`;
  document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
@@ -3500,7 +3504,7 @@ function mtLongFlare(id){const m=MTL.find(x=>x.id===id);if(!m||!MT.ch||!MT.turn)
  if(s==='flare'){toast(m.n+' ya está avivado');return}
  if(s==='used'){toast('Ya usaste este metal este turno');return}
  toast('Refresca '+m.n+' antes de avivarlo')}
-document.addEventListener('pointerdown',e=>{const c=e.target.closest&&e.target.closest('.mtc');if(!c||(e.pointerType==='mouse'&&e.button!==0))return;mtLpCancel();mtLpXY=[e.clientX,e.clientY];c.classList.add('mtlp');
+document.addEventListener('pointerdown',e=>{const c=e.target.closest&&e.target.closest('.mtc');if(!c||(e.pointerType==='mouse'&&e.button!==0))return;mtLpCancel();mtLpXY=[e.clientX,e.clientY];
  mtLpT=setTimeout(()=>{mtLpT=0;c.classList.remove('mtlp');mtLpFired=Date.now();try{navigator.vibrate&&navigator.vibrate(30)}catch(x){}mtLongFlare(c.dataset.m)},520)});
 document.addEventListener('pointermove',e=>{if(mtLpT&&mtLpXY&&Math.hypot(e.clientX-mtLpXY[0],e.clientY-mtLpXY[1])>10)mtLpCancel()});
 ['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{if(mtLpT)mtLpCancel()},true));
@@ -3914,13 +3918,13 @@ async function kickPlayer(pid,u){for(const col of ['pjs','miembros','invitacione
 /* ---------- invitar jugadores: lista con conectados y desconectados ---------- */
 let invSel=new Set(),invRows=[],invTm=0,invQ='';
 async function invLoad(){const p=parts.find(x=>x.id===partId);const box=document.querySelector('#dlg[open] .invdlg');if(!p||!box){clearInterval(invTm);invTm=0;return}
- try{const l=await fsList('presencia');const mem=new Set((partMem[p.id]||[]).map(x=>x.uid)),pen=new Set((partInv[p.id]||[]).filter(i=>i.status==='pending').map(i=>i.to));
-  const lf=leftSet(p.id);invRows=l.filter(r=>r.id!==session.uid&&!lf.has(r.id)&&r.name&&!(r.owner&&!canAdm())).map(r=>({uid:r.id,name:r.name,on:isOn(r),st:mem.has(r.id)?'mem':pen.has(r.id)?'pen':''})).sort((a,b)=>(b.on-a.on)||a.name.localeCompare(b.name,'es'));
+ try{const l=(await fsList('users')).filter(x=>!x.deleted);const mem=new Set((partMem[p.id]||[]).map(x=>x.uid)),pen=new Set((partInv[p.id]||[]).filter(i=>i.status==='pending').map(i=>i.to));
+  const lf=leftSet(p.id);invRows=l.filter(r=>r.id!==session.uid&&!lf.has(r.id)&&r.name&&!(r.owner&&!canAdm())).map(r=>({uid:r.id,name:r.name,on:0,st:mem.has(r.id)?'mem':pen.has(r.id)?'pen':''})).sort((a,b)=>(b.on-a.on)||a.name.localeCompare(b.name,'es'));
   invDraw()}catch(e){box.querySelector('.invlist').innerHTML='<p class="hint">No se pudo cargar la lista. Comprueba la conexión.</p>'}}
 function invDraw(){const box=document.querySelector('#dlg[open] .invdlg');if(!box)return;const q=invQ.toLowerCase();
  const rows=invRows.filter(r=>!q||r.name.toLowerCase().includes(q));const on=invRows.filter(r=>r.on).length;
- box.querySelector('.invsum').innerHTML=`<span class="dot on"></span>${on} en línea · <span class="dot"></span>${invRows.length-on} desconectados`;
- box.querySelector('.invlist').innerHTML=rows.length?rows.map(r=>`<label class="invrow${r.st?' dis':''}"><input type="checkbox" data-iu="${esc(r.uid)}"${r.st?' disabled':''}${invSel.has(r.uid)?' checked':''}><span class="dot${r.on?' on':''}"></span><b>${esc(r.name)}</b><small>${r.st==='mem'?'Ya en la partida':r.st==='pen'?'Invitación enviada':r.on?'En línea':'Desconectado'}</small></label>`).join(''):'<p class="hint" style="margin:6px 0">No hay usuarios que coincidan.</p>';
+ box.querySelector('.invsum').innerHTML=`${invRows.length} jugadores`;
+ box.querySelector('.invlist').innerHTML=rows.length?rows.map(r=>`<label class="invrow${r.st?' dis':''}"><input type="checkbox" data-iu="${esc(r.uid)}"${r.st?' disabled':''}${invSel.has(r.uid)?' checked':''}><b>${esc(r.name)}</b><small>${r.st==='mem'?'Ya en la partida':r.st==='pen'?'Invitación enviada':''}</small></label>`).join(''):'<p class="hint" style="margin:6px 0">No hay usuarios que coincidan.</p>';
  const n=[...invSel].filter(u=>invRows.some(r=>r.uid===u&&!r.st)).length,free=invRows.filter(r=>!r.st).length;
  const a=box.querySelector('[data-act=invsel]'),b=box.querySelector('[data-act=invall]');a.textContent='Invitar seleccionados ('+n+')';a.disabled=!n;b.textContent='Invitar a todos ('+free+')';b.disabled=!free}
 function openInvite(){invSel=new Set();invQ='';invRows=[];
@@ -4346,10 +4350,10 @@ document.addEventListener('click',e=>{
  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,c=cur(),v=b.dataset.v;
 
 
- if((b.classList.contains('bub')||b.classList.contains('csopt'))&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
-  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');metalFx(b,b.dataset.col||(b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6'));setTimeout(()=>b.click(),300);return}}
 
- if(a==='gohome'&&e.isTrusted&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){if(b.dataset.go)return;b.dataset.go='1';b.classList.add('hop');setTimeout(()=>b.click(),240);return}
+
+
+
  if(a==='atab')pg='t';
  if(c){const PG={next:'f',qnext:'f',qskip:'f',prev:'b',qprev:'b',qmode:'f',qform:'f'};if(PG[a])pg=PG[a];else if(a==='go')pg=(+b.dataset.i>=c.step)?'f':'b';
   if(b.tagName==='BUTTON'&&(b.hasAttribute('aria-pressed')||b.dataset.d!==undefined)&&a!=='showpw'){const d=b.dataset;popSel='[data-act="'+a+'"]'+['v','k','n','d'].filter(x=>d[x]!==undefined).map(x=>'[data-'+x+'="'+d[x]+'"]').join('');fx=['path','qmetal','bless'].includes(a)||(a==='qset'&&/path|powers/.test(d.f||''))}}
@@ -4452,7 +4456,7 @@ document.addEventListener('click',e=>{
   case 'doupd':{b.disabled=true;b.textContent='Actualizando…';(async()=>{try{await flush()}catch(x){}const v=updInfo?updInfo.v:Date.now();location.replace(updBase()+'?v='+encodeURIComponent(v)+location.hash)})();break}
   case 'chkupd':{const m=$('#umsg');if(m){m.textContent='Buscando…';m.className='msg'}checkUpdate(true).then(r=>{const m2=$('#umsg');if(!m2)return;if(r==='new'){m2.textContent='Hay una actualización disponible.';m2.className='msg ok'}else if(r==='same'){m2.textContent='Ya tienes la última versión.';m2.className='msg ok'}else{m2.textContent='No se pudo comprobar ahora. Cierra y vuelve a abrir la app para cargar la última versión.';m2.className='msg err'}});break}
   case 'logout':{const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>¿Cerrar sesión?</h3><p class="hint" style="margin:0">Tus fichas ya están guardadas en la nube. Para volver a entrar necesitarás tu correo y contraseña${skRem()?', y se olvidará el recuerdo de este dispositivo':''}.</p><div class="row"><button class="btn pri" data-act="logout2">Sí, cerrar sesión</button><button class="btn" data-act="closedlg">Cancelar</button></div></div>`;try{d.showModal()}catch(x){d.setAttribute('open','')}break}
-  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=lfRM();const nm=session&&session.name||'';const dv=document.documentElement.dataset;const u=dv.dun?'dun':dv.cyb?'cyb':dv.cos?'cos':'';const MS={dun:['Las arenas te despiden','Guardando tus fichas…'],cyb:['> cerrando sesión…','guardando datos y cortando enlace'],cos:['Hasta la próxima, viajero','Guardando tus fichas…'],'':['Hasta pronto','Guardando tus fichas…']}[u];const by=document.createElement('div');by.id='bye';by.className=u;by.setAttribute('role','status');by.setAttribute('aria-live','polite');let fx='';if(u==='dun'||u==='cos'){for(let k=0;k<22;k++)fx+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--s:'+(1+Math.random()*2.5).toFixed(1)+'px;--t:'+(2.4+Math.random()*3).toFixed(1)+'s;--d:-'+(Math.random()*4).toFixed(1)+'s"></i>'}by.innerHTML='<span class="byefx" aria-hidden="true">'+fx+'</span><div class="byei"><span class="byeo" aria-hidden="true"></span><b>'+MS[0]+(nm&&!u?', '+esc(nm):'')+'</b><small>'+MS[1]+'</small><span class="byebar" aria-hidden="true"><i></i></span></div>';document.body.appendChild(by);document.documentElement.classList.add('byeing');const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1500-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{await fs('PATCH','users/'+session.uid,SESION_UNICA?fbEnc({ping:0,sid:''}):fbEnc({ping:0}),SESION_UNICA?maskQ({ping:1,sid:1}):maskQ({ping:1}));await fs('PATCH','presencia/'+session.uid,fbEnc({ping:0}),maskQ({ping:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}document.documentElement.classList.remove('byeing');by.classList.add('out');setTimeout(()=>by.remove(),red?0:700)})();break;
+  case 'logout2':try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}(async()=>{const red=lfRM();const nm=session&&session.name||'';const dv=document.documentElement.dataset;const u=dv.dun?'dun':dv.cyb?'cyb':dv.cos?'cos':'';const MS={dun:['Las arenas te despiden','Guardando tus fichas…'],cyb:['> cerrando sesión…','guardando datos y cortando enlace'],cos:['Hasta la próxima, viajero','Guardando tus fichas…'],'':['Hasta pronto','Guardando tus fichas…']}[u];const by=document.createElement('div');by.id='bye';by.className=u;by.setAttribute('role','status');by.setAttribute('aria-live','polite');let fx='';if(u==='dun'||u==='cos'){for(let k=0;k<22;k++)fx+='<i style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--s:'+(1+Math.random()*2.5).toFixed(1)+'px;--t:'+(2.4+Math.random()*3).toFixed(1)+'s;--d:-'+(Math.random()*4).toFixed(1)+'s"></i>'}by.innerHTML='<span class="byefx" aria-hidden="true">'+fx+'</span><div class="byei"><span class="byeo" aria-hidden="true"></span><b>'+MS[0]+(nm&&!u?', '+esc(nm):'')+'</b><small>'+MS[1]+'</small><span class="byebar" aria-hidden="true"><i></i></span></div>';document.body.appendChild(by);document.documentElement.classList.add('byeing');const t0=Date.now();try{await flush()}catch(x){}if(!red){const w=1500-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w))}if(session)try{if(SESION_UNICA)await fs('PATCH','users/'+session.uid,fbEnc({sid:''}),maskQ({sid:1}))}catch(x){}if(session&&!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}document.documentElement.classList.remove('byeing');by.classList.add('out');setTimeout(()=>by.remove(),red?0:700)})();break;
   case 'acct':acctDlg();break;
   case 'adm':if(isAdmin()){goAdmin('ov');break}admState=null;admDlg();break;
   case 'admpanel':goAdmin(admTab);break;
@@ -4486,7 +4490,7 @@ document.addEventListener('click',e=>{
   case 'manrmno':manDlg();break;
   case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
-    (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}try{await fs('DELETE','presencia/'+u)}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
+    (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
   case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
   case 'new':{if(charFull('nb'))break;const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
