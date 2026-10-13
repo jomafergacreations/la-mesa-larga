@@ -2316,12 +2316,15 @@ html[data-dev=tablet] body.hub .wrap:has(.lfroot),html[data-dev=desktop] body.hu
 @media(max-width:1199px){
  html[data-dev=tablet] .lfsplit,html[data-dev=desktop] .lfsplit{grid-template-columns:minmax(0,1fr);gap:14px}
  html[data-dev=tablet] .lfside,html[data-dev=desktop] .lfside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
- html[data-dev=tablet] .lfside .mtmap,html[data-dev=desktop] .lfside .mtmap{margin-top:0;height:100%}
+ html[data-dev=tablet] .lfside .mtmap,html[data-dev=desktop] .lfside .mtmap{margin-top:0}html[data-dev=tablet] .lfside .mtmap[open],html[data-dev=desktop] .lfside .mtmap[open]{height:100%}
 }
 html[data-dev=tablet] .mttr,html[data-dev=desktop] .mttr{overflow-x:visible}
 html[data-dev=tablet] .mttk,html[data-dev=desktop] .mttk{width:100%;min-width:0}
 html[data-dev=tablet] .mts,html[data-dev=desktop] .mts{width:calc(100%/21);min-width:0;padding:4px 0}
 html[data-dev=tablet] .mtk,html[data-dev=desktop] .mtk{width:100%;max-width:38px;height:auto;aspect-ratio:1;font-size:clamp(.55rem,1.5vw,.9rem)}
+
+.mtmap:not([open]){width:fit-content;max-width:100%;padding:8px 14px;border-radius:99px;justify-self:start}
+.mtmap summary{list-style:none}.mtmap summary::-webkit-details-marker{display:none}.mtmap summary::before{content:'▸ '}.mtmap[open] summary::before{content:'▾ '}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -3025,8 +3028,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.16';
-const APPN='Tablet: los 21 pasos del entrenamiento se ven de un vistazo sin deslizar, y la vida y el tablero ocupan todo el ancho.';
+const APPV='00.01.17';
+const APPN='Al minimizar los controles del tablero, también se encoge el recuadro.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
