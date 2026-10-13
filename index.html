@@ -2227,6 +2227,23 @@ html[data-adm] #fdock .fd{color:#E6EAF0}
 .gmc{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:grid;gap:6px}
 .gmc.pending{border-color:#F59E0B}
 .gmh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.gms{margin-left:auto;font-size:.8rem;color:var(--muted)}
+
+#simfx{position:fixed;inset:0;z-index:99997;pointer-events:none;overflow:hidden;color:#EAF1FF;font-family:var(--sans,system-ui)}
+#simfx i{position:absolute;display:block}
+#simfx.in i{top:0;bottom:0;width:calc(100%/var(--n) + 1px);left:calc(100%/var(--n)*var(--i));background:linear-gradient(180deg,#0B1B3F,#1D4ED8);transform:scaleY(0);transform-origin:top}
+#simfx.out i{left:0;right:0;height:calc(100%/var(--n) + 1px);top:calc(100%/var(--n)*var(--i));background:linear-gradient(90deg,#0E1319,#1E293B);transform:scaleX(0);transform-origin:right}
+#simfx .sl{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:8px;text-align:center;opacity:0}
+#simfx .sl b{font-size:clamp(1.4rem,5vw,2.2rem);font-weight:700;letter-spacing:.02em}#simfx .sl small{opacity:.75;letter-spacing:.08em;text-transform:uppercase;font-size:.75rem}
+#simfx .sg{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;border:1.5px solid rgba(147,197,253,.6)}
+@media(prefers-reduced-motion:no-preference){
+#simfx.in i{animation:sfIn .45s calc(var(--i)*45ms) cubic-bezier(.6,0,.3,1) forwards}
+#simfx.out i{animation:sfOut .4s calc(var(--i)*40ms) cubic-bezier(.6,0,.3,1) forwards}
+#simfx .sl{animation:sfLb .4s .35s ease-out forwards}
+#simfx.in .sg{animation:sfPulse 1s .35s ease-out}
+#simfx.end{animation:sfEnd .5s ease forwards}
+@keyframes sfIn{to{transform:scaleY(1)}}@keyframes sfOut{to{transform:scaleX(1)}}@keyframes sfLb{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes sfPulse{0%{box-shadow:0 0 0 0 rgba(147,197,253,.5)}100%{box-shadow:0 0 0 26px rgba(147,197,253,0)}}
+@keyframes sfEnd{to{opacity:0}}}
 @media(max-width:640px){.adp .tiles{grid-template-columns:repeat(2,1fr)}.adph h1{font-size:1.3rem}}
 @media(prefers-reduced-motion:no-preference){.adp{animation:adpin .35s ease-out both}.adp .tile,.adp .arow{animation:adpin .4s ease-out both}@keyframes adpin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
 </style>
@@ -2511,7 +2528,12 @@ function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1
  return `<div class="grid"><p class="hint" style="margin:0">Los usuarios necesitan la autorización de <b>al menos un administrador</b> para ser Game Master. Aprobar una solicitud concede el permiso al instante.</p><div class="alist">${cards||'<p class="hint">No hay solicitudes todavía.</p>'}</div></div>`}
 function adminScreen(){if(!isAdmin()){scr='menu';return screen()}
  return `<div class="adp"><div class="adph"><div><small>Propietario</small><h1>Panel de administración</h1><p>Cuentas, conexiones e incidencias de La Mesa Larga.</p></div><div class="adpa"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}" title="Al simular, ver la app como un usuario sin licencia de Game Master">Sin licencia GM: ${simNoGM?'sí':'no'}</button><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div id="admpage" class="admroot"></div></div>`}
-function goAdmin(tab){exitFx(()=>{store.cur=null;store.npcCur=null;admTab=tab==='rp'?'rp':'acc';admSig='';admOpen=null;admState=null;regCache=null;scr='admin';dockSig='';try{const d=$('#dlg');if(d.open)d.close()}catch(e){}try{save()}catch(e){}render()})}
+function simFx(dir,then){if(lfRM()){then();return}
+ const o=document.createElement('div');o.id='simfx';o.className=dir;o.setAttribute('aria-hidden','true');let h='';const n=dir==='in'?9:7;for(let k=0;k<n;k++)h+='<i style="--i:'+k+';--n:'+n+'"></i>';
+ o.innerHTML=h+'<div class="sl"><span class="sg">'+(dir==='in'?'<svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-4 4-6 7.5-6s6.7 2 7.5 6"/></svg>':'<svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg>')+'</span><b>'+(dir==='in'?'Simulando usuario':'Volviendo al panel')+'</b><small>'+(dir==='in'?'Vista de un usuario normal':'Vista de administración')+'</small></div>';
+ document.body.appendChild(o);setTimeout(then,dir==='in'?720:620);setTimeout(()=>o.classList.add('end'),dir==='in'?1150:1000);setTimeout(()=>o.remove(),dir==='in'?1750:1600)}
+function goAdmin(tab){const wasSim=scr!=='admin';exitFx(()=>simFxIf(wasSim,()=>{store.cur=null;store.npcCur=null;admTab=tab==='rp'?'rp':'acc';admSig='';admOpen=null;admState=null;regCache=null;scr='admin';dockSig='';try{const d=$('#dlg');if(d.open)d.close()}catch(e){}try{save()}catch(e){}render()}))}
+function simFxIf(c,f){if(c&&session&&session.owner)simFx('out',f);else f()}
 function admPaint(){if(admTab==='gm'){admShow(gmAdmHtml());gmLoad().then(()=>{if(admLive()&&admTab==='gm')admShow(gmAdmHtml())});return}
  if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admLive()&&admTab==='rp')admShow(rpAdmHtml())}).catch(()=>{});return}
  if(regCache){admSig='';admView(true)}else{admShow('<p class="hint">Cargando las cuentas…</p>');admLoad()}
@@ -2795,8 +2817,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='164';
-const APPN='Nuevo panel para ALPHA con «Simular usuario». Para ser Game Master hace falta autorización de un administrador: los usuarios pueden pedir licencia temporal (una partida) o permanente.';
+const APPV='165';
+const APPN='Animaciones propias para ALPHA al entrar y salir de «Simular usuario».';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -4181,7 +4203,7 @@ document.addEventListener('click',e=>{
   case 'gmok':{if(!canInc())break;const u=b.dataset.u,t=b.dataset.t==='perm'?'perm':'tmp';b.disabled=true;(async()=>{try{await fs('PATCH','users/'+u,fbEnc(t==='perm'?{gm:1}:{gmTmp:1}),maskQ(t==='perm'?{gm:1}:{gmTmp:1}));await fs('PATCH','gmsol/'+u,fbEnc({status:'approved',by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,by:1,updated:1}));await gmLoad();regCache=null;toast('Solicitud aprobada');if(admLive())admShow(gmAdmHtml())}catch(e){b.disabled=false;toast('No se pudo aprobar la solicitud')}})();break}
   case 'gmno':{if(!canInc())break;const u=b.dataset.u;b.disabled=true;(async()=>{try{await fs('PATCH','gmsol/'+u,fbEnc({status:'denied',by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,by:1,updated:1}));await gmLoad();toast('Solicitud denegada');if(admLive())admShow(gmAdmHtml())}catch(e){b.disabled=false;toast('No se pudo denegar la solicitud')}})();break}
   case 'gmrev':{if(!canInc())break;const u=b.dataset.u;b.disabled=true;(async()=>{try{await fs('PATCH','users/'+u,fbEnc({gm:0,gmTmp:0,gmLic:''}),maskQ({gm:1,gmTmp:1,gmLic:1}));if(gmAll.some(x=>x.uid===u))await fs('PATCH','gmsol/'+u,fbEnc({status:'revoked',by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,by:1,updated:1}));await gmLoad();regCache=null;toast('Licencia de Game Master retirada');if(admLive()){if(admTab==='gm')admShow(gmAdmHtml());else admLoad()}}catch(e){b.disabled=false;toast('No se pudo retirar la licencia')}})();break}
-  case 'admgame':{if(simNoGM&&store.mode==='gm')store.mode='p';store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';dockSig='';render();break}
+  case 'admgame':{simFx('in',()=>{if(simNoGM&&store.mode==='gm')store.mode='p';store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';dockSig='';render()});break}
   case 'admdel':if(canAdm()){admState={u:b.dataset.u,mode:'del'};admView(true)}break;
   case 'admno':admState=null;admView(true);break;
   case 'admre':admDlg();break;
