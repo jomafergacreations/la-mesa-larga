@@ -2171,6 +2171,10 @@ html.byeing #app,html.byeing #topbar,html.byeing #fdock,html.byeing #gx,html.bye
 #bye{will-change:opacity;transform:translateZ(0)}#bye .byefx i{will-change:transform,opacity}
 @keyframes cyBarGl{0%{transform:translate(-3px,0) skewX(-8deg);filter:drop-shadow(3px 0 #00F0FF) drop-shadow(-3px 0 #FF2A6D)}50%{transform:translate(3px,1px) skewX(6deg);filter:drop-shadow(-3px 0 #00F0FF) drop-shadow(3px 0 #FF2A6D)}100%{transform:translate(0,-1px);filter:none}}
 .cypp.gl{animation:cyBarGl .14s steps(2,end) infinite}.cypp.er .cypb i{background:#FF2A6D!important;box-shadow:0 0 12px #FF2A6D!important}.cypp.er #cypct{color:#FF2A6D}
+.dnh{--dg1:#FFF3D2;--dg2:#F2B65A;--dg3:#B8651F}html[data-dun][data-lm=l] .dnh{--dg1:#7A3A0E;--dg2:#B8571A;--dg3:#E39A3A}html[data-dun][data-lm=d] .dnh{--dg1:#FFFFFF;--dg2:#D9E4FF;--dg3:#8FAAE8}
+.dnh .dnlg{display:block;width:min(88vw,460px);height:auto;overflow:visible;filter:drop-shadow(0 0 8px rgba(255,214,140,.45))}
+@media(prefers-reduced-motion:no-preference){.dnh .dnlg path{stroke-dasharray:1;stroke-dashoffset:1;animation:dnDraw 1.6s cubic-bezier(.4,0,.2,1) .15s forwards}.dnh .dnlg path:nth-child(2n){animation-delay:.35s}}
+@keyframes dnDraw{to{stroke-dashoffset:0}}
 </style>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
@@ -2697,8 +2701,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='155';
-const APPN='Dune: tipografía extendida como los carteles de la película y transición de entrada/salida con tormenta de arena real.';
+const APPV='156';
+const APPN='Dune: el título «DUNE» pasa a un rótulo propio de trazo fino y letras abiertas, inspirado en el cartel.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2934,7 +2938,7 @@ function duneOut(then){if(lfRM()||document.getElementById('dnout')){then();retur
  const t=document.createElement('div');t.className='dnot';t.textContent='Las arenas se cierran…';o.appendChild(t);t.animate([{opacity:0},{opacity:1,offset:.45},{opacity:1,offset:.7},{opacity:0}],{duration:1500,fill:'forwards'});
  setTimeout(then,1000);setTimeout(()=>o.remove(),1550)}
 function duneScreen(){
- return hubBar(['menu','Inicio'])+`<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="dnheat" x="-4%" y="-12%" width="108%" height="124%"><feTurbulence type="fractalNoise" baseFrequency="0.01 0.05" numOctaves="1" seed="4" result="n"><animate attributeName="baseFrequency" dur="8s" values="0.01 0.05;0.014 0.08;0.01 0.05" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh">Dune</h1></div>
+ return hubBar(['menu','Inicio'])+`<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="dnheat" x="-4%" y="-12%" width="108%" height="124%"><feTurbulence type="fractalNoise" baseFrequency="0.01 0.05" numOctaves="1" seed="4" result="n"><animate attributeName="baseFrequency" dur="8s" values="0.01 0.05;0.014 0.08;0.01 0.05" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh" aria-label="Dune"><svg class="dnlg" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="dnwg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#dnwg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg></h1></div>
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
 function screen(){
