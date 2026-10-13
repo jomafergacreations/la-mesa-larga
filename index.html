@@ -456,21 +456,6 @@ body.hub dialog .btn.pri{background:linear-gradient(135deg,var(--pc),#7C3AED);co
 }
 @media(prefers-reduced-motion:reduce){.stat b.pop,.counter .n.pop{animation:none}}
 
-#mist{position:fixed;inset:0;z-index:60;overflow:hidden;font-family:var(--display);--ox:50vw;--oy:50vh}
-#mist .mwave{position:absolute;left:var(--ox);top:var(--oy);width:300vmax;height:300vmax;margin:-150vmax 0 0 -150vmax;border-radius:50%;background:radial-gradient(circle,#4A5055 0%,#33383C 30%,#2B2F32 55%);transform:scale(0);animation:mWave .55s cubic-bezier(.5,0,.2,1) forwards}
-#mist .mf{position:absolute;left:-30%;width:160%;height:46%;border-radius:50%;opacity:0;background:radial-gradient(closest-side,rgba(226,223,219,.5),rgba(226,223,219,.18) 60%,rgba(226,223,219,0))}
-#mist .f1{top:2%;animation:mFog 5s linear .35s infinite alternate,mFogIn .8s ease-out .35s forwards}
-#mist .f2{top:30%;animation:mFog 7s linear .45s infinite alternate-reverse,mFogIn .8s ease-out .45s forwards}
-#mist .f3{top:56%;animation:mFog 9s linear .3s infinite alternate,mFogIn .8s ease-out .3s forwards}
-#mist .mash{position:absolute;inset:0}
-#mist .ak{position:absolute;top:-6px;width:var(--sz);height:var(--sz);border-radius:50%;background:rgba(235,232,228,.75);opacity:0;animation:ashFall 2.6s linear infinite}
-#mist .mtt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:0 24px}
-#mist .mtt small{font-family:var(--sc);font-size:1rem;letter-spacing:.5em;text-indent:.5em;color:#D8D6D6;text-transform:uppercase;opacity:0;animation:mUp .6s ease-out .55s forwards}
-#mist .mtt b{font-weight:700;font-size:clamp(1.7rem,8vw,3rem);letter-spacing:.1em;text-transform:uppercase;color:#C59E57;text-shadow:0 2px 18px rgba(0,0,0,.6);line-height:1.15;opacity:0;animation:mUp .7s cubic-bezier(.2,.8,.2,1) .7s forwards}
-#mist .mtt span{width:min(220px,50vw);height:1px;background:linear-gradient(90deg,transparent,#C59E57,transparent);transform:scaleX(0);animation:mLine .7s ease-out .95s forwards}
-#mist.out{animation:mOut .75s cubic-bezier(.4,0,.6,1) forwards}
-#mist.out .mtt{animation:mttOut .4s ease-in forwards}
-#mist.out .mash{opacity:0;transition:opacity .3s}
 body.misting #amb *,body.misting #amb{animation-play-state:paused}
 @keyframes ashFall{0%{opacity:0;transform:translate(0,0)}15%{opacity:.8}100%{opacity:0;transform:translate(40px,105vh)}}
 @keyframes mWave{from{transform:scale(0)}to{transform:scale(1)}}
@@ -2252,11 +2237,6 @@ html[data-lm=l] #scfx .scsun{opacity:.4}html[data-lm=l] #scfx .scm1{fill:#8D88A2
  @keyframes scDrift{to{transform:translate3d(-50%,0,0)}}
  @keyframes scAsh{from{transform:translate3d(0,-12px,0)}to{transform:translate3d(var(--dx),104vh,0)}}
 }
-#mistout{position:fixed;inset:0;z-index:99991;pointer-events:none;overflow:hidden;opacity:0;background:radial-gradient(120% 90% at 50% 100%,#2c2833 0%,#0c0a10 72%);animation:moBg 1.2s ease-in-out forwards}
-#mistout .mo1,#mistout .mo2{position:absolute;left:0;width:200%;height:60%;bottom:0;background:radial-gradient(36% 50% at 20% 60%,rgba(215,210,225,.35),transparent 70%),radial-gradient(36% 50% at 70% 50%,rgba(215,210,225,.3),transparent 70%);background-size:50% 100%;animation:scDrift 5s linear infinite}
-#mistout .mo2{bottom:20%;opacity:.6;animation-duration:8s}
-#mistout .mot{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#EDEBF3;gap:6px}
-#mistout .mot small{letter-spacing:.3em;text-transform:uppercase;font:600 .78rem var(--sans,system-ui);color:#9FB0D6}#mistout .mot b{font:700 clamp(1.4rem,5vw,2.2rem) var(--serif,Georgia,serif);letter-spacing:.06em}
 @keyframes moBg{0%{opacity:0}45%,62%{opacity:1}100%{opacity:0}}
 .csroot{max-width:720px;position:relative;--w1:#F0D58A;--w2:#B58A2E;--w3:#33250F;--hc:#E3C477;--gr1:#FFF4D0;--gr2:#E3C477;--gr3:#9C7A2E}
 .csroot[data-w=ro]{--hc:#8EC3FF;--gr1:#FFFFFF;--gr2:#A5D0FF;--gr3:#3F78C4}
@@ -2293,6 +2273,30 @@ html[data-lm=l] .csopt{color:#2A2312}
  @keyframes csDraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
  @keyframes csTrack{from{letter-spacing:.2em}to{letter-spacing:.06em}}
  @keyframes csFloat{to{transform:translateY(-6px)}}
+}
+
+/* v00.01.09: entrada a Nacidos de la Bruma — la bruma sube, aparece el título bajo el sol rojo y se abre */
+#nbin{position:fixed;inset:0;z-index:99989;overflow:hidden;opacity:0;font-family:var(--serif,Georgia,serif);cursor:pointer}
+#nbin .nbg{position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 108%,rgba(232,84,48,.5),transparent 72%),linear-gradient(#09080c,#17121b 70%,#241416)}
+#nbin .nbl{position:absolute;left:50%;top:50%;width:140vmax;height:2px;margin:-1px 0 0 -70vmax;background:linear-gradient(90deg,transparent,rgba(159,195,240,.8),transparent);opacity:0;transform:scaleX(.1)}
+#nbin .nbf{position:absolute;left:0;width:200%;height:55%;background:radial-gradient(36% 50% at 18% 60%,rgba(208,203,218,.42),transparent 70%),radial-gradient(34% 44% at 52% 42%,rgba(208,203,218,.3),transparent 70%),radial-gradient(38% 50% at 82% 64%,rgba(208,203,218,.38),transparent 70%);background-size:50% 100%;background-repeat:repeat-x}
+#nbin .nbf.a{bottom:-6%;opacity:.95}#nbin .nbf.b{bottom:18%;opacity:.6}#nbin .nbf.c{top:-14%;opacity:.5;transform:scaleY(-1)}
+#nbin .nba{position:absolute;top:0;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:rgba(225,220,230,.75)}
+#nbin .nbt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:0 24px}
+#nbin .nbt small{font:600 .9rem var(--sans,system-ui);letter-spacing:.5em;text-indent:.5em;text-transform:uppercase;color:#B7C6E6}
+#nbin .nbt b{font-weight:700;font-size:clamp(1.8rem,8vw,3.2rem);letter-spacing:.1em;text-transform:uppercase;color:#E8D3A0;text-shadow:0 2px 20px rgba(0,0,0,.7);line-height:1.15}
+#nbin .nbt span{width:min(240px,52vw);height:1px;background:linear-gradient(90deg,transparent,#C59E57,transparent)}
+@media(prefers-reduced-motion:no-preference){
+ #nbin .nbf{animation:nbRise 2.3s cubic-bezier(.25,.6,.3,1) both,scDrift 14s linear infinite}
+ #nbin .nbf.a{--ry:40%}#nbin .nbf.b{--ry:25%}#nbin .nbf.c{--ry:-30%}
+ #nbin .nba{animation:scAsh var(--t) linear var(--d) infinite}
+ #nbin .nbl{animation:nbLine 1.5s ease-out .5s both}
+ #nbin .nbt small{animation:nbUp .7s ease-out .55s both}#nbin .nbt b{animation:nbUp .8s cubic-bezier(.2,.8,.2,1) .72s both,nbTrack 1.4s ease-out .72s both}#nbin .nbt span{animation:nbLn .8s ease-out 1s both}
+ @keyframes nbRise{from{translate:0 var(--ry,40%)}to{translate:0 0}}
+ @keyframes nbLine{0%{opacity:0;transform:scaleX(.1)}35%{opacity:.9}100%{opacity:0;transform:scaleX(1)}}
+ @keyframes nbUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+ @keyframes nbTrack{from{letter-spacing:.2em}to{letter-spacing:.1em}}
+ @keyframes nbLn{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
 }
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
@@ -2922,16 +2926,15 @@ function ambient(on){let a=document.getElementById('amb');if(!on){if(a)a.remove(
  let h='';for(let i=0;i<5;i++){h+=`<i class="ab" style="top:${(Math.random()*85).toFixed(0)}%;left:${(-20+Math.random()*80).toFixed(0)}%;width:${(70+Math.random()*50).toFixed(0)}%;height:${(30+Math.random()*25).toFixed(0)}%;animation-duration:${(16+Math.random()*14).toFixed(0)}s;animation-delay:-${(Math.random()*20).toFixed(0)}s"></i>`}
  for(let i=0;i<16;i++){h+=`<b class="af" style="left:${(Math.random()*100).toFixed(1)}%;animation-duration:${(14+Math.random()*16).toFixed(0)}s;animation-delay:-${(Math.random()*24).toFixed(0)}s;--sz:${(2+Math.random()*2.5).toFixed(1)}px"></b>`}
  a.innerHTML=h;document.body.appendChild(a)}
-function mistIntro(x,y){
- try{if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return}catch(e){}
- if(document.getElementById('mist'))return;
- const W=innerWidth,H=innerHeight;if(x==null){x=W/2;y=H/2}
- const o=document.createElement('div');o.id='mist';o.setAttribute('aria-hidden','true');o.style.setProperty('--ox',x+'px');o.style.setProperty('--oy',y+'px');
- let ash='';for(let i=0;i<12;i++){ash+=`<b class="ak" style="left:${(Math.random()*100).toFixed(1)}%;animation-delay:${(.5+Math.random()*1.2).toFixed(2)}s;animation-duration:${(2+Math.random()*1.4).toFixed(2)}s;--sz:${(2+Math.random()*2.5).toFixed(1)}px"></b>`}
- o.innerHTML=`<i class="mwave"></i><div class="mf f1"></div><div class="mf f2"></div><div class="mf f3"></div><div class="mash">${ash}</div><div class="mtt"><small>Scadrial</small><b>Nacidos de la Bruma</b><span></span></div>`;
+function mistIntro(then){const go=typeof then==='function'?then:()=>{};if(lfRM()){go();return}if(document.getElementById('nbin'))return;
+ const W=innerWidth;let ash='';for(let i=0;i<14;i++)ash+=`<b class="nba" style="--x:${(Math.random()*100).toFixed(1)}%;--s:${(2+Math.random()*2.6).toFixed(1)}px;--t:${(3.2+Math.random()*2.4).toFixed(1)}s;--d:-${(Math.random()*4).toFixed(1)}s;--dx:${(-40+Math.random()*70).toFixed(0)}px"></b>`;
+ const o=document.createElement('div');o.id='nbin';o.setAttribute('aria-hidden','true');
+ o.innerHTML=`<i class="nbg"></i><i class="nbl"></i><i class="nbf a"></i><i class="nbf b"></i><i class="nbf c"></i>${ash}<div class="nbt"><small>Scadrial</small><b>Nacidos de la Bruma</b><span></span></div>`;
  document.body.appendChild(o);document.body.classList.add('misting');
- const end=()=>{if(o.classList.contains('out'))return;o.classList.add('out');const a=document.getElementById('app');if(a&&scr==='nb'){a.classList.remove('go-fwd','go-back','go-enter');void a.offsetWidth;a.classList.add('go-enter');setTimeout(()=>a.classList.remove('go-enter'),900)}setTimeout(()=>{o.remove();document.body.classList.remove('misting')},800)};
- o.addEventListener('click',end,{once:true});setTimeout(end,2000)}
+ let covered=false;const cover=()=>{if(covered)return;covered=true;try{go()}catch(e){}const a=document.getElementById('app');if(a&&(scr==='nb'||scr==='deck')){a.classList.remove('go-fwd','go-back','go-enter');void a.offsetWidth;a.classList.add('go-enter');setTimeout(()=>a.classList.remove('go-enter'),1000)}};
+ const an=o.animate([{opacity:0},{opacity:1,offset:.26},{opacity:1,offset:.64},{opacity:0}],{duration:2300,easing:'ease-in-out',fill:'forwards'});
+ const t1=setTimeout(cover,600);let done=false;const end=()=>{if(done)return;done=true;clearTimeout(t1);cover();o.remove();document.body.classList.remove('misting')};
+ an.onfinish=end;o.addEventListener('click',()=>{an.playbackRate=3.5;cover()},{once:true})}
 function delChar(id){
  try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}
  const red=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -2998,8 +3001,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.08';
-const APPN='Cosmere con menús homogéneos como Cyberpunk y Dune, y Nacidos de la Bruma tematizado: Scadrial con sol rojo, bruma, ceniza y la ciudad de Luthadel, pulsaciones alománticas y salida con bruma.';
+const APPV='00.01.09';
+const APPN='Nueva entrada a Nacidos de la Bruma: la bruma sube cubriendo la pantalla, aparece el título bajo el sol rojo con ceniza y la bruma se abre mostrando la pantalla.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -4284,7 +4287,7 @@ document.addEventListener('click',e=>{
 
 
  if((b.classList.contains('bub')||b.classList.contains('csopt'))&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
-  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');if(a==='nb'||a==='deck'){const r=b.getBoundingClientRect();mistIntro(r.left+r.width/2,r.top+r.height/2)}metalFx(b,b.dataset.col||(b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6'));setTimeout(()=>b.click(),300);return}}
+  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');metalFx(b,b.dataset.col||(b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6'));setTimeout(()=>b.click(),300);return}}
 
  if(a==='gohome'&&e.isTrusted&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){if(b.dataset.go)return;b.dataset.go='1';b.classList.add('hop');setTimeout(()=>b.click(),240);return}
  if(a==='atab')pg='t';
@@ -4455,8 +4458,8 @@ document.addEventListener('click',e=>{
   case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
   case 'dune':if(lfRM()){store.cur=null;scr='dune';render()}else{duneIntro();setTimeout(()=>{requestAnimationFrame(()=>{store.cur=null;scr='dune';render()})},470)}break;
   case 'rol':{const go=()=>{store.cur=null;scr='rol';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go();break}
-  case 'nb':mistIntro();scr='nb';render();break;
-  case 'deck':mistIntro();scr='deck';render();break;
+  case 'nb':mistIntro(()=>{scr='nb';render()});break;
+  case 'deck':mistIntro(()=>{scr='deck';render()});break;
   case 'lf':lfChange(+b.dataset.d);break;
   case 'mt':mtTap(b.dataset.m);break;
   case 'mtnext':mtNext();break;
