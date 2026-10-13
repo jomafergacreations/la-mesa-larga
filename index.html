@@ -2702,8 +2702,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='151';
-const APPN='Se desactiva por ahora la pantalla de bienvenida al arrancar en móvil.';
+const APPV='152';
+const APPN='Cierre de sesión automático tras 15 minutos de inactividad, con aviso en pantalla.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3546,6 +3546,14 @@ document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)retur
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
 (function(){let raf=0;function fit(){raf=0;const b=document.body,d=document.documentElement;if(!b)return;const on=d.dataset.dev==='phone'&&b.classList.contains('authdark');b.classList.remove('authlock');d.classList.remove('authlockh');if(!on)return;if(d.scrollHeight<=innerHeight+40){b.classList.add('authlock');d.classList.add('authlockh');window.scrollTo(0,0)}}
  const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};const r1=render;render=function(){const x=r1.apply(this,arguments);q();setTimeout(q,400);return x};window.addEventListener('resize',q);window.addEventListener('orientationchange',q);document.addEventListener('touchmove',function(e){if(document.body.classList.contains('authlock')&&!(e.target.closest&&e.target.closest('dialog,textarea,select')))e.preventDefault()},{passive:false})})();
+(function(){const IDLE=15*60*1000;let last=Date.now(),busy=false;
+ const act=()=>{last=Date.now()};['pointerdown','pointermove','keydown','touchstart','touchmove','wheel','scroll','click','input'].forEach(e=>window.addEventListener(e,act,{passive:true,capture:true}));
+ function bye(){const d=$('#dlg');d.className='';d.innerHTML='<div class="grid"><h3>Sesión cerrada por inactividad</h3><p class="hint" style="margin:0">Hemos cerrado tu sesión porque pasaron 15 minutos sin actividad. Tus fichas están guardadas: vuelve a iniciar sesión para continuar.</p><div class="row"><button class="btn pri" data-act="closedlg">Entendido</button></div></div>';try{d.showModal()}catch(x){d.setAttribute('open','')}}
+ function out(){if(busy)return;busy=true;document.querySelectorAll('dialog[open]').forEach(x=>{if(x.id!=='updf'){try{x.close()}catch(e){x.removeAttribute('open')}}});
+  const b=document.createElement('button');b.dataset.act='logout2';b.hidden=true;document.body.appendChild(b);b.click();b.remove();
+  let n=0;const t=setInterval(()=>{n++;if(!session||n>60){clearInterval(t);busy=false;last=Date.now();if(!session)bye()}},150)}
+ function check(){try{if(!session||booting||busy)return;if(Date.now()-last>=IDLE)out()}catch(e){}}
+ setInterval(check,10000);document.addEventListener('visibilitychange',check);window.addEventListener('focus',check);window.addEventListener('pageshow',check);window.__idleTest=()=>{last=Date.now()-IDLE-1000;check()}})();
 const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cyber:1,dune:1,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 let selMode=false;const selIds=new Set();
 function home(){
