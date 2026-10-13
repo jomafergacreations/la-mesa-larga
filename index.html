@@ -15,7 +15,7 @@ if(document.readyState==='complete')ready();else addEventListener('load',ready);
 <link rel="apple-touch-icon" sizes="180x180" href="logo-180.png?v=170"><link rel="apple-touch-icon-precomposed" href="logo-180.png?v=170">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
 <meta name="theme-color" content="#2563EB">
-<link rel="manifest" href="manifest.webmanifest?v=170"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=170"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=170"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest?v=172"><link rel="icon" type="image/png" sizes="192x192" href="app-192.png?v=172"><link rel="icon" type="image/png" sizes="512x512" href="app-512.png?v=172"><meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Share+Tech+Mono&family=Michroma&display=swap" rel="stylesheet">
@@ -2814,8 +2814,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='171';
-const APPN='Corregida la cabecera de la página: ahora el navegador reconoce el logo de la app, el nombre y el color al instalarla en iPhone y PC.';
+const APPV='172';
+const APPN='El icono de la app ahora tiene las esquinas redondeadas, como un icono de aplicación.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
