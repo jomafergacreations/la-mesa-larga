@@ -2944,7 +2944,7 @@ const CHAR_MAX=10;
 function charFull(g){const n=store.chars.filter(x=>(x.game||'nb')===(g||'nb')).length;if(n>=CHAR_MAX){toast('Has llegado al máximo de '+CHAR_MAX+' fichas para este juego: elimina alguna para crear otra');return true}return false}
 function blank(){return {mode:'q',q:'era',metalChoice:'',picks:[],id:uid(),name:'',player:(session&&session.name)||'',era:1,ancestry:'humano',blessing:'',cultures:['',''],extra:[],path:'',powers:{alo:[],fer:[]},
  attrs:{fue:0,vel:0,int:0,vol:0,dis:0,pre:0},skills:{},talents:{ancestry:'',notes:''},kit:'',weapons:'',armor:'',gear:'',deflect:0,arquillas:0,done:false,tl:[],hpAdj:0,
- purpose:'',obstacle:'',goals:['',''],connection:'',look:'',notes:'',step:0,level:1}}
+ purpose:'',obstacle:'',goals:['',''],connection:'',look:'',notes:'',inj:'',step:0,level:1}}
 function sample(){const c=blank();Object.assign(c,{mode:'f',metalChoice:'no',name:'Brannen (ejemplo inventado)',era:1,path:'guerrero',cultures:['Skaa','Bajos fondos'],extra:['Hacha de guerra'],
  attrs:{fue:3,vel:2,int:1,vol:2,dis:2,pre:2},skills:{armpes:2,atletismo:1,intimidacion:1},kit:'mercenario',weapons:KITS.mercenario.w,armor:KITS.mercenario.a,gear:KITS.mercenario.g,arquillas:7,
  purpose:'Proteger a mi gente de las patrullas del Ministerio.',obstacle:'Me cuesta confiar en nadie fuera de mi cuadrilla.',goals:['Sacar a mi hermana de las minas','']});
@@ -3147,9 +3147,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.52';
+const APPV='00.01.53';
 const APPN='Actualización menor.';
-const APPD='Habilidades de NPC: el valor editable puede ser negativo, pero el modificador final nunca baja de 0.';
+const APPD='Nuevo campo de texto largo Estados y lesiones en la ficha de NPC y en la hoja de personaje del jugador.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3669,7 +3669,7 @@ function npcSig(o){const x=JSON.parse(JSON.stringify(o));for(const k of ['id','s
 function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0,pre:0},o.attrs);
  return{id:o.id||uid(),game:NPCGAMES.some(x=>x[0]===o.game)?o.game:'nb',name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',kindTxt:String(o.kindTxt||'').slice(0,40),dead:!!o.dead,level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,conAdj:+o.conAdj||0,invAdj:+o.invAdj||0,
   skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||''),t:String(x.t||'')})):[],
-  traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,pid:String(o.pid||''),dupOf:o.dupOf?String(o.dupOf):'',created:o.created||Date.now()}}
+  traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),inj:String(o.inj||''),shared:!!o.shared,pid:String(o.pid||''),dupOf:o.dupOf?String(o.dupOf):'',created:o.created||Date.now()}}
 const npcCap=l=>Math.min(5,3+Math.floor(l/3));
 function npcDer(n){const t=n.attrs,kol=n.kind==='koloss'?1:0,l=n.level;
  return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol+(+n.conAdj||0),inv:2+Math.max(t.dis,t.pre)+(+n.invAdj||0),grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
@@ -3706,7 +3706,7 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
  <div class="npcat">${A.map(([k,nm])=>`<span><b>${n.attrs[k]}</b>${nm}</span>`).join('')}</div>
  ${sk?`<h4>Habilidades</h4><ul class="hlpl">${sk}</ul>`:''}
  ${n.attacks.length?`<h4>Ataques</h4><ul class="hlpl">${n.attacks.map(a=>`<li><b>${esc(a.n)}</b> ${esc(a.b)} · ${esc(a.d)}${a.t?' · '+esc(a.t):''}</li>`).join('')}</ul>`:''}
- ${[['Rasgos y talentos',n.traits],['Aspecto',n.look],['Motivación',n.motive],['Equipo',n.gear],['Notas',n.notes]].filter(x=>x[1]).map(([t,v])=>`<h4>${t}</h4><p class="pre" style="margin:0">${esc(v)}</p>`).join('')}</div>`}
+ ${[['Rasgos y talentos',n.traits],['Aspecto',n.look],['Motivación',n.motive],['Estados y lesiones',n.inj],['Equipo',n.gear],['Notas',n.notes]].filter(x=>x[1]).map(([t,v])=>`<h4>${t}</h4><p class="pre" style="margin:0">${esc(v)}</p>`).join('')}</div>`}
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
  const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" data-nolimit="1" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
  const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
@@ -3725,7 +3725,7 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <h3>Habilidades <small id="npcgr">${d.grades} grados</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
  <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><input type="text" data-nf="atk.${i}.t" value="${esc(a.t||'')}" placeholder="Tipo de daño" aria-label="Tipo de daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
- ${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
+ ${fld('inj','Estados y lesiones','Aturdido, herido, envenenado…',3)}${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
  <div class="row"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.pid?(n.shared?'npchide':'npcrev'):'npcmove'}" data-id="${n.id}">${n.pid?(n.shared?'Retirar de la partida':'Meter en la partida'):'Mover a una partida'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
 function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat inv"><b>${d.inv}</b><span>Investidura</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
 const rvBody=(n,full)=>`${n.dead?'<span class="tag endt">Fallecido</span> ':''}<div class="meta"><span>${[npcKind(n),esc(n.role||'')].filter(Boolean).join(' · ')||'NPC'}</span></div>${full&&n.look?`<p class="pre" style="margin:6px 0 0"><b>Aspecto:</b> ${esc(n.look)}</p>`:''}`;
@@ -4179,6 +4179,7 @@ function sHoja(c){const d=derive(c),p=pathInfo(c),t=d.t;
  const meta=METAL[c.path];const allp=meta&&meta.alo==='all'?['Todos los poderes alománticos']:meta&&meta.fer==='all'?['Todos los poderes feruquímicos']:[];
  return `<section class="panel"><h3>${c.done?'Hoja de personaje':'Paso 8. Hoja de personaje'}${helpBtn('hoja')}</h3>
  ${c.done?lvlBox(c):`<p class="hint">Resumen con todo calculado. Revisa los puntos de colores de arriba: naranja indica que a ese paso le falta algo.</p>`}
+ <label class="f">Estados y lesiones<textarea data-f="inj" data-nolimit="1" rows="3" placeholder="Aturdido, sangrando, brazo roto…">${esc(c.inj||'')}</textarea></label>
  <div class="sheetgrid"><div><h4>Identidad</h4><dl class="kv"><dt>Personaje</dt><dd>${esc(c.name||'—')}</dd><dt>Jugador</dt><dd>${esc(c.player||'—')}</dd><dt>Ascendencia</dt><dd>${{humano:'Humano',kandra:'Kandra'+(c.blessing?' ('+BLESS[c.blessing].n+')':''),koloss:'Sangre koloss'}[c.ancestry]}</dd><dt>Camino</dt><dd>${p?esc(p.n):'—'}</dd><dt>Era / nivel</dt><dd>${c.era} / ${c.level}</dd></dl></div>
  <div><h4>Atributos</h4><dl class="kv">${ATT.map(([k,n])=>`<dt>${n}</dt><dd>${t[k]}</dd>`).join('')}</dl></div>
  <div><h4>Reservas y defensas</h4><dl class="kv"><dt>Salud</dt><dd>${d.salud}</dd><dt>Concentración</dt><dd>${d.conc}</dd><dt>Investidura</dt><dd>${d.inv===null?'—':'0 / '+d.inv}</dd><dt>Defensa física</dt><dd>${d.fis}</dd><dt>Defensa cognitiva</dt><dd>${d.cog}</dd><dt>Defensa espiritual</dt><dd>${d.esp}</dd><dt>Desvío</dt><dd>${d.desvio}</dd></dl></div>
