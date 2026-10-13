@@ -1239,6 +1239,20 @@ html[data-dev] body.hub #app:has(.npcpanel){max-width:none!important;width:100%}
 .npcatk .item{flex-wrap:wrap}.npcatk .item input{flex:1 1 140px}
 @media(min-width:1100px){.npcpanel>.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;align-items:start}.npcpanel>.grid>*{min-width:0}.npcpanel>.grid>:is(.npcg2,.npcg3,.npcsk,.npcatk,.row,#npcd,h3,.hint){grid-column:1/-1}}
 @media(max-height:560px){dialog{max-height:calc(100dvh - 8px)}#fdock{transform:translateX(-50%) scale(.88);transform-origin:bottom center}}
+
+/* v00.01.51 · hoja de NPC coherente */
+.npcpanel .f{display:grid;gap:6px;align-content:start;font-weight:600;font-size:.9rem;line-height:1.2;min-width:0}
+.npcpanel .f>input,.npcpanel .f>select{height:44px;min-height:44px;box-sizing:border-box}
+.npcpanel .step{min-height:44px;gap:8px}.npcpanel .step button{width:44px;height:44px;flex:none}.npcpanel .step output{min-width:40px}
+.npcpanel .npcg2{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));align-items:end}
+.npcpanel .npcg3{grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));align-items:start}
+@media(min-width:900px){.npcpanel .npcg3:not(.npcadj){grid-template-columns:repeat(6,minmax(0,1fr))}.npcpanel .npcadj{grid-template-columns:repeat(3,minmax(0,1fr))}.npcpanel #npcd{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.npcpanel .stats .stat{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:68px}
+.npcpanel .npcs{min-height:56px;align-items:center}.npcpanel .npcs>em{min-width:2.4em;text-align:right;font-style:normal;font-weight:700}
+.npcpanel .npcatk .item{align-items:center;gap:8px}.npcpanel .npcatk .item input{height:44px;min-height:44px;box-sizing:border-box}.npcpanel .npcatk .item .btn{height:44px;width:44px;padding:0;flex:none}
+.npcpanel h3{margin:6px 0 0}
+.npcpanel textarea{min-height:96px;box-sizing:border-box}
+.npcpanel .row .btn{min-height:44px}
 </style>
 
 <style id="lifecss">
@@ -3133,9 +3147,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.50';
+const APPV='00.01.51';
 const APPN='Actualización menor.';
-const APPD='ALPHA ve los juegos a los que tiene acceso cada usuario (casillas marcadas) y puede marcar o desmarcar para dar o retirar acceso.';
+const APPD='Hoja de NPC: controles, etiquetas, ajustes, estadísticas y ataques alineados con el mismo tamaño y rejilla.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3703,9 +3717,11 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <div class="f">Nivel${stp('npclvl','l',n.level,'nivel')}</div></div>
  <h3>Atributos</h3><div class="npcg3">${ATT.map(([k,nm])=>`<div class="f">${nm}${stp('npcatt',k,n.attrs[k],nm)}</div>`).join('')}</div>
  <div id="npcd" class="stats npcd">${npcDerHTML(n)}</div>
+ <div class="npcg3 npcadj">
  <div class="f">Ajuste de salud${stp('npchp','h',(n.hpAdj>0?'+':'')+(n.hpAdj||0),'salud')}</div>
  <div class="f">Ajuste de concentración${stp('npccon','c',(n.conAdj>0?'+':'')+(n.conAdj||0),'concentración')}</div>
  <div class="f">Ajuste de investidura${stp('npcinv','i',(n.invAdj>0?'+':'')+(n.invAdj||0),'investidura')}</div>
+ </div>
  <h3>Habilidades <small id="npcgr">${d.grades} grados</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
  <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><input type="text" data-nf="atk.${i}.t" value="${esc(a.t||'')}" placeholder="Tipo de daño" aria-label="Tipo de daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
