@@ -1,15 +1,4 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-/* v00.01.19 sin efectos al pulsar */
-button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
-.burst,.hop{animation:none!important}
-.mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
-.mth .btn,#mtnext{position:relative;z-index:80}
-.mtchw:not(.open){pointer-events:none}
-
-.codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
-.codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
-.findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
-.synop{padding:10px 14px;border-radius:14px;border:1px solid var(--pc,#2563EB);background:rgba(37,99,235,.08)}.synop span{font-size:.8rem;opacity:.8;font-weight:700}.synop p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
 </style>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
@@ -1178,6 +1167,42 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 html[data-dev=phone] body.authdark .wrap{padding-bottom:16px}
 html.authlockh,body.authlock{overflow:hidden;overscroll-behavior:none}body.authlock{position:fixed;inset:0;width:100%;height:100%}body.authlock input,body.authlock button,body.authlock select,body.authlock label{touch-action:manipulation}
 @media (max-height:800px){html[data-dev=phone] body.authdark .lg{margin:6px 0 10px}html[data-dev=phone] body.authdark .lg .logo{width:44px;height:44px;margin:0 auto 6px;border-radius:14px}html[data-dev=phone] body.authdark .lg .logo svg{width:26px;height:26px}html[data-dev=phone] body.authdark .lg .hs{display:none}html[data-dev=phone] body.authdark .lg .tg{margin-bottom:0}}
+
+/* v00.01.19 sin efectos al pulsar */
+button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
+.burst,.hop{animation:none!important}
+.mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
+.mth .btn,#mtnext{position:relative;z-index:80}
+.mtchw:not(.open){pointer-events:none}
+
+.codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
+.codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
+.findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
+.synop{padding:10px 14px;border-radius:14px;border:1px solid var(--pc,#2563EB);background:rgba(37,99,235,.08)}.synop span{font-size:.8rem;opacity:.8;font-weight:700}.synop p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
+
+/* v00.01.25 modo JoJo (broma) */
+html[data-jojo]{--pc:#E6007E;--bg:#2B0A4A;--mist:#3A1266;--surface:#3A1266;--field:#1B0630;--ink:#FFF6C8;--muted:#FFD84A;--line:#FFD400}
+html[data-jojo] body{background:#2B0A4A!important;color:#FFF6C8!important;font-style:italic}
+html[data-jojo] body::before{content:'';position:fixed;inset:-50%;z-index:0;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(230,0,126,.38) 0 7deg,rgba(255,212,0,.22) 7deg 14deg,rgba(76,29,149,.5) 14deg 21deg)}
+@media(prefers-reduced-motion:no-preference){html[data-jojo] body::before{animation:jjspin 40s linear infinite}@keyframes jjspin{to{transform:rotate(360deg)}}
+ html[data-jojo] #jjfx i{animation:jjgo 1.4s ease-in-out infinite}html[data-jojo] #jjfx b{animation:jjpop 2.4s ease-in-out infinite}
+ @keyframes jjgo{0%,100%{transform:translate(0,0) rotate(var(--r))}25%{transform:translate(3px,-3px) rotate(var(--r))}50%{transform:translate(-3px,2px) rotate(var(--r))}75%{transform:translate(2px,3px) rotate(var(--r))}}
+ @keyframes jjpop{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-6deg) scale(1.1)}}}
+html[data-jojo] #app,html[data-jojo] .wrap,html[data-jojo] main{position:relative;z-index:1}
+html[data-jojo] h1,html[data-jojo] h2,html[data-jojo] h3,html[data-jojo] .hh,html[data-jojo] .hh2{font-weight:900!important;text-transform:uppercase;letter-spacing:.02em;color:#FFE600!important;text-shadow:3px 3px 0 #E6007E,5px 5px 0 #000;transform:skewX(-6deg);transform-origin:left}
+html[data-jojo] .card,html[data-jojo] .glass,html[data-jojo] .gmb,html[data-jojo] .tile,html[data-jojo] .gmc,html[data-jojo] .arow,html[data-jojo] dialog,html[data-jojo] .hdock,html[data-jojo] .bub,html[data-jojo] .csopt{background:linear-gradient(135deg,rgba(60,15,110,.94),rgba(130,10,90,.9))!important;color:#FFF6C8!important;border:3px solid #FFD400!important;border-radius:6px!important;box-shadow:6px 6px 0 #000!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-jojo] .btn,html[data-jojo] button.pri{background:#FFD400!important;color:#1B0630!important;border:3px solid #000!important;border-radius:4px!important;font-weight:900!important;text-transform:uppercase;box-shadow:4px 4px 0 #E6007E!important}
+html[data-jojo] .btn.ghost,html[data-jojo] .btn.danger{background:#1B0630!important;color:#FFD400!important;border-color:#FFD400!important}
+html[data-jojo] input,html[data-jojo] select,html[data-jojo] textarea{background:#1B0630!important;color:#FFF6C8!important;border:2px solid #FFD400!important;border-radius:4px!important}
+html[data-jojo] .hint,html[data-jojo] small,html[data-jojo] .hs{color:#FFE98A!important}
+html[data-jojo] .wel,html[data-jojo] .wel *,html[data-jojo] .hs,html[data-jojo] .hbar,html[data-jojo] .hbar *{color:#FFF6C8!important}
+#jjfx{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden;font-family:'Noto Sans JP','Hiragino Sans',sans-serif}
+#jjfx i{position:absolute;font-style:normal;font-weight:900;font-size:clamp(42px,9vw,110px);color:#FFE600;-webkit-text-stroke:3px #000;text-shadow:4px 4px 0 #E6007E;opacity:.6;--r:-8deg;transform:rotate(var(--r))}
+#jjfx i:nth-child(1){left:2%;top:12%}#jjfx i:nth-child(2){left:9%;top:34%;--r:6deg}#jjfx i:nth-child(3){right:3%;top:16%;--r:8deg}#jjfx i:nth-child(4){right:8%;top:46%;--r:-5deg}
+#jjfx i:nth-child(5){left:3%;bottom:10%;--r:-10deg}#jjfx i:nth-child(6){right:4%;bottom:12%;--r:9deg}
+#jjfx b{position:absolute;left:50%;bottom:10px;margin-left:-90px;padding:4px 14px;background:#E6007E;color:#FFF;font-weight:900;font-size:1.1rem;border:3px solid #000;box-shadow:4px 4px 0 #FFD400;transform:rotate(-6deg)}
+@media(max-width:700px){#jjfx i{opacity:.5}}
+
 </style>
 
 <style id="lifecss">
@@ -2518,7 +2543,7 @@ async function fs(m,p,body,q){const t=await tok();let r;
 async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
 const RESERVED=n=>nameK(n)==='alpha';
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
-async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;S().gm=p.gm|0;S().prev=p.prev|0;S().gmTmp=p.gmTmp|0;S().gmLic=String(p.gmLic||'');{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n,ping:n}),maskQ({seen:1,ping:1})).catch(()=>{})}return 'ok'}
+async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;S().gm=p.gm|0;S().prev=p.prev|0;S().gmTmp=p.gmTmp|0;S().gmLic=String(p.gmLic||'');S().jojo=p.jojo|0;{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n}),maskQ({seen:1})).catch(()=>{})}return 'ok'}
 async function claimProfile(name){const s=S();if(RESERVED(name))return false;
  try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
  await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
@@ -2558,7 +2583,7 @@ function beat(){}
 async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
-    {const sg=()=>COSF.map(canSeeGame).join(),v0=sg(),c0=canSeeGame('cosmere');session.prev=u.prev|0;await loadGames();const v1=sg(),c1=canSeeGame('cosmere');setTimeout(pubCheck,300);
+    {const sg=()=>COSF.map(canSeeGame).join(),v0=sg(),c0=canSeeGame('cosmere');session.prev=u.prev|0;if((u.jojo|0)!==(session.jojo|0)){session.jojo=u.jojo|0;jojoApply()}await loadGames();const v1=sg(),c1=canSeeGame('cosmere');setTimeout(pubCheck,300);
    if(v0!==v1){dockSig='';const gg=GSCR[scr];if((COSF.includes(gg)&&!canSeeGame(gg))||(store.cur&&!canSeeGame('nb'))){store.cur=null;store.npcCur=null;scr=canSeeGame('cosmere')?'cosmere':'menu'}
     toast(c0!==c1?(c1?'Cosmere ya está disponible':'Cosmere deja de estar disponible por ahora'):'Se han actualizado los juegos disponibles');render(1)}}
     {const g0=canGM();session.gm=u.gm|0;session.gmTmp=u.gmTmp|0;session.gmLic=String(u.gmLic||'');const g1=canGM();
@@ -2707,7 +2732,17 @@ function ovHtml(){const allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filte
 function rolHtml(){const L=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3),st=L.filter(x=>(x.role|0)>=1).sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es')),oth=L.filter(x=>(x.role|0)===0).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
  const row=r=>{const rl=r.role|0,on=(r.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(r.name)}</b><span class="gms">${esc(r.email||'')}</span></div><div class="row"><div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(r.id)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>${rl===2?`<button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(r.id)}" data-v="${on?0:1}">${on?'Quitar acceso a juegos sin publicar':'Dar acceso a juegos sin publicar'}</button>`:''}</div></div>`};
  return `<div class="grid"><p class="hint" style="margin:0"><b>Ver</b>: puede consultar las cuentas. <b>Admin</b>: además gestiona incidencias, autoriza Game Masters y elimina cuentas. Solo tú das o quitas roles.</p><b>Equipo (${st.length})</b><div class="alist">${st.map(row).join('')||'<p class="hint">Todavía no hay nadie con permisos.</p>'}</div><b>Dar un rol a otra cuenta</b><div class="row"><select id="rolsel" aria-label="Cuenta">${oth.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')||'<option value="">No hay cuentas</option>'}</select><button class="btn sm" data-act="rolpick" data-r="1">Dar «Ver»</button><button class="btn sm pri" data-act="rolpick" data-r="2">Dar «Admin»</button></div></div>`}
-function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alist"><div class="gmc"><div class="gmh"><b>Simular usuario</b></div><p class="hint" style="margin:0">Sal del panel y mira la app como la ve un usuario normal; sirve para comprobar los cambios de cada actualización.</p><div class="row"><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div class="gmc"><div class="gmh"><b>Vista sin permisos</b><span class="tag">${simNoGM?'Activada':'Desactivada'}</span></div><p class="hint" style="margin:0">Al activarla ves la app sin licencia de Game Master y sin acceso a juegos sin publicar.</p><div class="row"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}">${simNoGM?'Desactivar':'Activar'}</button></div></div></div><b>Información</b><div class="alist"><div class="gmc"><div class="gmh"><b>Versión</b><span class="tag">v${esc(APPV)}</span></div><p class="hint" style="margin:0">${esc(APPN)}</p></div></div></div>`}
+
+/* ---------- modo JoJo (broma controlada por ALPHA): estilo manga pop, dibujado con CSS propio ---------- */
+function jojoApply(){try{const on=!!(session&&session.jojo&&!session.owner);const r=document.documentElement;
+ if(on){r.setAttribute('data-jojo','1');if(!document.getElementById('jjfx')){const d=document.createElement('div');d.id='jjfx';d.setAttribute('aria-hidden','true');d.innerHTML='<i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ド</i><i>ド</i><b>¡MENACING!</b>';document.body.appendChild(d)}}
+ else{r.removeAttribute('data-jojo');const d=document.getElementById('jjfx');if(d)d.remove()}}catch(e){}}
+{const rj=render;render=function(){const x=rj.apply(this,arguments);jojoApply();return x}}
+async function jojoToggle(b){b.disabled=true;try{const nd=await fs('GET',nameDoc('SANJI'));if(!nd){toast('No existe ningún usuario llamado SANJI');b.disabled=false;return}
+ const uid=fbDec(nd).uid,ud=await fs('GET','users/'+uid),on=!((ud?fbDec(ud).jojo:0)|0);
+ await fs('PATCH','users/'+uid,fbEnc({jojo:on?1:0}),maskQ({jojo:1}));toast(on?'SANJI ha sido JOJOMIZADO: lo verá al iniciar sesión (o en 30 s si ya está dentro)':'SANJI vuelve a la normalidad')}
+ catch(e){toast('No se pudo completar (revisa las reglas de Firestore)')}b.disabled=false}
+function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alist"><div class="gmc"><div class="gmh"><b>Simular usuario</b></div><p class="hint" style="margin:0">Sal del panel y mira la app como la ve un usuario normal; sirve para comprobar los cambios de cada actualización.</p><div class="row"><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div class="gmc"><div class="gmh"><b>Vista sin permisos</b><span class="tag">${simNoGM?'Activada':'Desactivada'}</span></div><p class="hint" style="margin:0">Al activarla ves la app sin licencia de Game Master y sin acceso a juegos sin publicar.</p><div class="row"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}">${simNoGM?'Desactivar':'Activar'}</button></div></div><div class="gmc"><div class="gmh"><b>JOJOMIZAR SANJI</b></div><p class="hint" style="margin:0">Broma: convierte toda la interfaz del usuario SANJI en un estilo manga pop. Pulsa otra vez para deshacerlo.</p><div class="row"><button type="button" class="btn sm" data-act="jojo">JOJOMIZAR SANJI</button></div></div></div><b>Información</b><div class="alist"><div class="gmc"><div class="gmh"><b>Versión</b><span class="tag">v${esc(APPV)}</span></div><p class="hint" style="margin:0">${esc(APPN)}</p></div></div></div>`}
 let admLastTab='';
 function admStag(p){p.querySelectorAll('.tile,.gmc,.arow,.grid>*').forEach((e,k)=>e.style.setProperty('--k',Math.min(k,14)));if(admLastTab!==admTab){admLastTab=admTab;p.classList.remove('adin');void p.offsetWidth;p.classList.add('adin');clearTimeout(admStag.t);admStag.t=setTimeout(()=>p.classList.remove('adin'),900)}}
 function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('#dlg').classList.contains('admd')}
@@ -3026,8 +3061,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.24';
-const APPN='Eliminados los manuales adjuntos del modo GM (también en la nube).';
+const APPV='00.01.25';
+const APPN='Nueva herramienta ALPHA: JOJOMIZAR SANJI (broma).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -4359,6 +4394,7 @@ document.addEventListener('click',e=>{
   case 'adm':if(isAdmin()){goAdmin('ov');break}admState=null;admDlg();break;
   case 'admpanel':goAdmin(admTab);break;
   case 'rolpick':{const sel=document.getElementById('rolsel');if(!sel||!sel.value)break;const x=regCache&&regCache.find(y=>y.id===sel.value);if(!x||!isAdmin())break;const r=+b.dataset.r;fs('PATCH','users/'+x.id,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Rol asignado a '+x.name)}).catch(()=>toast('No se pudo asignar el rol'));break}
+  case 'jojo':if(isAdmin())jojoToggle(b);break
   case 'simgm':simNoGM=!simNoGM;render(1);break;
   case 'gpub':{if(!isAdmin())break;const g=b.dataset.g,v=b.dataset.v==='1'?1:0,gn=(GAMES.find(x=>x[0]===g)||[0,'este juego'])[1];if(!GAMES.some(x=>x[0]===g))break;
    if(v){showDlg('¿Publicar '+esc(gn)+'?',`<p style="margin:0">Todos los usuarios podrán entrar a <b>${esc(gn)}</b> y recibirán una notificación avisándoles de que ya está publicado.</p><div class="row"><button class="btn pri" data-act="gpubok" data-g="${g}">Sí, publicar y avisar</button></div>`,true);break}
