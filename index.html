@@ -2811,8 +2811,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='167';
-const APPN='Fondo del menú estático: se elimina el efecto paralaje y las animaciones del fondo.';
+const APPV='168';
+const APPN='Las animaciones infinitas se pausan cuando no se ven (fuera de pantalla o pestaña oculta) y se reanudan al volver a verse.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -4304,4 +4304,16 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
 loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
 {const r1=render;render=function(k){const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
+(function(){ // pausa las animaciones infinitas que no se ven (fuera de pantalla o pestaña oculta)
+ if(!('IntersectionObserver' in window)||!document.getAnimations)return;
+ const seen=new WeakSet(),vis=new WeakMap();let hid=document.hidden;
+ const inf=a=>{try{return !!a.effect&&a.effect.getComputedTiming().iterations===Infinity}catch(x){return false}};
+ const sync=el=>{try{const on=vis.get(el)!==false&&!hid;for(const a of el.getAnimations()){if(!inf(a))continue;if(on){if(a._mp){a._mp=0;a.play()}}else if(a.playState==='running'){a._mp=1;a.pause()}}}catch(x){}};
+ const io=new IntersectionObserver(es=>{for(const e of es){if(!e.target.isConnected){io.unobserve(e.target);seen.delete(e.target);continue}vis.set(e.target,e.isIntersecting);sync(e.target)}},{rootMargin:'120px'});
+ const add=t=>{if(!t||t.nodeType!==1)return;if(!seen.has(t)){seen.add(t);io.observe(t)}if(vis.get(t)===false||hid)sync(t)};
+ document.addEventListener('animationstart',e=>add(e.target),true);
+ const scan=()=>{try{for(const a of document.getAnimations()){if(inf(a))add(a.effect&&a.effect.target)}}catch(x){}};
+ document.addEventListener('visibilitychange',()=>{hid=document.hidden;try{for(const a of document.getAnimations()){const t=a.effect&&a.effect.target;if(t&&inf(a))sync(t)}}catch(x){}if(!hid)scan()});
+ setInterval(()=>{if(!hid)scan()},4000);setTimeout(scan,800);
+})();
 </script>
