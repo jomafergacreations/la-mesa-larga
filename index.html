@@ -2367,7 +2367,7 @@ function authView(){
   <div id="amsg" class="msg" role="alert" aria-live="polite"></div>
   <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Entrar'}</button></form>
   ${authTab==='login'?`<div class="row"><button type="button" class="btn ghost sm" data-act="atab" data-v="reset">¿Has olvidado tu contraseña?</button></div>`:''}
-  ${authTab==='new'?'<p class="hint">Te enviaremos un correo para verificar la dirección. Hasta que lo abras no podrás entrar. Tus fichas se guardan en la nube, ligadas a tu correo, y puedes verlas desde cualquier dispositivo.</p>':'<p class="hint">¿Tenías una cuenta de antes en este dispositivo? Crea la cuenta nueva y, una vez dentro, usa «Cuenta → Importar cuenta antigua».</p>'}`}
+  ${authTab==='new'?'<p class="hint">Te enviaremos un correo para verificar la dirección. Hasta que lo abras no podrás entrar. Tus fichas se guardan en la nube, ligadas a tu correo, y puedes verlas desde cualquier dispositivo.</p>':''}`}
  return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p></div>
  <section class="authhub">
  ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
@@ -2688,8 +2688,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='146';
-const APPN='Menos consultas a la base de datos para no agotar el límite diario: la app consulta con menos frecuencia y se frena sola si el servidor está saturado.';
+const APPV='147';
+const APPN='Se elimina el aviso de cuenta antigua en la pantalla de inicio de sesión.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
