@@ -9,6 +9,7 @@ button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lf
 .codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
 .codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
 .findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
+.synop{padding:10px 14px;border-radius:14px;border:1px solid var(--pc,#2563EB);background:rgba(37,99,235,.08)}.synop span{font-size:.8rem;opacity:.8;font-weight:700}.synop p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
 </style>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
@@ -3038,8 +3039,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.22';
-const APPN='Buscar partida muestra el motivo exacto si falla y no se bloquea por el aforo.';
+const APPV='00.01.23';
+const APPN='Al unirte a una partida ves la sinopsis que escribió el GM.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3841,7 +3842,7 @@ function partsPlayer(){let h='';
 function linkDlg(pid,pname,accept,invId){const P=myParts.find(x=>x.id===pid)||(joinP&&joinP.id===pid?joinP:null)||{};const ok=store.chars.filter(c=>!pjOk(c,P,pid)),no=store.chars.filter(c=>pjOk(c,P,pid));
  const opts=ok.map(c=>`<option value="${c.id}"${c.pid===pid?' selected':''}>${esc(c.name||'Sin nombre')}</option>`).join('');
  const why=no.length?`<div class="hint nolink"><b>No pueden participar:</b><ul>${no.map(c=>`<li>${esc(c.name||'Sin nombre')} — ${pjOk(c,P,pid)}</li>`).join('')}</ul></div>`:'';
- showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate><p class="hint" style="margin:0"><b>Importante:</b> solo puedes aportar personajes con la ficha terminada y compatibles con la partida (${P.era?'Era '+P.era:'cualquier era'}). El Game Master podrá ver y modificar la ficha que elijas, salvo Orígenes, Camino e Historia. Puedes salir cuando quieras y te quedas con una copia.</p>${why}
+ showDlg(accept?'Unirte a '+esc(pname):'Personaje en '+esc(pname),`<form id="linkform" class="grid" data-p="${esc(pid)}" data-inv="${esc(invId||'')}" data-accept="${accept?1:0}" novalidate>${P.desc?`<div class="synop"><span>Sinopsis de la partida${P.gmName?' · GM '+esc(P.gmName):''}</span><p>${esc(P.desc)}</p></div>`:''}<p class="hint" style="margin:0"><b>Importante:</b> solo puedes aportar personajes con la ficha terminada y compatibles con la partida (${P.era?'Era '+P.era:'cualquier era'}). El Game Master podrá ver y modificar la ficha que elijas, salvo Orígenes, Camino e Historia. Puedes salir cuando quieras y te quedas con una copia.</p>${why}
  ${ok.length?'':`<div class="hint nolink" style="background:rgba(79,70,229,.1)"><b>Ahora mismo no tienes ningún personaje que pueda jugar esta partida.</b> Crea uno nuevo${P.era?' (Era '+P.era+')':''}: cuando lo termines, elígelo desde tu inicio.<div class="row" style="margin-top:8px"><button type="button" class="btn pri" data-act="pjnew" data-e="${P.era||1}">Crear personaje nuevo</button></div></div>`}<label class="f">Personaje<select name="cid">${accept?'<option value="">Todavía ninguno</option>':''}${opts}</select></label><div id="lmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">${accept?'Unirme':'Guardar'}</button></div></form>`,true)}
 async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv=f.dataset.inv,cid=f.elements.cid.value,m=$('#lmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Un momento…');const key=pid+'_'+session.uid;
