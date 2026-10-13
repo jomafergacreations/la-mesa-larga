@@ -3062,7 +3062,7 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
 const APPV='00.01.25';
-const APPN='Nueva herramienta ALPHA: JOJOMIZAR SANJI (broma).';
+const APPN='Mejoras internas y correcciones.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
