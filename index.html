@@ -1,4 +1,15 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* v00.01.19 sin efectos al pulsar */
+button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
+.burst,.hop{animation:none!important}
+.mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
+.mth .btn,#mtnext{position:relative;z-index:80}
+.mtchw:not(.open){pointer-events:none}
+
+.codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
+.codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
+.findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
+.synop{padding:10px 14px;border-radius:14px;border:1px solid var(--pc,#2563EB);background:rgba(37,99,235,.08)}.synop span{font-size:.8rem;opacity:.8;font-weight:700}.synop p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
 </style>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
@@ -1167,49 +1178,6 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 html[data-dev=phone] body.authdark .wrap{padding-bottom:16px}
 html.authlockh,body.authlock{overflow:hidden;overscroll-behavior:none}body.authlock{position:fixed;inset:0;width:100%;height:100%}body.authlock input,body.authlock button,body.authlock select,body.authlock label{touch-action:manipulation}
 @media (max-height:800px){html[data-dev=phone] body.authdark .lg{margin:6px 0 10px}html[data-dev=phone] body.authdark .lg .logo{width:44px;height:44px;margin:0 auto 6px;border-radius:14px}html[data-dev=phone] body.authdark .lg .logo svg{width:26px;height:26px}html[data-dev=phone] body.authdark .lg .hs{display:none}html[data-dev=phone] body.authdark .lg .tg{margin-bottom:0}}
-
-/* v00.01.19 sin efectos al pulsar */
-button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lfbt:active,.adp .btn:active,dialog .cbub:active,#fbub:active,.mtc:active{transform:none!important}
-.burst,.hop{animation:none!important}
-.mtc.mtlp,.mtc.mtoff .mtdisc,.mtc.mtpop,.mtc.mtflp{animation:none!important}
-.mth .btn,#mtnext{position:relative;z-index:80}
-.mtchw:not(.open){pointer-events:none}
-
-.codebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;border:1px dashed var(--pc,#2563EB);margin:4px 0 10px}
-.codebox span{font-size:.85rem;opacity:.8}.codebox b{font-size:1.5rem;letter-spacing:.3em;font-variant-numeric:tabular-nums;user-select:all}
-.findbtn{display:inline-flex;align-items:center;gap:10px;min-height:48px}
-.synop{padding:10px 14px;border-radius:14px;border:1px solid var(--pc,#2563EB);background:rgba(37,99,235,.08)}.synop span{font-size:.8rem;opacity:.8;font-weight:700}.synop p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
-
-/* v00.01.25 modo JoJo (broma) */
-#jjq{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:16px;background:rgba(27,6,48,.92);font-family:inherit}
-#jjq .jjc{max-width:520px;width:100%;padding:22px;border:4px solid #FFD400;background:linear-gradient(135deg,#3C0F6E,#82105A);color:#FFF6C8;box-shadow:8px 8px 0 #000;display:grid;gap:12px;font-style:italic}
-#jjq h2{margin:0;color:#FFE600;text-transform:uppercase;font-weight:900;text-shadow:3px 3px 0 #E6007E,5px 5px 0 #000}
-#jjq p{margin:0;font-size:1.2rem;font-weight:700}#jjq em{color:#FF7AC8;font-weight:700}#jjq small{color:#FFE98A;text-transform:uppercase;letter-spacing:.08em}
-#jjq .jjo{display:grid;gap:10px}
-#jjq .jjintro h2{font-size:clamp(1.8rem,7vw,3rem)}@media(prefers-reduced-motion:no-preference){#jjq .jjintro{animation:jjpop2 .6s cubic-bezier(.2,1.6,.4,1) both}@keyframes jjpop2{from{transform:scale(.6) rotate(-6deg);opacity:0}}}
-
-html[data-jojo]{--pc:#E6007E;--bg:#2B0A4A;--mist:#3A1266;--surface:#3A1266;--field:#1B0630;--ink:#FFF6C8;--muted:#FFD84A;--line:#FFD400}
-html[data-jojo] body{background:#2B0A4A!important;color:#FFF6C8!important;font-style:italic}
-html[data-jojo] body::before{content:'';position:fixed;inset:-50%;z-index:0;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(230,0,126,.38) 0 7deg,rgba(255,212,0,.22) 7deg 14deg,rgba(76,29,149,.5) 14deg 21deg)}
-@media(prefers-reduced-motion:no-preference){html[data-jojo] body::before{animation:jjspin 40s linear infinite}@keyframes jjspin{to{transform:rotate(360deg)}}
- html[data-jojo] #jjfx i{animation:jjgo 1.4s ease-in-out infinite}html[data-jojo] #jjfx b{animation:jjpop 2.4s ease-in-out infinite}
- @keyframes jjgo{0%,100%{transform:translate(0,0) rotate(var(--r))}25%{transform:translate(3px,-3px) rotate(var(--r))}50%{transform:translate(-3px,2px) rotate(var(--r))}75%{transform:translate(2px,3px) rotate(var(--r))}}
- @keyframes jjpop{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-6deg) scale(1.1)}}}
-html[data-jojo] #app,html[data-jojo] .wrap,html[data-jojo] main{position:relative;z-index:1}
-html[data-jojo] h1,html[data-jojo] h2,html[data-jojo] h3,html[data-jojo] .hh,html[data-jojo] .hh2{font-weight:900!important;text-transform:uppercase;letter-spacing:.02em;color:#FFE600!important;text-shadow:3px 3px 0 #E6007E,5px 5px 0 #000;transform:skewX(-6deg);transform-origin:left}
-html[data-jojo] .card,html[data-jojo] .glass,html[data-jojo] .gmb,html[data-jojo] .tile,html[data-jojo] .gmc,html[data-jojo] .arow,html[data-jojo] dialog,html[data-jojo] .hdock,html[data-jojo] .bub,html[data-jojo] .csopt{background:linear-gradient(135deg,rgba(60,15,110,.94),rgba(130,10,90,.9))!important;color:#FFF6C8!important;border:3px solid #FFD400!important;border-radius:6px!important;box-shadow:6px 6px 0 #000!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-html[data-jojo] .btn,html[data-jojo] button.pri{background:#FFD400!important;color:#1B0630!important;border:3px solid #000!important;border-radius:4px!important;font-weight:900!important;text-transform:uppercase;box-shadow:4px 4px 0 #E6007E!important}
-html[data-jojo] .btn.ghost,html[data-jojo] .btn.danger{background:#1B0630!important;color:#FFD400!important;border-color:#FFD400!important}
-html[data-jojo] input,html[data-jojo] select,html[data-jojo] textarea{background:#1B0630!important;color:#FFF6C8!important;border:2px solid #FFD400!important;border-radius:4px!important}
-html[data-jojo] .hint,html[data-jojo] small,html[data-jojo] .hs{color:#FFE98A!important}
-html[data-jojo] .wel,html[data-jojo] .wel *,html[data-jojo] .hs,html[data-jojo] .hbar,html[data-jojo] .hbar *{color:#FFF6C8!important}
-#jjfx{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden;font-family:'Noto Sans JP','Hiragino Sans',sans-serif}
-#jjfx i{position:absolute;font-style:normal;font-weight:900;font-size:clamp(42px,9vw,110px);color:#FFE600;-webkit-text-stroke:3px #000;text-shadow:4px 4px 0 #E6007E;opacity:.6;--r:-8deg;transform:rotate(var(--r))}
-#jjfx i:nth-child(1){left:2%;top:12%}#jjfx i:nth-child(2){left:9%;top:34%;--r:6deg}#jjfx i:nth-child(3){right:3%;top:16%;--r:8deg}#jjfx i:nth-child(4){right:8%;top:46%;--r:-5deg}
-#jjfx i:nth-child(5){left:3%;bottom:10%;--r:-10deg}#jjfx i:nth-child(6){right:4%;bottom:12%;--r:9deg}
-#jjfx b{position:absolute;left:50%;bottom:10px;margin-left:-90px;padding:4px 14px;background:#E6007E;color:#FFF;font-weight:900;font-size:1.1rem;border:3px solid #000;box-shadow:4px 4px 0 #FFD400;transform:rotate(-6deg)}
-@media(max-width:700px){#jjfx i{opacity:.5}}
-
 </style>
 
 <style id="lifecss">
@@ -2550,7 +2518,7 @@ async function fs(m,p,body,q){const t=await tok();let r;
 async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
 const RESERVED=n=>nameK(n)==='alpha';
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
-async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;S().gm=p.gm|0;S().prev=p.prev|0;S().gmTmp=p.gmTmp|0;S().gmLic=String(p.gmLic||'');S().jojo=p.jojo|0;{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n}),maskQ({seen:1})).catch(()=>{})}return 'ok'}
+async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;S().gm=p.gm|0;S().prev=p.prev|0;S().gmTmp=p.gmTmp|0;S().gmLic=String(p.gmLic||'');{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n,ping:n}),maskQ({seen:1,ping:1})).catch(()=>{})}return 'ok'}
 async function claimProfile(name){const s=S();if(RESERVED(name))return false;
  try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
  await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
@@ -2590,7 +2558,7 @@ function beat(){}
 async function watchMe(){if(!session||document.hidden||session.owner||Date.now()<fsCool)return;
  try{const d=await fs('GET','users/'+session.uid);if(!d||!session)return;const u=fbDec(d);
   if(u.deleted){skClear();try{toast('Tu cuenta ha sido eliminada por un administrador')}catch(e){}setTimeout(()=>location.reload(),1500);return}
-    {const sg=()=>COSF.map(canSeeGame).join(),v0=sg(),c0=canSeeGame('cosmere');session.prev=u.prev|0;if((u.jojo|0)!==(session.jojo|0)){session.jojo=u.jojo|0;jojoApply()}await loadGames();const v1=sg(),c1=canSeeGame('cosmere');setTimeout(pubCheck,300);
+    {const sg=()=>COSF.map(canSeeGame).join(),v0=sg(),c0=canSeeGame('cosmere');session.prev=u.prev|0;await loadGames();const v1=sg(),c1=canSeeGame('cosmere');setTimeout(pubCheck,300);
    if(v0!==v1){dockSig='';const gg=GSCR[scr];if((COSF.includes(gg)&&!canSeeGame(gg))||(store.cur&&!canSeeGame('nb'))){store.cur=null;store.npcCur=null;scr=canSeeGame('cosmere')?'cosmere':'menu'}
     toast(c0!==c1?(c1?'Cosmere ya está disponible':'Cosmere deja de estar disponible por ahora'):'Se han actualizado los juegos disponibles');render(1)}}
     {const g0=canGM();session.gm=u.gm|0;session.gmTmp=u.gmTmp|0;session.gmLic=String(u.gmLic||'');const g1=canGM();
@@ -2622,7 +2590,7 @@ function devLabel(){const u=navigator.userAgent||'';const os=/iPhone/.test(u)?'i
 function kickedDlg(){const d=$('#dlg');d.className='';d.innerHTML='<div class="grid"><h3>Tu sesión se ha cerrado</h3><p class="hint" style="margin:0">Has iniciado sesión en otro dispositivo, así que hemos cerrado la sesión en este. Tus fichas están guardadas. Puedes volver a entrar cuando quieras.</p><div class="row"><button class="btn pri" data-act="closedlg">Entendido</button></div></div>';try{d.showModal()}catch(x){d.setAttribute('open','')}}
 let kicking=false;
 async function kickOut(){if(!session||kicking)return;kicking=true;try{try{await flush()}catch(x){}document.querySelectorAll('dialog[open]').forEach(x=>{if(x.id!=='updf'){try{x.close()}catch(e){x.removeAttribute('open')}}});
- if(!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;jjDone=false;{const q=document.getElementById('jjq');if(q)q.remove()}{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}kickedDlg()}finally{kicking=false}}
+ if(!dirty)lsDel(FKEY(session.uid));session=null;cand=null;pend=null;regCache=null;{const pp=document.getElementById('invpop');if(pp)pp.remove();ppSeen.clear()}store={chars:[],cur:null,npcs:[],mode:'p'};revealed=[];revSig='';skClear();authTab='login';try{render()}catch(x){}kickedDlg()}finally{kicking=false}}
 function sidCheck(d){try{if(!SESION_UNICA||!session||!session.sid||!d)return;const p=fbDec(d);if(p.sid&&p.sid!==session.sid){kickOut();return}if(!p.sid)fs('PATCH','users/'+session.uid,fbEnc({sid:session.sid,sidDev:devLabel(),sidAt:Date.now()}),maskQ({sid:1,sidDev:1,sidAt:1})).catch(()=>{})}catch(e){}}
 async function enter(a,rem,sidIn,restore){ // a: respuesta de signIn/refresh. Devuelve ok | unverified | deleted | name
  const lk=await aCall('lookup',{idToken:a.idToken});const u=(lk.users||[])[0]||{};const email=String(u.email||a.email||'').toLowerCase();
@@ -2739,49 +2707,7 @@ function ovHtml(){const allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filte
 function rolHtml(){const L=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3),st=L.filter(x=>(x.role|0)>=1).sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es')),oth=L.filter(x=>(x.role|0)===0).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
  const row=r=>{const rl=r.role|0,on=(r.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(r.name)}</b><span class="gms">${esc(r.email||'')}</span></div><div class="row"><div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(r.id)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>${rl===2?`<button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(r.id)}" data-v="${on?0:1}">${on?'Quitar acceso a juegos sin publicar':'Dar acceso a juegos sin publicar'}</button>`:''}</div></div>`};
  return `<div class="grid"><p class="hint" style="margin:0"><b>Ver</b>: puede consultar las cuentas. <b>Admin</b>: además gestiona incidencias, autoriza Game Masters y elimina cuentas. Solo tú das o quitas roles.</p><b>Equipo (${st.length})</b><div class="alist">${st.map(row).join('')||'<p class="hint">Todavía no hay nadie con permisos.</p>'}</div><b>Dar un rol a otra cuenta</b><div class="row"><select id="rolsel" aria-label="Cuenta">${oth.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')||'<option value="">No hay cuentas</option>'}</select><button class="btn sm" data-act="rolpick" data-r="1">Dar «Ver»</button><button class="btn sm pri" data-act="rolpick" data-r="2">Dar «Admin»</button></div></div>`}
-
-/* ---------- modo JoJo (broma controlada por ALPHA): estilo manga pop, dibujado con CSS propio ---------- */
-
-const JJ_Q=[
- ['¿Quién es el protagonista de «Phantom Blood», la primera parte?',['Jonathan Joestar','Jotaro Kujo','Giorno Giovanna'],0],
- ['¿Cómo se llama el Stand de Jotaro Kujo?',['Crazy Diamond','Star Platinum','Gold Experience'],1],
- ['¿En qué ciudad ficticia transcurre «Diamond is Unbreakable»?',['Morioh','Neo Tokio','Karakura'],0],
- ['¿Quién es el gran villano que se hace llamar DIO?',['Dio Brando','Diavolo','Kars'],0],
- ['¿Quién creó la saga?',['Eiichiro Oda','Hirohiko Araki','Akira Toriyama'],1],
- ['¿Cómo se llama el protagonista de «Golden Wind»?',['Giorno Giovanna','Josuke Higashikata','Joseph Joestar'],0],
- ['¿Cuál es el grito de combate más famoso de Star Platinum?',['¡ORAORAORA!','¡KAMEHAMEHA!','¡BANKAI!'],0],
- ['¿Cuántos Joestar tienen la «J» de JoJo en sus iniciales?',['Todos los protagonistas','Ninguno','Solo uno'],0],
- ['¿Qué tipo de poder se llama «Stand»?',['Un espíritu de combate','Una espada','Un coche'],0],
- ['¿Cómo se llama el Stand de Josuke Higashikata?',['Crazy Diamond','Silver Chariot','The World'],0],
- ['¿Cómo se llama el Stand de DIO en «Stardust Crusaders»?',['The World','Killer Queen','Made in Heaven'],0],
- ['¿Qué parte de la saga es «Stardust Crusaders»?',['La tercera','La primera','La quinta'],0],
- ['¿Cómo se llama el Stand de Giorno Giovanna?',['Gold Experience','Purple Haze','Stone Free'],0],
- ['¿Qué familia protagoniza la saga a lo largo de generaciones?',['Los Joestar','Los Uchiha','Los Targaryen'],0],
- ['¿Qué Stand pertenece a Yoshikage Kira?',['Killer Queen','Star Platinum','Hermit Purple'],0],
- ['¿Cómo se llama el abuelo de Jotaro, un Joestar muy querido?',['Joseph Joestar','Caesar Zeppeli','Polnareff'],0]];
-function jojoQ(t){let h=0;String(t).split('').forEach(c=>h=(h*31+c.charCodeAt(0))>>>0);return JJ_Q[(h+(jojoQ.k=(jojoQ.k||0)+0))%JJ_Q.length][0]}
-let jjDone=false,simJojo=false;const isJojo=()=>!!(session&&((session.jojo&&!session.owner)||(simJojo&&session.owner)));
-function jojoGate(){if(jjDone||!isJojo()||document.getElementById('jjq'))return;
- let qs=JJ_Q.slice().sort(()=>Math.random()-.5);let ok=0,n=0;const TAUNT=['Una más y entras… quizá.','Casi eres un verdadero fan.','Tu Stand aún no ha despertado.','Los Joestar estarían orgullosos… o no.','Sigue, el camino del fan es largo.','¡Yare yare! Otra pregunta.'];
- const d=document.createElement('div');d.id='jjq';d.setAttribute('role','alertdialog');d.setAttribute('aria-modal','true');document.body.appendChild(d);
- const draw=(msg)=>{if(n&&n%qs.length===0)qs=qs.sort(()=>Math.random()-.5);const q=qs[n%qs.length];const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);
-  d.innerHTML=`<div class="jjc"><small>Para jugar, debes ser un JoJo fan</small><h2>Pregunta ${n+1}</h2><p>${esc(q[0])}</p>${msg?`<em>${esc(msg)}</em>`:''}<small>Aciertos: ${ok}</small>${simJojo&&session&&session.owner?'<button type="button" class="btn ghost sm" data-jjx>Salir de la prueba</button>':''}<div class="jjo">${o.map(([t,i])=>`<button type="button" class="btn" data-jj="${i}">${esc(t)}</button>`).join('')}</div></div>`;
-  d.querySelectorAll('[data-jjx]').forEach(x=>x.onclick=()=>{simJojo=false;jjDone=false;d.remove();render(1)});
-  d.querySelectorAll('[data-jj]').forEach(b=>b.onclick=()=>{if(+b.dataset.jj===q[2]){ok++;n++;draw('¡Correcto! '+TAUNT[n%TAUNT.length])}else{n++;draw('¡Un verdadero fan no fallaría! Inténtalo con otra.')}})};
- d.innerHTML=`<div class="jjc jjintro"><small>ゴゴゴゴゴゴ</small><h2>¡Has sido JOJOMIZADO!</h2><p>Para seguir adelante, demuestra que eres un verdadero JoJo fan.</p>${simJojo&&session&&session.owner?'<button type="button" class="btn ghost sm" data-jjx>Salir de la prueba</button>':''}<button type="button" class="btn" data-jjgo>Aceptar mi destino</button></div>`;
- d.querySelectorAll('[data-jjx]').forEach(x=>x.onclick=()=>{simJojo=false;jjDone=false;d.remove();render(1)});
- d.querySelector('[data-jjgo]').onclick=()=>draw('')}
-function jojoApply(){try{const on=isJojo();const r=document.documentElement;
- if(on){r.setAttribute('data-jojo','1');if(!document.getElementById('jjfx')){const d=document.createElement('div');d.id='jjfx';d.setAttribute('aria-hidden','true');d.innerHTML='<i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ド</i><i>ド</i><b>¡MENACING!</b>';document.body.appendChild(d)}jojoGate()}
- else{r.removeAttribute('data-jojo');{const q=document.getElementById('jjq');if(q)q.remove()}const d=document.getElementById('jjfx');if(d)d.remove()}}catch(e){}}
-{const rj=render;render=function(){const x=rj.apply(this,arguments);jojoApply();return x}}
-// al cerrar sesión se vuelve a pedir el filtro
-
-async function jojoToggle(b){b.disabled=true;try{const nd=await fs('GET',nameDoc('SANJI'));if(!nd){toast('No existe ningún usuario llamado SANJI');b.disabled=false;return}
- const uid=fbDec(nd).uid,ud=await fs('GET','users/'+uid),on=!((ud?fbDec(ud).jojo:0)|0);
- await fs('PATCH','users/'+uid,fbEnc({jojo:on?1:0}),maskQ({jojo:1}));toast(on?'SANJI ha sido JOJOMIZADO: lo verá al iniciar sesión (o en 30 s si ya está dentro)':'SANJI vuelve a la normalidad')}
- catch(e){toast('No se pudo completar (revisa las reglas de Firestore)')}b.disabled=false}
-function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alist"><div class="gmc"><div class="gmh"><b>Simular usuario</b></div><p class="hint" style="margin:0">Sal del panel y mira la app como la ve un usuario normal; sirve para comprobar los cambios de cada actualización.</p><div class="row"><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div class="gmc"><div class="gmh"><b>Vista sin permisos</b><span class="tag">${simNoGM?'Activada':'Desactivada'}</span></div><p class="hint" style="margin:0">Al activarla ves la app sin licencia de Game Master y sin acceso a juegos sin publicar.</p><div class="row"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}">${simNoGM?'Desactivar':'Activar'}</button></div></div><div class="gmc"><div class="gmh"><b>JOJOMIZAR SANJI</b></div><p class="hint" style="margin:0">Broma: convierte toda la interfaz del usuario SANJI en un estilo manga pop. Pulsa otra vez para deshacerlo.</p><div class="row"><button type="button" class="btn sm" data-act="jojo">JOJOMIZAR SANJI</button><button type="button" class="btn sm ghost" data-act="simjojo" aria-pressed="${simJojo}">${simJojo?'Quitar prueba':'Probar en mi cuenta'}</button></div></div></div><b>Información</b><div class="alist"><div class="gmc"><div class="gmh"><b>Versión</b><span class="tag">v${esc(APPV)}</span></div><p class="hint" style="margin:0">${esc(APPN)}</p></div></div></div>`}
+function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alist"><div class="gmc"><div class="gmh"><b>Simular usuario</b></div><p class="hint" style="margin:0">Sal del panel y mira la app como la ve un usuario normal; sirve para comprobar los cambios de cada actualización.</p><div class="row"><button type="button" class="btn sm pri" data-act="admgame">Simular usuario</button></div></div><div class="gmc"><div class="gmh"><b>Vista sin permisos</b><span class="tag">${simNoGM?'Activada':'Desactivada'}</span></div><p class="hint" style="margin:0">Al activarla ves la app sin licencia de Game Master y sin acceso a juegos sin publicar.</p><div class="row"><button type="button" class="btn sm" data-act="simgm" aria-pressed="${simNoGM}">${simNoGM?'Desactivar':'Activar'}</button></div></div></div><b>Información</b><div class="alist"><div class="gmc"><div class="gmh"><b>Versión</b><span class="tag">v${esc(APPV)}</span></div><p class="hint" style="margin:0">${esc(APPN)}</p></div></div></div>`}
 let admLastTab='';
 function admStag(p){p.querySelectorAll('.tile,.gmc,.arow,.grid>*').forEach((e,k)=>e.style.setProperty('--k',Math.min(k,14)));if(admLastTab!==admTab){admLastTab=admTab;p.classList.remove('adin');void p.offsetWidth;p.classList.add('adin');clearTimeout(admStag.t);admStag.t=setTimeout(()=>p.classList.remove('adin'),900)}}
 function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('#dlg').classList.contains('admd')}
@@ -3100,8 +3026,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.28';
-const APPN='Pequeñas correcciones y mejoras de fluidez.';
+const APPV='00.01.29';
+const APPN='Actualización menor.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3231,7 +3157,7 @@ const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b><small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?avImg(''):`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function dnWord(id,sw,cl){return `<svg class="${cl}" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg>`}
-function hubTile(cls,ic,t,d,act,soon){if(isJojo())d=jojoQ(t);return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
+function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 /* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
 const CYBER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.500-6 10-6 10 6 10 6-3.500 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.200" fill="currentColor"/><path d="M12 2.500v2M12 19.500v2M4.500 18.500l1.500-1.300M19.500 18.500 18 17.200" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></svg>';
 const CYBFX=(()=>{const ch='01<>/{}#$%=+';let h='<span class="cyx" aria-hidden="true">';for(let i=0;i<9;i++){let s='';const n=9+(i*3)%7;for(let k=0;k<n;k++)s+=ch.charAt((i*7+k*5)%ch.length)+'\n';h+=`<b class="cr" style="left:${6+i*11}%;--t:${(4+(i%4)*1.3).toFixed(1)}s;--d:-${(i*0.9).toFixed(1)}s">${s}</b>`}return h+'<i class="cs"></i><i class="cg"></i></span>'})();
@@ -4433,8 +4359,6 @@ document.addEventListener('click',e=>{
   case 'adm':if(isAdmin()){goAdmin('ov');break}admState=null;admDlg();break;
   case 'admpanel':goAdmin(admTab);break;
   case 'rolpick':{const sel=document.getElementById('rolsel');if(!sel||!sel.value)break;const x=regCache&&regCache.find(y=>y.id===sel.value);if(!x||!isAdmin())break;const r=+b.dataset.r;fs('PATCH','users/'+x.id,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Rol asignado a '+x.name)}).catch(()=>toast('No se pudo asignar el rol'));break}
-  case 'simjojo':if(isAdmin()){simJojo=!simJojo;jjDone=false;{const q=document.getElementById('jjq');if(q)q.remove()}render(1);toast(simJojo?'Prueba activada: así lo verá SANJI':'Prueba desactivada')}break
-  case 'jojo':if(isAdmin())jojoToggle(b);break
   case 'simgm':simNoGM=!simNoGM;render(1);break;
   case 'gpub':{if(!isAdmin())break;const g=b.dataset.g,v=b.dataset.v==='1'?1:0,gn=(GAMES.find(x=>x[0]===g)||[0,'este juego'])[1];if(!GAMES.some(x=>x[0]===g))break;
    if(v){showDlg('¿Publicar '+esc(gn)+'?',`<p style="margin:0">Todos los usuarios podrán entrar a <b>${esc(gn)}</b> y recibirán una notificación avisándoles de que ya está publicado.</p><div class="row"><button class="btn pri" data-act="gpubok" data-g="${g}">Sí, publicar y avisar</button></div>`,true);break}
