@@ -3026,7 +3026,7 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.30';
+const APPV='00.01.31';
 const APPN='Actualización menor.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3394,9 +3394,9 @@ let MT=mtLoad(),mtSel=null,mtLast={id:null,t:0};
 function mtLoad(){let o=null;try{o=JSON.parse(localStorage.getItem(MT_KEY)||'null')}catch(e){}
  o=o||{};const st={};MTL.forEach(m=>{const v=o.st&&o.st[m.id];st[m.id]=['burn','flare','flip'].includes(v)?v:'ready'});
  const n=x=>Number.isFinite(+x)?Math.max(0,Math.round(+x)):0;
- return{v:2,ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:o.v===2?Math.min(MT_STEPS,n(o.step)):Math.min(MT_STEPS,n(o.turn)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
+ return{v:2,mode:MTC[o.ch]&&n(o.turn)>0&&(o.mode==='libre'||o.mode==='manual')?o.mode:null,ch:MTC[o.ch]&&n(o.turn)>0?o.ch:null,step:o.v===2?Math.min(MT_STEPS,n(o.step)):Math.min(MT_STEPS,n(o.turn)),turn:n(o.turn),st,used:Array.isArray(o.used)?o.used.filter(x=>MTL.some(m=>m.id===x)):[],at:n(o.at),atu:n(o.atu)}}
 function mtSave(){try{localStorage.setItem(MT_KEY,JSON.stringify(MT))}catch(e){}}
-function mtLimit(){let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
+function mtLimit(){if(MT.mode==='libre')return 99;let k=0;for(let i=1;i<=MT.step;i++)if(MT_REW[i]==='b')k++;return Math.max(1,k)}
 function mtBurning(){return MTL.filter(m=>MT.st[m.id]==='burn').length+MT.atu}
 function mtNFlare(){return MTL.filter(m=>MT.st[m.id]==='flare').length}
 function mtAb(k){return MT.step>={I:6,II:9,III:14}[k]}
@@ -3423,7 +3423,7 @@ function mtAbTog(k){mtOpen[k]=!mtOpen[k];const h=document.querySelector('.mtabh[
 function mtChTog(){if(mtChOpen===null)mtChOpen=!mtPh();mtChOpen=!mtChOpen;if(mtChOpen&&mtPh()){mtSel=null;const sh=document.getElementById('mtsheet');if(sh)sh.classList.remove('show')}const h=document.querySelector('.mtchh');if(!h)return;h.setAttribute('aria-expanded',mtChOpen);h.querySelector('.mtchev').classList.toggle('up',mtChOpen);const w=document.querySelector('.mtchw');if(w){w.classList.toggle('open',mtChOpen);w.classList.toggle('anim',mtChOpen)}}
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
-function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
+function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}${MT.mode==='libre'?'':'/'+mtLimit()}${MT.mode==='libre'?' · Por libre':''}${f?' · Avivados '+f:''}`}
 function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Mantén pulsado para avivarlo directamente.',a:''};
  const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
  let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
@@ -3471,12 +3471,15 @@ function mtFinAsk(){if(document.getElementById('mtfin'))return;const o=document.
  o.innerHTML=`<div class="mtpk"><h2 id="mtfint">¿Confirmas los metales avivados?</h2><p class="mtwarn">Al pasar turno, estos metales <b>quedarán girados</b> y no podrás usarlos hasta refrescarlos.</p><ul class="mtfl"></ul><div class="mtpbtns"><button type="button" class="btn pri" data-act="mtfinok">Confirmar y pasar turno</button><button type="button" class="btn ghost" data-act="mtfinx">Volver</button></div></div>`;
  document.body.appendChild(o);mtFinPaint();const f=o.querySelector('.btn.ghost');if(f)f.focus()}
 function mtFinClose(){const o=document.getElementById('mtfin');if(o)o.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
-function mtNext(force){if(!MT.ch){mtAsk();return}if(MT.turn>0&&!force&&mtNFlare()>0){mtFinAsk();return}mtFinClose();if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
+function mtNext(force){if(!MT.ch){if(!MT.mode){mtAskMode();return}mtAsk();return}if(MT.turn>0&&!force&&mtNFlare()>0){mtFinAsk();return}mtFinClose();if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
  if(MT.step<MT_STEPS){MT.step++;const r=MT_REW[MT.step];
-  if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
+  if(r==='b'&&MT.mode==='libre'){}else if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
   else if(r==='c'){MT.at++;gain=true;msg+=' · fin del entrenamiento: +1 Atium añadido a tu reserva (y 1 más cada turno)'}else if(r)msg+=' · habilidad '+r+' desbloqueada'}
  else{MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
  mtSel=null;mtSave();mtPaint();if(gain)mtAtFx('gain');toast(msg);}
+function mtAskMode(){if(document.getElementById('mtmode'))return;const o=document.createElement('div');o.id='mtmode';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtmodet');
+ o.innerHTML=`<div class="mtpk"><h2 id="mtmodet">¿Cómo quieres jugar la partida?</h2><p>No podrás cambiarlo hasta que reinicies el tablero.</p><div class="mtpg"><button type="button" class="mtpb" data-act="mtmode" data-m="manual"><b>Según el manual</b><small>El tablero respeta los límites de quemas por turno y te pide confirmar los avivados.</small></button><button type="button" class="mtpb" data-act="mtmode" data-m="libre"><b>Ir por libre</b><small>Sin límite de quemas: tú decides las reglas de la mesa.</small></button></div><button type="button" class="btn ghost" data-act="mtmodex">Cancelar</button></div>`;
+ document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
 function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.createElement('div');o.id='mtpick';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtpickt');
  o.innerHTML=`<div class="mtpk"><h2 id="mtpickt">¿Con qué personaje vas a jugar?</h2><p>Cuando empiece la partida no podrás cambiarlo.</p><div class="mtpg">${Object.keys(MTC).map(k=>{const c=MTC[k],m=MTL.find(x=>x.id===c.m);return `<button type="button" class="mtpb" data-act="mtpick" data-c="${k}" style="--mc:${m.bc}"><b>${c.n}</b><small>${c.r}</small><em>${m.n}</em></button>`}).join('')}</div><button type="button" class="btn ghost" data-act="mtpickx">Cancelar</button></div>`;
  document.body.appendChild(o);const f=o.querySelector('.mtpb');if(f)f.focus()}
@@ -3509,14 +3512,14 @@ function mtAskNew(id){const m=MTL.find(x=>x.id===id);if(!m||MT.st[id]!=='ready'|
 function mtNewGo(id,flare){mtAskClose();if(MT.st[id]!=='ready'||MT.used.includes(id))return;const m=MTL.find(x=>x.id===id);
  if(flare){MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'flare');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes')}
  else if(mtBurning()<mtLimit()){MT.st[id]='burn';mtSel=id;mtLast={id,t:Date.now()};mtSave();mtPaint();mtFx(id,'on')}}
-function mtAskClose(){const nw=document.getElementById('mtnew');if(nw)nw.remove();mtFinClose();const o=document.getElementById('mtpick');if(o)o.remove();const f=document.getElementById('mtflare');if(f)f.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
+function mtAskClose(){{const mm=document.getElementById('mtmode');if(mm)mm.remove()}const nw=document.getElementById('mtnew');if(nw)nw.remove();mtFinClose();const o=document.getElementById('mtpick');if(o)o.remove();const f=document.getElementById('mtflare');if(f)f.remove();const n=document.getElementById('mtnext');if(n)n.focus()}
 function mtPick(c){if(!MTC[c]||MT.turn>0)return;mtAskClose();MT.ch=c;mtSave();mtPaint();toast('Partida iniciada con '+MTC[c].n);mtNext()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(document.getElementById('mtpick')||document.getElementById('mtflare')))mtAskClose()});
 function mtAtFx(k){const p=document.getElementById('mtatp');if(!p||lfRM())return;p.classList.remove('mtatfx','mtatgain');void p.offsetWidth;p.classList.add(k==='use'?'mtatfx':'mtatgain');setTimeout(()=>p.classList.remove('mtatfx','mtatgain'),1400);
  if(k==='use'){const a=p.querySelector('.mtai');if(a)for(let i=0;i<3;i++){const g=document.createElement('i');g.className='mtgh';g.style.setProperty('--a',(-35+i*35)+'deg');g.style.animationDelay=(i*70)+'ms';g.innerHTML=MT_ATI;a.appendChild(g);setTimeout(()=>g.remove(),1100)}}}
 function mtAtium(d){const v=MT.at+d;if(v<0)return;MT.at=v;mtSave();mtPaint()}
 function mtAtUse(d){if(d>0){if(MT.at<1)return;if(mtBurning()>=mtLimit()){toast('No te quedan quemas libres para usar Atium');return}MT.at--;MT.atu++}else{if(MT.atu<1)return;MT.atu--;MT.at++}mtSave();mtPaint();if(d>0)mtAtFx('use')}
-function mtReset(){mtAskClose();MT.ch=null;MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=0;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
+function mtReset(){mtAskClose();MT.ch=null;MT.mode=null;MTL.forEach(m=>MT.st[m.id]='ready');MT.used=[];MT.step=0;MT.turn=0;MT.at=0;MT.atu=0;mtSel=null;mtSave();mtPaint()}
 
 /* ---------- Game Master y NPC ---------- */
 let revealed=[],revSig='',gmStag=false,npcPushed={};
@@ -4426,6 +4429,8 @@ document.addEventListener('click',e=>{
   case 'mtnwx':mtAskClose();break;
   case 'mtfinok':mtNext(true);break;
   case 'mtfinx':mtFinClose();break;
+  case 'mtmode':{const m=b.dataset.m==='libre'?'libre':'manual';const o=document.getElementById('mtmode');if(o)o.remove();MT.mode=m;mtSave();mtAsk();break}
+  case 'mtmodex':mtAskClose();break;
   case 'mtpick':mtPick(b.dataset.c);break;
   case 'mtpickx':mtAskClose();break;
   case 'mtab':mtAbTog(b.dataset.k);break;
