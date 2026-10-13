@@ -2861,6 +2861,7 @@ function doNpcR(f){const o={arch:f.elements.arch.value,kind:f.elements.kind.valu
  diceFx(()=>{const n=npcGen(o);const PP=parts.find(x=>x.id===partId)||{};n.game=PP.game||'nb';n.pid=partId||'';store.npcs.push(n);store.npcCur=n.id;scr='npc';save();render();toast('NPC generado: '+n.name)})}
 document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.nf)return;const n=npcCur();if(!n)return;const p=t.dataset.nf.split('.');
  if(p[0]==='atk'){const a=n.attacks[+p[1]];if(a)a[p[2]]=t.value}else n[p[0]]=t.value;
+ if(p[0]==='kindTxt')n.kind=t.value.trim()?'otro':'humano';
  if(p[0]==='name'){const h=document.querySelector('.hh');if(h)h.textContent=t.value||'NPC sin nombre'}save()});
 document.addEventListener('change',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.nf==='kind'){const n=npcCur();if(n){n.kind=t.value;save();render(1)}}});
 async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
@@ -3082,9 +3083,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.43';
+const APPV='00.01.45';
 const APPN='Actualización menor.';
-const APPD='La persona que solicita una licencia de GM recibe un aviso (toast, campana y notificación) cuando se acepta o se deniega.';
+const APPD='Al refrescar se mantiene la pantalla en la que estabas. El campo Tipo de la ficha de NPC es ahora un cuadro de texto libre.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3648,8 +3649,7 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  return hubBar([n.pid?'npcback':'menu',n.pid?'Volver a la partida':'Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · en la partida':''}</p><div class="npctop">${n.dead?`<button class="btn pri" data-act="npcrevive" data-id="${n.id}">Revivir NPC</button><small><b>NPC fallecido:</b> su ficha está bloqueada hasta que lo revivas.</small>`:`<button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdie" data-id="${n.id}">Marcar como fallecido</button><small>Se guarda también solo mientras escribes.</small>`}</div>
  <section class="npcpanel glass"${n.dead?' inert style="opacity:.55"':''}><div class="grid">
  <div class="npcg2">${fld('name','Nombre','Nombre del NPC')}${fld('role','Rol u ocupación','Guardia, mercader…')}
- <label class="f">Tipo<select data-nf="kind">${Object.entries(NPCKIND).map(([k,v])=>`<option value="${k}"${n.kind===k?' selected':''}>${v}</option>`).join('')}</select></label>
- ${n.kind==='otro'?`<label class="f">Especifica el tipo<input type="text" data-nf="kindTxt" maxlength="40" value="${esc(n.kindTxt||'')}" placeholder="Escribe el tipo que prefieras"></label>`:''}
+ <label class="f">Tipo<input type="text" data-nf="kindTxt" maxlength="40" value="${esc(n.kind==='otro'?(n.kindTxt||''):(NPCKIND[n.kind]||''))}" placeholder="Escribe el tipo que prefieras"></label>
  <div class="f">Nivel${stp('npclvl','l',n.level,'nivel')}</div></div>
  <h3>Atributos</h3><div class="npcg3">${ATT.map(([k,nm])=>`<div class="f">${nm}${stp('npcatt',k,n.attrs[k],nm)}</div>`).join('')}</div>
  <div id="npcd" class="stats npcd">${npcDerHTML(n)}</div>
@@ -3937,6 +3937,7 @@ document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)retur
 /* v74 botón atrás del sistema */
 (function(){let hk=null,pop=false;const snap=()=>({s:scr,c:store&&store.cur||null,p:typeof partId!=='undefined'?partId:null});const key=o=>o.s+'|'+o.c+'|'+o.p;
  const r0=render;render=function(k){r0.apply(this,arguments);{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
+ var __nr=render;render=function(){const x=__nr.apply(this,arguments);try{navSave()}catch(e){}return x};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
 (function(){let raf=0;function fit(){raf=0;const b=document.body,d=document.documentElement;if(!b)return;const on=d.dataset.dev==='phone'&&b.classList.contains('authdark');b.classList.remove('authlock');d.classList.remove('authlockh');if(!on)return;if(d.scrollHeight<=innerHeight+40){b.classList.add('authlock');d.classList.add('authlockh');window.scrollTo(0,0)}}
@@ -4567,7 +4568,20 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  if(m){m.textContent='Procesando…';m.className='msg'}
  avPickImg(f).then(u=>{store.avatar=avOk(u);save();avRefresh(true);const mm=$('#avmsg');if(mm){mm.textContent='Imagen actualizada.';mm.className='msg ok'}const r=document.querySelector('.avrow .row');if(r&&!r.querySelector('[data-act=avdel]'))r.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-act="avdel">Quitar</button>')}).catch(()=>{const mm=$('#avmsg');if(mm){mm.textContent='No se pudo leer esa imagen.';mm.className='msg err'}});return}
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
-loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
+
+/* v00.01.44 · mantener la pantalla al refrescar */
+let navDone=false;
+function navSave(){if(!navDone||booting)return;try{if(!session){sessionStorage.removeItem('lml_nav');return}sessionStorage.setItem('lml_nav',JSON.stringify({u:session.uid,m:store.mode,s:scr,c:store.cur||null,p:(typeof partId!=='undefined'&&partId)||null,n:store.npcCur||null,t:(typeof admTab!=='undefined'?admTab:null)}))}catch(e){}}
+async function navRestore(){let o=null;try{o=JSON.parse(sessionStorage.getItem('lml_nav')||'null')}catch(e){}
+ try{if(!o||!session||o.u!==session.uid||o.m!==store.mode||!o.s||o.s==='menu'&&!o.c)return;
+  if(o.s==='admin'){if(isAdmin())goAdmin(o.t);return}
+  if(o.s==='part'||o.s==='ppart'){await loadParts();if(!session)return;const ok=(o.s==='part'?parts:myParts).some(x=>x.id===o.p);if(!ok)return;partId=o.p;scr=o.s;render();if(o.s==='part')loadPart(partId);else fetchRevealed();return}
+  if(o.s==='npc'){if(!(store.npcs||[]).some(x=>x.id===o.n))return;store.npcCur=o.n;scr='npc';render();return}
+  if(o.s==='pjview'||o.s==='menu'&&!o.c){}
+  if(o.s!=='menu'&&!(GSCR&&GSCR[o.s])&&!['rol','deck','nb','cosmere','cyber','dune','arch'].includes(o.s))return;
+  if(o.c&&store.chars&&store.chars.some(x=>x.id===o.c))store.cur=o.c;
+  scr=o.s;render()}catch(e){}}
+loadAccounts();render();restoreSession().then(async ok=>{booting=false;render();try{if(ok)await navRestore()}catch(e){}navDone=true;navSave()});
 {const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('nb')){store.cur=null;store.npcCur=null}{const cw=(scr==='nb'||scr==='deck'||(session&&store&&store.cur))?'sc':scr==='arch'?'ro':'co';if(document.documentElement.dataset.cw!==cw)document.documentElement.dataset.cw=cw}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
 (function(){ // pausa las animaciones infinitas que no se ven (fuera de pantalla o pestaña oculta)
  if(!('IntersectionObserver' in window)||!document.getAnimations)return;
