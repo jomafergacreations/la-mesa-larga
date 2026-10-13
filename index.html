@@ -2304,6 +2304,12 @@ html[data-lm=l] .csopt{color:#2A2312}
 .mtc{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 .mtc.mtlp{box-shadow:0 0 0 2px var(--mc,#9FC3F0)}
 @media(prefers-reduced-motion:no-preference){.mtc.mtlp{animation:mtLp .52s ease-in forwards}@keyframes mtLp{to{transform:scale(.93);box-shadow:0 0 0 4px var(--mc,#9FC3F0),0 0 24px var(--mc,#9FC3F0)}}}
+
+.mtmap{margin-top:12px;border:1px solid var(--line,rgba(120,125,140,.4));border-radius:14px;padding:10px 12px;background:rgba(14,17,40,.55);font:.82rem/1.35 var(--sans,system-ui)}
+.mtmap summary{cursor:pointer;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.72rem;opacity:.85}
+.mtmap ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}.mtmap li{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:start}
+.mtmap .mmk{font-weight:700;font-size:.7rem;padding:2px 6px;border-radius:6px;border:1px solid currentColor;text-align:center;opacity:.9;white-space:nowrap}
+html[data-lm=l] .mtmap{background:rgba(255,255,255,.6)}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -3007,8 +3013,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.13';
-const APPN='Tablero de metales: manteniendo pulsado un metal se aviva directamente.';
+const APPV='00.01.14';
+const APPN='Tablero de metales: ya no pregunta al pulsar; un toque en un metal quemado o avivado lo deja listo. Nuevo mapa de controles en el lateral izquierdo.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3310,8 +3316,10 @@ function lfCard(){const h=LF.hp,x=h<=0?' disabled':'';
   <div class="lfb">${bt(-5,'lfdn','−5')}${bt(-1,'lfdn','−1')}${bt(1,'lfup','+1')}${bt(5,'lfup','+5')}</div>
   <div class="lfbar" aria-hidden="true"><i id="lfbar0" style="width:${(h/LF_MAX*100).toFixed(1)}%"></i></div>
   <p class="lfmsg" id="lfmsg"${h<=0?'':' hidden'}>Has perdido. Solo puedes empezar una nueva partida.</p></div>`}
+function mtMapH(){const r=(k,v)=>`<li><span class="mmk">${k}</span><span>${v}</span></li>`;
+ return `<details class="mtmap"${mtPh()?'':' open'}><summary>Controles del tablero</summary><ul>${r('Toque','Quemar un metal listo')}${r('Toque','Quemado o avivado → vuelve a listo')}${r('Mantener','Avivar directamente')}${r('Toque','Metal girado → refrescar')}${r('Pasar turno','Confirma los avivados')}</ul></details>`}
 function deckScreen(){setTimeout(lfMeasure,60);
- return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><div class="lfsplit"><div class="lfside">${lfCard()}</div><div class="lfmain">${mtBoard()}</div></div></div>`}
+ return hubBar(['cosmere','Cosmere'])+`<div class="lfroot"><div class="lfeye">Scadrial</div><h1 class="hh lfh">Creación de mazos</h1><div class="lffil" aria-hidden="true"></div><div class="lfsplit"><div class="lfside">${lfCard()}${mtMapH()}</div><div class="lfmain">${mtBoard()}</div></div></div>`}
 function lfMini(){const c=document.getElementById('lfc0');if(!c)return;const y=window.scrollY||0,m=c.classList.contains('lfmini');c.classList.toggle('lfmini',document.documentElement.dataset.dev==='phone'&&(m?y>12:y>70))}
 function lfMeasure(){const c=document.getElementById('lfc0'),r=document.querySelector('.lfroot');if(!c||!r)return;
  if(document.documentElement.dataset.dev!=='phone'){r.style.removeProperty('--lfh');return}
@@ -3406,9 +3414,9 @@ function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenam
 function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Mantén pulsado para avivarlo directamente.',a:''};
  const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
  let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
- if(s==='flare'){t+=` Para refrescarlo, descarta una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.`;a=`<button type="button" class="btn sm" data-act="mtref" data-m="${m.id}">Refrescar</button><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer</button>`}
+ if(s==='flare'){t+=` Tócalo otra vez para dejarlo listo. Para refrescarlo, descarta una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.`;a=`<button type="button" class="btn sm" data-act="mtref" data-m="${m.id}">Refrescar</button><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer</button>`}
 
- else if(s==='burn'){t+=' Tócalo otra vez para avivarlo o dejar de quemarlo.';a=`<button type="button" class="btn sm" data-act="mtflr" data-m="${m.id}">Avivar o dejar de quemar</button>`}
+ else if(s==='burn'){t+=' Tócalo otra vez para dejarlo listo; mantenlo pulsado para avivarlo.';a=`<button type="button" class="btn sm" data-act="mtflrok" data-m="${m.id}">Avivar</button><button type="button" class="btn sm ghost" data-act="mtflrno" data-m="${m.id}">Dejar de quemar</button>`}
  else if(s==='flip')t+=` Está girado: toca para refrescarlo (descartas una carta cuyo vial muestre ${m.n} o ${pr.n}).`;
  else if(s==='used')t+=' Ya lo usaste este turno: no puedes volver a usarlo hasta el siguiente.';
  return{t,a}}
@@ -3436,14 +3444,13 @@ function mtFx(id,k){if(lfRM())return;const b=document.querySelector('.mtc[data-m
  else{b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}}
 function mtTap(id){const m=MTL.find(x=>x.id===id);if(!m)return;const s=mtSt(id);mtSel=id;if(mtPh()&&mtChOpen)mtChTog();
  if(s==='used'){mtPaint();toast('Ya usaste este metal este turno');return}
- if(s==='ready'&&MTL.some(x=>x.id!==id&&(MT.st[x.id]==='burn'||MT.st[x.id]==='flare'))){mtPaint();mtAskNew(id);return}
  if(s==='ready'){if(mtBurning()<mtLimit()){MT.st[id]='burn';mtLast={id,t:Date.now()};mtSave();mtPaint();mtFx(id,'on')}
   else{mtPaint();toast('Has alcanzado tu límite de quemas ('+mtLimit()+'). Para usar otro metal, aviva o deja de quemar uno de los que estás quemando.')}return}
- if(s==='burn'){if(mtLast.id===id&&Date.now()-mtLast.t<400)return;mtPaint();mtAskFlare(id);return}
+ if(s==='burn'||s==='flare'){if(mtLast.id===id&&Date.now()-mtLast.t<400)return;MT.st[id]='ready';MT.used=MT.used.filter(x=>x!==id);mtSel=id;mtSave();mtPaint();mtFx(id,'off');mtFinPaint();return}
  if(s==='flip'){MT.st[id]='ready';mtSave();mtPaint();mtFx(id,'off');toast('Refrescado: descarta una carta cuyo vial muestre '+m.n+' o '+MTL.find(x=>x.id===m.p).n);return}
  mtPaint()}
 function mtRefresh(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';if(!MT.used.includes(id))MT.used.push(id);mtSave();mtPaint();mtFx(id,'off');toast('Refrescado, pero ya lo usaste este turno')}
-function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]=mtBurning()<mtLimit()?'burn':'ready';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off');mtFinPaint()}
+function mtUndo(id){if(MT.st[id]!=='flare')return;MT.st[id]='ready';MT.used=MT.used.filter(x=>x!==id);mtSave();mtPaint();mtFx(id,'off');mtFinPaint()}
 function mtEndTurn(){MTL.forEach(m=>{const s=MT.st[m.id];if(s==='burn')MT.st[m.id]='ready';else if(s==='flare')MT.st[m.id]='flip'});MT.used=[];MT.atu=0}
 function mtFinPaint(){const o=document.getElementById('mtfin');if(!o)return;const L=MTL.filter(m=>MT.st[m.id]==='flare');
  o.querySelector('.mtfl').innerHTML=L.length?L.map(m=>`<li><b>${m.n}</b><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer avivado</button></li>`).join(''):'<li class="none">No has avivado ningún metal este turno.</li>'}
