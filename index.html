@@ -515,21 +515,14 @@ body.misting #amb *,body.misting #amb{animation-play-state:paused}
 #hbg .a1{left:-10%;top:-8%;background:radial-gradient(closest-side,rgba(37,99,235,.38),transparent)}
 #hbg .a2{right:-15%;top:30%;background:radial-gradient(closest-side,rgba(20,184,166,.32),transparent)}
 #hbg .a3{left:10%;bottom:-12%;background:radial-gradient(closest-side,rgba(236,72,153,.26),transparent)}
-#hbg .dl{position:absolute;inset:-6%;transition:transform .5s ease-out}
-#hbg .d1{transform:translate(calc(var(--px)*-14px),calc(var(--py)*-14px))}
-#hbg .d2{transform:translate(calc(var(--px)*22px),calc(var(--py)*22px)) scale(1.5) scaleX(-1);opacity:.55}
+#hbg .dl{position:absolute;inset:-6%}
+#hbg .d1{transform:none}
+#hbg .d2{transform:scale(1.5) scaleX(-1);opacity:.55}
 #hbg .bgd{animation:none;opacity:.12}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #hbg .au{opacity:.7}}
 :root[data-theme="dark"] #hbg .au{opacity:.7}
-@media(prefers-reduced-motion:no-preference){
- #hbg .a1{animation:auA 19s ease-in-out infinite alternate}#hbg .a2{animation:auB 23s ease-in-out infinite alternate}#hbg .a3{animation:auC 27s ease-in-out infinite alternate}
- #hbg .d1 .bgd{animation:hbDrift 40s ease-in-out infinite alternate}
- #hbg .d2 .bgd{animation:hbDrift 55s ease-in-out -20s infinite alternate-reverse}
-}
-@keyframes auA{from{transform:translate(0,0) scale(1)}to{transform:translate(30%,20%) scale(1.3)}}
-@keyframes auB{from{transform:translate(0,0) scale(1.1)}to{transform:translate(-35%,-15%) scale(.85)}}
-@keyframes auC{from{transform:translate(0,0) scale(.9)}to{transform:translate(25%,-30%) scale(1.25)}}
-@keyframes hbDrift{from{transform:translateY(-3%) rotate(-1.5deg)}to{transform:translateY(3%) rotate(1.5deg)}}
+/* fondo estático (sin paralaje ni animación) */
+#hbg .a1{transform:translate(12%,8%) scale(1.1)}#hbg .a2{transform:translate(-14%,-6%) scale(1)}#hbg .a3{transform:translate(10%,-12%) scale(1.05)}
 
 /* adaptación por dispositivo: html[data-dev] = phone | tablet | desktop */
 html[data-dev=tablet] body.hub .wrap,html[data-dev=desktop] body.hub .wrap{max-width:980px}
@@ -2818,8 +2811,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='166';
-const APPN='Las incidencias solucionadas desaparecen a las 24 horas para ALPHA y los administradores.';
+const APPV='167';
+const APPN='Fondo del menú estático: se elimina el efecto paralaje y las animaciones del fondo.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -2942,8 +2935,6 @@ function hubbg(on){let h=document.getElementById('hbg');if(!on){if(h)h.remove();
  const hr=new Date().getHours();const tod=hr<5?'night':hr<9?'dawn':hr<18?'day':hr<21?'dusk':'night';
  h=document.createElement('div');h.id='hbg';h.dataset.tod=tod;h.setAttribute('aria-hidden','true');
  h.innerHTML=`<div class="au"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div><div class="dl d1">${BGD}</div><div class="dl d2">${BGD}</div>`;document.body.appendChild(h)}
-let pxT=0;
-document.addEventListener('pointermove',e=>{const h=document.getElementById('hbg');if(!h||pxT)return;pxT=requestAnimationFrame(()=>{pxT=0;h.style.setProperty('--px',((e.clientX/innerWidth-.5)*2).toFixed(3));h.style.setProperty('--py',((e.clientY/innerHeight-.5)*2).toFixed(3))})},{passive:true});
 applyTheme(getTheme());
 const ORB='<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="5.5" fill="currentColor" stroke="none"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-28 24 24)"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(62 24 24)" opacity=".55"/></g><g fill="currentColor"><circle cx="8.500" cy="31.500" r="2.600"/><circle cx="39.500" cy="16.500" r="2.600"/></g></svg>';
 const GEM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 5 6.6 5 9.5A5 5 0 0 1 12 17.5 5 5 0 0 1 7 12.5C7 9.600 9 7 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 20.500c2.300-1.500 4.300-1.500 7 0s4.700 1.500 7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
