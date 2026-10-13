@@ -1178,6 +1178,10 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 html[data-dev=phone] body.authdark .wrap{padding-bottom:16px}
 html.authlockh,body.authlock{overflow:hidden;overscroll-behavior:none}body.authlock{position:fixed;inset:0;width:100%;height:100%}body.authlock input,body.authlock button,body.authlock select,body.authlock label{touch-action:manipulation}
 @media (max-height:800px){html[data-dev=phone] body.authdark .lg{margin:6px 0 10px}html[data-dev=phone] body.authdark .lg .logo{width:44px;height:44px;margin:0 auto 6px;border-radius:14px}html[data-dev=phone] body.authdark .lg .logo svg{width:26px;height:26px}html[data-dev=phone] body.authdark .lg .hs{display:none}html[data-dev=phone] body.authdark .lg .tg{margin-bottom:0}}
+
+/* v00.01.33 etiquetas de la hoja calculada sin cortar palabras */
+.stat span,.glass .stat span{display:block;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;font-size:clamp(.56rem,.85vw,.7rem);letter-spacing:.02em;white-space:normal}
+.stat{padding-left:3px;padding-right:3px}
 </style>
 
 <style id="lifecss">
@@ -2847,6 +2851,24 @@ function sample(){const c=blank();Object.assign(c,{mode:'f',metalChoice:'no',nam
  attrs:{fue:3,vel:2,int:1,vol:2,dis:2,pre:2},skills:{armpes:2,atletismo:1,intimidacion:1},kit:'mercenario',weapons:KITS.mercenario.w,armor:KITS.mercenario.a,gear:KITS.mercenario.g,arquillas:7,
  purpose:'Proteger a mi gente de las patrullas del Ministerio.',obstacle:'Me cuesta confiar en nadie fuera de mi cuadrilla.',goals:['Sacar a mi hermana de las minas','']});
  c.talents.ancestry='Segundo talento de un camino heroico (a elegir)';return c}
+
+/* ---------- personaje aleatorio: ficha completa y válida (nivel 1), editable después ---------- */
+function randomChar(){const c=blank();c.mode='f';c.step=0;c.name=npcName().slice(0,60);c.era=Math.random()<.5?1:2;
+ const r=Math.random();c.ancestry=r<.7?'humano':(r<.9||c.era===1)?'kandra':'koloss';
+ if(c.ancestry==='kandra')c.blessing=rnd(Object.keys(BLESS));
+ c.cultures=[c.ancestry==='koloss'?'Sangre koloss':rnd(c.era===1?CULT1:CULT2),rnd(CULTB)];
+ const ps=Object.keys(PATHS).filter(k=>!PATHS[k].exp&&(!PATHS[k].era||PATHS[k].era.includes(c.era)));c.path=rnd(ps);
+ const nd=pathNeeds(c),pick=(arr,n)=>{const a=arr.slice(),o=[];while(o.length<n&&a.length)o.push(a.splice(Math.floor(Math.random()*a.length),1)[0]);return o};
+ c.powers={alo:pick(ALO_METALS.filter(m=>!m[2]).map(m=>m[0]),nd.alo),fer:pick(FER_METALS,nd.fer)};
+ let pts=attrBudget(c);while(pts>0){const k=rnd(ATT.map(x=>x[0]));if(c.attrs[k]<attrCap(c,k)){c.attrs[k]++;pts--}}
+ let sp=4;const fs0=freeSkill(c);while(sp>0){const k=rnd(SKILLS.map(x=>x[0]));if((c.skills[k]||0)+(fs0===k?1:0)<maxGrade(c)){c.skills[k]=(c.skills[k]||0)+1;sp--}}
+ if(c.ancestry==='humano')c.talents.ancestry='Segundo talento de un camino heroico (a elegir)';
+ const kk=Object.keys(KITS).filter(k=>k!=='otro'),k=rnd(kk),K=KITS[k];c.kit=k;c.weapons=K.w;c.armor=K.a;c.gear=K.g;
+ if(K.dice){let t=0;for(let i=0;i<K.dice[0];i++)t+=1+Math.floor(Math.random()*K.dice[1]);c.arquillas=t*(c.era===2?10:1)}
+ c.purpose=rnd(['Proteger a quienes dependen de mí.','Descubrir qué se esconde tras los secretos del Imperio.','Ganarme un nombre que nadie pueda arrebatarme.','Reparar un error del pasado.']);
+ c.obstacle=rnd(['Me cuesta confiar en los demás.','Arrastro una deuda que no puedo pagar.','Tengo un enemigo que no olvida.','Mi orgullo me mete en problemas.']);
+ c.goals=[rnd(['Reunir recursos para mi gente.','Encontrar a alguien que perdí.','Aprender un oficio nuevo.','Saldar una vieja cuenta.']),''];
+ return c}
 const cur=()=>store.chars.find(c=>c.id===store.cur)||(store.pjc&&store.pjc[store.cur]);
 
 /* ---------- reglas ---------- */
@@ -3026,9 +3048,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.32';
+const APPV='00.01.33';
 const APPN='Actualización menor.';
-const APPD='Los detalles de cada actualización solo se muestran a administradores y propietario; el resto de usuarios ve únicamente si es menor, media o grande.';
+const APPD='Nuevo botón «Crear personaje aleatorio» en Mis fichas y corrección del corte de palabras en «Hoja calculada» en PC.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3892,10 +3914,10 @@ function home(){
  return `<header class="cover">${corners}<div class="sub">Juego de rol del Cosmere</div><h1>Fichas de Scadrial</h1><div class="sub">Nacidos de la Bruma</div>
  <div class="orn"><i></i>${DIAMOND}<i></i></div></header>
  ${acctBar()}
- <div class="top"><div class="row"><button class="btn ghost" data-act="rol">‹ Rol</button>${selMode?`<button class="btn" data-act="selall">${store.chars.length&&selIds.size===store.chars.length?'Quitar selección':'Seleccionar todas'}</button><button class="btn danger" data-act="selask"${selIds.size?'':' disabled'}>Borrar (${selIds.size})</button><button class="btn ghost" data-act="selx">Cancelar</button>`:`<button class="btn pri" data-act="new">Nueva ficha</button><button class="btn" data-act="import">Importar</button>${store.chars.length?'<button class="btn" data-act="selmode">Seleccionar</button>':''}`}</div><p class="fcount${store.chars.length>=CHAR_MAX?' max':''}" role="status" aria-live="polite"><b>${store.chars.length}</b> de ${CHAR_MAX} fichas creadas${store.chars.length>=CHAR_MAX?' · límite alcanzado':''}</p></div>
+ <div class="top"><div class="row"><button class="btn ghost" data-act="rol">‹ Rol</button>${selMode?`<button class="btn" data-act="selall">${store.chars.length&&selIds.size===store.chars.length?'Quitar selección':'Seleccionar todas'}</button><button class="btn danger" data-act="selask"${selIds.size?'':' disabled'}>Borrar (${selIds.size})</button><button class="btn ghost" data-act="selx">Cancelar</button>`:`<button class="btn pri" data-act="new">Nueva ficha</button><button class="btn" data-act="newrand">Crear personaje aleatorio</button><button class="btn" data-act="import">Importar</button>${store.chars.length?'<button class="btn" data-act="selmode">Seleccionar</button>':''}`}</div><p class="fcount${store.chars.length>=CHAR_MAX?' max':''}" role="status" aria-live="polite"><b>${store.chars.length}</b> de ${CHAR_MAX} fichas creadas${store.chars.length>=CHAR_MAX?' · límite alcanzado':''}</p></div>
  ${store.chars.length?`<div class="grid cards">${cards}</div>`:
  `<div class="empty"><h2>Aún no hay personajes</h2><p>Crea uno siguiendo los ocho pasos del manual. La app calcula salud, concentración, Investidura, defensas y modificadores mientras eliges. Todo se guarda en este dispositivo.</p>
- <div class="row" style="justify-content:center"><button class="btn pri" data-act="new">Crear la primera ficha</button><button class="btn" data-act="sample">Ver un ejemplo inventado</button></div></div>`}
+ <div class="row" style="justify-content:center"><button class="btn pri" data-act="new">Crear la primera ficha</button><button class="btn" data-act="newrand">Crear personaje aleatorio</button><button class="btn" data-act="sample">Ver un ejemplo inventado</button></div></div>`}
  <p class="hint" style="margin-top:16px">Tus fichas se guardan en la nube, dentro de tu cuenta, y las ves desde cualquier dispositivo; para pasar una sola, usa Exportar dentro de la ficha.</p>`}
 
 function statsPanel(c){const d=derive(c);
@@ -4402,6 +4424,7 @@ document.addEventListener('click',e=>{
   case 'taladd':c.tl.push('');save();render(1);{const i=document.querySelectorAll('#tlist input');if(i.length)i[i.length-1].focus()}break;
   case 'taldel':c.tl.splice(+b.dataset.i,1);save();render(1);break;
   case 'sheetpdf':sheetPdf();break;
+  case 'newrand':{if(charFull('nb'))break;const n=randomChar();store.chars.push(n);store.cur=n.id;save();render();toast('Personaje aleatorio creado: puedes cambiar lo que quieras');break}
   case 'sample':{if(charFull('nb'))break;const n=sample();store.chars.push(n);store.cur=n.id;n.step=7;save();render();break}
   case 'open':store.cur=b.dataset.id;render();break;
   case 'dup':{if(charFull('nb'))break;const o=store.chars.find(x=>x.id===b.dataset.id);if(!o)break;const n=normalize(JSON.parse(JSON.stringify(o)));delete n.pid;delete n.rev;delete n._ph;n.name=(o.name||'Personaje')+' (copia)';n.done=false;n.mode='f';n.step=0;n.dupOf=dupSig(o);store.chars.push(n);store.cur=n.id;save();render();toast('Ficha duplicada: es editable hasta que la vuelvas a finalizar');break}
