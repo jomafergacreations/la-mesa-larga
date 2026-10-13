@@ -3013,8 +3013,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.14';
-const APPN='Tablero de metales: ya no pregunta al pulsar; un toque en un metal quemado o avivado lo deja listo. Nuevo mapa de controles en el lateral izquierdo.';
+const APPV='00.01.15';
+const APPN='Al llegar a la casilla 21 del entrenamiento se suma 1 Atium a la reserva automáticamente.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3461,7 +3461,7 @@ function mtFinClose(){const o=document.getElementById('mtfin');if(o)o.remove();c
 function mtNext(force){if(!MT.ch){mtAsk();return}if(MT.turn>0&&!force&&mtNFlare()>0){mtFinAsk();return}mtFinClose();if(MT.turn>0)mtEndTurn();MT.turn++;let msg='Turno '+MT.turn,gain=false;
  if(MT.step<MT_STEPS){MT.step++;const r=MT_REW[MT.step];
   if(r==='b')msg+=' · ahora quemas '+mtLimit()+(mtLimit()>1?' metales':' metal');else if(r==='a'){MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
-  else if(r==='c')msg+=' · fin del entrenamiento: 1 Atium cada turno';else if(r)msg+=' · habilidad '+r+' desbloqueada'}
+  else if(r==='c'){MT.at++;gain=true;msg+=' · fin del entrenamiento: +1 Atium añadido a tu reserva (y 1 más cada turno)'}else if(r)msg+=' · habilidad '+r+' desbloqueada'}
  else{MT.at++;gain=true;msg+=' · +1 Atium añadido a tu reserva'}
  mtSel=null;mtSave();mtPaint();mtStepFx();if(gain)mtAtFx('gain');toast(msg);MTL.forEach(m=>{const b=document.querySelector('.mtc[data-m="'+m.id+'"]');if(b&&!lfRM()){b.classList.remove('mtoff');void b.offsetWidth;b.classList.add('mtoff');setTimeout(()=>b.classList.remove('mtoff'),800)}})}
 function mtAsk(){if(document.getElementById('mtpick'))return;const o=document.createElement('div');o.id='mtpick';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtpickt');
