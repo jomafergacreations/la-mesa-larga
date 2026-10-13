@@ -1186,6 +1186,7 @@ button:active,.btn:active,.bub:active,.csopt:active,.avopt:active,.fd:active,.lf
 #jjq h2{margin:0;color:#FFE600;text-transform:uppercase;font-weight:900;text-shadow:3px 3px 0 #E6007E,5px 5px 0 #000}
 #jjq p{margin:0;font-size:1.2rem;font-weight:700}#jjq em{color:#FF7AC8;font-weight:700}#jjq small{color:#FFE98A;text-transform:uppercase;letter-spacing:.08em}
 #jjq .jjo{display:grid;gap:10px}
+#jjq .jjintro h2{font-size:clamp(1.8rem,7vw,3rem)}@media(prefers-reduced-motion:no-preference){#jjq .jjintro{animation:jjpop2 .6s cubic-bezier(.2,1.6,.4,1) both}@keyframes jjpop2{from{transform:scale(.6) rotate(-6deg);opacity:0}}}
 
 html[data-jojo]{--pc:#E6007E;--bg:#2B0A4A;--mist:#3A1266;--surface:#3A1266;--field:#1B0630;--ink:#FFF6C8;--muted:#FFD84A;--line:#FFD400}
 html[data-jojo] body{background:#2B0A4A!important;color:#FFF6C8!important;font-style:italic}
@@ -2767,7 +2768,9 @@ function jojoGate(){if(jjDone||!isJojo()||document.getElementById('jjq'))return;
   d.innerHTML=`<div class="jjc"><small>Para jugar, debes ser un JoJo fan</small><h2>Pregunta ${n+1}</h2><p>${esc(q[0])}</p>${msg?`<em>${esc(msg)}</em>`:''}<small>Aciertos: ${ok}</small>${simJojo&&session&&session.owner?'<button type="button" class="btn ghost sm" data-jjx>Salir de la prueba</button>':''}<div class="jjo">${o.map(([t,i])=>`<button type="button" class="btn" data-jj="${i}">${esc(t)}</button>`).join('')}</div></div>`;
   d.querySelectorAll('[data-jjx]').forEach(x=>x.onclick=()=>{simJojo=false;jjDone=false;d.remove();render(1)});
   d.querySelectorAll('[data-jj]').forEach(b=>b.onclick=()=>{if(+b.dataset.jj===q[2]){ok++;n++;draw('¡Correcto! '+TAUNT[n%TAUNT.length])}else{n++;draw('¡Un verdadero fan no fallaría! Inténtalo con otra.')}})};
- draw('')}
+ d.innerHTML=`<div class="jjc jjintro"><small>ゴゴゴゴゴゴ</small><h2>¡Has sido JOJOMIZADO!</h2><p>Para seguir adelante, demuestra que eres un verdadero JoJo fan.</p>${simJojo&&session&&session.owner?'<button type="button" class="btn ghost sm" data-jjx>Salir de la prueba</button>':''}<button type="button" class="btn" data-jjgo>Aceptar mi destino</button></div>`;
+ d.querySelectorAll('[data-jjx]').forEach(x=>x.onclick=()=>{simJojo=false;jjDone=false;d.remove();render(1)});
+ d.querySelector('[data-jjgo]').onclick=()=>draw('')}
 function jojoApply(){try{const on=isJojo();const r=document.documentElement;
  if(on){r.setAttribute('data-jojo','1');if(!document.getElementById('jjfx')){const d=document.createElement('div');d.id='jjfx';d.setAttribute('aria-hidden','true');d.innerHTML='<i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ド</i><i>ド</i><b>¡MENACING!</b>';document.body.appendChild(d)}jojoGate()}
  else{r.removeAttribute('data-jojo');{const q=document.getElementById('jjq');if(q)q.remove()}const d=document.getElementById('jjfx');if(d)d.remove()}}catch(e){}}
@@ -3097,8 +3100,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.27';
-const APPN='Ajustes de estabilidad y pequeñas correcciones.';
+const APPV='00.01.28';
+const APPN='Pequeñas correcciones y mejoras de fluidez.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
