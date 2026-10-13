@@ -949,8 +949,8 @@ html[data-dev=desktop] .hs{max-width:none}
 #modefx{position:fixed;inset:0;z-index:99997;pointer-events:none;overflow:hidden;display:block;clip-path:none;background:none}
 #modefx.gm,#modefx.pl{background:none}
 #modefx .mc{position:absolute;display:block;width:max(260vw,260vh);height:max(260vw,260vh);left:calc(85% - max(130vw,130vh));top:calc(6% - max(130vw,130vh));border-radius:50%;transform:scale(0);will-change:transform}
-#modefx.gm .mc{background:radial-gradient(circle at 50% 50%,#6E1F3A,#B5472F 70%)}#modefx.pl .mc{background:radial-gradient(circle at 50% 50%,#0F9D9A,var(--pc) 70%)}
-#modefx .ml{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:14px;color:#fff;text-align:center;opacity:0;font:800 clamp(1.8rem,6vw,3.2rem) var(--sans,system-ui)}
+#modefx .mc{background:radial-gradient(circle at 50% 50%,var(--mc1,#2a0e18),var(--mc2,#5b1d27) 70%)}#modefx.gm .mc,#modefx.pl .mc{background:radial-gradient(circle at 50% 50%,var(--mc1,#2a0e18),var(--mc2,#5b1d27) 70%)}
+#modefx .ml{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:14px;color:var(--mct,#fff);text-align:center;opacity:0;font:800 clamp(1.8rem,6vw,3.2rem) var(--sans,system-ui)}
 #modefx .ml svg{width:clamp(56px,11vw,88px);height:clamp(56px,11vw,88px)}
 @media(prefers-reduced-motion:no-preference){#modefx .mc{animation:mcIn .8s cubic-bezier(.65,0,.25,1) forwards}#modefx .ml{animation:mlIn .65s .4s cubic-bezier(.2,1.2,.4,1) forwards}#modefx.out{animation:mfOut .65s ease forwards}
 @keyframes mcIn{to{transform:scale(1)}}@keyframes mlIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}@keyframes mfOut{to{opacity:0}}}
@@ -2702,8 +2702,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='152';
-const APPN='Cierre de sesión automático tras 15 minutos de inactividad, con aviso en pantalla.';
+const APPV='153';
+const APPN='La transición entre modo Game Master y Jugador usa los colores de la pantalla de destino.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3309,7 +3309,7 @@ function stormFx(done){const old=document.getElementById('stormfx');if(old)old.r
 function stormOff(){const o=document.getElementById('stormfx');if(o){o.classList.add('out');setTimeout(()=>o.remove(),480)}}
 function setMode(m){if(m===store.mode)return;const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();dockSig='';render();if(m==='p')fetchRevealed()};
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red){apply();return}
- const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.setAttribute('aria-hidden','true');o.innerHTML=`<i class="mc"></i><div class="ml">${m==='gm'?PENI:DIEI}<span>${m==='gm'?'Modo Game Master':'Modo Jugador'}</span></div>`;document.body.appendChild(o);
+ const o=document.createElement('div');o.id='modefx';o.className=m==='gm'?'gm':'pl';o.setAttribute('aria-hidden','true');{const th=getTheme();let lt=th==='light';if(th==='auto'){try{lt=matchMedia('(prefers-color-scheme:light)').matches}catch(e){}}const P=m==='gm'?(lt?['#FFE9DD','#F4BFA8','#4A1624']:['#2a0e18','#5b1d27','#FFE9DD']):(lt?['#EAF2FF','#C3D8FF','#14213D']:['#0a1236','#1b2c66','#EAF0FF']);o.style.setProperty('--mc1',P[0]);o.style.setProperty('--mc2',P[1]);o.style.setProperty('--mct',P[2])}o.innerHTML=`<i class="mc"></i><div class="ml">${m==='gm'?PENI:DIEI}<span>${m==='gm'?'Modo Game Master':'Modo Jugador'}</span></div>`;document.body.appendChild(o);
  setTimeout(()=>{document.documentElement.classList.add('modeswap');apply()},850);setTimeout(()=>o.classList.add('out'),1500);setTimeout(()=>o.remove(),2900);setTimeout(()=>document.documentElement.classList.remove('modeswap'),2900)}
 
 /* ---------- Partidas ---------- */
