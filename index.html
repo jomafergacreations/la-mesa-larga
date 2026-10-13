@@ -2300,6 +2300,10 @@ html[data-lm=l] .csopt{color:#2A2312}
 }
 
 #mtfin .mtfl{list-style:none;margin:0;padding:0;display:grid;gap:8px}#mtfin .mtfl li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border:1px solid var(--line,rgba(120,125,140,.4));border-radius:10px}#mtfin .mtfl li.none{justify-content:center;opacity:.75}
+
+.mtc{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.mtc.mtlp{box-shadow:0 0 0 2px var(--mc,#9FC3F0)}
+@media(prefers-reduced-motion:no-preference){.mtc.mtlp{animation:mtLp .52s ease-in forwards}@keyframes mtLp{to{transform:scale(.93);box-shadow:0 0 0 4px var(--mc,#9FC3F0),0 0 24px var(--mc,#9FC3F0)}}}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -3003,8 +3007,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.12';
-const APPN='Tablero de metales: se recupera la regla anterior de quemas; se mantiene la confirmación al pasar turno y, con un metal quemado, al pulsar otro se pregunta si quieres avivarlo.';
+const APPV='00.01.13';
+const APPN='Tablero de metales: manteniendo pulsado un metal se aviva directamente.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3399,7 +3403,7 @@ function mtChTog(){if(mtChOpen===null)mtChOpen=!mtPh();mtChOpen=!mtChOpen;if(mtC
 function mtAtH(){const can=MT.at>0&&mtBurning()<mtLimit();
  return `<span class="mtai" aria-hidden="true">${MT_ATI}</span><div class="mtat1"><b>Atium</b><small>${MT.at} en reserva · ${MT.atu} en uso</small></div><div class="mtatb"><button type="button" class="btn sm" data-act="mtatu" data-d="1"${can?'':' disabled'}>Usar</button><button type="button" class="btn sm ghost" data-act="mtatu" data-d="-1"${MT.atu?'':' disabled'}>Deshacer</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="-1" aria-label="Quitar una ficha de Atium"${MT.at?'':' disabled'}>−</button><button type="button" class="btn sm ghost" data-act="mtat" data-d="1" aria-label="Añadir una ficha de Atium">+</button></div>`}
 function mtSubH(){const f=mtNFlare();return `Turno ${MT.turn||'–'} · Entrenamiento ${MT.step||'–'}/${MT_STEPS} · Quemas ${mtBurning()}/${mtLimit()}${f?' · Avivados '+f:''}`}
-function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Más allá de tu límite de quemas, se aviva (se gira).',a:''};
+function mtCapH(){const m=MTL.find(x=>x.id===mtSel);if(!m)return{t:'Toca un metal para quemarlo. Mantén pulsado para avivarlo directamente.',a:''};
  const s=mtSt(m.id),pr=MTL.find(x=>x.id===m.p);
  let t=`${m.n} · ${MT_LAB[s]}. ${m.u}`,a='';
  if(s==='flare'){t+=` Para refrescarlo, descarta una carta de tu mano cuyo vial muestre ${m.n} o ${pr.n}.`;a=`<button type="button" class="btn sm" data-act="mtref" data-m="${m.id}">Refrescar</button><button type="button" class="btn sm ghost" data-act="mtundo" data-m="${m.id}">Deshacer</button>`}
@@ -3462,6 +3466,22 @@ function mtAskFlare(id){const m=MTL.find(x=>x.id===id);if(!m||MT.st[id]!=='burn'
  document.body.appendChild(o);const f=o.querySelector('.btn.ghost');if(f)f.focus()}
 function mtStopBurn(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='ready';mtSel=id;mtSave();mtPaint();mtFx(id,'off');toast('Has dejado de quemar '+m.n)}
 function mtDoFlare(id){mtAskClose();if(MT.st[id]!=='burn')return;const m=MTL.find(x=>x.id===id);MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'flare');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes')}
+
+/* pulsación larga sobre un metal: lo aviva directamente */
+let mtLpT=0,mtLpFired=0,mtLpXY=null;
+function mtLpCancel(){clearTimeout(mtLpT);mtLpT=0;document.querySelectorAll('.mtc.mtlp').forEach(x=>x.classList.remove('mtlp'))}
+function mtLongFlare(id){const m=MTL.find(x=>x.id===id);if(!m||!MT.ch||!MT.turn){toast('Empieza la partida para avivar metales');return}const s=mtSt(id);
+ if(s==='burn'){mtDoFlare(id);return}
+ if(s==='ready'){mtAskClose();MT.st[id]='flare';mtSel=id;mtSave();mtPaint();mtFx(id,'flare');toast(m.n+' avivado: no podrás usarlo hasta que lo recuperes');return}
+ if(s==='flare'){toast(m.n+' ya está avivado');return}
+ if(s==='used'){toast('Ya usaste este metal este turno');return}
+ toast('Refresca '+m.n+' antes de avivarlo')}
+document.addEventListener('pointerdown',e=>{const c=e.target.closest&&e.target.closest('.mtc');if(!c||(e.pointerType==='mouse'&&e.button!==0))return;mtLpCancel();mtLpXY=[e.clientX,e.clientY];c.classList.add('mtlp');
+ mtLpT=setTimeout(()=>{mtLpT=0;c.classList.remove('mtlp');mtLpFired=Date.now();try{navigator.vibrate&&navigator.vibrate(30)}catch(x){}mtLongFlare(c.dataset.m)},520)});
+document.addEventListener('pointermove',e=>{if(mtLpT&&mtLpXY&&Math.hypot(e.clientX-mtLpXY[0],e.clientY-mtLpXY[1])>10)mtLpCancel()});
+['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{if(mtLpT)mtLpCancel()},true));
+document.addEventListener('click',e=>{if(mtLpFired&&Date.now()-mtLpFired<700&&e.target.closest&&e.target.closest('.mtc')){e.stopImmediatePropagation();e.preventDefault();mtLpFired=0}},true);
+document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('.mtc'))e.preventDefault()});
 function mtAskNew(id){const m=MTL.find(x=>x.id===id);if(!m||MT.st[id]!=='ready'||document.getElementById('mtnew'))return;const pr=MTL.find(x=>x.id===m.p),can=mtBurning()<mtLimit();
  const o=document.createElement('div');o.id='mtnew';o.className='mtpick';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','mtnwt');
  o.innerHTML=`<div class="mtpk"><h2 id="mtnwt">${m.n}: ¿quieres avivarlo?</h2><p class="mtwarn"><b>Avivar:</b> la ficha se gira y <b>no podrás volver a usarlo hasta que lo refresques</b> descartando una carta cuyo vial muestre ${m.n} o ${pr.n}.</p>${can?'<p><b>Quemar:</b> lo quemas con normalidad, sin girarlo.</p>':'<p>Has alcanzado tu límite de quemas: para usar otro metal tienes que avivarlo.</p>'}<div class="mtpbtns"><button type="button" class="btn pri" data-act="mtnwf" data-m="${id}">Avivar</button>${can?`<button type="button" class="btn" data-act="mtnwb" data-m="${id}">Quemar</button>`:''}<button type="button" class="btn ghost" data-act="mtnwx">Cancelar</button></div></div>`;
