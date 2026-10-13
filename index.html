@@ -2857,11 +2857,12 @@ function randomChar(){const c=blank();c.mode='f';c.step=0;c.name=npcName().slice
  const r=Math.random();c.ancestry=r<.7?'humano':(r<.9||c.era===1)?'kandra':'koloss';
  if(c.ancestry==='kandra')c.blessing=rnd(Object.keys(BLESS));
  c.cultures=[c.ancestry==='koloss'?'Sangre koloss':rnd(c.era===1?CULT1:CULT2),rnd(CULTB)];
- const ps=Object.keys(PATHS).filter(k=>!PATHS[k].exp&&(!PATHS[k].era||PATHS[k].era.includes(c.era)));c.path=rnd(ps);
+ const ps=Object.keys(PATHS).filter(k=>!PATHS[k].exp&&(!PATHS[k].era||PATHS[k].era.includes(c.era))&&!(c.ancestry==='kandra'&&METAL[k]));c.path=rnd(ps);c.metalChoice=METAL[c.path]?'si':'no';
  const nd=pathNeeds(c),pick=(arr,n)=>{const a=arr.slice(),o=[];while(o.length<n&&a.length)o.push(a.splice(Math.floor(Math.random()*a.length),1)[0]);return o};
  c.powers={alo:pick(ALO_METALS.filter(m=>!m[2]).map(m=>m[0]),nd.alo),fer:pick(FER_METALS,nd.fer)};
  let pts=attrBudget(c);while(pts>0){const k=rnd(ATT.map(x=>x[0]));if(c.attrs[k]<attrCap(c,k)){c.attrs[k]++;pts--}}
  let sp=4;const fs0=freeSkill(c);while(sp>0){const k=rnd(SKILLS.map(x=>x[0]));if((c.skills[k]||0)+(fs0===k?1:0)<maxGrade(c)){c.skills[k]=(c.skills[k]||0)+1;sp--}}
+ c.picks=[];for(const k in c.skills)for(let i=0;i<c.skills[k];i++)c.picks.push(k);
  if(c.ancestry==='humano')c.talents.ancestry='Segundo talento de un camino heroico (a elegir)';
  const kk=Object.keys(KITS).filter(k=>k!=='otro'),k=rnd(kk),K=KITS[k];c.kit=k;c.weapons=K.w;c.armor=K.a;c.gear=K.g;
  if(K.dice){let t=0;for(let i=0;i<K.dice[0];i++)t+=1+Math.floor(Math.random()*K.dice[1]);c.arquillas=t*(c.era===2?10:1)}
@@ -3048,9 +3049,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.33';
+const APPV='00.01.34';
 const APPN='Actualización menor.';
-const APPD='Nuevo botón «Crear personaje aleatorio» en Mis fichas y corrección del corte de palabras en «Hoja calculada» en PC.';
+const APPD='El personaje aleatorio queda con todas las elecciones hechas, incluido el camino.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
