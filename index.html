@@ -2312,7 +2312,9 @@ html[data-lm=l] .csopt{color:#2A2312}
 html[data-lm=l] .mtmap{background:rgba(255,255,255,.6)}
 
 /* v00.01.16: tablero y vida a todo el ancho en tablet, sin barra deslizante */
-html[data-dev=tablet] body.hub .wrap:has(.lfroot),html[data-dev=desktop] body.hub .wrap:has(.lfroot){max-width:1320px}
+html[data-dev=tablet] body.hub .wrap:has(.lfroot),html[data-dev=desktop] body.hub .wrap:has(.lfroot){max-width:none;width:100%;padding-inline:clamp(16px,3vw,56px)}
+html[data-dev=desktop] #app:has(.lfroot){max-width:none}
+@media(min-width:1600px){html[data-dev=desktop] .lfsplit{grid-template-columns:minmax(360px,420px) minmax(0,1fr);gap:28px}html[data-dev=desktop] .mtn{font-size:.95rem}html[data-dev=desktop] .mtk{max-width:46px}html[data-dev=desktop] .mtcap{font-size:1.05rem}}
 @media(max-width:1199px){
  html[data-dev=tablet] .lfsplit,html[data-dev=desktop] .lfsplit{grid-template-columns:minmax(0,1fr);gap:14px}
  html[data-dev=tablet] .lfside,html[data-dev=desktop] .lfside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
@@ -3028,8 +3030,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.17';
-const APPN='Al minimizar los controles del tablero, también se encoge el recuadro.';
+const APPV='00.01.18';
+const APPN='En PC, el tablero y la vida ocupan toda la pantalla.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
