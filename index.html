@@ -1187,6 +1187,9 @@ html[data-mode=gm]:not([data-theme="dark"]) .hb .bell,html[data-mode=gm]:not([da
 @media (prefers-reduced-motion:no-preference){.fcount b{display:inline-block;animation:fcPop .35s ease both}}@keyframes fcPop{from{transform:scale(1.4);opacity:.4}to{transform:none;opacity:1}}
 .card.sel{outline:3px solid var(--pc);outline-offset:-3px}.selb{width:100%}.top .btn[disabled]{opacity:.5;cursor:not-allowed}
 .lg h1.hh{text-transform:uppercase;letter-spacing:.04em;font-size:clamp(1.6rem,8.2vw,2.5rem);white-space:nowrap}html[data-dev=tablet] #app:has(.authhub) .lg h1.hh,html[data-dev=desktop] #app:has(.authhub) .lg h1.hh{font-size:clamp(2.2rem,4.4vw,3.6rem);white-space:normal;overflow-wrap:anywhere}
+html[data-dev=phone] body.authdark .wrap{padding-bottom:16px}
+html.authlockh,body.authlock{overflow:hidden;overscroll-behavior:none;touch-action:none}body.authlock{height:100dvh}body.authlock input,body.authlock button,body.authlock select,body.authlock label{touch-action:manipulation}
+@media (max-height:760px){html[data-dev=phone] body.authdark .lg{margin:6px 0 10px}html[data-dev=phone] body.authdark .lg .logo{width:44px;height:44px;margin:0 auto 6px;border-radius:14px}html[data-dev=phone] body.authdark .lg .logo svg{width:26px;height:26px}html[data-dev=phone] body.authdark .lg .hs{display:none}html[data-dev=phone] body.authdark .lg .tg{margin-bottom:0}}
 </style>
 
 <style id="lifecss">
@@ -2689,8 +2692,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='148';
-const APPN='El título «La Mesa Larga» del inicio de sesión va en mayúsculas.';
+const APPV='149';
+const APPN='En móvil, la pantalla de inicio de sesión queda fija (sin desplazamiento) cuando todo cabe en pantalla.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3531,6 +3534,8 @@ document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)retur
  const r0=render;render=function(k){r0.apply(this,arguments);{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
+(function(){let raf=0;function fit(){raf=0;const b=document.body,d=document.documentElement;if(!b)return;const on=d.dataset.dev==='phone'&&b.classList.contains('authdark');b.classList.remove('authlock');d.classList.remove('authlockh');if(!on)return;if(d.scrollHeight<=innerHeight+1){b.classList.add('authlock');d.classList.add('authlockh');window.scrollTo(0,0)}}
+ const q=()=>{if(!raf)raf=requestAnimationFrame(fit)};const r1=render;render=function(){const x=r1.apply(this,arguments);q();setTimeout(q,400);return x};window.addEventListener('resize',q);window.addEventListener('orientationchange',q)})();
 const DEPTH={ppart:1,pjview:1,part:1,npc:1,auth:0,menu:0,cyber:1,dune:1,cosmere:1,rol:2,deck:2,arch:3,nb:3,ed:4};let lastKey=null;
 let selMode=false;const selIds=new Set();
 function home(){
