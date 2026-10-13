@@ -2751,19 +2751,26 @@ const JJ_Q=[
  ['¿Cuál es el grito de combate más famoso de Star Platinum?',['¡ORAORAORA!','¡KAMEHAMEHA!','¡BANKAI!'],0],
  ['¿Cuántos Joestar tienen la «J» de JoJo en sus iniciales?',['Todos los protagonistas','Ninguno','Solo uno'],0],
  ['¿Qué tipo de poder se llama «Stand»?',['Un espíritu de combate','Una espada','Un coche'],0],
- ['¿Cómo se llama el Stand de Josuke Higashikata?',['Crazy Diamond','Silver Chariot','The World'],0]];
+ ['¿Cómo se llama el Stand de Josuke Higashikata?',['Crazy Diamond','Silver Chariot','The World'],0],
+ ['¿Cómo se llama el Stand de DIO en «Stardust Crusaders»?',['The World','Killer Queen','Made in Heaven'],0],
+ ['¿Qué parte de la saga es «Stardust Crusaders»?',['La tercera','La primera','La quinta'],0],
+ ['¿Cómo se llama el Stand de Giorno Giovanna?',['Gold Experience','Purple Haze','Stone Free'],0],
+ ['¿Qué familia protagoniza la saga a lo largo de generaciones?',['Los Joestar','Los Uchiha','Los Targaryen'],0],
+ ['¿Qué Stand pertenece a Yoshikage Kira?',['Killer Queen','Star Platinum','Hermit Purple'],0],
+ ['¿Cómo se llama el abuelo de Jotaro, un Joestar muy querido?',['Joseph Joestar','Caesar Zeppeli','Polnareff'],0]];
 function jojoQ(t){let h=0;String(t).split('').forEach(c=>h=(h*31+c.charCodeAt(0))>>>0);return JJ_Q[(h+(jojoQ.k=(jojoQ.k||0)+0))%JJ_Q.length][0]}
 let jjDone=false,simJojo=false;const isJojo=()=>!!(session&&((session.jojo&&!session.owner)||(simJojo&&session.owner)));
 function jojoGate(){if(jjDone||!isJojo()||document.getElementById('jjq'))return;
- const qs=JJ_Q.slice().sort(()=>Math.random()-.5);let ok=0,n=0;const need=3;
+ let qs=JJ_Q.slice().sort(()=>Math.random()-.5);let ok=0,n=0;const TAUNT=['Una más y entras… quizá.','Casi eres un verdadero fan.','Tu Stand aún no ha despertado.','Los Joestar estarían orgullosos… o no.','Sigue, el camino del fan es largo.','¡Yare yare! Otra pregunta.'];
  const d=document.createElement('div');d.id='jjq';d.setAttribute('role','alertdialog');d.setAttribute('aria-modal','true');document.body.appendChild(d);
- const draw=(msg)=>{const q=qs[n%qs.length];const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);
-  d.innerHTML=`<div class="jjc"><small>Para jugar, debes ser un JoJo fan</small><h2>Pregunta ${ok+1} de ${need}</h2><p>${esc(q[0])}</p>${msg?`<em>${esc(msg)}</em>`:''}<div class="jjo">${o.map(([t,i])=>`<button type="button" class="btn" data-jj="${i}">${esc(t)}</button>`).join('')}</div></div>`;
-  d.querySelectorAll('[data-jj]').forEach(b=>b.onclick=()=>{if(+b.dataset.jj===q[2]){ok++;n++;if(ok>=need){jjDone=true;d.remove();toast('¡Bienvenido, verdadero fan!');return}draw('¡Correcto! Sigue así.')}else{n++;draw('¡Un verdadero fan no fallaría! Inténtalo con otra.')}})};
+ const draw=(msg)=>{if(n&&n%qs.length===0)qs=qs.sort(()=>Math.random()-.5);const q=qs[n%qs.length];const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);
+  d.innerHTML=`<div class="jjc"><small>Para jugar, debes ser un JoJo fan</small><h2>Pregunta ${n+1}</h2><p>${esc(q[0])}</p>${msg?`<em>${esc(msg)}</em>`:''}<small>Aciertos: ${ok}</small>${simJojo&&session&&session.owner?'<button type="button" class="btn ghost sm" data-jjx>Salir de la prueba</button>':''}<div class="jjo">${o.map(([t,i])=>`<button type="button" class="btn" data-jj="${i}">${esc(t)}</button>`).join('')}</div></div>`;
+  d.querySelectorAll('[data-jjx]').forEach(x=>x.onclick=()=>{simJojo=false;jjDone=false;d.remove();render(1)});
+  d.querySelectorAll('[data-jj]').forEach(b=>b.onclick=()=>{if(+b.dataset.jj===q[2]){ok++;n++;draw('¡Correcto! '+TAUNT[n%TAUNT.length])}else{n++;draw('¡Un verdadero fan no fallaría! Inténtalo con otra.')}})};
  draw('')}
 function jojoApply(){try{const on=isJojo();const r=document.documentElement;
  if(on){r.setAttribute('data-jojo','1');if(!document.getElementById('jjfx')){const d=document.createElement('div');d.id='jjfx';d.setAttribute('aria-hidden','true');d.innerHTML='<i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ゴ</i><i>ド</i><i>ド</i><b>¡MENACING!</b>';document.body.appendChild(d)}jojoGate()}
- else{r.removeAttribute('data-jojo');const d=document.getElementById('jjfx');if(d)d.remove()}}catch(e){}}
+ else{r.removeAttribute('data-jojo');{const q=document.getElementById('jjq');if(q)q.remove()}const d=document.getElementById('jjfx');if(d)d.remove()}}catch(e){}}
 {const rj=render;render=function(){const x=rj.apply(this,arguments);jojoApply();return x}}
 // al cerrar sesión se vuelve a pedir el filtro
 
@@ -3090,8 +3097,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.26';
-const APPN='Mejoras de rendimiento y pequeñas correcciones.';
+const APPV='00.01.27';
+const APPN='Ajustes de estabilidad y pequeñas correcciones.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
