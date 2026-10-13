@@ -3131,9 +3131,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.48';
-const APPN='Actualización media.';
-const APPD='Ficha de NPC a todo el ancho y adaptación global a cualquier pantalla; habilidades de NPC admiten valores negativos; ALPHA puede mostrar juegos sin publicar a usuarios concretos o a todos los juegos de golpe.';
+const APPV='00.01.49';
+const APPN='Actualización menor.';
+const APPD='Las tarjetas de NPC tienen botón para marcar como fallecido o revivir sin abrir la ficha.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3675,7 +3675,7 @@ function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.i
 function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat inv"><b>${d.inv}</b><span>Invest.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
 function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}${n.dead?' <span class="tag endt">Fallecido</span>':''}</h3><div class="meta"><span>${npcKind(n)} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">En la partida</span>':''}</div>${npcSummary(n)}
- <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
+ <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn${n.dead?'':' ghost'}" data-act="${n.dead?'npcrevive':'npcdie'}" data-id="${n.id}">${n.dead?'Revivir':'Marcar fallecido'}</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
 function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
 
