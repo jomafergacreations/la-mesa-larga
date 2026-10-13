@@ -2933,8 +2933,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.06';
-const APPN='Cosmere rediseñado: fondo con el Adonalsium hecho añicos (16 Vasos), brumas de Scadrial y tormentas de Roshar, con colores de oro, plata y azul. Muy ligero.';
+const APPV='00.01.07';
+const APPN='El botón de modo muestra «Solicita tu licencia de GM» si aún no eres Game Master, y «Cambiar a Game Master» cuando ya lo eres.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3004,7 +3004,7 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN()].join('|');
+ const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;
 if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
   t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="admpanel" aria-label="Panel de administración">${LOGOI}<b>La Mesa Larga</b><em class="admtag">Admin</em></button>
@@ -3016,7 +3016,7 @@ if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role=
  t.innerHTML=`<div class="tbin"><button type="button" class="tbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGOI}<b>La Mesa Larga</b></button>
  <nav class="tbnav" aria-label="Principal"><button type="button" class="tbi${home?' cur':''}" data-act="gohome" ${home?'aria-current="page"':''}>${HOUSE}<span>Inicio</span></button>
  ${canMenu()?`<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${SHLD}<span>Administración</span>${CHEV}</button><div class="tbd" role="menu">${canList()?it('adm','Panel de administración'):''}${canInc()?it('incid','Incidencias'+(rpOpenN()?' ('+rpOpenN()+')':'')):''}</div></div>`:''}<span class="tbind" aria-hidden="true"></span></nav>
- <div class="tbr">${session.owner?`<button type="button" class="tbi simpill" data-act="admpanel">${SHLD}<span>Simulando usuario · Volver al panel</span></button>`:''}${bellBtn("tbi tbbell")}<button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':'Cambiar a Game Master'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
+ <div class="tbr">${session.owner?`<button type="button" class="tbi simpill" data-act="admpanel">${SHLD}<span>Simulando usuario · Volver al panel</span></button>`:''}${bellBtn("tbi tbbell")}<button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':canGM()?'Cambiar a Game Master':gmReqPend?'Licencia de GM pendiente':'Solicita tu licencia de GM'}</span></button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${TI[th]}<span>Tema</span>${CHEV}</button><div class="tbd" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(th===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')}</div></div>
  <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
  setTimeout(()=>tbInd(),30);
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
