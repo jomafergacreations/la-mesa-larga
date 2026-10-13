@@ -3083,9 +3083,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.45';
-const APPN='Actualización menor.';
-const APPD='Al refrescar se mantiene la pantalla en la que estabas. El campo Tipo de la ficha de NPC es ahora un cuadro de texto libre.';
+const APPV='00.01.46';
+const APPN='Actualización media.';
+const APPD='Ficha de NPC: Investidura, ajustes de concentración e investidura, sin máximos en atributos y habilidades, Tipo de daño en ataques y textos largos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3603,12 +3603,12 @@ const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function npcName(){let n=rnd(NPC_PRE)+rnd(NPC_MID)+rnd(NPC_END);return Math.random()<.4?n+' '+rnd(NPC_ALIAS):n}
 function npcSig(o){const x=JSON.parse(JSON.stringify(o));for(const k of ['id','shared','created','dupOf','pid'])delete x[k];x.name=String(x.name||'').replace(/ \(copia\)$/,'');return JSON.stringify(x)}
 function npcNorm(o){o=o||{};const a=Object.assign({fue:0,vel:0,int:0,vol:0,dis:0,pre:0},o.attrs);
- return{id:o.id||uid(),game:NPCGAMES.some(x=>x[0]===o.game)?o.game:'nb',name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',kindTxt:String(o.kindTxt||'').slice(0,40),dead:!!o.dead,level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,
-  skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||'')})):[],
+ return{id:o.id||uid(),game:NPCGAMES.some(x=>x[0]===o.game)?o.game:'nb',name:String(o.name||''),role:String(o.role||''),kind:NPCKIND[o.kind]?o.kind:'humano',kindTxt:String(o.kindTxt||'').slice(0,40),dead:!!o.dead,level:Math.min(30,Math.max(1,+o.level||1)),attrs:a,hpAdj:+o.hpAdj||0,conAdj:+o.conAdj||0,invAdj:+o.invAdj||0,
+  skills:Object.assign({},o.skills),attacks:Array.isArray(o.attacks)?o.attacks.map(x=>({n:String(x.n||''),b:String(x.b||''),d:String(x.d||''),t:String(x.t||'')})):[],
   traits:String(o.traits||''),look:String(o.look||''),motive:String(o.motive||''),gear:String(o.gear||''),notes:String(o.notes||''),shared:!!o.shared,pid:String(o.pid||''),dupOf:o.dupOf?String(o.dupOf):'',created:o.created||Date.now()}}
 const npcCap=l=>Math.min(5,3+Math.floor(l/3));
 function npcDer(n){const t=n.attrs,kol=n.kind==='koloss'?1:0,l=n.level;
- return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol,grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
+ return{salud:10+t.fue+kol+hpLevel({level:l},t.fue)+(+n.hpAdj||0),fis:10+t.fue+t.vel,cog:10+t.int+t.vol,esp:10+t.dis+t.pre,conc:2+t.vol+(+n.conAdj||0),inv:2+Math.max(t.dis,t.pre)+(+n.invAdj||0),grades:Object.values(n.skills).reduce((a,b)=>a+(+b||0),0),maxG:maxGrade({level:l})}}
 function npcMod(n,k){return (+n.skills[k]||0)+n.attrs[SK[k][2]]}
 function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.id===o.arch):rnd(NPCARCH);const L=Math.min(30,Math.max(1,+o.level||rint(1,4)));
  const kinds=['humano','humano','humano','humano','kandra','koloss'];const kind=o.kind&&o.kind!=='any'?o.kind:rnd(kinds);
@@ -3625,7 +3625,7 @@ function npcGen(o){o=o||{};const arch=o.arch&&o.arch!=='any'?NPCARCH.find(a=>a.i
   traits:'Personalidad: '+rnd(NPC_PERS)+'.',look:rnd(NPC_LOOK)+'.',motive:rnd(NPC_MOT)+'.',gear:[rnd(arch.gear),rnd(arch.gear)].filter((x,i,r)=>r.indexOf(x)===i).join(', ')});
  if(kind==='koloss')n.traits+=' Sangre koloss: robusto y de gran tamaño.';if(kind==='kandra')n.traits+=' Kandra: puede cambiar de forma según tu mesa.';return n}
 function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
-function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
+function npcSummary(n){const d=npcDer(n);return `<div class="stats" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat inv"><b>${d.inv}</b><span>Invest.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
 function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}${n.dead?' <span class="tag endt">Fallecido</span>':''}</h3><div class="meta"><span>${npcKind(n)} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">En la partida</span>':''}</div>${npcSummary(n)}
  <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
 function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
@@ -3641,10 +3641,10 @@ function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
  return `<div class="npcro"><p class="hint" style="margin:0">${npcKind(n)} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</p>${npcSummary(n)}
  <div class="npcat">${A.map(([k,nm])=>`<span><b>${n.attrs[k]}</b>${nm}</span>`).join('')}</div>
  ${sk?`<h4>Habilidades</h4><ul class="hlpl">${sk}</ul>`:''}
- ${n.attacks.length?`<h4>Ataques</h4><ul class="hlpl">${n.attacks.map(a=>`<li><b>${esc(a.n)}</b> ${esc(a.b)} · ${esc(a.d)}</li>`).join('')}</ul>`:''}
+ ${n.attacks.length?`<h4>Ataques</h4><ul class="hlpl">${n.attacks.map(a=>`<li><b>${esc(a.n)}</b> ${esc(a.b)} · ${esc(a.d)}${a.t?' · '+esc(a.t):''}</li>`).join('')}</ul>`:''}
  ${[['Rasgos y talentos',n.traits],['Aspecto',n.look],['Motivación',n.motive],['Equipo',n.gear],['Notas',n.notes]].filter(x=>x[1]).map(([t,v])=>`<h4>${t}</h4><p class="pre" style="margin:0">${esc(v)}</p>`).join('')}</div>`}
 function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=npcDer(n);
- const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}"${k==='look'?' data-nolimit="1"':''} placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
+ const fld=(k,l,ph,rows)=>`<label class="f">${l}${rows?`<textarea data-nf="${k}" rows="${rows}" data-nolimit="1" placeholder="${ph||''}">${esc(n[k])}</textarea>`:`<input type="text" data-nf="${k}" value="${esc(n[k])}" placeholder="${ph||''}" autocomplete="off">`}</label>`;
  const stp=(act,k,val,lbl)=>`<div class="step"><button type="button" data-act="${act}" data-k="${k}" data-d="-1" aria-label="Bajar ${lbl}">−</button><output>${val}</output><button type="button" data-act="${act}" data-k="${k}" data-d="1" aria-label="Subir ${lbl}">+</button></div>`;
  return hubBar([n.pid?'npcback':'menu',n.pid?'Volver a la partida':'Volver a mis NPC'])+`<h1 class="hh">${esc(n.name||'NPC sin nombre')}</h1><p class="hs">Ficha de NPC · ${gameName(n.game)}${n.shared?' · en la partida':''}</p><div class="npctop">${n.dead?`<button class="btn pri" data-act="npcrevive" data-id="${n.id}">Revivir NPC</button><small><b>NPC fallecido:</b> su ficha está bloqueada hasta que lo revivas.</small>`:`<button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdie" data-id="${n.id}">Marcar como fallecido</button><small>Se guarda también solo mientras escribes.</small>`}</div>
  <section class="npcpanel glass"${n.dead?' inert style="opacity:.55"':''}><div class="grid">
@@ -3654,12 +3654,14 @@ function npcEditor(){const n=npcCur();if(!n){scr='menu';return gmHome()}const d=
  <h3>Atributos</h3><div class="npcg3">${ATT.map(([k,nm])=>`<div class="f">${nm}${stp('npcatt',k,n.attrs[k],nm)}</div>`).join('')}</div>
  <div id="npcd" class="stats npcd">${npcDerHTML(n)}</div>
  <div class="f">Ajuste de salud${stp('npchp','h',(n.hpAdj>0?'+':'')+(n.hpAdj||0),'salud')}</div>
- <h3>Habilidades <small id="npcgr">${d.grades} grados · máximo ${d.maxG} por habilidad</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
- <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
+ <div class="f">Ajuste de concentración${stp('npccon','c',(n.conAdj>0?'+':'')+(n.conAdj||0),'concentración')}</div>
+ <div class="f">Ajuste de investidura${stp('npcinv','i',(n.invAdj>0?'+':'')+(n.invAdj||0),'investidura')}</div>
+ <h3>Habilidades <small id="npcgr">${d.grades} grados</small></h3><div class="npcsk">${SKILLS.map(s=>`<div class="npcs"><span>${s[1]} <small>${ATT.find(a=>a[0]===s[2])[1].slice(0,3)}</small></span>${stp('npcsk',s[0],n.skills[s[0]]||0,s[1])}<em id="m_${s[0]}">${sg(npcMod(n,s[0]))}</em></div>`).join('')}</div>
+ <h3>Ataques</h3><div class="npcatk">${n.attacks.map((a,i)=>`<div class="item tl"><input type="text" data-nf="atk.${i}.n" value="${esc(a.n)}" placeholder="Arma" aria-label="Arma"><input type="text" data-nf="atk.${i}.b" value="${esc(a.b)}" placeholder="Bonus" aria-label="Bonus" style="max-width:90px"><input type="text" data-nf="atk.${i}.d" value="${esc(a.d)}" placeholder="Daño" aria-label="Daño"><input type="text" data-nf="atk.${i}.t" value="${esc(a.t||'')}" placeholder="Tipo de daño" aria-label="Tipo de daño"><button type="button" class="btn sm ghost" data-act="npcatkdel" data-i="${i}" aria-label="Quitar ataque">✕</button></div>`).join('')}<div class="row"><button type="button" class="btn sm" data-act="npcatkadd">+ Añadir ataque</button></div></div>
  <p class="hint" style="margin:0">El daño es orientativo: ajústalo con las reglas del manual para el arma que use.</p>
  ${fld('traits','Rasgos y talentos','Personalidad, capacidades especiales…',3)}${fld('look','Aspecto','Cómo se ve y suena',2)}${fld('motive','Motivación','Qué quiere',2)}${fld('gear','Equipo','Armas, armadura, objetos',2)}${fld('notes','Notas del GM','Secretos, ganchos de aventura…',3)}
  <div class="row"><button class="btn pri npcsv" data-act="npcsave">Guardar NPC</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button><button class="btn" data-act="${n.pid?(n.shared?'npchide':'npcrev'):'npcmove'}" data-id="${n.id}">${n.pid?(n.shared?'Retirar de la partida':'Meter en la partida'):'Mover a una partida'}</button><button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></div></section>`}
-function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
+function npcDerHTML(n){const d=npcDer(n);return `<div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat inv"><b>${d.inv}</b><span>Investidura</span></div><div class="stat"><b>${d.fis}</b><span>Def. física</span></div><div class="stat"><b>${d.cog}</b><span>Def. cognitiva</span></div><div class="stat"><b>${d.esp}</b><span>Def. espiritual</span></div>`}
 const rvBody=(n,full)=>`${n.dead?'<span class="tag endt">Fallecido</span> ':''}<div class="meta"><span>${[npcKind(n),esc(n.role||'')].filter(Boolean).join(' · ')||'NPC'}</span></div>${full&&n.look?`<p class="pre" style="margin:6px 0 0"><b>Aspecto:</b> ${esc(n.look)}</p>`:''}`;
 function rvDlg(n){showDlg(esc(n.name||'NPC'),`<div class="npcro">${rvBody(n,true)}${n.look?'':'<p class="hint">El Game Master no ha descrito su aspecto.</p>'}</div>`,true)}
 function revealedHTML(){if(!revealed.length)return '';const seen=revealedHTML.seen||(revealedHTML.seen=new Set());
@@ -4417,13 +4419,15 @@ document.addEventListener('click',e=>{
   case 'npcdel2':{const id=b.dataset.id,o=store.npcs.find(x=>x.id===id);try{$('#dlg').close()}catch(x){}if(o&&o.shared)fs('DELETE','reveladas/'+id).catch(()=>{});delete npcPushed[id];store.npcs=store.npcs.filter(x=>x.id!==id);if(store.npcCur===id){store.npcCur=null;scr=(o&&o.pid)?'part':'menu';if(o&&o.pid)partId=o.pid}save();render();toast('NPC borrado');break}
   case 'npcrev':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;if(!o.pid){toast('Primero mueve este NPC a una partida');break}if(o.dupOf&&npcSig(o)===o.dupOf){toast('Cambia algo del NPC duplicado y guárdalo antes de meterlo en la partida');break}delete o.dupOf;o.shared=true;save();pushShared().then(()=>toast('NPC metido en la partida'));render(1);const el=document.querySelector('[data-nid="'+o.id+'"]');if(el){el.classList.add('flash')}break}
   case 'npchide':{const o=store.npcs.find(x=>x.id===b.dataset.id);if(!o)break;o.shared=false;delete npcPushed[o.id];fs('DELETE','reveladas/'+o.id).catch(()=>{});save();render(1);toast('NPC retirado de la partida');break}
-  case 'npcatt':{const n=npcCur();if(!n)break;const k=b.dataset.k,d=+b.dataset.d;n.attrs[k]=Math.max(0,Math.min(npcCap(n.level)+1,(n.attrs[k]||0)+d));save();render(1);break}
-  case 'npclvl':{const n=npcCur();if(!n)break;n.level=Math.max(1,Math.min(30,n.level+(+b.dataset.d)));const mg=maxGrade({level:n.level});for(const k in n.skills)if(n.skills[k]>mg)n.skills[k]=mg;save();render(1);break}
+  case 'npcatt':{const n=npcCur();if(!n)break;const k=b.dataset.k,d=+b.dataset.d;n.attrs[k]=Math.max(0,Math.min(99,(n.attrs[k]||0)+d));save();render(1);break}
+  case 'npclvl':{const n=npcCur();if(!n)break;n.level=Math.max(1,Math.min(30,n.level+(+b.dataset.d)));save();render(1);break}
   case 'npcdie':{const n=store.npcs.find(x=>x.id===b.dataset.id);if(!n)break;n.dead=true;save();render(1);toast('NPC marcado como fallecido');break}
   case 'npcrevive':{const n=store.npcs.find(x=>x.id===b.dataset.id);if(!n)break;n.dead=false;save();render(1);toast('NPC revivido');break}
+  case 'npccon':{const n=npcCur();if(!n)break;n.conAdj=Math.max(-30,Math.min(60,(+n.conAdj||0)+(+b.dataset.d)));save();render(1);break}
+  case 'npcinv':{const n=npcCur();if(!n)break;n.invAdj=Math.max(-30,Math.min(60,(+n.invAdj||0)+(+b.dataset.d)));save();render(1);break}
   case 'npchp':{const n=npcCur();if(!n)break;n.hpAdj=Math.max(-30,Math.min(60,(+n.hpAdj||0)+(+b.dataset.d)));save();render(1);break}
-  case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k,mg=maxGrade({level:n.level});n.skills[k]=Math.max(0,Math.min(mg,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
-  case 'npcatkadd':{const n=npcCur();if(!n)break;n.attacks.push({n:'',b:'',d:''});save();render(1);{const i=document.querySelectorAll('.npcatk .item');const l=i[i.length-1];if(l){const f=l.querySelector('input');if(f)f.focus()}}break}
+  case 'npcsk':{const n=npcCur();if(!n)break;const k=b.dataset.k;n.skills[k]=Math.max(0,Math.min(99,(+n.skills[k]||0)+(+b.dataset.d)));save();render(1);break}
+  case 'npcatkadd':{const n=npcCur();if(!n)break;n.attacks.push({n:'',b:'',d:'',t:''});save();render(1);{const i=document.querySelectorAll('.npcatk .item');const l=i[i.length-1];if(l){const f=l.querySelector('input');if(f)f.focus()}}break}
   case 'npcatkdel':{const n=npcCur();if(!n)break;n.attacks.splice(+b.dataset.i,1);save();render(1);break}
   case 'ppopen':{partId=b.dataset.p;scr='ppart';render();fetchRevealed();break}
   case 'npcpx':{const pp=document.getElementById('npcpop');if(pp)pp.remove();break}
