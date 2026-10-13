@@ -1114,20 +1114,7 @@ html[data-dev=tablet] .hb .hn{flex:1;min-width:0}html[data-dev=tablet] #npcpop{t
 body.has-tb .hb .bell{display:none}body.has-tb .hb .bell+.hlp{margin-left:auto}
 
 
-/* manuales */
-.mansec{margin-top:22px}
-.mancards .mancard{animation:manin .45s cubic-bezier(.2,.8,.2,1) both}.mancards .mancard:nth-child(2){animation-delay:.06s}.mancards .mancard:nth-child(3){animation-delay:.12s}.mancards .mancard:nth-child(n+4){animation-delay:.18s}
-@keyframes manin{from{opacity:0;transform:translateY(10px)}}
-.manbar{height:8px;border-radius:99px;background:rgba(120,125,140,.25);overflow:hidden;margin:8px 0 4px}.manbar i{display:block;height:100%;background:linear-gradient(90deg,var(--pc,#2563EB),#0F9D9A);transition:width .35s ease}
-#dlg.mand{width:min(980px,calc(100vw - 20px))}#dlg.manv[open]{animation:manv .35s cubic-bezier(.2,.8,.2,1)}@keyframes manv{from{opacity:0;transform:scale(.97)}}
-.manview{width:100%;height:68vh;border:1px solid rgba(120,125,140,.35);border-radius:14px;background:#fff;margin-top:10px}
-.manimg{max-height:68vh;overflow:auto;margin-top:10px}.manimg img{max-width:100%;border-radius:12px;display:block}
-.mantxt{white-space:pre-wrap;word-break:break-word;max-height:68vh;overflow:auto;margin:10px 0 0;padding:14px;border-radius:14px;border:1px solid rgba(120,125,140,.35);font:.9rem/1.5 var(--sans,system-ui)}
-@media(prefers-reduced-motion:reduce){.mancards .mancard,#dlg.manv[open]{animation:none}.manbar i{transition:none}}
 
-.mansum{margin-top:12px;padding:14px 16px;border-radius:16px;border:1px solid rgba(120,125,140,.35);background:rgba(120,125,140,.08);animation:manin .4s ease both}.mansum h4{margin:0 0 6px;font-size:1.05rem}.mansum h5{margin:12px 0 4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
-.mansum ul{margin:0;padding-left:20px;display:grid;gap:6px}.manss li{line-height:1.45}.manol{columns:2;column-gap:28px}@media(max-width:560px){.manol{columns:1}}
-.mansum.min{max-height:140px;overflow:hidden;position:relative}.mansum.min::after{content:'';position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,var(--bg,rgba(255,255,255,.9)))}
 .hb .hn em.supr{background:linear-gradient(90deg,#F59E0B,#D9480F);color:#fff;letter-spacing:.14em;padding:1px 8px;border-radius:99px;display:inline-block;align-self:flex-start;width:fit-content}
 /* modo GM: tema claro */
 html[data-mode=gm][data-theme="light"]:root body.hub{--h-bg:#FFF3EA;--h-card:#FFFFFF;--h-ink:#3A1620;--h-mut:#7A4A3A;--h-line:#EBBFAA;background:var(--h-bg);color:var(--h-ink)}
@@ -3039,8 +3026,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.23';
-const APPN='Al unirte a una partida ves la sinopsis que escribió el GM.';
+const APPV='00.01.24';
+const APPN='Eliminados los manuales adjuntos del modo GM (también en la nube).';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3581,83 +3568,12 @@ function npcCur(){return (store.npcs||[]).find(x=>x.id===store.npcCur)}
 function npcSummary(n){const d=npcDer(n);return `<div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`}
 function npcCard(n,i){return `<article class="card npcc${gmStag?' stg':''}" data-nid="${n.id}" style="--i:${i}"><h3>${esc(n.name||'Sin nombre')}</h3><div class="meta"><span>${NPCKIND[n.kind]} · ${esc(n.role||'Sin rol')} · nivel ${n.level}</span><span class="tag">${gameName(n.game)}</span>${n.shared?'<span class="tag rv">En la partida</span>':''}</div>${npcSummary(n)}
  <div class="row"><button class="btn pri" data-act="npcopen" data-id="${n.id}">Abrir</button><button class="btn" data-act="npcdup" data-id="${n.id}">Duplicar</button>${n.pid?`<button class="btn" data-act="${n.shared?'npchide':'npcrev'}" data-id="${n.id}">${n.shared?'Retirar de la partida':'Meter en la partida'}</button>`:`<button class="btn" data-act="npcmove" data-id="${n.id}">Mover a una partida</button>`}<button class="btn ghost" data-act="npcdel" data-id="${n.id}">Borrar</button></div></article>`}
-function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${manSec()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
+function gmHome(){const lg=(store.npcs||[]).filter(x=>!x.pid);const h=hubBar(null)+welcomeHTML()+`<h1 class="hh">Game Master</h1><p class="hs">Crea tus partidas e invita a tus jugadores. Los personajes no jugadores (NPC) se crean dentro de cada partida.</p>${partsGM()}${lg.length?`<h2 class="hh2">NPC sin partida</h2><p class="hint">Estos NPC se crearon antes de que existieran las partidas. Muévelos a una partida o bórralos.</p><div class="npcgrid">${lg.map(npcCard).join('')}</div>`:''}`;
  if(gmStag)setTimeout(()=>{gmStag=false},900);return h}
 
-/* ---------- Manuales del GM: el resumen va a la nube y el archivo original se queda en este dispositivo ---------- */
-const MAN_N=10;let manList=null,manUp=false,manLocal=new Map();
-const manAllowed=()=>!!session&&store.mode==='gm';
-function manType(f){const n=(f.name||'').toLowerCase();if(f.type&&/^(application\/pdf|text\/plain|text\/markdown|image\/(png|jpeg|webp|gif))$/.test(f.type))return f.type;if(/\.pdf$/.test(n))return'application/pdf';if(/\.md$/.test(n))return'text/markdown';if(/\.txt$/.test(n))return'text/plain';return''}
-const manSz=n=>n>=1073741824?(n/1073741824).toFixed(1)+' GB':n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
-const manIco=t=>t==='application/pdf'?'PDF':/^image/.test(t)?'IMG':'TXT';
-/* almacén local (IndexedDB) */
-const idbOpen=()=>new Promise((ok,no)=>{try{const r=indexedDB.open('lml_manuales',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
-async function idbDo(mode,fn){const d=await idbOpen();return new Promise((ok,no)=>{const t=d.transaction('f',mode),rq=fn(t.objectStore('f'));t.oncomplete=()=>{d.close();ok(rq&&rq.result)};t.onerror=t.onabort=()=>{d.close();no(t.error)}})}
-const idbPut=(k,v)=>idbDo('readwrite',s=>s.put(v,k)),idbGet=k=>idbDo('readonly',s=>s.get(k)),idbDel=k=>idbDo('readwrite',s=>s.delete(k)),idbKeys=()=>idbDo('readonly',s=>s.getAllKeys());
-async function manPool(n,k,fn){let nx=0;const w=async()=>{while(nx<n){const i=nx++;await fn(i)}};await Promise.all(Array.from({length:Math.min(k,n)},w))}
-/* resumen automático (extractivo, en el dispositivo) */
-let pdfjsP=null;const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
-function pdfLoad(){if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);return pdfjsP||(pdfjsP=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src=PDFJS+'pdf.min.js';sc.onload=async()=>{try{const w=await(await fetch(PDFJS+'pdf.worker.min.js')).text();window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([w],{type:'text/javascript'}))}catch(e){}ok(window.pdfjsLib)};sc.onerror=()=>{pdfjsP=null;no(new Error('pdfjs'))};document.head.appendChild(sc)}))}
-const MSTOP=new Set('de la que el en y a los del se las por un para con no una su al lo como más pero sus le ya o este sí porque esta entre cuando muy sin sobre también me hasta hay donde quien desde todo nos durante todos uno les ni contra otros ese eso ante ellos e esto antes algunos qué unos yo otro otras otra él tanto esa estos mucho quienes nada muchos cual poco ella estar estas algunas algo nosotros mi mis tú te ti tu tus ellas es son ser puede pueden si cada así donde tiene tienen será serán han ha fue era the of and to in is'.split(' '));
-const MTURN=/\b(turnos?|rondas?|iniciativa)\b/gi,MLVL=/\b(subir de nivel|sube de nivel|nivel(?:es)? de personaje|avanzar de nivel|ganar un nivel|alcanzar(?:s|á)? el nivel|puntos? de experiencia|experiencia|hitos?|avance|ascender|ascendencia|nivel)\b/gi;
-const MTURNB=/(en tu turno|tu turno|cada turno|orden de (?:los )?turnos|comienzo de (?:cada|la) ronda|principio de (?:cada|la) ronda|final de (?:cada|la) ronda|tirada de iniciativa|iniciativa)/i,MLVLB=/(subir de nivel|sube de nivel|al alcanzar el nivel|alcanzas el nivel|puntos? de experiencia|ganar un nivel|avanzar de nivel|hito)/i;
-function manSumTopic(sents,re,bonus,n){const sc=[];sents.forEach((x,i)=>{re.lastIndex=0;const hits=(x.match(re)||[]).length;if(!hits)return;let v=hits+(bonus.test(x)?3:0);const dg=(x.match(/\d/g)||[]).length;if(dg/x.length>.12)v-=2;if(/Capítulo \d/.test(x))v-=2;if(v>0)sc.push({i,x,v})});
- return sc.sort((a,b)=>b.v-a.v).slice(0,n).sort((a,b)=>a.i-b.i).map(q=>q.x.length>250?q.x.slice(0,247)+'…':q.x)}
-function manSummarize(text,outline,pages){
- const clean=String(text||'').replace(/\s+/g,' ').trim();
- const o=(outline||[]).map(x=>String(x).trim()).filter(x=>x.length>1&&x.length<90&&/(turno|ronda|iniciativa|nivel|avance|progres|experiencia|combate)/i.test(x)).slice(0,20);
- const sents=(clean.match(/[A-ZÁÉÍÓÚÑ¿¡][^.!?]{40,300}[.!?]/g)||[]).slice(0,40000).map(x=>x.trim());
- const t=manSumTopic(sents,MTURN,MTURNB,8),l=manSumTopic(sents,MLVL,MLVLB,8);
- if(!t.length&&!l.length&&!o.length)return '';
- return JSON.stringify({p:pages|0,o:o,t:t,l:l})}
-function flatOutline(a,out,d){(a||[]).forEach(x=>{if(x&&x.title)out.push(String(x.title));if(x&&x.items&&d<1)flatOutline(x.items,out,d+1)});return out}
-async function manAnalyze(f,ty){let u='';try{
- if(/^image/.test(ty))return '';
- if(ty==='application/pdf'){const lib=await pdfLoad();u=URL.createObjectURL(f);const doc=await lib.getDocument({url:u}).promise;let txt='',lim=Math.min(doc.numPages,600);
-  for(let i=1;i<=lim&&txt.length<1500000;i++){const pg=await doc.getPage(i),tc=await pg.getTextContent();txt+=tc.items.map(z=>z.str).join(' ')+' ';manProg('Analizando el manual… página '+i+' de '+lim,3+(i/lim)*90)}
-  let ol=[];try{ol=flatOutline(await doc.getOutline(),[],0)}catch(e){}
-  return manSummarize(txt,ol,doc.numPages)}
- return manSummarize((await f.text()).slice(0,3000000),[],0)}catch(e){return ''}finally{if(u)try{URL.revokeObjectURL(u)}catch(e){}}}
-function manSumHtml(m){let r=null;try{r=m.sum?JSON.parse(m.sum):null}catch(e){}
- const re=`<div class="row" style="margin-top:10px"><label class="btn sm" for="manredo">Volver a generar el resumen</label><input type="file" id="manredo" data-id="${esc(m.id)}" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" hidden></div><div class="manprog" aria-live="polite"></div>`;
- if(!r||(!(r.t&&r.t.length)&&!(r.l&&r.l.length)&&!(r.o&&r.o.length)))return `<section class="mansum"><h4>Resumen</h4><p class="hint" style="margin:0">${/^image/.test(m.type)?'Las imágenes no tienen resumen automático.':r&&r.s?'Este resumen es de una versión anterior (general). Vuelve a generarlo para obtener el resumen de turnos y subida de nivel.':'No se ha encontrado texto sobre turnos o subida de nivel (puede ser un documento escaneado).'}</p>${/^image/.test(m.type)?'':re}</section>`;
- const ul=a=>`<ul class="manss">${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
- return `<section class="mansum"><h4>Resumen automático${r.p?' · '+r.p+' páginas':''}</h4>${r.t&&r.t.length?`<h5>Cómo funcionan los turnos</h5>${ul(r.t)}`:''}${r.l&&r.l.length?`<h5>Cómo subir de nivel</h5>${ul(r.l)}`:''}${r.o&&r.o.length?`<h5>Apartados relacionados</h5><ul class="manol">${r.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}<small class="hint">Extracto automático de las frases del manual sobre turnos y subida de nivel. Para una regla exacta consulta tu manual.</small>${re}</section>`}
-async function manLoad(){if(!session)return;try{manList=(await fsQuery('manuales','uid',session.uid)).sort((a,b)=>(b.created|0)-(a.created|0))}catch(e){if(!Array.isArray(manList))manList=[]}
- try{for(const k of await idbKeys())await idbDel(k)}catch(e){}}
-function manRows(open){const L=manList||[];return L.length?`<div class="alist mancards">${L.map(m=>`<div class="arow mancard"><div class="ahead" style="cursor:default"><span class="aav">${manIco(m.type)}</span><span class="anm"><b>${esc(m.name)}</b><small>${manSz(m.size|0)} · solo resumen guardado</small></span><button type="button" class="btn sm pri" data-act="manopen" data-id="${esc(m.id)}">Ver resumen</button><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(m.id)}">Borrar</button></div></div>`).join('')}</div>`:`<p class="hint" style="margin:0">${manList===null?'Cargando tus manuales…':'Aún no has generado ningún resumen.'}</p>`}
-function manSec(){if(manList===null)manLoad().then(()=>{if(scr==='menu'&&store.mode==='gm'&&!store.cur&&!document.querySelector('dialog[open]'))render(1)});
- return `<section class="partsec mansec"><div class="psh"><h2 class="hh2" style="margin:0">Manuales</h2><button type="button" class="btn pri" data-act="manpick">Generar resumen del manual</button><input type="file" id="manfile" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" hidden></div><p class="hint">Elige un manual (PDF o texto, sin límite de tamaño). La app lo analiza en tu dispositivo y se queda solo con el resumen de turnos y subida de nivel: el archivo no se guarda en ningún sitio. Solo tú, como Game Master, puedes verlo.</p><div class="manprog" aria-live="polite"></div>${manRows(false)}</section>`}
-function manDlg(){if(!manAllowed())return;showDlg('Resúmenes de manuales',`<p class="hint" style="margin:0">Solo tú puedes consultar estos resúmenes.</p>${manRows(true)}${manList&&manList.length?'':'<p class="hint">Genera uno desde el inicio del modo Game Master.</p>'}`,true);$('#dlg').classList.add('mand');if(manList===null)manLoad().then(()=>{if($('#dlg').open&&$('#dlg').classList.contains('mand'))manDlg()})}
-function manProg(t,pc){const h=t?`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`:'';document.querySelectorAll('.manprog').forEach(e=>{e.innerHTML=h})}
-async function manProcess(f,redoId){const ty=manType(f);if(!ty||/^image/.test(ty)){toast('Formato no admitido: usa PDF, TXT o MD');return}
- if(manUp)return;if(!redoId&&(manList||[]).length>=MAN_N){toast('Máximo '+MAN_N+' manuales: borra alguno antes');return}
- manUp=true;
- try{manProg('Preparando…',2);const sm=await manAnalyze(f,ty);
-  if(!sm){manProg('');toast('No se ha podido extraer texto de ese archivo (¿es un escaneo?), así que no hay resumen');manUp=false;return}
-  manProg('Guardando el resumen…',96);
-  if(redoId){await fs('PATCH','manuales/'+redoId,fbEnc({sum:sm}),maskQ({sum:1}));const m=(manList||[]).find(x=>x.id===redoId);if(m)m.sum=sm}
-  else await fs('PATCH','manuales/'+session.uid+'_'+uid()+uid(),fbEnc({uid:session.uid,name:f.name.slice(0,120),type:ty,size:f.size,n:0,sum:sm,created:Date.now()}));
-  manProg('¡Resumen listo!',100);setTimeout(()=>manProg(''),1500);toast('Resumen guardado. El archivo no se ha guardado en ningún sitio');
-  if(redoId){const m=(manList||[]).find(x=>x.id===redoId);if(m&&$('#manbox'))$('#manbox').innerHTML=manSumHtml(m)}else{manList=null;await manLoad();if(scr==='menu'&&!store.cur)render(1)}}
- catch(x){manProg('');toast(x&&x.code==='NET'?'Sin conexión: no se pudo guardar':'No se pudo guardar el resumen (revisa las reglas de Firestore)')}
- manUp=false}
-document.addEventListener('change',e=>{const t=e.target;if(!t||(t.id!=='manfile'&&t.id!=='manredo'))return;const f=t.files&&t.files[0],lid=t.dataset.id;t.value='';if(!f||!manAllowed())return;manProcess(f,t.id==='manredo'?lid:null)});
-function manOpen(id){if(!manAllowed())return;const m=(manList||[]).find(x=>x.id===id);if(!m)return;
- showDlg(esc(m.name),`<div class="row"><button type="button" class="btn sm" data-act="manview">‹ Resúmenes</button><button type="button" class="btn sm ghost" data-act="manrm" data-id="${esc(id)}">Borrar</button></div><div id="manbox">${manSumHtml(m)}</div>`,true);$('#dlg').classList.add('mand','manv')}
-function manRmDlg(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
- showDlg('Borrar manual',`<p style="margin:0">¿Seguro que quieres borrar <b>${esc(m.name)}</b>?</p><p class="hint" style="margin:6px 0 0">Se eliminará el resumen guardado (tu archivo original no se toca). Esta acción no se puede deshacer.</p><div id="manrmp" aria-live="polite"></div><div class="row"><button type="button" class="btn danger" data-act="manrm2" data-id="${esc(id)}">Sí, borrar</button><button type="button" class="btn" data-act="manrmno">No, cancelar</button></div>`,true)}
-function manRmProg(t,pc){const e=document.getElementById('manrmp');if(e)e.innerHTML=`<div class="manbar"><i style="width:${pc|0}%"></i></div><small>${esc(t)}</small>`}
-const manWait=ms=>new Promise(r=>setTimeout(r,ms));
-async function manRm(id){const m=(manList||[]).find(x=>x.id===id);if(!m||!manAllowed())return;
- document.querySelectorAll('#dlg [data-act=manrm2],#dlg [data-act=manrmno]').forEach(x=>x.disabled=true);
- try{manRmProg('Preparando el borrado…',10);try{await idbDel(id)}catch(e){}manLocal.delete(id);manRmProg('Listo para borrar',45);await manWait(350);
-  const nc=m.n|0;for(let i=0;i<nc;i++){await fs('DELETE','manchunks/'+id+'_'+i);manRmProg('Borrando datos de la nube… '+(i+1)+'/'+nc,45+30*(i+1)/nc)}
-  manRmProg('Borrando el resumen de la nube…',80);await fs('DELETE','manuales/'+id);
-  manRmProg('¡Manual borrado!',100);await manWait(700);
-  manList=(manList||[]).filter(x=>x.id!==id);toast('Manual borrado');
-  if($('#dlg').open&&$('#dlg').querySelector('#manrmp'))manDlg();if(scr==='menu'&&!store.cur)render(1)}
- catch(e){manRmProg('No se pudo completar el borrado. Inténtalo de nuevo.',0);document.querySelectorAll('#dlg [data-act=manrm2],#dlg [data-act=manrmno]').forEach(x=>x.disabled=false)}}
+/* ---------- limpieza única de los antiguos manuales del GM (se eliminan de la nube y del dispositivo) ---------- */
+async function purgeMan(){if(!session||store.manPurged)return;
+ try{const L=await fsQuery('manuales','uid',session.uid);for(const m of L){await fs('DELETE','manuales/'+m.id)}try{indexedDB.deleteDatabase('lml_manuales')}catch(e){}store.manPurged=1;save()}catch(e){}}
 
 const PENI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.500 6.500l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function npcSheet(n,ro){const d=npcDer(n),A=ATT.map(([k,nm])=>[k,nm]);
@@ -3756,7 +3672,7 @@ async function loadParts(){if(!session)return;
   try{exits=(await fsQuery('salidas','gm',session.uid)).filter(x=>x.kind==='left').sort((a,b)=>(a.created|0)-(b.created|0));kicks=(await fsQuery('salidas','uid',session.uid)).filter(x=>x.kind==='kicked');
    for(const k of kicks){if(!kkSeen.has(k.id)){if(kkSeen.size||loadParts.k2)toast('Te han expulsado de «'+(k.pname||'una partida')+'»');kkSeen.add(k.id)}}loadParts.k2=1}catch(e){}
   if(!store.seeded){store.seeded=true;exits.forEach(x=>(store.popEx=store.popEx||[]).push(x.id));invs.forEach(x=>(store.popInv=store.popInv||[]).push(x.id));save()}
-  await rpLoad();await syncLinked();exPop();ensureCodes();
+  await rpLoad();await syncLinked();exPop();ensureCodes();purgeMan();
   invPop();if(store.mode!=='gm')fetchRevealed();
   const sg=JSON.stringify([parts.map(p=>[p.id,p.name]),myParts.map(p=>[p.id,p.name,p.cid,apState[p.id],reqState[p.id],denyState[p.id],p.end||'',hpMap[p.id+'_'+session.uid]|0]),rpOpenN(),exits.map(x=>x.id),kicks.map(x=>x.id),invs.map(i=>i.id)]);
   if(sg!==partSig){const first=partSig==='';partSig=sg;if(first)invs.forEach(i=>invSeen.add(i.id));if(!store.cur&&(scr==='menu'||scr==='part'||scr==='ppart'))render(1)}}catch(e){}}
@@ -3831,7 +3747,7 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
  <section class="partsec" style="margin-top:22px"><h2 class="hh2">NPC de la partida</h2><p class="hint">Crea aquí los personajes no jugadores de esta partida. Son privados hasta que los metas en la partida: en ese momento se revelan automáticamente a tus jugadores, y seguirán visibles hasta que los retires.</p>
  <div class="gmact"><button type="button" class="gmb" data-act="npcrand"><span class="gmi">${DIEI}</span><b>NPC aleatorio</b><small>Elige un tipo y nivel y los dados hacen el resto.</small></button><button type="button" class="gmb" data-act="npcnew"><span class="gmi">${PENI}</span><b>NPC personalizado</b><small>Empieza con una ficha vacía y rellénala a tu gusto.</small></button></div>
  ${nl.length?`<div class="npcgrid" style="margin-top:14px">${nl.map(npcCard).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Todavía no hay NPC en esta partida.</p></section>'}</section>
- <section class="glass" style="margin-top:16px"><div class="row"><button type="button" class="btn" data-act="manview">Consultar manuales</button>${p.end==='1'?'<span class="apb wait">Partida finalizada · solo lectura</span>':`<button class="btn" data-act="partend" data-id="${p.id}">Finalizar partida</button>`}<button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
+ <section class="glass" style="margin-top:16px"><div class="row">${p.end==='1'?'<span class="apb wait">Partida finalizada · solo lectura</span>':`<button class="btn" data-act="partend" data-id="${p.id}">Finalizar partida</button>`}<button class="btn danger" data-act="partdel" data-id="${p.id}">Eliminar partida</button></div></section>`}
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}">${p.end==='1'?`<button type="button" class="pcx" data-act="partdel" data-id="${p.id}" aria-label="Eliminar la partida finalizada de la lista" title="Eliminar de la lista">✕</button>`:''}<h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
@@ -4464,12 +4380,6 @@ document.addEventListener('click',e=>{
   case 'admre':if(isAdmin()&&scr==='admin'){b.disabled=true;Promise.all([fsList('users').then(l=>{regCache=l;admT=Date.now()}),rpLoad(),gmLoad(),loadGames()]).catch(()=>{}).then(()=>{admSig='';if(admLive())admView(true)});break}admDlg();break;
   case 'admrow':admOpen=admOpen===b.dataset.u?null:b.dataset.u;admState=null;admView(true);break;
   case 'admf':admF=b.dataset.v;admView(true);break;
-  case 'manview':manDlg();break;
-  case 'manpick':{const i=document.getElementById('manfile');if(i)i.click();break}
-  case 'manopen':manOpen(b.dataset.id);break;
-  case 'manrm':manRmDlg(b.dataset.id);break;
-  case 'manrm2':manRm(b.dataset.id);break;
-  case 'manrmno':manDlg();break;
   case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
