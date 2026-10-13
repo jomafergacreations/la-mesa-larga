@@ -3052,9 +3052,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.37';
+const APPV='00.01.38';
 const APPN='Actualización menor.';
-const APPD='El aspecto del NPC admite texto largo sin límite y se oculta en la miniatura; los personajes fallecidos quedan bloqueados hasta que el GM los reviva.';
+const APPD='Un GM con licencia que juega como jugador en una partida ajena no tiene permisos de GM en ella; solo el GM de la partida puede revivir a un fallecido.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3728,7 +3728,7 @@ function memCard(p,m,i){const x=(partPJ[p.id]||{})[m.uid];let ch=null,d=null;if(
  const ap=x&&x.raw?(x.raw.ap||'y'):'y';if(ap==='n'){ch=null}
  const seen=partSeen[p.id]||(partSeen[p.id]=new Set()),nw=!seen.has(m.uid)&&seen.size>0;seen.add(m.uid);
  return `<article class="card npcc join${nw?' newj':''}" style="--i:${i}" data-mu="${esc(m.uid)}"><h3>${esc(m.name||'Jugador')}</h3>${ch?`<div class="meta"><span>${esc(ch.name||'Sin nombre')} · nivel ${ch.level||1}</span></div><div class="stats"><div class="stat"><b>${d.salud}</b><span>Salud</span></div><div class="stat"><b>${d.conc}</b><span>Conc.</span></div><div class="stat"><b>${d.fis}/${d.cog}/${d.esp}</b><span>Defensas</span></div></div>`:`<p class="hint" style="margin:0">${ap==='n'?'Esperando que elija otro personaje.':'Todavía no ha elegido personaje.'}</p>`}
- ${ch&&ap!=='n'?hpBox(ch,p.id,m.uid,p.end!=='1'):''}
+ ${ch&&ap!=='n'?hpBox(ch,p.id,m.uid,p.end!=='1',true):''}
  ${ch?`<span class="apb ${ap==='p'?'wait':'ok'}">${ap==='p'?'Pendiente de tu aprobación':'Aprobado'}</span>`:''}
  ${ch&&ap==='y'&&x.raw.req==='1'?`<div class="reqbox"><b>Solicita cambiar de personaje</b><span>«${esc(x.raw.reason||'')}»</span>${x.raw.rd?`<span>Propone: <b>${esc(rdName(x.raw.rd))}</b></span>`:''}<div class="row">${x.raw.rd?`<button class="btn pri sm" data-act="pjrq" data-p="${p.id}" data-u="${esc(m.uid)}">Ver ficha del nuevo</button>`:`<button class="btn pri sm" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">Autorizar cambio</button>`}<button class="btn sm" data-act="pjdeny" data-p="${p.id}" data-u="${esc(m.uid)}">Denegar</button></div></div>`:''}
  <div class="row">${ch?`<button class="btn pri" data-act="pjopen" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Ver ficha':'Ver y editar ficha'}</button>`:''}${ch&&ap==='p'?`<button class="btn" data-act="pjap" data-v="y" data-p="${p.id}" data-u="${esc(m.uid)}">Aprobar</button>`:''}${ch?`<button class="btn" data-act="pjap" data-v="n" data-p="${p.id}" data-u="${esc(m.uid)}">${ap==='p'?'Rechazar':'Pedir otro personaje'}</button>`:''}<button class="btn ghost" data-act="kick" data-p="${p.id}" data-u="${esc(m.uid)}">Quitar</button></div></article>`}
@@ -3746,8 +3746,8 @@ const DEAD_OK=new Set(['home','go','help','prev','next','gohome','notif','theme'
 ['click','keydown','beforeinput','change'].forEach(ev=>document.addEventListener(ev,e=>{if(!document.body.classList.contains('pjdead'))return;const t=e.target;if(!t||!t.closest||t.closest('dialog,#fdock,.hdock,.steps'))return;
  if(ev==='click'){const b=t.closest('[data-act]');if(!b||DEAD_OK.has(b.dataset.act))return;e.preventDefault();e.stopImmediatePropagation();toast('Personaje fallecido: solo el Game Master puede revivirlo')}
  else if(t.matches&&t.matches('[data-f],[data-q]')){e.preventDefault();e.stopImmediatePropagation()}},true));
-function hpBox(ch,pid,uid,edit){let mx=10;try{mx=derive(normalize(JSON.parse(JSON.stringify(ch)))).salud}catch(e){}mx=Math.max(1,mx|0);const dm=Math.max(0,Math.min(mx,hpMap[pid+'_'+uid]|0)),cu=mx-dm,pc=Math.round(cu*100/mx);
- if(cu<=0)return `<div class="hpbox dead"><div class="hph"><small>Vida</small><b>0<span>/${mx}</span></b><span class="tag endt">Fallecido</span></div><div class="hpbar"><i style="width:0"></i></div>${edit?`<div class="hpc"><button type="button" class="btn sm pri" data-act="pjrevive" data-p="${esc(pid)}" data-u="${esc(uid)}" data-mx="${mx}">Revivir</button></div>`:'<p class="hint" style="margin:6px 0 0">Su vida y su ficha están bloqueadas. Solo el Game Master puede revivirlo.</p>'}</div>`;
+function hpBox(ch,pid,uid,edit,gm){let mx=10;try{mx=derive(normalize(JSON.parse(JSON.stringify(ch)))).salud}catch(e){}mx=Math.max(1,mx|0);const dm=Math.max(0,Math.min(mx,hpMap[pid+'_'+uid]|0)),cu=mx-dm,pc=Math.round(cu*100/mx);
+ if(cu<=0)return `<div class="hpbox dead"><div class="hph"><small>Vida</small><b>0<span>/${mx}</span></b><span class="tag endt">Fallecido</span></div><div class="hpbar"><i style="width:0"></i></div>${edit&&gm?`<div class="hpc"><button type="button" class="btn sm pri" data-act="pjrevive" data-p="${esc(pid)}" data-u="${esc(uid)}" data-mx="${mx}">Revivir</button></div>`:'<p class="hint" style="margin:6px 0 0">Su vida y su ficha están bloqueadas. Solo el Game Master puede revivirlo.</p>'}</div>`;
  return `<div class="hpbox"><div class="hph"><small>Vida</small><b>${cu}<span>/${mx}</span></b></div><div class="hpbar"><i class="${pc<=25?'lo':pc<=60?'mid':''}" style="width:${pc}%"></i></div>${edit?`<div class="hpc">${[[-5,'−5'],[-1,'−1'],[1,'+1'],[5,'+5']].map(([d,t])=>`<button type="button" class="btn sm" data-act="pjhp" data-d="${d}" data-p="${esc(pid)}" data-u="${esc(uid)}" data-mx="${mx}" aria-label="${d<0?'Quitar':'Curar'} ${Math.abs(d)} de vida">${t}</button>`).join('')}</div>`:''}</div>`}
 function partTags(p){return `<span class="tag">${p.mode==='libre'?'Por libre':'Según el manual'}</span>${p.end==='1'?'<span class="tag endt">Finalizada</span>':''}<span class="tag">${esc(gameName(p.game||'nb'))}</span>${(p.era|0)?eraTag(p.era|0):''}${(p.maxlvl|0)?`<span class="tag">Nivel máx. ${p.maxlvl|0}</span>`:''}${(p.maxp|0)?`<span class="tag">Hasta ${p.maxp|0} jugadores</span>`:''}`}
 function pjOk(c,P,pid){if(c.dead)return 'Personaje fallecido';if(!c.done)return 'Ficha sin terminar';if(c.pid&&c.pid!==pid)return 'Ya participa en otra partida';if(pid&&(banMap[pid]||'').split(',').includes(c.id))return 'El Game Master pidió cambiarlo: no puede volver a elegirse';const pe=+P.era|0;if(pe&&c.era!==pe&&!(pe===2&&c.era===1&&c.ancestry==='kandra'))return 'Es de Era '+c.era+' y la partida es de Era '+pe;if((+P.maxlvl|0)&&(+c.level||1)>(+P.maxlvl))return 'Supera el nivel máximo ('+P.maxlvl+')';return ''}
@@ -4308,6 +4308,9 @@ document.addEventListener('click',e=>{
  if(a==='atab')pg='t';
  if(c){const PG={next:'f',qnext:'f',qskip:'f',prev:'b',qprev:'b',qmode:'f',qform:'f'};if(PG[a])pg=PG[a];else if(a==='go')pg=(+b.dataset.i>=c.step)?'f':'b';
   if(b.tagName==='BUTTON'&&(b.hasAttribute('aria-pressed')||b.dataset.d!==undefined)&&a!=='showpw'){const d=b.dataset;popSel='[data-act="'+a+'"]'+['v','k','n','d'].filter(x=>d[x]!==undefined).map(x=>'[data-'+x+'="'+d[x]+'"]').join('');fx=['path','qmetal','bless'].includes(a)||(a==='qset'&&/path|powers/.test(d.f||''))}}
+  {const GMO=['kick','pjap','pjdeny','pjrevive'];if(GMO.includes(a)&&!parts.some(x=>x.id===b.dataset.p)){toast('Solo el Game Master de esa partida puede hacerlo');return}
+   if(a==='pjhp'&&b.dataset.u!==session.uid&&!parts.some(x=>x.id===b.dataset.p)){toast('Solo el Game Master de esa partida puede cambiar la vida de otros');return}
+   if(a==='pjhp'&&b.dataset.u===session.uid&&!parts.some(x=>x.id===b.dataset.p)&&pjDead(store.chars.find(x=>x.pid===b.dataset.p))){return}}
  {const GB=['kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
  switch(a){
   case 'atab':authTab=v;render();break;
