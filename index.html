@@ -1,7 +1,7 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>La Mesa Larga</title>
 <script>(function(){try{var w=innerWidth,h=innerHeight,c=matchMedia('(pointer:coarse)').matches;document.documentElement.dataset.dev=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet'}catch(e){}})()</script>
-<script>(function(){try{var d=document.documentElement;if(d.dataset.dev!=='phone')return;if(sessionStorage.getItem('lml_splash'))return;sessionStorage.setItem('lml_splash','1');
+<script>(function(){try{var SPLASH_ON=false;if(!SPLASH_ON)return;var d=document.documentElement;if(d.dataset.dev!=='phone')return;if(sessionStorage.getItem('lml_splash'))return;sessionStorage.setItem('lml_splash','1');
 var red=matchMedia('(prefers-reduced-motion:reduce)').matches;
 var st=document.createElement('style');st.textContent='#splash{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(80% 50% at 50% 38%,#16346b,#071026 70%);color:#EAF2FF;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;text-align:center;opacity:1;transition:opacity .55s ease}#splash.out{opacity:0;pointer-events:none}#splash svg{width:104px;height:104px;border-radius:28px;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 54px -6px rgba(45,212,196,.75)}#splash b{font-size:1.7rem;letter-spacing:.06em;font-weight:800}#splash small{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:#5EEAD4;font-weight:700}#splash i{display:block;width:120px;height:3px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:10px}#splash i:after{content:"";display:block;height:100%;width:40%;border-radius:3px;background:linear-gradient(90deg,#2563EB,#14B8A6)}'+(red?'':'@keyframes spIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}@keyframes spBar{from{transform:translateX(-100%)}to{transform:translateX(260%)}}#splash svg{animation:spIn .7s cubic-bezier(.2,.8,.2,1) both}#splash b{animation:spIn .7s .15s cubic-bezier(.2,.8,.2,1) both}#splash small{animation:spIn .7s .3s cubic-bezier(.2,.8,.2,1) both}#splash i:after{animation:spBar 1.1s ease-in-out infinite}');
 document.head.appendChild(st);
@@ -2702,8 +2702,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
  const d=(w<600||Math.min(w,h)<480)?'phone':(w>=768)?'desktop':'tablet';
  const r=document.documentElement;if(r.dataset.dev!==d){r.dataset.dev=d;try{if(session&&!booting){dockSig='';fdockUpdate(cur())}}catch(e){}}r.dataset.orient=w>=h?'land':'port'}catch(e){}}
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
-const APPV='150';
-const APPN='Móvil: inicio de sesión realmente fijo (sin rebote al deslizar) y pantalla de bienvenida con el logo al arrancar la app.';
+const APPV='151';
+const APPN='Se desactiva por ahora la pantalla de bienvenida al arrancar en móvil.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
