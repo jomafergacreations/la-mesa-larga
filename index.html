@@ -2229,6 +2229,71 @@ html[data-cos] .bub.t1:not(.gal){background:radial-gradient(circle at 30% 25%,#B
 html[data-cos] .bub.t2{background:radial-gradient(circle at 30% 25%,#F0D58A,#B58A2E 52%,#33250F);box-shadow:0 24px 40px -18px rgba(220,180,90,.5),inset 0 0 30px rgba(255,235,170,.12)}
 html[data-cos] .bub.t3{background:radial-gradient(circle at 30% 25%,#9CD3FF,#2F6FB8 52%,#0E2046);box-shadow:0 24px 40px -18px rgba(90,160,235,.5),inset 0 0 30px rgba(190,225,255,.12)}
 html[data-cos] .bub.t1 .tt,html[data-cos] .bub.t2 .tt,html[data-cos] .bub.t3 .tt{text-shadow:0 2px 8px rgba(5,6,26,.7)}
+
+/* ===== v00.01.08: menús del Cosmere + escenario de Scadrial ===== */
+html[data-cw=sc]{--pc:#9DBBEA;--accent:#A9C4F0;--head:#E8EDF7;--frame:#6D7FA3}
+html[data-cw=ro]{--pc:#7FC0FF;--accent:#9CCBFF;--head:#EAF4FF;--frame:#5D8FD0}
+html[data-cw=sc] #gx{display:none!important}
+html[data-cw=sc][data-cos][data-dev] body,html[data-cw=sc][data-cos][data-dev] body.hub{background-color:#08070B;background-image:none}
+html[data-cw=sc][data-cos][data-lm=l][data-dev] body,html[data-cw=sc][data-cos][data-lm=l][data-dev] body.hub{background-color:#E9E6EE}
+#gx .rg{opacity:.34;right:-30vmin;top:-12vmin}
+#scfx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;contain:strict;background:linear-gradient(#08070b 0%,#15101b 46%,#2b1514 82%,#40201a 100%)}
+#scfx .scsun{position:absolute;left:50%;bottom:4vh;width:78vmin;height:78vmin;margin-left:-39vmin;border-radius:50%;background:radial-gradient(closest-side,rgba(232,84,48,.58),rgba(190,52,32,.24) 56%,transparent)}
+#scfx .scm1,#scfx .scct{position:absolute;left:0;width:100%;bottom:0;display:block}
+#scfx .scm1{height:36vh;fill:#171120}#scfx .scct{height:25vh;fill:#06050a}
+#scfx .scmi{position:absolute;left:0;width:200%;height:30vh;background:radial-gradient(40% 50% at 15% 60%,rgba(205,200,215,.3),transparent 70%),radial-gradient(34% 44% at 45% 40%,rgba(205,200,215,.2),transparent 70%),radial-gradient(40% 50% at 75% 65%,rgba(205,200,215,.28),transparent 70%);background-size:50% 100%;background-repeat:repeat-x;transform:translateZ(0)}
+#scfx .scmi.a{bottom:13vh;opacity:.5}#scfx .scmi.b{bottom:2vh;opacity:.7}#scfx .scmi.c{bottom:-7vh;height:34vh;opacity:.88}
+#scfx .sca{position:absolute;top:0;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:rgba(214,208,220,.72);display:none}
+html[data-lm=l] #scfx{background:linear-gradient(#EEEBF4,#DAD4E2 62%,#E9C9BF)}
+html[data-lm=l] #scfx .scsun{opacity:.4}html[data-lm=l] #scfx .scm1{fill:#8D88A2;opacity:.55}html[data-lm=l] #scfx .scct{fill:#5E5972;opacity:.6}html[data-lm=l] #scfx .sca{background:rgba(70,64,86,.5)}
+@media(prefers-reduced-motion:no-preference){
+ #scfx .sca{display:block;animation:scAsh var(--t) linear var(--d) infinite}
+ #scfx .scmi{animation:scDrift 120s linear infinite}#scfx .scmi.a{animation-duration:170s}#scfx .scmi.c{animation-duration:85s}
+ @keyframes scDrift{to{transform:translate3d(-50%,0,0)}}
+ @keyframes scAsh{from{transform:translate3d(0,-12px,0)}to{transform:translate3d(var(--dx),104vh,0)}}
+}
+#mistout{position:fixed;inset:0;z-index:99991;pointer-events:none;overflow:hidden;opacity:0;background:radial-gradient(120% 90% at 50% 100%,#2c2833 0%,#0c0a10 72%);animation:moBg 1.2s ease-in-out forwards}
+#mistout .mo1,#mistout .mo2{position:absolute;left:0;width:200%;height:60%;bottom:0;background:radial-gradient(36% 50% at 20% 60%,rgba(215,210,225,.35),transparent 70%),radial-gradient(36% 50% at 70% 50%,rgba(215,210,225,.3),transparent 70%);background-size:50% 100%;animation:scDrift 5s linear infinite}
+#mistout .mo2{bottom:20%;opacity:.6;animation-duration:8s}
+#mistout .mot{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#EDEBF3;gap:6px}
+#mistout .mot small{letter-spacing:.3em;text-transform:uppercase;font:600 .78rem var(--sans,system-ui);color:#9FB0D6}#mistout .mot b{font:700 clamp(1.4rem,5vw,2.2rem) var(--serif,Georgia,serif);letter-spacing:.06em}
+@keyframes moBg{0%{opacity:0}45%,62%{opacity:1}100%{opacity:0}}
+.csroot{max-width:720px;position:relative;--w1:#F0D58A;--w2:#B58A2E;--w3:#33250F;--hc:#E3C477;--gr1:#FFF4D0;--gr2:#E3C477;--gr3:#9C7A2E}
+.csroot[data-w=ro]{--hc:#8EC3FF;--gr1:#FFFFFF;--gr2:#A5D0FF;--gr3:#3F78C4}
+.cseye{font:600 .78rem var(--sans,system-ui);letter-spacing:.22em;text-transform:uppercase;color:var(--hc);margin:10px 0 8px}
+.csh{margin:0;font-family:var(--serif,Georgia,serif);font-size:clamp(2.2rem,8.4vw,4.4rem);line-height:1.06;letter-spacing:.06em;text-transform:uppercase;font-weight:700;background:linear-gradient(180deg,var(--gr1),var(--gr2) 55%,var(--gr3));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 14px rgba(0,0,0,.35))}
+html[data-lm=l] .csh{background-image:linear-gradient(180deg,#8A6416,#5D4410);filter:none}
+html[data-lm=l] .csroot[data-w=ro] .csh{background-image:linear-gradient(180deg,#2E5E9F,#173A6A)}
+.csdiv{display:block;width:100%;height:14px;margin:12px 0 4px;color:var(--hc);opacity:.85}
+.cspan{position:relative;margin-top:14px;padding:12px;border:1px solid color-mix(in srgb,var(--hc) 38%,transparent);border-radius:18px;background:rgba(13,16,42,.76);box-shadow:0 20px 50px -28px #000,inset 0 0 44px color-mix(in srgb,var(--hc) 7%,transparent)}
+html[data-lm=l] .cspan{background:rgba(255,255,255,.72);box-shadow:0 18px 40px -26px rgba(20,20,60,.5)}
+.cspan::before,.cspan::after{content:"";position:absolute;width:20px;height:20px;border:2px solid var(--hc);pointer-events:none}
+.cspan::before{left:-2px;top:-2px;border-right:0;border-bottom:0;border-radius:18px 0 0 0}.cspan::after{right:-2px;bottom:-2px;border-left:0;border-top:0;border-radius:0 0 18px 0}
+.csopt{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:16px;width:100%;padding:16px;border-radius:14px;cursor:pointer;position:relative;overflow:hidden;color:#F6EBCB;transition:transform .2s,background-color .2s,box-shadow .2s}
+html[data-lm=l] .csopt{color:#2A2312}
+.csopt+.csopt{margin-top:8px}
+.csopt:hover{background:color-mix(in srgb,var(--hc) 10%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--hc) 45%,transparent)}
+.csopt:focus-visible{outline:3px solid var(--hc);outline-offset:2px}
+.csic{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 25%,var(--w1),var(--w2) 56%,var(--w3));box-shadow:0 8px 18px -8px var(--w2)}
+.csic svg{width:28px;height:28px}
+.w-g{--w1:#F0D58A;--w2:#B58A2E;--w3:#33250F}.w-s{--w1:#C7D3EA;--w2:#5C6C94;--w3:#1B2142}.w-r{--w1:#A6D6FF;--w2:#2F6FB8;--w3:#0E2046}
+.cst{display:grid;gap:3px;min-width:0}.cst b{font:700 1.28rem var(--serif,Georgia,serif);letter-spacing:.02em}.cst span{font:.92rem/1.35 var(--sans,system-ui);opacity:.78}
+.csgo{margin-left:auto;flex:none;opacity:.6;transition:transform .2s,opacity .2s}.csopt:hover .csgo{transform:translateX(4px);opacity:1}
+.csopt.soon{opacity:.62}.csopt em{margin-left:auto;flex:none;font:700 .66rem var(--sans,system-ui);letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:99px;border:1px solid currentColor;font-style:normal}
+.csso{display:grid;justify-items:center;text-align:center;gap:8px;padding:26px 14px;color:#EAF4FF}html[data-lm=l] .csso{color:#173A6A}.csso b{font:600 1.3rem var(--sans,system-ui);letter-spacing:.3em;text-transform:uppercase}.csso>span:last-child{opacity:.8}
+.csopt.burst{transform:scale(.98);box-shadow:inset 0 0 0 2px var(--hc),0 0 26px -4px var(--hc)}
+@media(prefers-reduced-motion:no-preference){
+ .csroot>*{animation:csIn .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*80ms)}
+ .csopt{animation:csIn .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.3s + var(--j,0)*90ms)}
+ .csdiv{animation:csDraw 1s cubic-bezier(.3,.6,.2,1) .2s both}
+ .csh{animation:csIn .7s cubic-bezier(.2,.7,.2,1) both,csTrack .9s cubic-bezier(.2,.7,.2,1) both}
+ .csic{transition:transform .25s}.csopt:hover .csic{transform:rotate(-8deg) scale(1.08)}.csopt:active{transform:scale(.985)}
+ .csso .csic{animation:csFloat 4s ease-in-out infinite alternate}
+ @keyframes csIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+ @keyframes csDraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+ @keyframes csTrack{from{letter-spacing:.2em}to{letter-spacing:.06em}}
+ @keyframes csFloat{to{transform:translateY(-6px)}}
+}
 /* ===== Panel de administración (ALPHA) ===== */
 html[data-adm][data-adm]{--bg:#0E1319;--mist:#151B23;--surface:#151B23;--field:#0E1319;--ink:#E6EAF0;--muted:#8D98A8;--line:#263041;--accent:#3B82F6;--accent-ink:#fff;--head:#E6EAF0;--frame:#334155;--gold:#3B82F6;--ok:#34D399;--warn:#F59E0B;--display:var(--sans);--serif:var(--sans);--sc:var(--sans);--h-bg:#0E1319;--h-card:#151B23;--h-ink:#E6EAF0;--h-mut:#8D98A8;--h-line:#263041;color-scheme:dark}
 html[data-adm] body,html[data-adm] body.hub{background:#0E1319;background-image:none;font-family:var(--sans);font-size:1rem;color:var(--ink)}
@@ -2834,7 +2899,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
 function warpIntro(out){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';if(out)o.className='wo';o.setAttribute('aria-hidden','true');
  let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
  o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
-function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);deckAtmo(!!(session&&!c&&scr==='deck'));cyberFx(!!(session&&!c&&scr==='cyber'));duneFx(!!(session&&!c&&scr==='dune'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'&&scr!=='cyber'&&scr!=='dune'));const key=!session?'auth':c?'ed':scr;let d='';
+function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);scadFx(!!(session&&(c||scr==='nb'||scr==='deck')));cyberFx(!!(session&&!c&&scr==='cyber'));duneFx(!!(session&&!c&&scr==='dune'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'&&scr!=='cyber'&&scr!=='dune'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
  lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d)a.classList.add('go-'+d);
  if(c){if(pg)a.classList.add('pg-'+pg);
@@ -2933,8 +2998,8 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.07';
-const APPN='El botón de modo muestra «Solicita tu licencia de GM» si aún no eres Game Master, y «Cambiar a Game Master» cuando ya lo eres.';
+const APPV='00.01.08';
+const APPN='Cosmere con menús homogéneos como Cyberpunk y Dune, y Nacidos de la Bruma tematizado: Scadrial con sol rojo, bruma, ceniza y la ciudad de Luthadel, pulsaciones alománticas y salida con bruma.';
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
 async function checkUpdate(manual){
@@ -3100,7 +3165,7 @@ function cyberOut(then){if(lfRM()||document.getElementById('cyout')){then();retu
  o.innerHTML='<div class="cyot"><div class="cyol" style="--d:.15s">&gt; cerrando sesión…</div><div class="cyol" style="--d:.45s">&gt; descargando módulo… <em>[ OK ]</em></div><div class="cyol wn" style="--d:.75s">&gt; desconectando</div><div class="cypb"><i></i></div></div>';
  document.body.appendChild(o);setTimeout(then,1000);setTimeout(()=>o.remove(),1400)}
 /* salida propia de cada universo al pulsar Inicio / volver */
-function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&document.documentElement.dataset.cos){warpIntro(true);setTimeout(then,420);return}}then()}
+function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&(scr==='nb'||scr==='deck')){mistOut(then);return}if(session&&document.documentElement.dataset.cos){warpIntro(true);setTimeout(then,420);return}}then()}
 function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
  if(!on){if(f)f.remove();delete r.dataset.cyb;return}
  r.dataset.cyb='1';if(f)return;
@@ -3178,6 +3243,25 @@ function duneScreen(){
  return hubBar(['menu','Inicio'])+`<div class="dnroot"><div class="dneye">Arrakis · el planeta del desierto</div><div class="dnhw"><h1 class="hh dnh" aria-label="Dune">${dnWord("dnwg",2.6,"dnlg")}</h1></div>
   <svg class="dnrip" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C40 2 70 2 100 9S160 16 200 9 270 2 300 9 370 16 400 8"/></svg>
   <div class="dnpan"><div class="dnso" role="status"><span class="dnic" aria-hidden="true">${DUNE}</span><b>Próximamente</b><span>Las arenas todavía se están moviendo. Vuelve pronto.</span></div></div></div>`}
+
+document.addEventListener('pointerdown',e=>{try{if(!e.isTrusted||lfRM())return;const r=document.documentElement;if(r.dataset.cw!=='sc'||!r.dataset.cos)return;const t=e.target.closest&&e.target.closest('.btn,.card,.avopt');if(!t||t.disabled)return;const now=Date.now();if(now-(pointerdownT||0)<160)return;pointerdownT=now;metalFx(t,'#9FC3F0')}catch(x){}});
+let pointerdownT=0;
+/* ---------- Cosmere: menús homogéneos (como Cyberpunk y Dune) y escenario de Scadrial ---------- */
+const CSGO='<svg class="csgo" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+function csOpt(j,w,col,ic,t,d,act,soon){return `<button type="button" class="csopt w-${w}${soon?' soon':''}" data-act="${act}" data-col="${col}" style="--j:${j}"><span class="csic" aria-hidden="true">${ic}</span><span class="cst"><b>${t}</b><span>${d}</span></span>${soon?'<em>Próximamente</em>':CSGO}</button>`}
+function csRoot(eye,title,body,w){return `<div class="csroot" data-w="${w||'co'}"><div class="cseye" style="--i:0">${eye}</div><h1 class="csh" style="--i:1">${title}</h1><svg class="csdiv" style="--i:2" viewBox="0 0 400 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7H400" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="22 3.4"/><path d="M200 1l6 6-6 6-6-6z" fill="currentColor"/></svg><div class="cspan" style="--i:3">${body}</div></div>`}
+function scadFx(on){let f=document.getElementById('scfx');if(!on){if(f)f.remove();return}if(f)return;
+ f=document.createElement('div');f.id='scfx';f.setAttribute('aria-hidden','true');
+ let sd=7;const R=()=>(sd=(sd*16807)%2147483647)/2147483647;
+ let m='M0,200 L0,150';for(let x=0;x<=1200;x+=40){m+=' L'+x+','+(150-Math.max(0,52*Math.sin(x/190+1))-26*Math.sin(x/70)-R()*14).toFixed(0)}m+=' L1200,200Z';
+ let pts=[[0,200],[0,150]],x=0;while(x<1200){const keep=x>760&&x<830,w=keep?70:12+R()*34,h=keep?60:128-R()*58;pts.push([x,h],[x+w*.35,h]);if(keep||R()<.38){pts.push([x+w*.5,h-(keep?60:16+R()*34)])}pts.push([x+w*.65,h],[x+w,h]);x+=w+R()*6}
+ pts.push([1200,150],[1200,200]);const c='M'+pts.map(q=>q[0].toFixed(0)+','+q[1].toFixed(0)).join(' L')+'Z';
+ let a='';for(let i=0;i<16;i++)a+=`<b class="sca" style="--x:${(R()*100).toFixed(1)}%;--s:${(1.6+R()*2.6).toFixed(1)}px;--t:${(13+R()*13).toFixed(1)}s;--d:-${(R()*24).toFixed(1)}s;--dx:${(-60+R()*90).toFixed(0)}px"></b>`;
+ f.innerHTML=`<i class="scsun"></i><svg class="scm1" viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="${m}"/></svg><i class="scmi a"></i><svg class="scct" viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="${c}"/></svg><i class="scmi b"></i><i class="scmi c"></i>${a}`;
+ document.body.appendChild(f)}
+function mistOut(then){if(lfRM()||document.getElementById('mistout')){then();return}
+ const o=document.createElement('div');o.id='mistout';o.setAttribute('aria-hidden','true');o.innerHTML='<i class="mo1"></i><i class="mo2"></i><div class="mot"><small>Scadrial</small><b>La bruma se cierra…</b></div>';
+ document.body.appendChild(o);setTimeout(then,620);setTimeout(()=>o.remove(),1250)}
 function soonScreen(g){const N=(GAMES.find(x=>x[0]===g)||[0,'Juego'])[1];return hubBar(gParent(g)==='cosmere'?(g==='deck'?['cosmere','Cosmere']:['rol','Rol']):['menu','Inicio'])+`<h1 class="hh">${esc(N)}</h1><div class="glass soonbox"><div class="soonic" aria-hidden="true">${SHLD}</div><h2>Próximamente</h2><p class="hs" style="margin:0">Este juego todavía no está disponible. Lo verás aquí en cuanto se publique.</p></div>`}
 function screen(){const g=GSCR[scr];if(COSF.includes(g)){if(!canSeeGame(g))return soonScreen(g);if(gameUnp(g))return `<div class="prevrib" role="note">Vista previa · este juego aún no está publicado para los usuarios</div>`+screen0()}return screen0()}
 function screen0(){
@@ -3190,14 +3274,12 @@ function screen0(){
  if(scr==='pjview')return pjViewScreen();
  if(store.mode==='gm'&&scr==='menu')return gmHome();
  if(scr==='nb')return home();
- if(scr==='rol')return hubBar(['cosmere','Cosmere'])+`<h1 class="hh">Rol</h1><p class="hs">Elige la ambientación de tu partida.</p><div class="bubbles">
-  ${hubTile('t2',NAIL,'Nacidos de la Bruma','Crea y gestiona tus fichas de personaje.','nb',canSeeGame('nb')?0:1)}
-  ${hubTile('t3',STORM,'El archivo de las tormentas','Fichas de Roshar.','soon_arch',canSeeGame('arch')?0:1)}</div>`;
+ if(scr==='rol')return hubBar(['cosmere','Cosmere'])+csRoot('Cosmere · elige ambientación','Rol',
+  csOpt(0,'s','#9FC3F0',NAIL,'Nacidos de la Bruma','Scadrial · crea y gestiona tus fichas de personaje.','nb',canSeeGame('nb')?0:1)+csOpt(1,'r','#7FC0FF',STORM,'El archivo de las tormentas','Roshar · fichas de los Caballeros Radiantes.','soon_arch',canSeeGame('arch')?0:1));
  if(scr==='deck')return deckScreen();
- if(scr==='arch')return hubBar(['rol','Rol'])+`<h1 class="hh">El archivo de las tormentas</h1><p class="hs">Esta parte todavía está en preparación. Cuando esté lista aparecerá aquí.</p>`;
- if(scr==='cosmere')return hubBar(['menu','Inicio'])+`<h1 class="hh">Cosmere</h1><p class="hs">¿Qué quieres hacer?</p><div class="bubbles">
-  ${hubTile('t1',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)}
-  ${hubTile('t2',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1)}</div>`;
+ if(scr==='arch')return hubBar(['rol','Rol'])+csRoot('Roshar · la tierra de las tormentas','El archivo de las tormentas',`<div class="csso" role="status"><span class="csic w-r" aria-hidden="true">${STORM}</span><b>Próximamente</b><span>Las tormentas todavía se están formando. Vuelve pronto.</span></div>`,'ro');
+ if(scr==='cosmere')return hubBar(['menu','Inicio'])+csRoot('Cosmere · la chispa de Adonalsium','Cosmere',
+  csOpt(0,'s','#9FC3F0',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)+csOpt(1,'g','#F0D58A',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas.','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1));
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
   ${hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1)}
   ${hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1)}
@@ -4201,8 +4283,8 @@ document.addEventListener('click',e=>{
  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,c=cur(),v=b.dataset.v;
 
 
- if(b.classList.contains('bub')&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
-  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');if(a==='nb'||a==='deck'){const r=b.getBoundingClientRect();mistIntro(r.left+r.width/2,r.top+r.height/2)}metalFx(b,b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6');setTimeout(()=>b.click(),300);return}}
+ if((b.classList.contains('bub')||b.classList.contains('csopt'))&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
+  if(!e.isTrusted){}else{if(b.dataset.go)return;b.dataset.go='1';b.classList.add('burst');if(a==='nb'||a==='deck'){const r=b.getBoundingClientRect();mistIntro(r.left+r.width/2,r.top+r.height/2)}metalFx(b,b.dataset.col||(b.classList.contains('t1')?'#C4BCFF':b.classList.contains('t3')?'#FFC79A':'#8DF2E6'));setTimeout(()=>b.click(),300);return}}
 
  if(a==='gohome'&&e.isTrusted&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){if(b.dataset.go)return;b.dataset.go='1';b.classList.add('hop');setTimeout(()=>b.click(),240);return}
  if(a==='atab')pg='t';
@@ -4369,10 +4451,10 @@ document.addEventListener('click',e=>{
   case 'selok':{const ids=new Set(selIds);try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}store.chars.filter(o=>ids.has(o.id)&&o.pid).forEach(o=>{fs('DELETE','pjs/'+o.pid+'_'+session.uid).catch(()=>{})});store.chars=store.chars.filter(x=>!ids.has(x.id));selIds.clear();selMode=false;save();render(1);toast(ids.size===1?'Ficha borrada':ids.size+' fichas borradas');break}
   case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
   case 'menu':exitFx(()=>{scr='menu';render()});break;
-  case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{store.cur=null;scr='cosmere';render()}break;
+  case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{const go=()=>{store.cur=null;scr='cosmere';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go()}break;
   case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
   case 'dune':if(lfRM()){store.cur=null;scr='dune';render()}else{duneIntro();setTimeout(()=>{requestAnimationFrame(()=>{store.cur=null;scr='dune';render()})},470)}break;
-  case 'rol':store.cur=null;scr='rol';render();break;
+  case 'rol':{const go=()=>{store.cur=null;scr='rol';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go();break}
   case 'nb':mistIntro();scr='nb';render();break;
   case 'deck':mistIntro();scr='deck';render();break;
   case 'lf':lfChange(+b.dataset.d);break;
@@ -4435,7 +4517,7 @@ document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='avfile'){c
  avPickImg(f).then(u=>{store.avatar=avOk(u);save();avRefresh(true);const mm=$('#avmsg');if(mm){mm.textContent='Imagen actualizada.';mm.className='msg ok'}const r=document.querySelector('.avrow .row');if(r&&!r.querySelector('[data-act=avdel]'))r.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-act="avdel">Quitar</button>')}).catch(()=>{const mm=$('#avmsg');if(mm){mm.textContent='No se pudo leer esa imagen.';mm.className='msg err'}});return}
  if(t.tagName==='SELECT'){if(t.dataset&&t.dataset.r)popSel='select[data-f="'+t.dataset.f+'"]';else if(cur()){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');metalFx(t)}}if(t.dataset&&t.dataset.r){const c=cur();setPath(c,t.dataset.f,t.value);save();render(1)}});
 loadAccounts();render();restoreSession().then(()=>{booting=false;render()});
-{const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('nb')){store.cur=null;store.npcCur=null}{const cw=(scr==='nb'||scr==='deck')?'sc':scr==='arch'?'ro':'co';if(document.documentElement.dataset.cw!==cw)document.documentElement.dataset.cw=cw}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
+{const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('nb')){store.cur=null;store.npcCur=null}{const cw=(scr==='nb'||scr==='deck'||(session&&store&&store.cur))?'sc':scr==='arch'?'ro':'co';if(document.documentElement.dataset.cw!==cw)document.documentElement.dataset.cw=cw}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
 (function(){ // pausa las animaciones infinitas que no se ven (fuera de pantalla o pestaña oculta)
  if(!('IntersectionObserver' in window)||!document.getAnimations)return;
  const seen=new WeakSet(),vis=new WeakMap();let hid=document.hidden;
