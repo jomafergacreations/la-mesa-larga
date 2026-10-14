@@ -22,11 +22,11 @@ d.appendChild(el);var t0=Date.now(),gone=false;
 function out(){if(gone)return;gone=true;el.classList.add('out');setTimeout(function(){el.remove()},red?0:650)}
 function ready(){var w=Math.max(0,(red?300:1300)-(Date.now()-t0));setTimeout(out,w)}
 if(document.readyState==='complete')ready();else addEventListener('load',ready);setTimeout(out,4500)}catch(e){}})()</script>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232563EB%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230F9D9A%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2217%22%20y%3D%2213%22%20width%3D%228%22%20height%3D%2238%22%20rx%3D%224%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2243%22%20width%3D%2232%22%20height%3D%228%22%20rx%3D%224%22%2F%3E%3Ccircle%20cx%3D%2231%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2241%22%20cy%3D%2234%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="logo-180.png?v=170"><link rel="apple-touch-icon-precomposed" href="logo-180.png?v=170">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20512%20512%22%3E%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23D9603F%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%239B2C3F%22/%3E%3C/linearGradient%3E%3CradialGradient%20id=%22h%22%20cx=%22.28%22%20cy=%22.2%22%20r=%22.7%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23fff%22%20stop-opacity=%22.08%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23fff%22%20stop-opacity=%220%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect%20width=%22512%22%20height=%22512%22%20rx=%22116%22%20fill=%22url(%23g)%22/%3E%3Crect%20width=%22512%22%20height=%22512%22%20rx=%22116%22%20fill=%22url(%23h)%22/%3E%3Cg%20transform=%22translate(22.176470588235276%2061.882352941176464)%20scale(4.411764705882353)%22%20fill=%22%23fff%22%3E%3Crect%20x=%2219%22%20y=%2214%22%20width=%2213%22%20height=%2260%22%20rx=%226.5%22/%3E%3Crect%20x=%2219%22%20y=%2261%22%20width=%2268%22%20height=%2213%22%20rx=%226.5%22/%3E%3Ccircle%20cx=%2249%22%20cy=%2247%22%20r=%226.5%22%20opacity=%22.9%22/%3E%3Ccircle%20cx=%2264%22%20cy=%2247%22%20r=%226.5%22%20opacity=%22.9%22/%3E%3Ccircle%20cx=%2279%22%20cy=%2247%22%20r=%226.5%22%20opacity=%22.9%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" sizes="180x180" href="logo-180.png?v=173"><link rel="apple-touch-icon-precomposed" href="logo-180.png?v=173">
 <meta name="apple-mobile-web-app-title" content="La Mesa Larga">
-<meta name="theme-color" content="#2563EB">
-<link rel="manifest" href="manifest.webmanifest?v=172"><link rel="icon" type="image/png" sizes="192x192" href="app-192.png?v=172"><link rel="icon" type="image/png" sizes="512x512" href="app-512.png?v=172"><meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#9B2C3F">
+<link rel="manifest" href="manifest.webmanifest?v=173"><link rel="icon" type="image/png" sizes="192x192" href="app-192.png?v=173"><link rel="icon" type="image/png" sizes="512x512" href="app-512.png?v=173"><meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Share+Tech+Mono&family=Michroma&display=swap" rel="stylesheet">
@@ -1332,6 +1332,27 @@ html[data-dev=tablet] body.hub.authdark #app:has(.authhub){grid-template-columns
 html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf{display:none}
 html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .hs{margin:16px 0 0;font-size:1.05rem;font-weight:600;color:var(--h-mut);max-width:none}
 html[data-dev=desktop] body.authdark #app:has(.authhub) .lg{min-width:0}
+#welfx{position:fixed;inset:0;z-index:2147482500;display:grid;place-items:center;text-align:center;background:#F7F0E3;color:#2B2118;font-family:var(--sans,system-ui);overflow:hidden;pointer-events:auto}
+html[data-lm=d] #welfx{background:#0E0A13;color:#F4EBDD}
+#welfx .wg{position:absolute;left:50%;top:46%;width:min(120vmin,900px);height:min(120vmin,900px);margin:calc(min(120vmin,900px)/-2) 0 0 calc(min(120vmin,900px)/-2);border-radius:50%;background:radial-gradient(circle,rgba(232,170,90,.5) 0,rgba(232,170,90,.18) 32%,transparent 66%)}
+html[data-lm=d] #welfx .wg{background:radial-gradient(circle,rgba(232,150,60,.42) 0,rgba(232,150,60,.14) 32%,transparent 66%)}
+#welfx .wc{position:relative;display:grid;justify-items:center;gap:6px;padding:0 24px}
+#welfx .wlogo{position:relative;width:96px;height:96px;margin-bottom:18px}
+#welfx .wl{position:relative;width:96px;height:96px;border-radius:30px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#D9603F,#9B2C3F);box-shadow:0 0 0 2px rgba(232,179,92,.7),0 18px 40px -14px rgba(155,44,63,.8)}
+#welfx .wl svg{width:52px;height:52px}
+#welfx .wr{position:absolute;inset:0;border-radius:30px;border:2px solid rgba(232,179,92,.7);opacity:0}
+#welfx .wt{font-size:clamp(1.2rem,4vw,1.6rem);font-weight:600;opacity:.85;letter-spacing:.02em}
+#welfx .wn{font-size:clamp(1.9rem,7vw,3rem);font-weight:800;line-height:1.1;max-width:90vw;overflow-wrap:anywhere}
+#welfx .ws{margin-top:20px;font-size:.9rem;letter-spacing:.06em;opacity:0}
+#welfx .wd b{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:50%;background:currentColor;vertical-align:middle}
+@media(prefers-reduced-motion:no-preference){#welfx .wr{animation:welR 1.8s ease-out .5s infinite}#welfx .wr.r2{animation-delay:1.1s}
+#welfx .wd b{animation:welD 1s ease-in-out infinite}#welfx .wd b:nth-child(2){animation-delay:.15s}#welfx .wd b:nth-child(3){animation-delay:.3s}
+body.authdark .authhub button[type=submit].busy{animation:welB 1.1s ease-in-out infinite}}
+@keyframes welR{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes welD{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes welB{0%,100%{opacity:1}50%{opacity:.72}}
+.fe{display:block;margin-top:5px;font-size:.84rem;font-weight:600;color:var(--err,#D9480F)}
+.authhub input[aria-invalid=true]{border-color:var(--err,#D9480F)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--err,#D9480F) 22%,transparent)}
 </style>
 
 <style id="lifecss">
@@ -2777,8 +2798,23 @@ async function restoreSession(){try{const t=skGet();if(!t)return false;const o=J
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 let vT=null;
 function flash(t,k){const m=$('#amsg');if(m){m.textContent=t;m.className='msg '+(k||'')}}
+let welOn=false;
+function welcomeFx(apply){if(welOn)return false;try{welOn=true;const nm=(session&&session.name)||'';
+ const o=document.createElement('div');o.id='welfx';o.setAttribute('role','status');o.setAttribute('aria-live','polite');
+ o.innerHTML='<i class="wg"></i><div class="wc"><div class="wlogo"><i class="wr"></i><i class="wr r2"></i><div class="wl">'+LOGOI+'</div></div><div class="wt">Bienvenido a la mesa'+(nm?',':'')+'</div>'+(nm?'<div class="wn">'+esc(nm)+'</div>':'')+'<div class="ws">Preparando tus juegos<span class="wd"><b></b><b></b><b></b></span></div></div>';
+ document.body.appendChild(o);const E='cubic-bezier(.2,.8,.2,1)';
+ o.animate([{opacity:0},{opacity:1}],{duration:380,easing:'ease-out',fill:'forwards'});
+ const q=(s,kf,op)=>{const e=o.querySelector(s);if(e)e.animate(kf,Object.assign({fill:'both',easing:E},op))};
+ q('.wlogo',[{opacity:0,transform:'translateY(14px) scale(.86)'},{opacity:1,transform:'none'}],{duration:700,delay:200});
+ q('.wt',[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:600,delay:480});
+ q('.wn',[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:600,delay:620});
+ q('.ws',[{opacity:0},{opacity:.85}],{duration:500,delay:900});
+ q('.wg',[{opacity:0,transform:'scale(.7)'},{opacity:1,transform:'scale(1)'}],{duration:1200,delay:100});
+ setTimeout(()=>{try{apply()}catch(e){}},420);
+ setTimeout(()=>{o.animate([{opacity:1,transform:'none'},{opacity:0,transform:'scale(1.03)'}],{duration:650,easing:'ease-in-out',fill:'forwards'})},1900);
+ setTimeout(()=>{o.remove();welOn=false},2600);return true}catch(e){welOn=false;return false}}
 async function afterEnter(res){
- if(res==='ok'){pend=null;clearInterval(vT);authTab='login';render();toast('Sesión iniciada');return}
+ if(res==='ok'){pend=null;clearInterval(vT);authTab='login';if(!lfRM()&&welcomeFx(()=>{render();toast('Sesión iniciada')}))return;render();toast('Sesión iniciada');return}
  if(res==='unverified'){if(authTab!=='verify'){authTab='verify';render();vPoll()}else flash('Todavía no hemos recibido la verificación. Abre el enlace del correo y vuelve aquí.','err');return}
  if(res==='deleted'){authTab='login';render();flash('Esta cuenta ha sido eliminada por un administrador.','err');return}
  if(res==='name'){authTab='name';render();return}
@@ -2824,9 +2860,11 @@ function authView(){
  ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
  ${authTab==='login'||authTab==='new'?`<div class="seg" data-i="${authTab==='new'?1:0}"><i class="pill" aria-hidden="true"></i>${tabs}</div>`:''}${form}</section>`}
 
+function emErr(inp,on){try{const l=inp&&inp.closest('label');if(!l)return;const o=l.querySelector('.fe');if(o)o.remove();inp.removeAttribute('aria-invalid');if(on){const m=document.createElement('span');m.className='fe';m.id='emerr';m.setAttribute('role','alert');m.textContent='Este correo ya está siendo utilizado';l.appendChild(m);inp.setAttribute('aria-invalid','true');inp.setAttribute('aria-describedby','emerr');inp.focus()}else inp.removeAttribute('aria-describedby')}catch(e){}}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.id==='em'&&t.getAttribute('aria-invalid'))emErr(t,false)});
 async function doAuth(f){
  if(authBusy)return;const msg=$('#amsg');const set=(t,k)=>{msg.textContent=t;msg.className='msg '+(k||'')};const btn=f.querySelector('button[type=submit]');const el=n=>f.elements[n];
- authBusy=true;btn.disabled=true;
+ authBusy=true;btn.disabled=true;btn.classList.add('busy');emErr(el('em'),false);
  try{
   if(authTab==='reset'){const em=String(el('em').value||'').trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
    set('Enviando…');try{await aCall('sendOobCode',{requestType:'PASSWORD_RESET',email:em})}catch(e){if(e.code==='NET'||e.code==='INVALID_EMAIL'){set(aMsg(e),'err');return}}
@@ -2842,7 +2880,7 @@ async function doAuth(f){
    if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
    if(pw.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
    if(pw!==el('ap2').value){set('Las contraseñas no coinciden.','err');return}
-   set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,returnSecureToken:true})}catch(e){set(aMsg(e),'err');return}
+   set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,returnSecureToken:true})}catch(e){if(e&&e.code==='EMAIL_EXISTS'){set('');emErr(el('em'),true);return}set(aMsg(e),'err');return}
    try{await aCall('update',{idToken:a.idToken,displayName:name,returnSecureToken:false})}catch(e){}
    try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}
    pend={email:em,pw,idToken:a.idToken,rem:false,name};authTab='verify';render();vPoll();return}
@@ -2852,7 +2890,7 @@ async function doAuth(f){
   const res=await enter(a,wantRem);if(res==='unverified'){try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}}
   await afterEnter(res);
  }catch(e){const m=$('#amsg');if(m){m.textContent=e&&e.code==='NET'?aMsg(e):(e&&e.code&&String(e.code).startsWith('FS')?'No se pudieron cargar tus datos ('+e.code+'). Inténtalo de nuevo.':aMsg(e));m.className='msg err'}}
- finally{authBusy=false;const b=f.querySelector('button[type=submit]');if(b)b.disabled=false}}
+ finally{authBusy=false;const b=f.querySelector('button[type=submit]');if(b){b.disabled=false;b.classList.remove('busy')}}}
 
 const fdate=t=>t?new Date(t).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'—';
 let admQ='',admF='all',admOpen=null,admSig='',admT=0,admPrev={on:null,n:null,st:null};
@@ -3234,9 +3272,9 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
-const APPV='00.01.66';
-const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.65 a v00.01.66. Se deshace la reescritura con jerga geek: los textos del inicio de sesión vuelven a los de la v00.01.64.';
+const APPV='00.01.68';
+const APPN='Actualización media.';
+const APPD='Actualiza de v00.01.67 a v00.01.68. Registro: si el correo ya está en uso, aviso bajo el campo «Correo electrónico». Nueva animación de bienvenida tras «Sentarme a la mesa» y pulso en el botón mientras se comprueba. Nuevo icono de la app (degradado rojo del inicio de sesión) y color de tema.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4798,7 +4836,7 @@ loadAccounts();render();restoreSession().then(async ok=>{booting=false;render();
  document.addEventListener('visibilitychange',()=>{hid=document.hidden;try{for(const a of document.getAnimations()){const t=a.effect&&a.effect.target;if(t&&inf(a))sync(t)}}catch(x){}if(!hid)scan()});
  setInterval(()=>{if(!hid)scan()},4000);setTimeout(scan,800);
 })();
-(function(){try{if(!('serviceWorker' in navigator))return;const h=location.hostname;if(!(h.endsWith('github.io')||h==='localhost'))return;setTimeout(()=>{navigator.serviceWorker.register('sw.js?v=170',{scope:'./'}).catch(()=>{})},1500)}catch(e){}})();
+(function(){try{if(!('serviceWorker' in navigator))return;const h=location.hostname;if(!(h.endsWith('github.io')||h==='localhost'))return;setTimeout(()=>{navigator.serviceWorker.register('sw.js?v=173',{scope:'./'}).catch(()=>{})},1500)}catch(e){}})();
 
 /* v00.01.42 · animaciones de interacción */
 (function(){var rm=function(){try{return matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}};
