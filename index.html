@@ -1287,6 +1287,8 @@ body.authdark .authhub .chk{color:var(--h-ink)}body.authdark .authhub .chk input
 #thfx .tfhz{left:0;right:0;bottom:calc(10vmin);height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent)}
 #thfx .tfst{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.7)}
 #thfx .tfst.a{left:18%;top:16%}#thfx .tfst.b{left:72%;top:11%}#thfx .tfst.c{left:40%;top:26%}#thfx .tfst.d{left:85%;top:30%}
+body.authdark .lgt{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));margin:0;z-index:30;grid-area:auto}
+body.authdark #app:has(.authhub){padding-bottom:70px}
 </style>
 
 <style id="lifecss">
@@ -3186,9 +3188,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.59';
+const APPV='00.01.60';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.58 a v00.01.59. Transiciones de tema en el inicio de sesión: claro con luz del sol por una ventana, oscuro con persiana que baja y lámpara sobre la mesa, auto con ciclo de sol y luna.';
+const APPD='Actualiza de v00.01.59 a v00.01.60. Los botones de cambio de tema del inicio de sesión pasan a la esquina inferior derecha.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
