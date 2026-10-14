@@ -1315,6 +1315,22 @@ html[data-dev=phone] body.authdark .authhub input:not([type=checkbox]){min-heigh
 html[data-dev=phone] body.authdark .authhub .btn{min-height:42px}
 html[data-dev=phone] body.authdark .authhub .hint{font-size:.72rem;line-height:1.3;margin:0}
 html[data-dev=phone] body.authdark.authreg .lg .logo,html[data-dev=phone] body.authdark.authreg .lg .tg{display:none}
+.lgf{display:none}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg{display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:center;justify-items:start}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .logo,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .logo{grid-row:1/3;width:64px;height:64px;border-radius:20px;margin:0}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .logo svg,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .logo svg{width:34px;height:34px}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg h1.hh,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg h1.hh{grid-column:2;align-self:end;font-size:clamp(1.5rem,2.6vw,2rem);letter-spacing:.07em;white-space:nowrap;line-height:1.1;margin:0}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .tg,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .tg{grid-column:2;align-self:start;margin:4px 0 0;font-size:.68rem;letter-spacing:.24em}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .hs,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .hs{grid-column:1/-1;margin:30px 0 0;font-size:clamp(1.7rem,2.8vw,2.1rem);font-weight:800;line-height:1.12;letter-spacing:-.01em;color:var(--h-ink);max-width:12em}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .lgf{grid-column:1/-1;display:grid;gap:14px;list-style:none;margin:22px 0 0;padding:20px 0 0;border-top:1px solid var(--h-line);width:100%;max-width:440px}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf li,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .lgf li{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:center}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf i,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .lgf i{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent);border:1px solid color-mix(in srgb,var(--acc) 28%,transparent)}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf b,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .lgf b{display:block;font-size:.95rem;color:var(--h-ink)}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf span,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .lgf span{display:block;font-size:.84rem;color:var(--h-mut);margin-top:2px;line-height:1.35}
+html[data-dev=tablet] body.hub.authdark #app:has(.authhub){grid-template-columns:minmax(0,520px);grid-template-areas:"t" "l" "f";justify-content:center;row-gap:20px}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .lgf{display:none}
+html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .hs{margin:16px 0 0;font-size:1.05rem;font-weight:600;color:var(--h-mut);max-width:none}
+html[data-dev=desktop] body.authdark #app:has(.authhub) .lg{min-width:0}
 </style>
 
 <style id="lifecss">
@@ -2802,7 +2818,7 @@ function authView(){
   <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Sentarme a la mesa'}</button></form>
   ${authTab==='login'?`<div class="row"><button type="button" class="btn ghost sm" data-act="atab" data-v="reset">¿Has olvidado tu contraseña?</button></div>`:''}
   ${authTab==='new'?'<p class="hint">Te enviaremos un correo para verificar la dirección. Hasta que lo abras no podrás entrar. Tus fichas se guardan en la nube, ligadas a tu correo, y puedes verlas desde cualquier dispositivo.</p>':''}`}
- return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p></div>
+ return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p><ul class="lgf"><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5z"/></svg></i><div><b>Tus fichas, siempre contigo</b><span>Guardadas en la nube y ligadas a tu correo.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14c2 .6 3.4 2.3 3.4 5"/></svg></i><div><b>Partidas en grupo</b><span>Crea una mesa o únete con un código.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></i><div><b>Todos los juegos en un sitio</b><span>Todos tus juegos de mesa, en un solo lugar.</span></div></li></ul></div>
  <section class="authhub">
  ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
  ${authTab==='login'||authTab==='new'?`<div class="seg" data-i="${authTab==='new'?1:0}"><i class="pill" aria-hidden="true"></i>${tabs}</div>`:''}${form}</section>`}
@@ -3217,9 +3233,9 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
-const APPV='00.01.62';
+const APPV='00.01.63';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.61 a v00.01.62. Objetos de la mesa del inicio de sesión centrados y sustituidos por cajas de juegos, barajas y libros de rol. En móvil: sin scroll vertical en el inicio de sesión y sin número de versión.';
+const APPD='Actualiza de v00.01.62 a v00.01.63. Rediseño de la cabecera del inicio de sesión en tablet y escritorio: marca en línea (logo + nombre), titular y tres puntos clave con iconos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
