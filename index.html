@@ -2796,19 +2796,19 @@ function authView(){
  const tabs=[['login','Entrar'],['new','Crear cuenta']].map(([k,n])=>`<button type="button" data-act="atab" data-v="${k}" aria-pressed="${authTab===k}"><b>${n}</b></button>`).join('');
  const pwf=(id,label,auto)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required><button type="button" class="btn sm" data-act="showpw" aria-pressed="false">Ver</button></span></label>`;
  const emf=v=>`<label class="f">Correo electrónico<input type="email" id="em" name="em" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email" value="${esc(v||'')}" required></label>`;
- let form='',sub='Tira iniciativa para entrar.';
- if(authTab==='verify'){sub='Tirada de verificación pendiente';
+ let form='',sub='Inicia sesión para continuar.';
+ if(authTab==='verify'){sub='Verifica tu correo';
   form=`<div class="grid"><p class="hint" style="margin:0">Hemos enviado un enlace de verificación a <b>${esc(pend?pend.email:'tu correo')}</b>. Ábrelo y vuelve aquí: entrarás automáticamente. Si no lo ves, mira en la carpeta de spam.</p><div id="amsg" class="msg" role="status" aria-live="polite"></div>
   <div class="row"><button class="btn pri" data-act="vcheck">Ya lo he verificado</button><button class="btn" data-act="vresend" id="vrs">Reenviar correo</button></div><div class="row"><button class="btn ghost sm" data-act="atab" data-v="login">Volver</button></div></div>`}
- else if(authTab==='reset'){sub='Pifia con la contraseña: toca restaurarla';
+ else if(authTab==='reset'){sub='Recuperar la contraseña';
   form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Escribe el correo de tu cuenta y te enviaremos un enlace para elegir una contraseña nueva. Tus fichas no se pierden.</p>${emf(lastUser())}<div id="amsg" class="msg" role="alert" aria-live="polite"></div>
   <div class="row"><button class="btn pri" type="submit">Enviar enlace</button><button type="button" class="btn ghost" data-act="atab" data-v="login">Volver</button></div></form>`}
- else if(authTab==='name'){sub='Elige tu alias de aventurero';
+ else if(authTab==='name'){sub='Elige tu nombre de usuario';
   form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">El nombre que elegiste ya está en uso. Escribe otro: es el que verán los demás.</p>
   <label class="f">Nombre de usuario<input type="text" id="au" name="au" autocomplete="nickname" autocapitalize="none" spellcheck="false" required></label><div id="amsg" class="msg" role="alert" aria-live="polite"></div>
   <div class="row"><button class="btn pri" type="submit">Continuar</button><button type="button" class="btn ghost" data-act="atab" data-v="login">Cancelar</button></div></form>`}
  else{
-  if(authTab==='new')sub='Crea tu personaje de cuenta.';
+  if(authTab==='new')sub='Crea tu cuenta para guardar tus partidas y fichas.';
   form=`<form id="authform" novalidate class="grid">
   ${authTab==='new'?`<label class="f">Nombre de usuario<input type="text" id="au" name="au" autocomplete="nickname" autocapitalize="none" spellcheck="false" required></label>`:''}
   ${emf(authTab==='login'?lastUser():'')}
@@ -2819,7 +2819,7 @@ function authView(){
   <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Sentarme a la mesa'}</button></form>
   ${authTab==='login'?`<div class="row"><button type="button" class="btn ghost sm" data-act="atab" data-v="reset">¿Has olvidado tu contraseña?</button></div>`:''}
   ${authTab==='new'?'<p class="hint">Te enviaremos un correo para verificar la dirección. Hasta que lo abras no podrás entrar. Tus fichas se guardan en la nube, ligadas a tu correo, y puedes verlas desde cualquier dispositivo.</p>':''}`}
- return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p><ul class="lgf"><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5z"/></svg></i><div><b>Fichas con autoguardado</b><span>Tus personajes en la nube. Cero pérdida de PX.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14c2 .6 3.4 2.3 3.4 5"/></svg></i><div><b>Party multijugador</b><span>Monta mesa o únete con un código.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></i><div><b>Un inventario para todo el loot</b><span>Todos tus juegos en un solo repo.</span></div></li></ul></div>
+ return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p><ul class="lgf"><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5z"/></svg></i><div><b>Tus fichas, siempre contigo</b><span>Guardadas en la nube y ligadas a tu correo.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14c2 .6 3.4 2.3 3.4 5"/></svg></i><div><b>Partidas en grupo</b><span>Crea una mesa o únete con un código.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></i><div><b>Todos los juegos en un sitio</b><span>Todos tus juegos de mesa, en un solo lugar.</span></div></li></ul></div>
  <section class="authhub">
  ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
  ${authTab==='login'||authTab==='new'?`<div class="seg" data-i="${authTab==='new'?1:0}"><i class="pill" aria-hidden="true"></i>${tabs}</div>`:''}${form}</section>`}
@@ -3234,9 +3234,9 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
-const APPV='00.01.65';
+const APPV='00.01.66';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.64 a v00.01.65. Textos del inicio de sesión reescritos con jerga geek (titulares y los tres puntos clave).';
+const APPD='Actualiza de v00.01.65 a v00.01.66. Se deshace la reescritura con jerga geek: los textos del inicio de sesión vuelven a los de la v00.01.64.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
