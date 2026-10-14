@@ -1264,6 +1264,29 @@ body.authdark .authhub a,body.authdark .authhub .lnk{color:var(--acc)}
 body.authdark .lgt .thm{background:var(--seg-bg);border:1px solid var(--h-line);color:var(--h-mut)}
 body.authdark .lgt .thm button[aria-pressed="true"]{background:var(--seg-on);color:var(--seg-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 45%,transparent)}
 body.authdark .authhub .chk{color:var(--h-ink)}body.authdark .authhub .chk input{accent-color:var(--pc)}
+
+/* v00.01.59 · transición de tema */
+#thfx{position:fixed;inset:0;z-index:2147482000;overflow:hidden;pointer-events:auto;cursor:progress}
+#thfx i,#thfx b,#thfx div,#thfx svg{position:absolute;display:block}
+#thfx.tf-light .tfw{inset:0;background:#FFF4D6}
+#thfx .tfsun{right:-8vmax;top:-8vmax;width:34vmax;height:34vmax;border-radius:50%;background:radial-gradient(circle,#FFFBE8 0,#FFE08A 38%,rgba(255,200,90,0) 70%)}
+#thfx .tfwin{left:50%;top:50%;width:min(52vmin,360px);margin:calc(min(52vmin,360px)*-.6) 0 0 calc(min(52vmin,360px)*-.5);filter:drop-shadow(0 12px 22px rgba(80,50,20,.35))}
+#thfx .tfsh{left:12%;top:58%;width:22vmax;height:46vmax;background:linear-gradient(180deg,rgba(255,240,190,.9),rgba(255,240,190,0));transform-origin:top left;clip-path:polygon(0 0,100% 0,70% 100%,0 100%);margin-top:0;filter:blur(1px)}
+#thfx .tfsh.a{left:8%;rotate:-18deg}#thfx .tfsh.b{left:30%;rotate:-18deg}#thfx .tfsh.c{left:52%;rotate:-18deg}#thfx .tfsh.d{left:74%;rotate:-18deg}
+#thfx .tfbl{left:0;right:0;top:0;height:100%;background:repeating-linear-gradient(180deg,#4A3524 0 22px,#2E1F14 22px 26px);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+#thfx .tfcord{left:50%;bottom:-34px;width:3px;height:40px;background:#C9A25E;margin-left:-1px}
+#thfx .tfcord::after{content:"";position:absolute;left:-5px;bottom:-8px;width:13px;height:13px;border-radius:50%;background:#E8B35C}
+#thfx .tfl{left:50%;top:0;width:min(34vmin,200px);margin-left:calc(min(34vmin,200px)*-.5);transform-origin:50% 0}
+#thfx .tfl svg{position:relative;width:100%;height:auto}
+#thfx .tfcone{left:-60%;right:-60%;top:57%;height:min(70vh,520px);background:linear-gradient(180deg,rgba(255,214,130,.8),rgba(255,214,130,0));clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);filter:blur(2px)}
+#thfx .tfglow{inset:0;background:radial-gradient(60% 55% at 50% 30%,rgba(255,196,100,.55),rgba(20,10,5,.15) 60%,transparent 80%)}
+#thfx.tf-auto .tfsky{inset:0;background:linear-gradient(180deg,#F8C46A 0,#E8845A 38%,#4B3A7A 70%,#141030 100%)}
+#thfx .tfdial{left:50%;bottom:-30vmin;width:80vmin;height:80vmin;margin-left:-40vmin;transform-origin:50% 50%}
+#thfx .tfsn{left:50%;top:-4vmin;width:11vmin;height:11vmin;margin-left:-5.5vmin;border-radius:50%;background:radial-gradient(circle,#FFF8D8,#FFD060);box-shadow:0 0 5vmin 1vmin rgba(255,208,96,.8)}
+#thfx .tfmn{left:50%;bottom:-4vmin;width:10vmin;height:10vmin;margin-left:-5vmin;border-radius:50%;background:#F2F0E8;box-shadow:inset -2.6vmin -1.2vmin 0 0 #C9C6DC,0 0 4vmin .5vmin rgba(200,205,255,.55);transform:rotate(180deg)}
+#thfx .tfhz{left:0;right:0;bottom:calc(10vmin);height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent)}
+#thfx .tfst{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.7)}
+#thfx .tfst.a{left:18%;top:16%}#thfx .tfst.b{left:72%;top:11%}#thfx .tfst.c{left:40%;top:26%}#thfx .tfst.d{left:85%;top:30%}
 </style>
 
 <style id="lifecss">
@@ -3163,9 +3186,9 @@ function detectDev(){try{const w=innerWidth,h=innerHeight,coarse=matchMedia('(po
 detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=setTimeout(detectDev,120)});addEventListener('orientationchange',()=>setTimeout(detectDev,200));
 /* NORMA DE VERSIONES aa.bb.cc  ·  aa = actualización muy grande (la app se presenta como finalizada) · bb = actualización media (p. ej. un juego nuevo completo) · cc = actualización menor (lo habitual).
    Al subir aa se ponen bb y cc a 00; al subir bb se pone cc a 00. Siempre dos cifras como mínimo. */
-const APPV='00.01.58';
-const APPN='Actualización media.';
-const APPD='Actualiza de v00.01.57 a v00.01.58. Inicio de sesión: modos claro, oscuro y auto funcionales, fondo estático de mesa de juego, transición animada entre Entrar y Crear cuenta, sin texto bajo Recordar y botón Sentarme a la mesa.';
+const APPV='00.01.59';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.58 a v00.01.59. Transiciones de tema en el inicio de sesión: claro con luz del sol por una ventana, oscuro con persiana que baja y lámpara sobre la mesa, auto con ciclo de sol y luna.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3191,7 +3214,33 @@ function getTheme(){try{const v=localStorage.getItem(TKEY);return v==='light'||v
 function applyTheme(v){const r=document.documentElement;const tb=document.querySelector('#fdock .tbtn');if(tb){const sp=tb.querySelector('span');tb.innerHTML=TI[v]+(sp?sp.outerHTML:'<span>Tema</span>')}dockSig='';if(v==='light'||v==='dark')r.setAttribute('data-theme',v);else r.removeAttribute('data-theme');
  document.querySelectorAll('.thm button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)));lmSync()}
 function themeFade(run){const r=document.documentElement;r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}}
-function setTheme(v){try{if(v==='auto')localStorage.removeItem(TKEY);else localStorage.setItem(TKEY,v)}catch(e){}themeFade(()=>applyTheme(v))}
+function setTheme(v){const was=getTheme();try{if(v==='auto')localStorage.removeItem(TKEY);else localStorage.setItem(TKEY,v)}catch(e){}
+ if(v!==was&&document.body.classList.contains('authdark')&&!lfRM()&&themeFx(v,()=>themeFade(()=>applyTheme(v))))return;themeFade(()=>applyTheme(v))}
+/* transición de tema en el inicio de sesión: ventana con sol / persiana y lámpara / ciclo día-noche */
+let thfxOn=false;
+function themeFx(v,apply){if(thfxOn)return false;thfxOn=true;const D=v==='dark'?1700:v==='light'?1500:1600,E='ease-in-out';
+ const o=document.createElement('div');o.id='thfx';o.className='tf-'+v;o.setAttribute('aria-hidden','true');
+ const sky='<defs><linearGradient id="tfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1C2"/><stop offset="1" stop-color="#FFD68A"/></linearGradient></defs>';
+ if(v==='light')o.innerHTML='<i class="tfw"></i><i class="tfsun"></i><svg class="tfwin" viewBox="0 0 200 240" aria-hidden="true"><rect x="8" y="8" width="184" height="224" rx="6" fill="none" stroke="#7A5230" stroke-width="10"/><path d="M100 8v224M8 120h184" stroke="#7A5230" stroke-width="7"/><rect x="14" y="14" width="82" height="102" fill="#FFF6D6" opacity=".55"/><rect x="104" y="14" width="82" height="102" fill="#FFF6D6" opacity=".55"/><rect x="14" y="124" width="82" height="102" fill="#FFF6D6" opacity=".55"/><rect x="104" y="124" width="82" height="102" fill="#FFF6D6" opacity=".55"/></svg><i class="tfsh a"></i><i class="tfsh b"></i><i class="tfsh c"></i><i class="tfsh d"></i>';
+ else if(v==='dark')o.innerHTML='<i class="tfbl"><b class="tfcord"></b></i><div class="tfl"><svg viewBox="0 0 200 260" aria-hidden="true"><path d="M100 0v70" stroke="#C9A25E" stroke-width="3"/><path d="M52 150 L72 70 H128 L148 150 Z" fill="#2B1B10" stroke="#C9A25E" stroke-width="3" stroke-linejoin="round"/><ellipse cx="100" cy="150" rx="48" ry="9" fill="#FFE2A0"/><circle cx="100" cy="158" r="9" fill="#FFF3C8"/></svg><i class="tfcone"></i></div><i class="tfglow"></i>';
+ else o.innerHTML='<i class="tfsky"></i><div class="tfdial"><i class="tfsn"></i><i class="tfmn"></i></div><i class="tfhz"></i><i class="tfst a"></i><i class="tfst b"></i><i class="tfst c"></i><i class="tfst d"></i>';
+ document.body.appendChild(o);
+ const A=(sel,kf,opt)=>{const e=o.querySelector(sel);if(e)e.animate(kf,Object.assign({duration:D,easing:E,fill:'both'},opt||{}))};
+ if(v==='light'){A('.tfw',[{opacity:0},{opacity:0,offset:.18},{opacity:.95,offset:.42},{opacity:.95,offset:.55},{opacity:0}]);
+  A('.tfsun',[{transform:'scale(.2)',opacity:0},{transform:'scale(1.4)',opacity:1,offset:.45},{transform:'scale(2.4)',opacity:0}],{easing:'ease-out'});
+  A('.tfwin',[{opacity:0,transform:'translateY(-30px) scale(.9)'},{opacity:1,transform:'none',offset:.3},{opacity:1,offset:.6},{opacity:0,transform:'scale(1.05)'}]);
+  o.querySelectorAll('.tfsh').forEach((e,i)=>e.animate([{opacity:0,transform:'translate(-60px,-40px)'},{opacity:0,offset:.15},{opacity:.9,transform:'none',offset:.45},{opacity:.9,offset:.62},{opacity:0,transform:'translate(40px,30px)'}],{duration:D,easing:E,fill:'both',delay:i*40}))}
+ else if(v==='dark'){A('.tfbl',[{transform:'translateY(-102%)'},{transform:'translateY(0)',offset:.34,easing:'cubic-bezier(.3,1.4,.5,1)'},{transform:'translateY(0)',offset:.62},{transform:'translateY(-102%)'}]);
+  A('.tfl',[{transform:'translateY(-110%)',opacity:0},{transform:'translateY(-110%)',opacity:0,offset:.34},{transform:'translateY(0) rotate(-4deg)',opacity:1,offset:.5},{transform:'translateY(0) rotate(3deg)',opacity:1,offset:.6},{transform:'translateY(0) rotate(0)',opacity:1,offset:.7},{opacity:0,transform:'translateY(-30px)'}]);
+  A('.tfcone',[{opacity:0},{opacity:0,offset:.5},{opacity:1,offset:.54},{opacity:.35,offset:.58},{opacity:1,offset:.63},{opacity:1,offset:.78},{opacity:0}]);
+  A('.tfglow',[{opacity:0},{opacity:0,offset:.52},{opacity:1,offset:.66},{opacity:.7,offset:.82},{opacity:0}])}
+ else{A('.tfsky',[{opacity:0},{opacity:1,offset:.25},{opacity:1,offset:.7},{opacity:0}]);
+  A('.tfdial',[{transform:'rotate(0deg)'},{transform:'rotate(180deg)'}],{easing:'cubic-bezier(.5,0,.3,1)'});
+  A('.tfhz',[{opacity:0},{opacity:1,offset:.25},{opacity:1,offset:.7},{opacity:0}]);
+  o.querySelectorAll('.tfst').forEach((e,i)=>e.animate([{opacity:0},{opacity:0,offset:.35},{opacity:1,offset:.55},{opacity:.4,offset:.65},{opacity:1,offset:.72},{opacity:0}],{duration:D,fill:'both',delay:i*70}))}
+ o.animate([{opacity:1},{opacity:1,offset:.86},{opacity:0}],{duration:D,fill:'both'});
+ setTimeout(()=>{try{apply()}catch(e){}},Math.round(D*.42));
+ setTimeout(()=>{o.remove();thfxOn=false},D+60);return true}
 function lmSync(){try{const t=getTheme(),dk=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.lm=dk?'d':'l'}catch(e){}}
 lmSync();
 try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTheme()==='auto')themeFade(lmSync)})}catch(e){}
