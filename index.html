@@ -3323,11 +3323,11 @@ function authFit(){try{const b=document.body;const reg=document.documentElement.
 function hubSync(){try{const b=document.body;const on=!!(session&&!booting&&document.querySelector('#app .bubbles'));b.classList.toggle('hubs',on);let t=document.getElementById('htab');
  if(on&&!t){const w=document.createElement('div');w.innerHTML=AUTHBG;t=w.firstElementChild;if(t){t.id='htab';b.appendChild(t)}}else if(!on&&t)t.remove()}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
-function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.max(1,Math.min(innerWidth/1280,innerHeight/760,1.75)):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
+function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.70';
-const APPN='Actualización media.';
-const APPD='Actualiza de v00.01.69 a v00.01.70. Inicio de sesión en pantallas grandes de escritorio: la interfaz y los textos se escalan para aprovechar toda la pantalla y los objetos de la mesa dejan de recortarse.';
+const APPV='00.01.71';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.70 a v00.01.71. Inicio de sesión en pantallas grandes: escala reducida (máximo 1,3×, antes 1,75×).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
