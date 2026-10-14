@@ -1303,9 +1303,10 @@ body.authdark .atable .ac{fill:var(--acc)}
 body.authdark .atable .ln{fill:none;stroke:var(--ob1);stroke-width:1.4;opacity:.9}
 body.authdark .atable .ly{fill:none;stroke:var(--obl);stroke-width:.8;opacity:.45}
 html[data-dev=phone] #vtag{display:none!important}
-html[data-dev=phone] body.authdark #app:has(.authhub){padding-top:8px;padding-bottom:62px}
+html[data-dev=phone] body.authdark #app:has(.authhub){padding-top:calc(10px + env(safe-area-inset-top,0px));padding-bottom:62px}
 html[data-dev=phone] body.authdark .lg{margin-top:0}
-html[data-dev=phone] body.authdark .lg .logo{width:36px;height:36px;border-radius:10px}
+html[data-dev=phone] body.authdark .lg .logo{width:40px;height:40px;border-radius:12px;margin:0 auto 6px;overflow:hidden}
+html[data-dev=phone] body.authdark .lg .logo svg{width:24px;height:24px}
 html[data-dev=phone] body.authdark .lg .hh{font-size:1.5rem}
 html[data-dev=phone] body.authdark .lg .hs{display:none}
 html[data-dev=phone] body.authdark .authhub{padding:14px;gap:8px}
@@ -1314,7 +1315,7 @@ html[data-dev=phone] body.authdark .authhub .seg button{min-height:38px}
 html[data-dev=phone] body.authdark .authhub input:not([type=checkbox]){min-height:42px;padding-top:6px;padding-bottom:6px;margin-top:3px}
 html[data-dev=phone] body.authdark .authhub .btn{min-height:42px}
 html[data-dev=phone] body.authdark .authhub .hint{font-size:.72rem;line-height:1.3;margin:0}
-html[data-dev=phone] body.authdark.authreg .lg .logo,html[data-dev=phone] body.authdark.authreg .lg .tg{display:none}
+@media(max-height:740px){html[data-dev=phone] body.authdark.authreg .lg .logo,html[data-dev=phone] body.authdark.authreg .lg .tg{display:none}}
 .lgf{display:none}
 html[data-dev=tablet] body.authdark #app:has(.authhub) .lg,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg{display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:center;justify-items:start}
 html[data-dev=tablet] body.authdark #app:has(.authhub) .lg .logo,html[data-dev=desktop] body.authdark #app:has(.authhub) .lg .logo{grid-row:1/3;width:64px;height:64px;border-radius:20px;margin:0}
@@ -3233,9 +3234,9 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
-const APPV='00.01.63';
+const APPV='00.01.64';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.62 a v00.01.63. Rediseño de la cabecera del inicio de sesión en tablet y escritorio: marca en línea (logo + nombre), titular y tres puntos clave con iconos.';
+const APPD='Actualiza de v00.01.63 a v00.01.64. Inicio de sesión móvil: el logo ya no se sale de su recuadro y se mantiene visible en Crear cuenta salvo en pantallas muy bajas; respeta la zona segura superior.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
