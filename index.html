@@ -1454,6 +1454,7 @@ html[data-dev=phone] .hmcards{right:8px;top:10px;translate:none;scale:.72;transf
 .jgin{display:none;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px;margin-top:20px}
 .jgwrap[data-open="1"] .jgin{display:grid}
 @keyframes jgIn{from{opacity:0;transform:translateY(28px) scale(.92)}to{opacity:1;transform:none}}@keyframes jgOut{to{opacity:0;transform:translateY(14px) scale(.96)}}
+.jgin.anim{contain:layout paint}.jgin.anim>.bub{will-change:transform,opacity;backface-visibility:hidden}.jgwrap[data-busy] .hmc,.jgwrap[data-busy] .hmsweep,.jgwrap[data-busy] .hmb{animation-play-state:paused}.bubbles.hubmain:has([data-busy]) .hmsweep,.bubbles.hubmain:has([data-busy]) .hmb{animation-play-state:paused}
 .jgin.anim>.bub{animation:jgIn .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*95ms+60ms)}
 .jgin.anim.out>.bub{animation:jgOut .22s ease-in both;animation-delay:calc((2 - var(--i))*45ms)}
 @media(prefers-reduced-motion:no-preference){dialog:has(>.cbub)[open]{animation:dlgfade .2s ease-out}dialog.dclosing:has(>.cbub){animation:dlgfadeo .16s ease-in forwards}}
@@ -3554,10 +3555,10 @@ let jgOpen=false;
 const hmx=(cls,act,eye,title,sub,art,extra)=>`<button type="button" class="hmx ${cls}" data-act="${act}"${extra||''}><span class="hmart" aria-hidden="true">${art}</span><span class="tt"><i class="hme">${eye}</i><b>${title}</b><span>${sub}</span></span><span class="go" aria-hidden="true">→</span></button>`;
 function jgToggle(){const w=document.getElementById('jgwrap'),inn=document.getElementById('jgin');if(!w||!inn||w.dataset.busy)return;const open=!jgOpen;jgOpen=open;const btn=w.querySelector('[data-act=jgtoggle]');if(btn){btn.setAttribute('aria-expanded',String(open));const sp=btn.querySelector('.tt>span');if(sp)sp.textContent=open?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.'}
  if(lfRM()||!inn.animate){w.dataset.open=open?1:0;return}
- w.dataset.busy=1;inn.style.overflow='hidden';
+ w.dataset.busy=1;inn.style.overflow='hidden';inn.style.willChange='height';
  if(open){w.dataset.open=1;inn.classList.remove('out');inn.classList.add('anim');const h=inn.scrollHeight;
   const a=inn.animate([{height:'0px',marginTop:'0px'},{height:h+'px',marginTop:'20px'}],{duration:420,easing:'cubic-bezier(.2,.8,.2,1)'});
-  a.onfinish=a.oncancel=()=>{inn.style.overflow='';inn.classList.remove('anim');delete w.dataset.busy};setTimeout(()=>{try{inn.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}},260)}
+  a.onfinish=a.oncancel=()=>{inn.style.overflow='';inn.style.willChange='';inn.classList.remove('anim');delete w.dataset.busy;try{inn.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}}
  else{inn.classList.add('anim','out');const h=inn.offsetHeight;
   const a=inn.animate([{height:h+'px',marginTop:'20px'},{height:'0px',marginTop:'0px'}],{duration:340,easing:'cubic-bezier(.4,0,.2,1)',delay:90,fill:'both'});
   a.onfinish=a.oncancel=()=>{w.dataset.open=0;inn.style.overflow='';inn.classList.remove('anim','out');a.cancel();delete w.dataset.busy}}}
@@ -3567,9 +3568,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.96';
-const APPN='Actualización media.';
-const APPD='Actualiza de v00.01.95 a v00.01.96. Burbujas de la pantalla principal con diseño propio: Juegos muestra un abanico de cartas (Cosmere, Cyberpunk, Dune) sobre degradado ciruela y Buscar partida un radar animado con ondas y puntos sobre degradado turquesa. Textura de rejilla, título grande y flecha circular; respetan el modo de movimiento reducido.';
+const APPV='00.01.97';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.96 a v00.01.97. Animación de la burbuja Juegos más fluida: las cartas se pasan a su propia capa gráfica, se pausan las animaciones decorativas mientras se despliega y el desplazamiento automático espera a que termine.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
