@@ -1410,7 +1410,7 @@ html[data-dev=desktop] body.authdark #app:has(.authhub){zoom:var(--az,1);min-hei
 #onl .onb:hover{transform:translateY(-2px)}#onl .onb b{font-size:1rem}#onl .onb span{color:var(--h-mut,inherit)}
 #onl .ond{width:9px;height:9px;border-radius:50%;background:#3FBF7F;box-shadow:0 0 0 0 rgba(63,191,127,.6);animation:onp 2s ease-out infinite;flex:none}@keyframes onp{70%{box-shadow:0 0 0 8px rgba(63,191,127,0)}100%{box-shadow:0 0 0 0 rgba(63,191,127,0)}}
 #onl .onp{min-width:200px;max-width:280px;max-height:50vh;overflow:auto;padding:12px 14px;border-radius:18px;border:1px solid var(--h-line,rgba(232,190,120,.24));background:var(--h-card,rgba(30,21,34,.92));color:var(--h-ink,inherit);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:var(--shadow,0 14px 30px -16px rgba(0,0,0,.6));display:grid;gap:7px;animation:onin .25s cubic-bezier(.2,.8,.2,1)}@keyframes onin{from{opacity:0;transform:translateY(8px) scale(.97)}}
-#onl .onr{display:flex;align-items:center;gap:8px;font-size:.88rem}#onl .onr em{margin-left:auto;font-style:normal;font-size:.72rem;color:var(--acc,inherit);font-weight:700}
+#onl .onp{cursor:pointer}#onl .onr{display:flex;align-items:center;gap:8px;font-size:.88rem}#onl .onr em{margin-left:auto;font-style:normal;font-size:.72rem;color:var(--acc,inherit);font-weight:700}
 @media(prefers-reduced-motion:reduce){#onl .ond,#onl .onp{animation:none}#onl .onb{transition:none}}
 
 html:not([data-dev=phone]) dialog .cbub.auto{display:none}
@@ -2881,7 +2881,7 @@ function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!boo
  if(Date.now()-onlT>55000&&!onlBusy){beat();onlRefresh()}
  if(!e){e=document.createElement('div');e.id='onl';e.addEventListener('click',ev=>{if(ev.target.closest('[data-onl]')){onlOpen=!onlOpen;onlDraw()}});b.appendChild(e)}
  const n=onlL.length,rn=r=>(r.role|0)>=3?'Superusuario':(r.role|0)>=2?'Administrador':'';
- const h=`<button type="button" class="onb" data-onl="1" aria-expanded="${onlOpen}" aria-label="${n} ${n===1?'usuario':'usuarios'} en línea"><i class="ond" aria-hidden="true"></i><b>${n}</b><span>en línea</span></button>`+(onlOpen?`<div class="onp" role="status"><b>Conectados ahora</b>${n?onlL.slice(0,30).map(r=>`<div class="onr"><i class="ond" aria-hidden="true"></i><span>${esc(r.name||'Usuario')}</span>${rn(r)?`<em>${rn(r)}</em>`:''}</div>`).join(''):'<p class="hint" style="margin:0">Nadie conectado.</p>'}${n>30?`<p class="hint" style="margin:4px 0 0">y ${n-30} más…</p>`:''}</div>`:'');
+ const h=(onlOpen?'':`<button type="button" class="onb" data-onl="1" aria-expanded="${onlOpen}" aria-label="${n} ${n===1?'usuario':'usuarios'} en línea"><i class="ond" aria-hidden="true"></i><b>${n}</b><span>en línea</span></button>`)+(onlOpen?`<div class="onp" role="status" data-onl="1" title="Toca para cerrar"><b>Conectados ahora</b>${n?onlL.slice(0,30).map(r=>`<div class="onr"><i class="ond" aria-hidden="true"></i><span>${esc(r.name||'Usuario')}</span>${rn(r)?`<em>${rn(r)}</em>`:''}</div>`).join(''):'<p class="hint" style="margin:0">Nadie conectado.</p>'}${n>30?`<p class="hint" style="margin:4px 0 0">y ${n-30} más…</p>`:''}</div>`:'');
  if(e.dataset.s!==h){e.dataset.s=h;e.innerHTML=h}}catch(x){}}
 setInterval(()=>{beat();onlRefresh()},60000);setTimeout(()=>{beat();onlRefresh()},4000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){beat();onlRefresh()}});
