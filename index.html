@@ -2754,6 +2754,16 @@ html[data-dev=desktop] body.admbub #fdock.tabcoll .fd{flex-direction:row;justify
 html[data-dev=desktop] body.admbub #fdock.tabcoll .fd span:not(.avs){font-size:.95rem}
 html[data-dev=desktop] body.admbub #fdock .fd .bdg{position:static;margin-left:auto;min-width:19px;height:19px;border-radius:99px;background:#D9480F;color:#fff;font:800 .7rem/19px var(--sans,system-ui);text-align:center;font-style:normal;padding:0 5px}
 html[data-dev=desktop] body.admbub .adp{padding-top:32px}
+
+/* v00.01.99 · enlaces legales */
+.lglegal{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:2px 6px;margin:12px 0 0;font-size:.84rem;color:var(--h-mut,var(--muted));text-align:center}
+.lglegal button,.lgllnk{background:none;border:0;padding:4px 2px;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;min-height:32px}
+.lglegal button:hover,.lgllnk:hover{text-decoration-thickness:2px}
+.lglegal button:focus-visible,.lgllnk:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:4px}
+.legal{display:grid;gap:8px;max-height:62dvh;overflow:auto;padding-right:6px;font-size:.95rem;line-height:1.5;overscroll-behavior:contain}
+.legal h4{margin:12px 0 0;font-size:1rem;color:var(--head)}
+.legal p,.legal ul{margin:0}.legal ul{padding-left:20px;display:grid;gap:4px}
+.legal small{color:var(--muted)}
 </style>
 </head><body>
 <div class="wrap" id="app"></div>
@@ -3110,7 +3120,7 @@ function authView(){
  return `${AUTHBG}<div class="lgt">${themeSeg()}</div><div class="lg"><div class="logo">${LOGOI}</div><h1 class="hh">La Mesa Larga</h1><div class="tg">Donde caben todos tus juegos</div><p class="hs">${sub}</p><ul class="lgf"><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5z"/></svg></i><div><b>Tus fichas, siempre contigo</b><span>Guardadas en la nube y ligadas a tu correo.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14c2 .6 3.4 2.3 3.4 5"/></svg></i><div><b>Partidas en grupo</b><span>Crea una mesa o únete con un código.</span></div></li><li><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg></i><div><b>Todos los juegos en un sitio</b><span>Todos tus juegos de mesa, en un solo lugar.</span></div></li></ul></div>
  <section class="authhub">
  ${fbOn()?'':'<p class="warn-t">Falta conectar la base de datos de la app.</p>'}
- ${authTab==='login'||authTab==='new'?`<div class="seg" data-i="${authTab==='new'?1:0}"><i class="pill" aria-hidden="true"></i>${tabs}</div>`:''}${form}</section>`}
+ ${authTab==='login'||authTab==='new'?`<div class="seg" data-i="${authTab==='new'?1:0}"><i class="pill" aria-hidden="true"></i>${tabs}</div>`:''}${form}${authTab==='login'||authTab==='new'?legalLinks(authTab==='new'):''}</section>`}
 
 function emErr(inp,on){try{const l=inp&&inp.closest('label');if(!l)return;const o=l.querySelector('.fe');if(o)o.remove();inp.removeAttribute('aria-invalid');if(on){const m=document.createElement('span');m.className='fe';m.id='emerr';m.setAttribute('role','alert');m.textContent='Este correo ya está siendo utilizado';l.appendChild(m);inp.setAttribute('aria-invalid','true');inp.setAttribute('aria-describedby','emerr');inp.focus()}else inp.removeAttribute('aria-describedby')}catch(e){}}
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.id==='em'&&t.getAttribute('aria-invalid'))emErr(t,false)});
@@ -3580,9 +3590,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.99';
+const APPV='00.01.101';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.98 a v00.01.99. Modo Game Master: cada partida tiene ahora un cronómetro. Botón Comenzar partida; el GM puede Pausar, Posponer partida (el botón pasa a Continuar partida) o Finalizar. El cronómetro se detiene al pausar, posponer o finalizar y sigue al continuar. Al finalizar, todos los jugadores reciben un resumen: tiempo, NPC fallecidos, jugadores caídos y revividos y quién recibió más daño. ADMIN/ALPHA: requiere campos nuevos en la colección partidas del servidor (tst, tacc, tseg, stats); ver docs/servidor-cronometro.md.';
+const APPD='Actualiza de v00.01.100 a v00.01.101. Modo Game Master: cada partida tiene ahora un cronómetro. Botón Comenzar partida; el GM puede Pausar, Posponer partida (el botón pasa a Continuar partida) o Finalizar. El cronómetro se detiene al pausar, posponer o finalizar y sigue al continuar. Al finalizar, todos los jugadores reciben un resumen: tiempo, NPC fallecidos, jugadores caídos y revividos y quién recibió más daño. ADMIN/ALPHA: requiere campos nuevos en la colección partidas del servidor (tst, tacc, tseg, stats); ver docs/servidor-cronometro.md.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3679,8 +3689,64 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const GEAR='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 const roleEm=()=>(isAdmin()?'<em class="tbrole su">SUPER</em>':canAdm()?'<em class="tbrole">ADMIN</em>':'')+(store.mode==='gm'?'<em class="tbrole gm">GM</em>':'');
-const setItems=it=>[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(getTheme()===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')+'<hr>'+it('chkupd2','Buscar actualizaciones')+it('rpt','¿Algo no funciona?'+(isAdmin()&&rpOpenN()?'<em>'+rpOpenN()+'</em>':''));
-function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div></div>`,true)}
+const setItems=it=>[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(getTheme()===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')+'<hr>'+it('chkupd2','Buscar actualizaciones')+it('rpt','¿Algo no funciona?'+(isAdmin()&&rpOpenN()?'<em>'+rpOpenN()+'</em>':''))+'<hr>'+it('legala','Aviso legal')+it('legald','Protección de datos');
+
+/* v00.01.99 · aviso legal y protección de datos */
+const LEG_MAIL='lamesalarga001@gmail.com',LEG_URL='https://jomafergacreations.github.io/la-mesa-larga/';
+const LEGAL={
+aviso:['Aviso legal',[
+['h','1. Datos identificativos del titular'],
+['p','En cumplimiento del artículo 10 de la Ley 34/2002 (LSSI-CE), se informa de que el titular de este sitio web es Jose Manuel Fernández Gámez, persona física.'],
+['ul',['Email de contacto: '+LEG_MAIL,'Dirección web: '+LEG_URL]],
+['h','2. Objeto y condiciones de uso'],
+['p','La Mesa Larga es una aplicación web de juegos de mesa para un grupo de personas. El acceso exige registro con cuenta. Quien se registra declara que los datos facilitados son veraces y se compromete a hacer un uso lícito de la app, sin dañar ni sobrecargar el servicio ni acceder a cuentas de otras personas.'],
+['p','Los menores de 14 años solo pueden usarla con autorización de su padre, madre o tutor legal.'],
+['h','3. Propiedad intelectual'],
+['p','El código, el diseño, los textos, el logotipo y demás elementos propios de La Mesa Larga pertenecen a Jose Manuel Fernández Gámez, que se reserva todos los derechos. Quedan prohibidas la reproducción, distribución, comunicación pública y transformación sin autorización expresa y por escrito. La app se ha desarrollado con ayuda de herramientas de inteligencia artificial, bajo la dirección y supervisión del titular.'],
+['p','Félix Torres Tejero es afiliado a La Mesa Larga. Gran parte de su trabajo, en especial la gestión de la base de datos, es lo que hace que la app funcione.'],
+['h','4. Contenido de terceros'],
+['p','Los nombres, imágenes y marcas de juegos de mesa que aparezcan en la app pertenecen a sus respectivos titulares y se muestran solo con fines identificativos, sin que ello implique relación, patrocinio ni respaldo. Si eres titular de alguno de esos derechos y quieres que se retire, escribe a '+LEG_MAIL+' y se atenderá la petición con la mayor brevedad.'],
+['h','5. Contenido de las personas usuarias'],
+['p','Quien sube partidas, textos o imágenes conserva todos los derechos sobre ellos. Al subirlos concede al titular una licencia no exclusiva, gratuita y limitada a mostrar ese contenido dentro de la app mientras la cuenta esté activa. La persona usuaria garantiza que tiene derecho a subirlo y que no infringe derechos de terceros ni la ley. El titular podrá retirar contenido ilícito o que vulnere derechos ajenos.'],
+['h','6. Responsabilidad'],
+['p','El titular no garantiza la disponibilidad continua de la app ni la ausencia de errores, y no responde de los daños derivados de interrupciones, fallos técnicos o del uso indebido por terceros. Tampoco se hace responsable del contenido publicado por las personas usuarias ni de los enlaces a sitios ajenos.'],
+['h','7. Modificaciones'],
+['p','El titular puede modificar este aviso legal en cualquier momento. La versión vigente es la publicada en la app.'],
+['h','8. Legislación y jurisdicción'],
+['p','Este aviso se rige por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales que correspondan conforme a la normativa aplicable; si eres consumidor, los de tu domicilio.']
+]],
+datos:['Protección de datos',[
+['p','Así tratamos tus datos personales en La Mesa Larga, conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 (LOPDGDD).'],
+['h','1. Responsable del tratamiento'],
+['ul',['Responsable: Jose Manuel Fernández Gámez','Email: '+LEG_MAIL]],
+['h','2. Datos que se tratan y para qué'],
+['ul',['Correo electrónico: crear y gestionar tu cuenta y enviarte avisos del servicio.','Nombre de usuario: identificarte ante el resto del grupo.','Contraseña: acceder a tu cuenta; se guarda cifrada, nunca en texto claro.','Contenido y actividad (partidas, fichas, puntuaciones, textos, imágenes): mostrarlos dentro de la app.']],
+['p','La base jurídica es la ejecución del servicio que solicitas (art. 6.1.b RGPD). Sin esos datos no se puede crear la cuenta. No se usan tus datos para publicidad ni para elaborar perfiles, ni se venden a terceros.'],
+['h','3. Destinatarios y encargados del tratamiento'],
+['p','Tus datos solo los ven las personas de tu grupo en la medida en que tú los publiques. Para prestar el servicio intervienen:'],
+['ul',['Alojamiento web: GitHub Pages (GitHub, Inc.). Sirve la app; no almacena los datos de tu cuenta.','Base de datos: servidor propio de La Mesa Larga con PocketBase, gestionado técnicamente por Félix Torres Tejero, afiliado a La Mesa Larga, cuyo trabajo hace posible el funcionamiento de la app. Actúa como encargado del tratamiento bajo las instrucciones del responsable.']],
+['p','No hay otras cesiones salvo obligación legal.'],
+['h','4. Transferencias internacionales'],
+['p','GitHub Pages es un servicio de Estados Unidos que recibe datos técnicos de conexión, como la dirección IP, al servir la web. Los datos de tu cuenta se guardan en el servidor propio de la app.'],
+['h','5. Plazo de conservación'],
+['p','Tus datos se conservan mientras tu cuenta esté activa. Al eliminarla se borran, salvo lo que una ley obligue a guardar y solo durante el plazo legal.'],
+['h','6. Tus derechos'],
+['p','Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad, y retirar tu consentimiento cuando sea la base del tratamiento.'],
+['ul',['Desde la app: en los ajustes de tu cuenta, para consultar, modificar y eliminar tus datos.','Por email: escribiendo a '+LEG_MAIL+' si no puedes hacerlo desde la app.']],
+['p','Responderemos en un plazo máximo de un mes. Si consideras que tus derechos no se han atendido, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).'],
+['h','7. Menores de edad'],
+['p','Los menores de 14 años solo pueden registrarse con el consentimiento de su padre, madre o tutor legal. Si detectamos una cuenta de un menor sin esa autorización, la eliminaremos. Si eres progenitor o tutor y quieres retirar tu consentimiento, escribe a '+LEG_MAIL+'.'],
+['h','8. Cookies y almacenamiento local'],
+['p','La app no usa cookies de analítica ni de publicidad. Solo emplea almacenamiento técnico del navegador necesario para mantener tu sesión y recordar tus preferencias (tema, recordar el correo en este dispositivo), que no requiere consentimiento. Si en el futuro se añade analítica o publicidad, se actualizará esta política y se pedirá tu consentimiento.'],
+['h','9. Seguridad'],
+['p','Se aplican medidas técnicas y organizativas razonables: contraseñas cifradas, conexión HTTPS y acceso a la base de datos limitado a las personas que lo necesitan. En caso de brecha de seguridad con riesgo para tus derechos, se te informará y se notificará a la AEPD en los plazos legales.'],
+['h','10. Cambios en esta política'],
+['p','Esta política puede actualizarse. La versión vigente es la publicada en la app.']
+]]};
+function legalHtml(k){const d=LEGAL[k];if(!d)return'';return '<div class="legal" tabindex="0">'+d[1].map(([t,v])=>t==='h'?'<h4>'+esc(v)+'</h4>':t==='ul'?'<ul>'+v.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p>'+esc(v)+'</p>').join('')+'</div>'}
+function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(d[0],legalHtml(k),true)}
+function legalLinks(acc){const a='<button type="button" data-act="legala">Aviso legal</button>',b=`<button type="button" data-act="legald">${acc?'Política de protección de datos':'Protección de datos'}</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+a+' y la '+b+'.':a+'<span aria-hidden="true">·</span>'+b}</p>`}
+function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal</button><button type="button" class="btn" data-act="legald">Protección de datos</button></div></div></div>`,true)}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
  const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
@@ -5039,6 +5105,8 @@ document.addEventListener('click',e=>{
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
   case 'rpt':rptDlg();break;
   case 'ajustes':ajustesDlg();break;
+  case 'legala':legalDlg('aviso');break;
+  case 'legald':legalDlg('datos');break;
   case 'jgtoggle':jgToggle();break;
   case 'chkupd2':checkUpdate(true).then(x=>toast(x==='new'?'Hay una actualización disponible':x==='same'?'Ya tienes la última versión':'No se pudo comprobar ahora')).catch(()=>toast('No se pudo comprobar ahora'));break;
   case 'notif':notifDlg();rpLoad().then(()=>{if(!Array.from(document.querySelectorAll('#dlg textarea')).some(t=>t.value)&&$('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
