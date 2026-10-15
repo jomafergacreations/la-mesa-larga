@@ -3227,6 +3227,7 @@ async function doCh(f){const m=$('#cmsg');const set=(t,k)=>{m.textContent=t;m.cl
 async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Comprobando…');try{await reauth(f.elements.d0.value)}catch(x){set(x.code==='NET'?aMsg(x):'La contraseña no es correcta.','err');return}
   clearTimeout(saveT);const u=session.uid,nm=session.name;
+  for(const [c,fl] of [['amistades','a'],['amistades','b'],['invitaciones','gm'],['invitaciones','dest'],['solicitudes','uid'],['solicitudes','gm']]){try{for(const r of await fsQuery(c,fl,u))await fs('DELETE',c+'/'+r.id)}catch(x){}}
   try{await fs('DELETE','fichas/'+u)}catch(x){}try{await fs('DELETE',nameDoc(nm))}catch(x){}try{await fs('DELETE','users/'+u)}catch(x){}
   await aCall('delete',{idToken:session.idToken});lsDel(FKEY(u));dirty=false;
   session=null;store={chars:[],cur:null};skClear();lsDel(UKEY);ckDel(UKEY);
@@ -3481,7 +3482,7 @@ function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='d
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
 const APPV='00.01.84';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.83 a v00.01.84. Amistades con código de amigo, invitaciones del GM, búsqueda en Mis amigos con solicitud de unión, presencia solo entre amigos y aviso de jugador que se une a la sala. Requiere 5 colecciones nuevas en PocketBase (docs/servidor-amistades.md).';
+const APPD='Actualiza de v00.01.83 a v00.01.84. Amistades con código de amigo, invitaciones del GM, búsqueda en Mis amigos con solicitud de unión, presencia solo entre amigos, aviso de jugador que se une a la sala, burbuja en línea que oculta el botón al abrirse, cuenta sin botón Cerrar inferior y limpieza de amistades/invitaciones/solicitudes al borrar la cuenta. Requiere 5 colecciones nuevas en PocketBase (docs/servidor-amistades.md).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
