@@ -3581,9 +3581,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.99';
+const APPV='00.01.100';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.98 a v00.01.99. Legal: enlaces al Aviso legal y a la Protección de datos en la pantalla de inicio de sesión, en Crear cuenta y en el menú y el diálogo de Ajustes.';
+const APPD='Actualiza de v00.01.99 a v00.01.100. Legal: se quita una frase del párrafo de Félix Torres Tejero en el Aviso legal.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3694,7 +3694,7 @@ aviso:['Aviso legal',[
 ['p','Los menores de 14 años solo pueden usarla con autorización de su padre, madre o tutor legal.'],
 ['h','3. Propiedad intelectual'],
 ['p','El código, el diseño, los textos, el logotipo y demás elementos propios de La Mesa Larga pertenecen a Jose Manuel Fernández Gámez, que se reserva todos los derechos. Quedan prohibidas la reproducción, distribución, comunicación pública y transformación sin autorización expresa y por escrito. La app se ha desarrollado con ayuda de herramientas de inteligencia artificial, bajo la dirección y supervisión del titular.'],
-['p','Félix Torres Tejero es afiliado a La Mesa Larga. Gran parte de su trabajo, en especial la gestión de la base de datos, es lo que hace que la app funcione. Su participación no implica titularidad sobre la app salvo que se pacte por escrito.'],
+['p','Félix Torres Tejero es afiliado a La Mesa Larga. Gran parte de su trabajo, en especial la gestión de la base de datos, es lo que hace que la app funcione.'],
 ['h','4. Contenido de terceros'],
 ['p','Los nombres, imágenes y marcas de juegos de mesa que aparezcan en la app pertenecen a sus respectivos titulares y se muestran solo con fines identificativos, sin que ello implique relación, patrocinio ni respaldo. Si eres titular de alguno de esos derechos y quieres que se retire, escribe a '+LEG_MAIL+' y se atenderá la petición con la mayor brevedad.'],
 ['h','5. Contenido de las personas usuarias'],
