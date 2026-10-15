@@ -1430,6 +1430,12 @@ html[data-dev=desktop] .adp .tiles,html[data-dev=tablet] .adp .tiles{grid-templa
 .ovd{width:8px;height:8px;border-radius:50%;background:#34D399;flex:none}
 .ovb{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:10px;font-size:.86rem}.ovb span{color:var(--muted)}.ovb i{height:8px;border-radius:99px;background:rgba(120,130,150,.22);position:relative;overflow:hidden}.ovb i:after{content:"";position:absolute;inset:0;width:var(--w);background:var(--accent,#3B82F6);border-radius:99px}.ovb b{font-variant-numeric:tabular-nums}
 .okc{color:#34D399}.warc{color:#F59E0B}.mutc{color:var(--muted)}
+
+.frr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line,rgba(130,130,150,.25));flex-wrap:wrap}.frr:last-child{border-bottom:0}
+.frr>span:first-child{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}.frr small{opacity:.7;font-size:.78rem}
+.frp{display:grid;gap:6px;padding:12px 14px;border-radius:14px;border:1px solid var(--line,rgba(130,130,150,.3));justify-items:start}.frp small{display:block;opacity:.75}
+.ovd.off{background:#8b93a1}
+.hlp.frb{margin-right:6px}
 </style>
 
 <style id="lifecss">
@@ -2791,7 +2797,7 @@ async function tok(){const s=S();if(!s)throw{code:'AUTH'};
  if(Date.now()>s.exp-60000){const j=await pbRefresh(s.rt);if(!j)throw{code:'AUTH'};s.idToken=j.id_token;s.rt=j.refresh_token;s.exp=Date.now()+(+j.expires_in||3600)*1000;skSet({rt:s.rt},s.rem)}
  return s.idToken}
 /* Capa de compatibilidad Firestore -> PocketBase: mismas llamadas y mismo formato de documento (fields), ids compuestos incluidos */
-const PB_ID=/^[a-z0-9]{15}$/,PBK={created:'creado',updated:'actualizado'},PBKR={creado:'created',actualizado:'updated'},COMPC=['pjs','miembros','salidas'];
+const PB_ID=/^[a-z0-9]{15}$/,PBK={created:'creado',updated:'actualizado'},PBKR={creado:'created',actualizado:'updated'},COMPC=['pjs','miembros','salidas'],UIDC=['fichas','gmsol','presencia','codigos'];
 const pbId=()=>{let s='';const a='abcdefghijklmnopqrstuvwxyz0123456789';try{const u=new Uint8Array(15);crypto.getRandomValues(u);for(const v of u)s+=a[v%36]}catch(e){for(let i=0;i<15;i++)s+=a[Math.floor(Math.random()*36)]}return s};
 const pbQ=v=>'"'+String(v).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"';
 const PBSKIP=new Set(['id','collectionId','collectionName','expand','fid','password','tokenKey','emailVisibility','verified']);
@@ -2799,7 +2805,7 @@ function pbDoc(col,rec){const f={};for(const k in rec){if(PBSKIP.has(k))continue
  let id=rec.id;if(COMPC.includes(col))id=rec.pid+'_'+rec.uid;else if((col==='reveladas'||col==='ajustes')&&rec.fid)id=rec.fid;
  return{name:'pb/'+encodeURIComponent(id),fields:f}}
 async function pbFind(col,id,tk){let flt='';
- if(['fichas','gmsol'].includes(col))flt='uid='+pbQ(id);
+ if(UIDC.includes(col))flt='uid='+pbQ(id);
  else if(col==='nombres')flt='nombre='+pbQ(id);
  else if(col==='ajustes'||col==='reveladas')flt='fid='+pbQ(id);
  else if(COMPC.includes(col)&&id.includes('_')){const i=id.indexOf('_');flt='pid='+pbQ(id.slice(0,i))+' && uid='+pbQ(id.slice(i+1))}
@@ -2813,13 +2819,13 @@ async function fs(m,p,body,q){const tk=await tok();q=q||'';const sp=p.split('/')
  const o={};for(const k in(body&&body.fields||{})){const v=body.fields[k];o[PBK[k]||k]=v.stringValue!==undefined?v.stringValue:v.booleanValue!==undefined?v.booleanValue:+v.integerValue}
  const ex=/currentDocument\.exists=false/.test(q);const rec=await pbFind(col,id,tk);
  if(rec&&ex)throw{code:'FS409'};
- if(rec){const drop=col==='users'?['email','creado']:COMPC.includes(col)||col==='fichas'||col==='gmsol'?['uid','pid']:col==='nombres'?['nombre']:col==='ajustes'||col==='reveladas'?['fid']:[];
+ if(rec){const drop=col==='users'?['email','creado']:COMPC.includes(col)||UIDC.includes(col)?['uid','pid']:col==='nombres'?['nombre']:col==='ajustes'||col==='reveladas'?['fid']:[];
   drop.forEach(k=>delete o[k]);for(const k of Object.keys(o))if(rec[k]===o[k])delete o[k];
   if(!Object.keys(o).length)return pbDoc(col,rec);
   const x=await pbX('PATCH','collections/'+col+'/records/'+rec.id,o,tk);if(x.s===429)fsCool=Date.now()+300000;if(x.s!==200)throw{code:'FS'+x.s,detail:x.j};return pbDoc(col,x.j)}
  if(col==='users')throw{code:'FS404'};
  if(COMPC.includes(col)){const i=id.indexOf('_');if(i>0){o.pid=o.pid||id.slice(0,i);o.uid=o.uid||id.slice(i+1)}}
- else if(col==='fichas'||col==='gmsol')o.uid=id;else if(col==='nombres')o.nombre=id;else if(col==='ajustes'||col==='reveladas')o.fid=id;else if(PB_ID.test(id))o.id=id;
+ else if(UIDC.includes(col))o.uid=id;else if(col==='nombres')o.nombre=id;else if(col==='ajustes'||col==='reveladas')o.fid=id;else if(PB_ID.test(id))o.id=id;
  const x=await pbX('POST','collections/'+col+'/records',o,tk);if(x.s===429)fsCool=Date.now()+300000;
  if(x.s!==200&&x.s!==201){if(x.s===400&&ex)throw{code:'FS409',detail:x.j};throw{code:'FS'+x.s,detail:x.j}}return pbDoc(col,x.j)}
 async function fsList(col){const d=await fs('GET',col);return(d&&d.documents||[]).map(fbDec)}
@@ -2868,7 +2874,7 @@ var fsCool=0;const ONLINE_MS=130000;
 const ONL_MS=150000;
 const isOn=r=>!!r&&Date.now()-(+r.ping||0)<ONL_MS;
 let onlL=[],onlOpen=false,onlBusy=false,onlT=0;
-async function beat(){if(!session||document.hidden||Date.now()<fsCool)return;try{await fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}))}catch(e){}}
+async function beat(){if(!session||document.hidden||Date.now()<fsCool)return;const n=Date.now();try{await fs('PATCH','users/'+session.uid,fbEnc({ping:n}))}catch(e){}try{await fs('PATCH','presencia/'+session.uid,fbEnc({uid:session.uid,ping:n}))}catch(e){}}
 async function onlRefresh(){if(onlBusy||!canInc()||document.hidden||Date.now()<fsCool)return;onlBusy=true;onlT=Date.now();try{const L=await fsList('users');onlL=L.filter(r=>!r.deleted&&isOn(r)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));onlDraw()}catch(e){}finally{onlBusy=false}}
 function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!booting&&(scr==='menu'&&(document.querySelector('#app .bubbles')||store.mode==='gm')));let e=document.getElementById('onl');
  if(!on){if(e)e.remove();return}
@@ -3197,7 +3203,7 @@ function acctDlg(){
  showDlg('Cuenta de '+esc(session.name),`<div class="grid"><div class="acc2"><div class="accL grid">
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
  ${gmLicLabel()&&!session.owner?`<p class="hint" style="margin:0">Licencia de Game Master: <b>${esc(gmLicLabel())}</b></p>`:''}
- <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div>
+<div class="row"><button type="button" class="btn" data-act="friends">Amigos</button><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div>
  ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>'+esc(session.name)+'</b>: está bloqueado porque tu rol es Superusuario.</p>':''}
  ${`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
  </div><div class="accR grid">
@@ -3254,7 +3260,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
 document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(pgSel,x.value)});const m=document.getElementById('pgmsg');if(m)m.textContent=''});
 document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('[data-act=showpw]'))e.preventDefault()});
-document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,pgform:f=>pgSave(f,false),linkform:doLink,authform:doAuth,pwform:doPw,chform:doCh,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
+document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,pgform:f=>pgSave(f,false),linkform:doLink,authform:doAuth,pwform:doPw,chform:doCh,faddform:doFriendAdd,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -3473,9 +3479,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.83';
+const APPV='00.01.84';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.82 a v00.01.83. Panel de administración a ancho completo en PC y tablet, con resumen ampliado: usuarios en línea, cuentas por rol, Game Masters, partidas, estado de juegos, últimas altas, incidencias recientes y estado del servidor.';
+const APPD='Actualiza de v00.01.83 a v00.01.84. Amistades con código de amigo, invitaciones del GM, búsqueda en Mis amigos con solicitud de unión, presencia solo entre amigos y aviso de jugador que se une a la sala. Requiere 5 colecciones nuevas en PocketBase (docs/servidor-amistades.md).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3630,7 +3636,7 @@ const GALX='<span class="gxb" aria-hidden="true"><svg class="gxa" viewBox="0 0 2
 const NAIL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v1.200a1 1 0 0 1-1 1h-2.100l-1.400 12.800-1.500 3-1.500-3L9.100 6.200H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="currentColor"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b>${gmLicTipo()?`<em class="gmlic">Licencia ${gmLicTipo()}</em>`:''}<small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?avImg(''):`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b>${gmLicTipo()?`<em class="gmlic">Licencia ${gmLicTipo()}</em>`:''}<small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?avImg(''):`<b>${avIni()}</b>`}</button><span class="hn"><small>Sesión</small><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp frb" data-act="friends" aria-label="Amigos"><span aria-hidden="true">☺</span>Amigos${socN()?`<i class="bdg">${socN()}</i>`:''}</button><button type="button" class="hlp" data-act="rpt" aria-label="¿Algo no funciona?"><span aria-hidden="true">?</span>¿Algo no funciona?${isAdmin()&&rpOpenN()?`<i class="bdg">${rpOpenN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function dnWord(id,sw,cl){return `<svg class="${cl}" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg>`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 /* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
@@ -4164,6 +4170,7 @@ async function loadPart(pid){if(!session)return;
   const pjm={};pj.forEach(x=>{hpMap[x.pid+'_'+x.uid]=x.hp|0;try{pjm[x.uid]={ch:JSON.parse(x.data),rev:x.rev|0,upd:x.updated|0,raw:x}}catch(e){}});
   const sg=JSON.stringify([mem.map(m=>[m.id,m.cid]),inv.map(i=>[i.id,i.status]),pj.map(x=>[x.uid,x.rev,x.hp|0])]);
   const changed=sg!==(loadPart.sg&&loadPart.sg[pid]);(loadPart.sg=loadPart.sg||{})[pid]=sg;
+  {const pv=(loadPart.mu=loadPart.mu||{})[pid];loadPart.mu[pid]=new Set(mem.map(x=>x.uid));if(pv&&!document.hidden&&(scr==='part'||scr==='ppart')){mem.filter(x=>!pv.has(x.uid)&&x.uid!==session.uid).forEach(x=>{toast((x.name||'Un jugador')+' se ha unido a la partida');try{if(!lfRM())envFx((x.name||'Jugador')+' se ha unido','open')}catch(e){}})}}
   partMem[pid]=mem;partInv[pid]=inv;partPJ[pid]=pjm;
   const k=store.cur;if(k&&store.pjc[k]&&store.pjc[k]._pj.pid===pid){const x=pjm[store.pjc[k]._pj.uid];if(x&&x.rev>(store.pjc[k].rev|0)&&!pjDirty.has(k))pullPJ(k,x.raw)}
   if(changed&&scr==='part'&&partId===pid&&!store.cur)render(1)}catch(e){}}
@@ -4258,7 +4265,7 @@ async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv
   {const cu=store.chars.find(x=>x.pid===pid);if(apState[pid]==='y'&&cu&&cid!==cu.id){set('Para cambiar de personaje necesitas la autorización del Game Master.','err');return}}
   {const P=myParts.find(x=>x.id===pid)||(joinP&&joinP.id===pid?joinP:null)||{};const cc=cid&&store.chars.find(x=>x.id===cid);if(cc){const w=pjOk(cc,P,pid);if(w){set('Ese personaje no puede participar: '+w+'.','err');return}}
    }
-  if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));}
+  if(accept){await fs('PATCH','miembros/'+key,fbEnc({pid,uid:session.uid,name:session.name,cid:cid||'',joined:Date.now()}));try{socJoined(pid)}catch(e){}}
   for(const c of store.chars){if(c.pid===pid&&c.id!==cid){delete c.pid;delete c.rev;delete c._ph}}
   if(cid){const c=store.chars.find(x=>x.id===cid);if(c&&c.pid===pid){}else if(c){const h=pjData(c);await fs('PATCH','pjs/'+key,fbEnc({pid,uid:session.uid,cid:c.id,owner:session.name,data:h,rev:0,ap:'p',req:'',reason:'',deny:'',updated:Date.now()}),maskQ({pid:1,uid:1,cid:1,owner:1,data:1,rev:1,ap:1,req:1,reason:1,deny:1,updated:1}));c.pid=pid;c.rev=0;c._ph=h}
    try{await fs('PATCH','miembros/'+key,fbEnc({cid}),maskQ({cid:1}))}catch(e){}}
@@ -4270,7 +4277,7 @@ let rpMine=[],rpAll=[],rpImg='',rpTab='open';const RPCAT=[['ui','Fallo en la int
 const rpOpenN=()=>rpAll.filter(r=>r.status!=='done').length;
 const BELL='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function exPend(){try{return (typeof exits!=='undefined'&&exits||[]).filter(x=>!exAck(x.id))}catch(e){return[]}}
-function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(canInc()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length+pubUnread().length+(gmUnread()?1:0)}
+function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(canInc()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length+pubUnread().length+(gmUnread()?1:0)+(typeof soc!=='undefined'?socN():0)}
 function bellBtn(c){const n=notifN();return `<button type="button" class="${c}" data-act="notif" aria-label="Notificaciones${n?' ('+n+' sin leer)':''}" title="Notificaciones">${BELL}${n?`<i class="bdg">${n}</i>`:''}</button>`}
 function bellUpd(){const n=notifN();document.querySelectorAll('.bell,.tbbell').forEach(b=>{let i=b.querySelector('.bdg');if(n){if(!i){i=document.createElement('i');i.className='bdg';b.appendChild(i)}i.textContent=n}else if(i)i.remove();b.setAttribute('aria-label','Notificaciones'+(n?' ('+n+' sin leer)':''))})}
 function notifDlg(){const adm=canInc(),rd=store.rpRead=store.rpRead||[];
@@ -4280,8 +4287,8 @@ function notifDlg(){const adm=canInc(),rd=store.rpRead=store.rpRead||[];
  const ivs=(typeof invs!=='undefined'&&invs)||[],exs=exPend();
  const pubs=pubList(),pu=pubUnread().map(x=>x.k);
  const gmU=gmUnread(),gmShow=gmRes&&!(store.gmHide||[]).includes(gmRes.updated),gmCard=gmShow?`<h3 style="margin:0">Licencia de Game Master</h3><div class="rplist"><article class="rpc${gmU?' nw':''}"><div class="rph"><b>${gmU?'<em class="nwb">Nuevo</em> ':''}${gmRes.status==='approved'?'Solicitud aceptada':'Solicitud denegada'}</b></div><small>${rpDate(gmRes.updated)}</small><p class="rpt">${gmRes.status==='approved'?'Se ha aceptado tu solicitud de licencia '+(gmRes.type==='perm'?'permanente':'temporal (una partida)')+'. Ya puedes ser Game Master.':'Se ha denegado tu solicitud de licencia de Game Master. Puedes enviar otra desde "Ser Game Master".'}${gmRes.by?' Respondió: '+esc(gmRes.by)+'.':''}</p></article></div>`:'';
- const canClr=!!(gmShow||pubs.length||exs.length||hist.length);
- showDlg('Notificaciones',`<div class="grid">${canClr?'<div class="row"><button type="button" class="btn sm danger" data-act="notifclr">Borrar todas las notificaciones</button></div>':''}${gmCard}${pubs.length?`<h3 style="margin:0">Juegos publicados</h3>${pubs.length>1?'<div class="row"><button class="btn sm ghost" data-act="pubdelall">Borrar todas</button></div>':''}<div class="rplist">${pubs.map(x=>`<article class="rpc${pu.includes(x.k)?' nw':''}"><div class="rph"><b>${pu.includes(x.k)?'<em class="nwb">Nuevo</em> ':''}¡${esc(x.n)} ya está publicado!</b></div><small>${rpDate(x.at)}</small><p class="rpt">${esc(session.name)}, ya puedes entrar y jugar.</p><div class="row"><button class="btn pri sm" data-act="pubgo" data-g="${x.g}">Entrar</button><button class="btn sm ghost" data-act="pubdel" data-k="${esc(x.k)}">Borrar</button></div></article>`).join('')}</div>`:''}${ivs.length?`<h3 style="margin:0">Invitaciones a partidas</h3><div class="rplist">${ivs.map(i=>`<article class="rpc"><div class="rph"><b>${esc(i.gmName||'Un Game Master')} te invita</b></div><p class="rpt">Partida «${esc(i.pname||'Partida')}»</p><div class="row"><button class="btn pri sm" data-act="ppyes" data-id="${i.id}">Aceptar</button><button class="btn sm" data-act="ppno" data-id="${i.id}">Rechazar</button></div></article>`).join('')}</div>`:''}${exs.length?`<h3 style="margin:0">Jugadores que abandonan</h3><div class="rplist">${exs.map(x=>`<article class="rpc"><div class="rph"><b>${esc(x.name||'Un jugador')} abandona la partida</b></div><small>«${esc(x.pname||'Partida')}»</small><p class="rpt">Motivo: ${esc(x.reason||'—')}</p><div class="row"><button class="btn pri sm" data-act="exok" data-id="${x.id}">Entendido</button></div></article>`).join('')}</div>`:''}${adm?`<h3 style="margin:0">Avisos pendientes de respuesta${openL.length?' ('+openL.length+')':''}</h3><div class="rplist">${openL.map(r=>rpCard(r,true)).join('')||'<p class="hint">No hay avisos pendientes.</p>'}</div>`:(openL.length?`<h3 style="margin:0">Pendientes de respuesta</h3><div class="rplist">${openL.map(r=>rpCard(r,false)).join('')}</div>`:'')}
+ const canClr=!!(gmShow||pubs.length||exs.length||hist.length);if(typeof socLoad==='function')socLoad(true);
+ showDlg('Notificaciones',`<div class="grid">${canClr?'<div class="row"><button type="button" class="btn sm danger" data-act="notifclr">Borrar todas las notificaciones</button></div>':''}${gmCard}${pubs.length?`<h3 style="margin:0">Juegos publicados</h3>${pubs.length>1?'<div class="row"><button class="btn sm ghost" data-act="pubdelall">Borrar todas</button></div>':''}<div class="rplist">${pubs.map(x=>`<article class="rpc${pu.includes(x.k)?' nw':''}"><div class="rph"><b>${pu.includes(x.k)?'<em class="nwb">Nuevo</em> ':''}¡${esc(x.n)} ya está publicado!</b></div><small>${rpDate(x.at)}</small><p class="rpt">${esc(session.name)}, ya puedes entrar y jugar.</p><div class="row"><button class="btn pri sm" data-act="pubgo" data-g="${x.g}">Entrar</button><button class="btn sm ghost" data-act="pubdel" data-k="${esc(x.k)}">Borrar</button></div></article>`).join('')}</div>`:''}${typeof socNotifHtml==='function'?socNotifHtml():''}${ivs.length?`<h3 style="margin:0">Invitaciones a partidas</h3><div class="rplist">${ivs.map(i=>`<article class="rpc"><div class="rph"><b>${esc(i.gmName||'Un Game Master')} te invita</b></div><p class="rpt">Partida «${esc(i.pname||'Partida')}»</p><div class="row"><button class="btn pri sm" data-act="ppyes" data-id="${i.id}">Aceptar</button><button class="btn sm" data-act="ppno" data-id="${i.id}">Rechazar</button></div></article>`).join('')}</div>`:''}${exs.length?`<h3 style="margin:0">Jugadores que abandonan</h3><div class="rplist">${exs.map(x=>`<article class="rpc"><div class="rph"><b>${esc(x.name||'Un jugador')} abandona la partida</b></div><small>«${esc(x.pname||'Partida')}»</small><p class="rpt">Motivo: ${esc(x.reason||'—')}</p><div class="row"><button class="btn pri sm" data-act="exok" data-id="${x.id}">Entendido</button></div></article>`).join('')}</div>`:''}${adm?`<h3 style="margin:0">Avisos pendientes de respuesta${openL.length?' ('+openL.length+')':''}</h3><div class="rplist">${openL.map(r=>rpCard(r,true)).join('')||'<p class="hint">No hay avisos pendientes.</p>'}</div>`:(openL.length?`<h3 style="margin:0">Pendientes de respuesta</h3><div class="rplist">${openL.map(r=>rpCard(r,false)).join('')}</div>`:'')}
  <h3 style="margin:6px 0 0">Histórico de incidencias resueltas${hist.length?' ('+hist.length+')':''}</h3>
  <div class="rplist">${hist.map(r=>`<div class="nfi${newIds.includes(r.id)?' nw':''}">${newIds.includes(r.id)?'<em class="nwb">Nueva</em>':''}${rpCard(r,adm)}${adm?'':`<div class="row"><button type="button" class="btn sm" data-act="rprep" data-id="${esc(r.id)}">Responder a ALPHA</button></div>`}</div>`).join('')||'<p class="hint">Aún no hay incidencias resueltas.</p>'}</div>
  <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div></div>`,true);
@@ -4335,7 +4342,7 @@ async function ensureCodes(){if(codeBusy||!session)return;const miss=parts.filte
  try{for(const p of miss){const c=await newCode();await fs('PATCH','partidas/'+p.id,fbEnc({code:c}),maskQ({code:1}));p.code=c}partSig='';render(1)}catch(e){}codeBusy=false}
 const normCode=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
 const LUPA='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
-function findDlg(){showDlg('Buscar partida',`<form id="findform" class="grid" novalidate><p class="hint" style="margin:0">Pídele a tu Game Master el <b>código de la partida</b> (6 caracteres) y escríbelo aquí para unirte a su sala.</p><label class="f">Código de la partida<input name="code" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC123" inputmode="text" style="text-transform:uppercase;letter-spacing:.3em;text-align:center;font-weight:700;font-size:1.3rem"></label><div id="fmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Buscar</button></div></form>`,true);setTimeout(()=>{const i=document.querySelector('#findform [name=code]');if(i)i.focus()},120)}
+function findDlg(){socRe=null;showDlg('Buscar partida',`<div class="seg" role="tablist" style="margin-bottom:12px"><button type="button" data-act="findtab" data-v="code" aria-pressed="true">Por código</button><button type="button" data-act="findtab" data-v="fr" aria-pressed="false">Mis amigos</button></div><form id="findform" class="grid" novalidate><p class="hint" style="margin:0">Pídele a tu Game Master el <b>código de la partida</b> (6 caracteres) y escríbelo aquí para unirte a su sala.</p><label class="f">Código de la partida<input name="code" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC123" inputmode="text" style="text-transform:uppercase;letter-spacing:.3em;text-align:center;font-weight:700;font-size:1.3rem"></label><div id="fmsg" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Buscar</button></div></form>`,true);setTimeout(()=>{const i=document.querySelector('#findform [name=code]');if(i)i.focus()},120)}
 async function doFind(f){const m=$('#fmsg'),set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const code=normCode(f.elements.code.value);
  if(code.length<6){set('El código tiene 6 caracteres.','err');return}
  try{set('Buscando…');const r=await fsQuery('partidas','code',code);const p=r[0];
@@ -4346,6 +4353,81 @@ async function doFind(f){const m=$('#fmsg'),set=(t,k)=>{m.textContent=t;m.classN
   try{const ks=await fsQuery('salidas','uid',session.uid);if(ks.some(x=>x.pid===p.id&&(x.kind==='kicked'||x.kind==='left'))){set('No puedes volver a unirte a esa partida.','err');return}}catch(e){}
   if((p.maxp|0)){try{const mem=await fsQuery('miembros','pid',p.id);if(mem.length>=(p.maxp|0)){set('La partida está completa.','err');return}}catch(e){}}
   joinP=p;try{$('#dlg').close()}catch(x){}linkDlg(p.id,p.name,true,'')}catch(e){set(e.code==='NET'?aMsg(e):e.code==='FS403'?'Firestore no permite buscar partidas por código (faltan reglas). Avisa al administrador.':'No se pudo buscar la partida ('+(e.code||'error')+').','err')}}
+
+/* ---------- amistades, invitaciones y solicitudes de unión ---------- */
+const soc={code:'',fr:[],inq:[],outq:[],pres:{},invs:[],myReq:[],gmReq:[],at:0,busy:false,sig:null,seen:new Set(),ok:false};let socRe=null;
+const FC_AL='ABCDEFGHJKMNPQRSTUVWXYZ23456789',fcNew=()=>{let s='';for(let i=0;i<8;i++)s+=FC_AL[Math.floor(Math.random()*FC_AL.length)];return s},fcNorm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8);
+const socOn=u=>Date.now()-(+soc.pres[u]||0)<ONL_MS;
+const socN=()=>soc.inq.length+soc.invs.length+soc.gmReq.length+soc.myReq.filter(r=>r.status!=='pending').length;
+async function socEnsureCode(){if(soc.code||!session)return;
+ try{const d=await fs('GET','codigos/'+session.uid);if(d){const r=fbDec(d);soc.code=r.code||'';if(r.name!==session.name)fs('PATCH','codigos/'+session.uid,fbEnc({name:session.name})).catch(()=>{});return}}catch(e){return}
+ for(let i=0;i<5;i++){const c=fcNew();try{await fs('PATCH','codigos/'+session.uid,fbEnc({uid:session.uid,code:c,name:session.name}),'&currentDocument.exists=false');soc.code=c;return}catch(e){if(e.code==='FS409'){try{const d=await fs('GET','codigos/'+session.uid);if(d){soc.code=fbDec(d).code||'';return}}catch(x){}}else if(e.code!=='FS400')return}}}
+async function socLoad(force){if(!session||soc.busy||document.hidden||(!force&&Date.now()-soc.at<20000)||Date.now()<fsCool)return;soc.busy=true;
+ try{await socEnsureCode();const u=session.uid,ok=p=>p.then(x=>x,()=>null);
+  const [A,B,I,R1,R2,P,O]=await Promise.all([ok(fsQuery('amistades','a',u)),ok(fsQuery('amistades','b',u)),ok(fsQuery('invitaciones','dest',u)),ok(fsQuery('solicitudes','uid',u)),ok(fsQuery('solicitudes','gm',u)),ok(fsList('presencia')),ok(fsQuery('invitaciones','gm',u))]);
+  if(!A&&!B&&!I&&!R1&&!R2){soc.ok=false;return}soc.ok=true;
+  soc.fr=[];soc.inq=[];soc.outq=[];
+  (A||[]).forEach(x=>{const o={id:x.id,uid:x.b,name:x.bn||'Usuario'};x.status==='ok'?soc.fr.push(o):soc.outq.push(o)});
+  (B||[]).forEach(x=>{const o={id:x.id,uid:x.a,name:x.an||'Usuario'};x.status==='ok'?soc.fr.push(o):soc.inq.push(o)});
+  soc.fr.sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
+  soc.pres={};(P||[]).forEach(x=>{soc.pres[x.uid]=+x.ping||0});
+  soc.outInv=(O||[]).filter(x=>x.status==='pending');soc.invs=(I||[]).filter(x=>x.status==='pending');soc.myReq=R1||[];soc.gmReq=(R2||[]).filter(x=>x.status==='pending');soc.at=Date.now();
+  const ids=[...soc.inq.map(x=>'f'+x.id),...soc.invs.map(x=>'i'+x.id),...soc.gmReq.map(x=>'r'+x.id),...soc.myReq.filter(r=>r.status!=='pending').map(r=>'m'+r.id+r.status)];
+  if(soc.sig!==null){ids.filter(k=>!soc.seen.has(k)).forEach(k=>{const f=k[0];let t='';if(f==='f'){const x=soc.inq.find(y=>'f'+y.id===k);t=x&&x.name+' quiere ser tu amigo'}else if(f==='i'){const x=soc.invs.find(y=>'i'+y.id===k);t=x&&x.gmn+' te invita a «'+x.pname+'»'}else if(f==='r'){const x=soc.gmReq.find(y=>'r'+y.id===k);t=x&&x.name+' quiere unirse a «'+x.pname+'»'}else{const x=soc.myReq.find(y=>k==='m'+y.id+y.status);t=x&&(x.status==='ok'?'Tu solicitud para «'+x.pname+'» ha sido aceptada':'Tu solicitud para «'+x.pname+'» ha sido rechazada')}if(t)toast(t)})}
+  ids.forEach(k=>soc.seen.add(k));
+  const sg=JSON.stringify([ids,soc.fr.map(x=>[x.id,socOn(x.uid)])]);const ch=sg!==soc.sig;soc.sig=sg;
+  if(ch){topbarSync();if(scr==='menu'&&!store.cur&&!document.querySelector('#dlg[open]'))render(1)}
+  if(socRe&&document.getElementById('socmark')&&$('#dlg').open)socRe()}catch(e){}finally{soc.busy=false}}
+setInterval(()=>socLoad(),45000);setTimeout(()=>socLoad(true),5000);
+const socDot=u=>`<i class="ovd${socOn(u)?'':' off'}" aria-hidden="true"></i>`;
+function friendsDlg(){socRe=friendsDlg;
+ const fr=soc.fr.map(f=>`<div class="frr"><span>${socDot(f.uid)}<b>${esc(f.name)}</b><small>${socOn(f.uid)?'En línea':soc.pres[f.uid]?'Visto '+ago(soc.pres[f.uid]):'Desconectado'}</small></span><button type="button" class="btn sm ghost danger" data-act="frm1" data-id="${esc(f.id)}" data-n="${esc(f.name)}">Eliminar</button></div>`).join('');
+ showDlg('Amigos',`<div class="grid" id="socmark"><div class="codebox"><span>Tu código de amigo</span><b aria-label="Código de amigo">${esc(soc.code||'········')}</b>${soc.code?`<button class="btn sm" data-act="fcopy" data-c="${esc(soc.code)}">Copiar</button>`:''}</div>
+ <p class="hint" style="margin:0">Dale este código a quien quieras tener como amigo. Solo tus amigos pueden ver si estás en línea.</p>
+ <form id="faddform" class="grid" novalidate><label class="f">Añadir amigo con su código<input name="fc" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="CÓDIGO" style="text-transform:uppercase;letter-spacing:.2em;font-weight:700"></label><div id="fmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar solicitud</button></div></form>
+ ${soc.inq.length?`<h3 style="margin:0">Solicitudes recibidas</h3>${soc.inq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b></span><span class="row" style="gap:6px"><button class="btn pri sm" data-act="facc" data-id="${esc(x.id)}">Aceptar</button><button class="btn sm" data-act="fdel" data-id="${esc(x.id)}">Rechazar</button></span></div>`).join('')}`:''}
+ ${soc.outq.length?`<h3 style="margin:0">Solicitudes enviadas</h3>${soc.outq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b><small>Pendiente</small></span><button class="btn sm ghost" data-act="fdel" data-id="${esc(x.id)}">Cancelar</button></div>`).join('')}`:''}
+ <h3 style="margin:0">Mis amigos (${soc.fr.length})</h3>${fr||'<p class="hint" style="margin:0">Todavía no tienes amigos. Comparte tu código o escribe el de otra persona.</p>'}</div>`,true)}
+async function doFriendAdd(f){const m=$('#fmsg2'),set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const c=fcNorm(f.elements.fc.value);
+ if(c.length<8){set('El código de amigo tiene 8 caracteres.','err');return}if(c===soc.code){set('Ese es tu propio código.','err');return}
+ try{set('Buscando…');const r=(await fsQuery('codigos','code',c))[0];if(!r){set('No existe ningún usuario con ese código.','err');return}
+  if(r.uid===session.uid){set('Ese es tu propio código.','err');return}
+  if(soc.fr.some(x=>x.uid===r.uid)){set(r.name+' ya es tu amigo.','err');return}if(soc.outq.some(x=>x.uid===r.uid)){set('Ya le enviaste una solicitud a '+r.name+'.','err');return}
+  const inc=soc.inq.find(x=>x.uid===r.uid);if(inc){await fs('PATCH','amistades/'+inc.id,fbEnc({status:'ok'}));await socLoad(true);toast(r.name+' ahora es tu amigo');friendsDlg();return}
+  await fs('PATCH','amistades/'+pbId(),fbEnc({a:session.uid,b:r.uid,an:session.name,bn:r.name||'Usuario',status:'pending',creado:Date.now()}),'&currentDocument.exists=false');
+  await socLoad(true);friendsDlg();toast('Solicitud enviada a '+(r.name||'Usuario'))}catch(e){set(e.code==='NET'?aMsg(e):'No se pudo enviar la solicitud ('+(e.code||'error')+').','err')}}
+async function socGo(fn,after){try{await fn();await socLoad(true);if(after)after()}catch(e){toast(e.code==='NET'?aMsg(e):'No se pudo completar la acción')}}
+async function socPart(pid){const d=await fs('GET','partidas/'+pid);return d?fbDec(d):null}
+async function socFull(p){if(!(p.maxp|0))return false;try{return (await fsQuery('miembros','pid',p.id)).length>=(p.maxp|0)}catch(e){return false}}
+function friendPartsHtml(L,busy){if(busy)return '<p class="hint" style="margin:0">Buscando las partidas de tus amigos…</p>';if(!soc.fr.length)return '<p class="hint" style="margin:0">Todavía no tienes amigos. Añádelos desde «Amigos» con su código.</p>';
+ if(!L.length)return '<p class="hint" style="margin:0">Tus amigos no tienen ninguna partida abierta ahora mismo.</p>';
+ return L.map(p=>{const full=p.full,mine=myParts.some(x=>x.id===p.id),pend=soc.myReq.some(r=>r.pid===p.id&&r.status==='pending');
+  return `<article class="frp"><div><b>${esc(p.name)}</b><small>GM ${esc(p.gmName||'')} · ${esc(gameName(p.game||'nb'))}</small></div><span class="tag ${full?'endt':''}">${full?'Sala llena':(p.maxp|0)?p.n+'/'+(p.maxp|0)+' plazas':p.n+' jugadores'}</span>${mine?'<span class="apb ok">Ya estás dentro</span>':`<button type="button" class="btn sm ${full||pend?'ghost':'pri'}" data-act="rreq" data-p="${esc(p.id)}"${full||pend?' disabled':''}>${full?'Sala llena':pend?'Solicitud enviada':'Solicitar unirme'}</button>`}</article>`}).join('')}
+let fpL=[],fpBusy=false;
+async function friendPartsLoad(){fpBusy=true;fpRender();try{await socLoad(true);const out=[];await Promise.all(soc.fr.map(async f=>{try{const ps=(await fsQuery('partidas','gm',f.uid)).filter(p=>p.end!=='1');await Promise.all(ps.map(async p=>{let n=0;try{n=(await fsQuery('miembros','pid',p.id)).length}catch(e){}p.n=n;p.full=!!(p.maxp|0)&&n>=(p.maxp|0);out.push(p)}))}catch(e){}}));fpL=out.sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'))}catch(e){}fpBusy=false;fpRender()}
+function fpRender(){const b=document.getElementById('fpbody');if(b)b.innerHTML=friendPartsHtml(fpL,fpBusy)}
+function findFriendsTab(){showDlg('Buscar partida',`<div class="grid" id="socmark"><div class="seg" role="tablist"><button type="button" data-act="findtab" data-v="code" aria-pressed="false">Por código</button><button type="button" data-act="findtab" data-v="fr" aria-pressed="true">Mis amigos</button></div><p class="hint" style="margin:0">Partidas abiertas de tus amigos. Si la sala no está llena, puedes pedir unirte y su Game Master decidirá.</p><div id="fpbody" class="grid"></div></div>`,true);socRe=null;friendPartsLoad()}
+function socNotifHtml(){const S=[];
+ if(soc.inq.length)S.push(`<h3 style="margin:0">Solicitudes de amistad</h3>${soc.inq.map(x=>`<article class="rpc nw"><div class="rph"><b>${esc(x.name)} quiere ser tu amigo</b></div><div class="row"><button class="btn pri sm" data-act="facc" data-id="${esc(x.id)}" data-n="1">Aceptar</button><button class="btn sm" data-act="fdel" data-id="${esc(x.id)}" data-n="1">Rechazar</button></div></article>`).join('')}`);
+ if(soc.invs.length)S.push(`<h3 style="margin:0">Invitaciones a partidas</h3>${soc.invs.map(x=>`<article class="rpc nw"><div class="rph"><b>${esc(x.gmn)} te invita a «${esc(x.pname)}»</b></div><div class="row"><button class="btn pri sm" data-act="iacc" data-id="${esc(x.id)}" data-p="${esc(x.pid)}">Aceptar</button><button class="btn sm" data-act="irej" data-id="${esc(x.id)}">Rechazar</button></div></article>`).join('')}`);
+ if(soc.gmReq.length)S.push(`<h3 style="margin:0">Solicitudes para unirse a tus partidas</h3>${soc.gmReq.map(x=>`<article class="rpc nw"><div class="rph"><b>${esc(x.name)} quiere unirse a «${esc(x.pname)}»</b></div><div class="row"><button class="btn pri sm" data-act="rok" data-id="${esc(x.id)}" data-p="${esc(x.pid)}">Aceptar</button><button class="btn sm" data-act="rno" data-id="${esc(x.id)}">Rechazar</button></div></article>`).join('')}`);
+ const mr=soc.myReq.filter(r=>r.status!=='pending');if(mr.length)S.push(`<h3 style="margin:0">Tus solicitudes</h3>${mr.map(r=>`<article class="rpc nw"><div class="rph"><b>${r.status==='ok'?'Aceptada':'Rechazada'}: «${esc(r.pname)}»</b></div><div class="row">${r.status==='ok'?`<button class="btn pri sm" data-act="rjoin" data-id="${esc(r.id)}" data-p="${esc(r.pid)}">Unirme ahora</button>`:''}<button class="btn sm ghost" data-act="rdone" data-id="${esc(r.id)}">${r.status==='ok'?'Descartar':'Entendido'}</button></div></article>`).join('')}`);
+ return S.join('')}
+async function socJoinFlow(pid,delId){try{const p=await socPart(pid);if(!p||p.end==='1'){toast('Esa partida ya no está disponible');if(delId)fs('DELETE','solicitudes/'+delId).catch(()=>{});return}
+ if(myParts.some(x=>x.id===pid)){toast('Ya estás en esa partida');return}if(await socFull(p)){toast('La sala está llena');return}
+ joinP=p;try{$('#dlg').close()}catch(e){}linkDlg(p.id,p.name,true,'')}catch(e){toast('No se pudo abrir la partida')}}
+function socJoined(pid){soc.myReq.filter(r=>r.pid===pid).forEach(r=>fs('DELETE','solicitudes/'+r.id).catch(()=>{}));soc.invs.filter(r=>r.pid===pid).forEach(r=>fs('DELETE','invitaciones/'+r.id).catch(()=>{}));setTimeout(()=>socLoad(true),600)}
+function addInviteHtml(p){const mem=(partMem[p.id]||[]).map(m=>m.uid);
+ const fr=soc.fr.map(f=>{const inn=mem.includes(f.uid),pen=(soc.outInv||[]).some(i=>i.pid===p.id&&i.dest===f.uid);return `<div class="frr"><span>${socDot(f.uid)}<b>${esc(f.name)}</b></span>${inn?'<span class="apb ok">Dentro</span>':`<button type="button" class="btn sm ${pen?'ghost':'pri'}" data-act="finv" data-p="${esc(p.id)}" data-u="${esc(f.uid)}" data-n="${esc(f.name)}"${pen?' disabled':''}>${pen?'Invitado':'Invitar'}</button>`}</div>`}).join('');
+ const rq=soc.gmReq.filter(r=>r.pid===p.id).map(x=>`<div class="frr"><span><b>${esc(x.name)}</b><small>quiere unirse</small></span><span class="row" style="gap:6px"><button class="btn pri sm" data-act="rok" data-id="${esc(x.id)}" data-p="${esc(x.pid)}">Aceptar</button><button class="btn sm" data-act="rno" data-id="${esc(x.id)}">Rechazar</button></span></div>`).join('');
+ return `${rq?`<h3 style="margin:0">Solicitudes de unión</h3>${rq}`:''}<h3 style="margin:0">Invitar a un amigo</h3>${fr||'<p class="hint" style="margin:0">Aún no tienes amigos. Añádelos desde «Amigos» con su código.</p>'}`}
+
+function partAddDlg(p){socRe=()=>{const q=parts.find(x=>x.id===p.id);if(q)partAddDlg(q)};const n=(partMem[p.id]||[]).length,mx=p.maxp|0,left=mx?Math.max(0,mx-n):0;
+ const msg='Únete a mi partida «'+p.name+'» en La Mesa Larga: entra, pulsa «Buscar partida» e introduce el código '+(p.code||'')+'.';
+ showDlg('Añadir jugador',`<div class="grid" id="socmark"><p class="hint" style="margin:0">${mx?`Plazas: <b>${n} de ${mx}</b> ocupadas · quedan <b>${left}</b>.`:'Esta partida no tiene límite de jugadores.'} Invita a un amigo o pásale el código a quien quieras.</p>
+ ${addInviteHtml(p)}
+ <h3 style="margin:0">Código de la partida</h3><div class="codebox"><span>Código</span><b aria-label="Código de unión">${esc(p.code||'······')}</b></div>
+ <div class="row">${p.code?`<button type="button" class="btn pri" data-act="codecopy" data-c="${esc(p.code)}">Copiar código</button><button type="button" class="btn" data-act="invcopy" data-t="${esc(msg)}">Copiar invitación</button>`:'<p class="hint" style="margin:0">El código se está generando…</p>'}</div></div>`,true)}
 
 /* ---------- aviso emergente de invitación (esquina) ---------- */
 const ppSeen=new Set();
@@ -4771,13 +4853,26 @@ document.addEventListener('click',e=>{
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'partfind':findDlg();break
-  case 'partadd':{const p=parts.find(x=>x.id===b.dataset.id);if(!p)break;const n=(partMem[p.id]||[]).length,mx=p.maxp|0,left=mx?Math.max(0,mx-n):0;
-   if(mx&&!left){toast('La partida está completa');break}
-   const msg='Únete a mi partida «'+p.name+'» en La Mesa Larga: entra, pulsa «Buscar partida» e introduce el código '+(p.code||'')+'.';
-   showDlg('Añadir jugador',`<div class="grid"><p class="hint" style="margin:0">${mx?`Plazas: <b>${n} de ${mx}</b> ocupadas · quedan <b>${left}</b>.`:'Esta partida no tiene límite de jugadores.'} Pásales el código: lo escriben en <b>Buscar partida</b> y se unen a tu sala.</p>
-   <div class="codebox"><span>Código de la partida</span><b aria-label="Código de unión">${esc(p.code||'······')}</b></div>
-   <div class="row">${p.code?`<button type="button" class="btn pri" data-act="codecopy" data-c="${esc(p.code)}">Copiar código</button><button type="button" class="btn" data-act="invcopy" data-t="${esc(msg)}">Copiar invitación</button>`:'<p class="hint" style="margin:0">El código se está generando…</p>'}</div></div>`,true);break}
+  case 'partadd':{const p=parts.find(x=>x.id===b.dataset.id);if(!p)break;if((p.maxp|0)&&(partMem[p.id]||[]).length>=(p.maxp|0)){toast('La partida está completa');break}partAddDlg(p);socLoad(true);break}
   case 'invcopy':{const t=b.dataset.t;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Invitación copiada')).catch(()=>toast('No se pudo copiar'));break}
+  case 'friends':friendsDlg();socLoad(true);break
+  case 'fcopy':{const c=b.dataset.c;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('Código copiado')).catch(()=>toast('Código: '+c));break}
+  case 'facc':socGo(()=>fs('PATCH','amistades/'+b.dataset.id,fbEnc({status:'ok'})),()=>{toast('Ahora sois amigos');if(b.dataset.n)notifDlg();else friendsDlg()});break
+  case 'fdel':socGo(()=>fs('DELETE','amistades/'+b.dataset.id),()=>{if(b.dataset.n)notifDlg();else friendsDlg()});break
+  case 'frm1':showDlg('Eliminar amigo',`<div class="grid"><p style="margin:0">¿Quieres eliminar a <b>${esc(b.dataset.n)}</b> de tus amigos?</p><div class="row"><button type="button" class="btn danger" data-act="frm2" data-id="${esc(b.dataset.id)}" data-n="${esc(b.dataset.n)}">Continuar</button><button type="button" class="btn" data-act="friends">Cancelar</button></div></div>`,true);break
+  case 'frm2':showDlg('Última confirmación',`<div class="grid"><p style="margin:0">Vas a eliminar definitivamente a <b>${esc(b.dataset.n)}</b>. Dejaréis de ver si el otro está en línea y tendréis que volver a añadiros con el código.</p><div class="row"><button type="button" class="btn danger" data-act="frm3" data-id="${esc(b.dataset.id)}">Sí, eliminar amigo</button><button type="button" class="btn" data-act="friends">No, mantener</button></div></div>`,true);break
+  case 'frm3':socGo(()=>fs('DELETE','amistades/'+b.dataset.id),()=>{toast('Amigo eliminado');friendsDlg()});break
+  case 'finv':{const p=parts.find(x=>x.id===b.dataset.p);if(!p)break;b.disabled=true;(async()=>{try{if((p.maxp|0)&&(partMem[p.id]||[]).length>=(p.maxp|0)){toast('La partida está completa');return}await fs('PATCH','invitaciones/'+pbId(),fbEnc({pid:p.id,pname:p.name,gm:session.uid,gmn:session.name,dest:b.dataset.u,status:'pending',creado:Date.now()}),'&currentDocument.exists=false');toast('Invitación enviada a '+b.dataset.n);await socLoad(true);partAddDlg(p)}catch(e){b.disabled=false;toast('No se pudo enviar la invitación')}})();break}
+  case 'iacc':{b.disabled=true;(async()=>{await socJoinFlow(b.dataset.p);fs('DELETE','invitaciones/'+b.dataset.id).catch(()=>{});socLoad(true)})();break}
+  case 'irej':socGo(()=>fs('DELETE','invitaciones/'+b.dataset.id),()=>notifDlg());break
+  case 'rok':{b.disabled=true;(async()=>{try{const p=parts.find(x=>x.id===b.dataset.p)||await socPart(b.dataset.p);if(p&&await socFull(p)){toast('La sala está llena');b.disabled=false;return}await fs('PATCH','solicitudes/'+b.dataset.id,fbEnc({status:'ok'}));toast('Solicitud aceptada: el jugador ya puede unirse');await socLoad(true);if(document.getElementById('socmark')&&socRe)socRe();else notifDlg()}catch(e){b.disabled=false;toast('No se pudo aceptar')}})();break}
+  case 'rno':socGo(()=>fs('PATCH','solicitudes/'+b.dataset.id,fbEnc({status:'no'})),()=>{if(document.getElementById('socmark')&&socRe)socRe();else notifDlg()});break
+  case 'rjoin':socJoinFlow(b.dataset.p,b.dataset.id);break
+  case 'rdone':socGo(()=>fs('DELETE','solicitudes/'+b.dataset.id),()=>notifDlg());break
+  case 'rreq':{b.disabled=true;(async()=>{try{const p=fpL.find(x=>x.id===b.dataset.p);if(!p){b.disabled=false;return}if(await socFull(p)){toast('La sala está llena');friendPartsLoad();return}
+    try{const ks=await fsQuery('salidas','uid',session.uid);if(ks.some(x=>x.pid===p.id&&(x.kind==='kicked'||x.kind==='left'))){toast('No puedes volver a unirte a esa partida');b.disabled=false;return}}catch(e){}
+    await fs('PATCH','solicitudes/'+pbId(),fbEnc({pid:p.id,pname:p.name,gm:p.gm,uid:session.uid,name:session.name,status:'pending',creado:Date.now()}),'&currentDocument.exists=false');toast('Solicitud enviada al Game Master');await socLoad(true);fpRender()}catch(e){b.disabled=false;toast('No se pudo enviar la solicitud')}})();break}
+  case 'findtab':if(b.dataset.v==='fr')findFriendsTab();else findDlg();break
   case 'codecopy':{const c=b.dataset.c;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('Código copiado')).catch(()=>toast('Código: '+c));break}
   case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre y las reglas de la mesa.</p>
 <div class="f"><span style="font-weight:700">¿Cómo quieres jugar la partida?</span><div class="seg" role="group" aria-label="Modo de partida"><button type="button" data-act="pmodeset" data-v="manual" aria-pressed="true">Según el manual</button><button type="button" data-act="pmodeset" data-v="libre" aria-pressed="false">Ir por libre</button></div><input type="hidden" name="pmode" value="manual"><small class="hint" id="pmodeh">Se aplican las reglas del manual: era y nivel máximo de los personajes.</small></div>
