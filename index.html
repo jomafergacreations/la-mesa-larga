@@ -2960,7 +2960,7 @@ function authSwap(a,b){if(lfRM()||a===b)return;try{const E='cubic-bezier(.2,.8,.
  const h=document.querySelector('.lg .hs');if(h)h.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:300,easing:E})}catch(e){}}
 function authView(){
  const tabs=[['login','Entrar'],['new','Crear cuenta']].map(([k,n])=>`<button type="button" data-act="atab" data-v="${k}" aria-pressed="${authTab===k}"><b>${n}</b></button>`).join('');
- const pwf=(id,label,auto)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required><button type="button" class="btn sm" data-act="showpw" aria-pressed="false">Ver</button></span></label>`;
+ const pwf=(id,label,auto,nb)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required>${nb?'':'<button type="button" class="btn sm" data-act="showpw" aria-pressed="false" tabindex="-1" aria-label="Mostrar u ocultar las contraseñas">Ver</button>'}</span></label>`;
  const emf=v=>`<label class="f">Correo electrónico<input type="email" id="em" name="em" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email" value="${esc(v||'')}" required></label>`;
  let form='',sub='Inicia sesión para continuar.';
  if(authTab==='cfm'&&cfm){const c=cfm,bk='<div class="row"><button class="btn pri" data-act="cfmgo">Ir a iniciar sesión</button></div>';
@@ -2970,7 +2970,7 @@ function authView(){
   else if(c.k==='c'&&c.st==='form'){sub='Confirma tu nuevo correo';form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Para terminar el cambio de correo, escribe la contraseña actual de tu cuenta.</p>${pwf('cp','Contraseña actual','current-password')}<div id="amsg" class="msg" role="alert" aria-live="polite"></div><div class="row"><button class="btn pri" type="submit">Confirmar cambio</button><button type="button" class="btn ghost" data-act="cfmgo">Cancelar</button></div></form>`}
   else if(c.st==='ok'){sub=c.k==='c'?'Correo cambiado':'Contraseña cambiada';form=`<div class="grid vfy"><div class="vfi vok" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 25l8 8 16-18"/></svg></div><p class="vfm" style="word-break:normal">${c.k==='c'?'Ya puedes entrar con tu correo nuevo.':'Ya puedes entrar con tu contraseña nueva.'}</p>${bk}</div>`}
   else if(c.st==='err'){sub='Enlace no válido';form=`<div class="grid vfy"><div class="vfi ver" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14l20 20M34 14L14 34"/></svg></div><p class="hint" style="margin:0" role="alert">${c.k==='c'?'El enlace no es válido o ha caducado. Pide el cambio de correo otra vez.':'El enlace no es válido o ha caducado. Pide uno nuevo desde «¿Has olvidado tu contraseña?».'}</p>${bk}</div>`}
-  else{sub='Elige tu contraseña nueva';form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Escribe la contraseña nueva de tu cuenta. Tus fichas no se pierden.</p>${pwf('np','Contraseña nueva','new-password')}${pwf('np2','Repite la contraseña','new-password')}<div id="amsg" class="msg" role="alert" aria-live="polite"></div>
+  else{sub='Elige tu contraseña nueva';form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Escribe la contraseña nueva de tu cuenta. Tus fichas no se pierden.</p>${pwf('np','Contraseña nueva','new-password')}${pwf('np2','Repite la contraseña','new-password',1)}<div id="amsg" class="msg" role="alert" aria-live="polite"></div>
   <div class="row"><button class="btn pri" type="submit">Guardar contraseña</button><button type="button" class="btn ghost" data-act="cfmgo">Cancelar</button></div></form>`}}
  else if(authTab==='verify'){sub='Verifica tu correo';
   form=`<div class="grid vfy"><div class="vfi" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="36" height="26" rx="5"/><path d="M8 15l16 12 16-12"/></svg><i class="vfd"></i></div><p class="hint vft">Hemos enviado un enlace de verificación a</p><p class="vfm">${esc(pend?pend.email:'tu correo')}</p><ol class="vfs"><li><span>Abre el correo de <b>La Mesa Larga</b>.</span></li><li><span>Pulsa <b>Verificar mi cuenta</b>.</span></li><li><span>Vuelve aquí: entrarás automáticamente.</span></li></ol><p class="hint vfh">¿No lo ves? Mira en la carpeta de spam.</p><div id="amsg" class="msg" role="status" aria-live="polite"></div>
@@ -2989,7 +2989,7 @@ function authView(){
   ${authTab==='new'?`<label class="f">Nombre de usuario<input type="text" id="au" name="au" autocomplete="nickname" autocapitalize="none" spellcheck="false" required></label>`:''}
   ${emf(authTab==='login'?lastUser():'')}
   ${pwf('ap','Contraseña',authTab==='new'?'new-password':'current-password')}
-  ${authTab==='new'?pwf('ap2','Repite la contraseña','new-password'):''}
+  ${authTab==='new'?pwf('ap2','Repite la contraseña','new-password',1):''}
   ${authTab==='login'?`<label class="chk rem"><input type="checkbox" name="rem" id="rem" ${lastUser()?'checked':''}><span><b>Recordar en este dispositivo</b></span></label>`:''}
   <div id="amsg" class="msg" role="alert" aria-live="polite"></div>
   <button class="btn pri" type="submit">${authTab==='new'?'Crear cuenta':'Sentarme a la mesa'}</button></form>
@@ -3211,6 +3211,7 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
   const d=await dec(await aesKey(dk.raw),rec.data);const chars=(Array.isArray(d.chars)?d.chars:[]).map(normalize);
   store.chars.push(...chars);if(!store.avatar&&d.avatar)store.avatar=avOk(d.avatar);save();render(1);set(chars.length?`Se importaron ${chars.length} ficha${chars.length===1?'':'s'}.`:'La cuenta antigua no tenía fichas.','ok')}catch(x){set('No se pudo importar. Revisa los datos.','err')}}
 document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(pgSel,x.value)});const m=document.getElementById('pgmsg');if(m)m.textContent=''});
+document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('[data-act=showpw]'))e.preventDefault()});
 document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,pgform:f=>pgSave(f,false),linkform:doLink,authform:doAuth,pwform:doPw,chform:doCh,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
 window.addEventListener('pagehide',()=>{flush()});
@@ -3430,9 +3431,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.76';
-const APPN='Actualización media.';
-const APPD='Actualiza de v00.01.75 a v00.01.76. Burbuja flotante con los usuarios en línea (solo administradores y propietario) en la pantalla principal; latido de presencia cada 60 s.';
+const APPV='00.01.77';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.76 a v00.01.77. Botón Ver/Ocultar contraseña: un solo botón por formulario, funcional en móvil (no roba el foco) y fuera del orden del tabulador.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
