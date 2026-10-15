@@ -2692,6 +2692,10 @@ const LIFT=[50,100,250,500,2500,5000], MOVE=[6,7.5,9,12,18,24], DIE=['d4','d6','
 /* ---------- estado ---------- */
 /* ---------- cuentas locales, cifradas con la contraseña ---------- */
 const AKEY='fichas-scadrial-cuentas-v1',SKEY='fichas-scadrial-sesion-v1',LEGACY='fichas-scadrial-v1',ITER=150000;
+let cfm=null;
+function cfmInit(){try{const m=/(?:[?&#\/])(verificar|confirm-verification|restablecer|confirm-password-reset)(?:=|\/)([^&\/#?\s]+)/.exec(location.href);if(!m)return;cfm={k:/^(verificar|confirm-verification)$/.test(m[1])?'v':'r',t:decodeURIComponent(m[2]),st:'form'};try{history.replaceState(null,'',location.pathname)}catch(e){}authTab='cfm';if(cfm.k==='v'){cfm.st='work';cfmVerify()}}catch(e){cfm=null}}
+async function cfmVerify(){const c=cfm;try{const x=await pbX('POST','collections/users/confirm-verification',{token:c.t});c.st=x.s===204||x.s===200?'ok':x.s===429?'busy':'err'}catch(e){c.st='net'}if(cfm===c)render()}
+function cfmDone(){cfm=null;authTab='login';render()}
 let accounts={users:{}},session=null,store={chars:[],cur:null},scr='menu',authTab='login',authBusy=false,fails=0,booting=true;
 const isAdmin=()=>!!session&&!!session.owner;
 let simNoGM=false,gmAll=[],gmReqPend=false,gamesCfg={};
@@ -2937,7 +2941,15 @@ function authView(){
  const pwf=(id,label,auto)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required><button type="button" class="btn sm" data-act="showpw" aria-pressed="false">Ver</button></span></label>`;
  const emf=v=>`<label class="f">Correo electrónico<input type="email" id="em" name="em" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email" value="${esc(v||'')}" required></label>`;
  let form='',sub='Inicia sesión para continuar.';
- if(authTab==='verify'){sub='Verifica tu correo';
+ if(authTab==='cfm'&&cfm){const c=cfm,bk='<div class="row"><button class="btn pri" data-act="cfmgo">Ir a iniciar sesión</button></div>';
+  if(c.k==='v'){if(c.st==='work'){sub='Verificando tu cuenta…';form=`<div class="grid vfy"><div class="vfi" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="36" height="26" rx="5"/><path d="M8 15l16 12 16-12"/></svg><i class="vfd"></i></div><p class="hint" role="status">Un momento, estamos confirmando tu correo…</p></div>`}
+   else if(c.st==='ok'){sub='¡Cuenta verificada!';form=`<div class="grid vfy"><div class="vfi vok" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 25l8 8 16-18"/></svg></div><p class="vfm" style="word-break:normal">Ya puedes sentarte a la mesa.</p><p class="hint" style="margin:0">Inicia sesión para entrar: si lo tenías abierto en otro dispositivo, entrará solo.</p>${bk}</div>`}
+   else{sub='No hemos podido verificar tu cuenta';form=`<div class="grid vfy"><div class="vfi ver" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14l20 20M34 14L14 34"/></svg></div><p class="hint" style="margin:0" role="alert">${c.st==='net'?'No hay conexión con el servidor. Vuelve a abrir el enlace en unos minutos.':c.st==='busy'?'Demasiados intentos. Espera un poco y vuelve a abrir el enlace.':'El enlace no es válido o ha caducado. Si ya verificaste tu cuenta, simplemente inicia sesión; si no, inicia sesión y pide otro correo.'}</p>${bk}</div>`}}
+  else if(c.st==='ok'){sub='Contraseña cambiada';form=`<div class="grid vfy"><div class="vfi vok" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 25l8 8 16-18"/></svg></div><p class="vfm" style="word-break:normal">Ya puedes entrar con tu contraseña nueva.</p>${bk}</div>`}
+  else if(c.st==='err'){sub='Enlace no válido';form=`<div class="grid vfy"><div class="vfi ver" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14l20 20M34 14L14 34"/></svg></div><p class="hint" style="margin:0" role="alert">El enlace no es válido o ha caducado. Pide uno nuevo desde «¿Has olvidado tu contraseña?».</p>${bk}</div>`}
+  else{sub='Elige tu contraseña nueva';form=`<form id="authform" novalidate class="grid"><p class="hint" style="margin:0">Escribe la contraseña nueva de tu cuenta. Tus fichas no se pierden.</p>${pwf('np','Contraseña nueva','new-password')}${pwf('np2','Repite la contraseña','new-password')}<div id="amsg" class="msg" role="alert" aria-live="polite"></div>
+  <div class="row"><button class="btn pri" type="submit">Guardar contraseña</button><button type="button" class="btn ghost" data-act="cfmgo">Cancelar</button></div></form>`}}
+ else if(authTab==='verify'){sub='Verifica tu correo';
   form=`<div class="grid vfy"><div class="vfi" aria-hidden="true"><svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="36" height="26" rx="5"/><path d="M8 15l16 12 16-12"/></svg><i class="vfd"></i></div><p class="hint vft">Hemos enviado un enlace de verificación a</p><p class="vfm">${esc(pend?pend.email:'tu correo')}</p><ol class="vfs"><li><span>Abre el correo de <b>La Mesa Larga</b>.</span></li><li><span>Pulsa <b>Verificar mi cuenta</b>.</span></li><li><span>Vuelve aquí: entrarás automáticamente.</span></li></ol><p class="hint vfh">¿No lo ves? Mira en la carpeta de spam.</p><div id="amsg" class="msg" role="status" aria-live="polite"></div>
   <div class="row"><button class="btn pri" data-act="vcheck">Ya lo he verificado</button><button class="btn" data-act="vresend" id="vrs">Reenviar correo</button></div><div class="row"><button class="btn ghost sm" data-act="atab" data-v="login">Volver</button></div></div>`}
  else if(authTab==='reset'){sub='Recuperar la contraseña';
@@ -2970,6 +2982,9 @@ async function doAuth(f){
  if(authBusy)return;const msg=$('#amsg');const set=(t,k)=>{msg.textContent=t;msg.className='msg '+(k||'')};const btn=f.querySelector('button[type=submit]');const el=n=>f.elements[n];
  authBusy=true;btn.disabled=true;btn.classList.add('busy');emErr(el('em'),false);
  try{
+  if(authTab==='cfm'&&cfm&&cfm.k==='r'){const a=String(el('np').value||''),b2=String(el('np2').value||'');if(a.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}if(a!==b2){set('Las contraseñas no coinciden.','err');return}
+   set('Guardando…');let x;try{x=await pbX('POST','collections/users/confirm-password-reset',{token:cfm.t,password:a,passwordConfirm:b2})}catch(e){set('No hay conexión con el servidor. Inténtalo de nuevo.','err');return}
+   if(x.s===204||x.s===200){cfm.st='ok';render();return}const dd=(x.j&&x.j.data)||{};if(dd.password){set(pbPwMsg(dd.password.message),'err');return}if(x.s===429){set('Demasiados intentos. Espera un poco.','err');return}cfm.st='err';render();return}
   if(authTab==='reset'){const em=String(el('em').value||'').trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
    set('Enviando…');try{await aCall('sendOobCode',{requestType:'PASSWORD_RESET',email:em})}catch(e){if(e.code==='NET'||e.code==='INVALID_EMAIL'){set(aMsg(e),'err');return}}
    set('Si ese correo tiene cuenta, te hemos enviado un enlace para cambiar la contraseña. Revisa también el spam.','ok');return}
@@ -4811,6 +4826,7 @@ document.addEventListener('click',e=>{
   case 'admrole':if(isAdmin()){const u=b.dataset.u,r=+b.dataset.r,x=regCache&&regCache.find(y=>y.id===u);if(x&&u!==session.uid&&r>=0&&r<=(isAdmin()?2:1)&&(x.role|0)<(isAdmin()?3:2)&&(isAdmin()||(x.gp|0)!==1)){fs('PATCH','users/'+u,fbEnc({role:r}),maskQ({role:1})).then(()=>{x.role=r;admView(true);toast('Permisos actualizados')}).catch(()=>toast('No se pudo cambiar el permiso'))}}break
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
+  case 'cfmgo':cfmDone();break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
   case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id,email:pend.email})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken,email:pend.email})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
   case 'new':{if(charFull('nb'))break;const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
@@ -4922,7 +4938,7 @@ async function navRestore(){let o=null;try{o=JSON.parse(sessionStorage.getItem('
   if(o.s!=='menu'&&!(GSCR&&GSCR[o.s])&&!['rol','deck','nb','cosmere','cyber','dune','arch'].includes(o.s))return;
   if(o.c&&store.chars&&store.chars.some(x=>x.id===o.c))store.cur=o.c;
   scr=o.s;render()}catch(e){}}
-loadAccounts();render();restoreSession().then(async ok=>{booting=false;render();try{if(ok)await navRestore()}catch(e){}navDone=true;navSave()});
+loadAccounts();cfmInit();render();(cfm?Promise.resolve(false):restoreSession()).then(async ok=>{booting=false;render();try{if(ok)await navRestore()}catch(e){}navDone=true;navSave()});
 {const r1=render;render=function(k){if(session&&store&&store.cur&&!canSeeGame('nb')){store.cur=null;store.npcCur=null}{const cw=(scr==='nb'||scr==='deck'||(session&&store&&store.cur))?'sc':scr==='arch'?'ro':'co';if(document.documentElement.dataset.cw!==cw)document.documentElement.dataset.cw=cw}const on=!!(session&&session.owner&&scr==='admin'&&!(store&&store.cur));if(on)document.documentElement.dataset.adm='1';else delete document.documentElement.dataset.adm;r1.apply(this,arguments);if(on)admPaint()}}
 (function(){ // pausa las animaciones infinitas que no se ven (fuera de pantalla o pestaña oculta)
  if(!('IntersectionObserver' in window)||!document.getAnimations)return;
