@@ -3396,9 +3396,9 @@ function hubSync(){try{const b=document.body;const on=!!(session&&!booting&&docu
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.72';
-const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.71 a v00.01.72. Migración de Firebase a un servidor propio (PocketBase): cuentas, partidas, fichas y ajustes ahora viven en rolfelix.duckdns.org. Los correos de verificación y recuperación quedan pendientes del servicio de envío.';
+const APPV='00.01.73';
+const APPN='Actualización media.';
+const APPD='Actualiza de v00.01.72 a v00.01.73. Páginas de confirmación de correo y de restablecer contraseña (enlaces ?verificar= y ?restablecer=), ventana «Verifica tu correo» tematizada y plantillas de correo preparadas.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
