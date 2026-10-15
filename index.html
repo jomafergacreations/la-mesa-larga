@@ -2723,30 +2723,83 @@ const canList=()=>!!session&&myRole()>=1;
 const canMenu=()=>canList()||canInc();
 const ROLEN=['Sin permisos','Ver cuentas','Administrador','Propietario'];
 /* ---------- cuentas en la nube: Firebase Auth + Firestore (REST) ---------- */
-const FB={projectId:'lamesalarga-c9518',apiKey:'AIzaSyATrJ2mZmTidyubsdEkz8Z7c13wAh2qTig'};
+const PBU='https://rolfelix.duckdns.org'; // PocketBase (antes Firebase)
 const OWNER='felixtorrestejero.96@gmail.com';
-const fbOn=()=>!!(FB.projectId&&FB.apiKey);
+const fbOn=()=>true;
 let cand=null,pend=null,regCache=null;
 const S=()=>cand||session;
-const fbU=(p,q)=>`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents/${p}?key=${FB.apiKey}${q||''}`;
 const fbEnc=o=>{const f={};for(const k in o){const v=o[k];f[k]=typeof v==='string'?{stringValue:v}:typeof v==='boolean'?{booleanValue:v}:{integerValue:String(Math.round(v))}}return{fields:f}};
 const fbDec=d=>{const o={id:decodeURIComponent((d.name||'').split('/').pop())};for(const k in(d.fields||{})){const v=d.fields[k];o[k]=v.stringValue!==undefined?v.stringValue:v.booleanValue!==undefined?v.booleanValue:+v.integerValue}return o};
 const maskQ=o=>'&'+Object.keys(o).map(x=>'updateMask.fieldPaths='+x).join('&');
-const AERR={EMAIL_EXISTS:'Ya hay una cuenta con ese correo. Entra con ella o recupera la contraseña.',INVALID_EMAIL:'Ese correo no parece válido.',WEAK_PASSWORD:'La contraseña es demasiado débil: usa al menos 6 caracteres.',INVALID_LOGIN_CREDENTIALS:'Correo o contraseña incorrectos.',INVALID_PASSWORD:'Correo o contraseña incorrectos.',EMAIL_NOT_FOUND:'Correo o contraseña incorrectos.',USER_DISABLED:'Esta cuenta está desactivada.',TOO_MANY_ATTEMPTS_TRY_LATER:'Demasiados intentos. Espera unos minutos y vuelve a probar.',OPERATION_NOT_ALLOWED:'El acceso por correo no está activado en Firebase.',MISSING_PASSWORD:'Escribe tu contraseña.',API_KEY_INVALID:'La clave de Firebase de la app no es válida.',CONFIGURATION_NOT_FOUND:'Falta activar Authentication en Firebase.'};
-const aMsg=e=>AERR[e&&e.code]||(e&&e.code==='NET'?'No hay conexión con el servidor. Comprueba tu conexión e inténtalo de nuevo.':'Algo ha fallado. Inténtalo de nuevo.');
-async function aCall(ep,body){let r;try{r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:'+ep+'?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/json','X-Firebase-Locale':'es'},body:JSON.stringify(body)})}catch(e){throw{code:'NET'}}
- const j=await r.json().catch(()=>({}));if(!r.ok){const m=String((j.error&&j.error.message)||'').split(/[ :]/)[0];throw{code:m||'ERR'}}return j}
+const AERR={EMAIL_EXISTS:'Ya hay una cuenta con ese correo. Entra con ella o recupera la contraseña.',INVALID_EMAIL:'Ese correo no parece válido.',WEAK_PASSWORD:'La contraseña es demasiado débil: usa al menos 6 caracteres.',INVALID_LOGIN_CREDENTIALS:'Correo o contraseña incorrectos.',INVALID_PASSWORD:'Correo o contraseña incorrectos.',EMAIL_NOT_FOUND:'Correo o contraseña incorrectos.',USER_DISABLED:'Esta cuenta está desactivada.',TOO_MANY_ATTEMPTS_TRY_LATER:'Demasiados intentos. Espera unos minutos y vuelve a probar.',OPERATION_NOT_ALLOWED:'El acceso por correo no está activado en el servidor.',MISSING_PASSWORD:'Escribe tu contraseña.',API_KEY_INVALID:'No se pudo validar la conexión con el servidor.',CONFIGURATION_NOT_FOUND:'El servicio de cuentas no está disponible.'};
+const aMsg=e=>(e&&e.code==='WEAK_PASSWORD'&&e.msg)||AERR[e&&e.code]||(e&&e.code==='NET'?'No hay conexión con el servidor. Comprueba tu conexión e inténtalo de nuevo.':'Algo ha fallado. Inténtalo de nuevo.');
+const jwtP=t=>{try{return JSON.parse(decodeURIComponent(escape(atob(String(t).split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return {}}};
+async function pbX(m,path,body,tk){let r;try{r=await fetch(PBU+'/api/'+path,{method:m,headers:Object.assign(tk?{Authorization:tk}:{},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined})}catch(e){throw{code:'NET'}}
+ let j=null;try{j=await r.json()}catch(e){}return{s:r.status,j}}
+const pbExpIn=t=>String(Math.max(60,Math.round(((jwtP(t).exp||0)*1000-Date.now())/1000)||3600));
+const pbTok=(t,rec)=>({idToken:t,refreshToken:t,expiresIn:pbExpIn(t),localId:(rec&&rec.id)||jwtP(t).id||'',email:(rec&&rec.email)||''});
+const pbPwMsg=m=>{const n=/at least (\d+)/i.exec(String(m||''));return n?'La contraseña debe tener al menos '+n[1]+' caracteres.':'La contraseña no cumple los requisitos del servidor.'};
+/* Capa de compatibilidad: emula los endpoints de Firebase Auth sobre PocketBase para no tocar el resto del código */
+async function aCall(ep,b){
+ if(ep==='signInWithPassword'){const x=await pbX('POST','collections/users/auth-with-password',{identity:b.email,password:b.password});
+  if(x.s===429)throw{code:'TOO_MANY_ATTEMPTS_TRY_LATER'};if(x.s>=500||x.s===404)throw{code:'ERR'};if(x.s!==200||!x.j||!x.j.token)throw{code:'INVALID_LOGIN_CREDENTIALS'};return pbTok(x.j.token,x.j.record)}
+ if(ep==='lookup'){const x=await pbX('POST','collections/users/auth-refresh',null,b.idToken);if(x.s!==200||!x.j||!x.j.record)throw{code:'INVALID_ID_TOKEN'};const r=x.j.record;return{users:[{localId:r.id,email:r.email,emailVerified:!!r.verified,displayName:r.name||''}]}}
+ if(ep==='signUp'){const x=await pbX('POST','collections/users/records',{email:b.email,password:b.password,passwordConfirm:b.password,name:b.name||''});
+  if(x.s===200||x.s===201){let a;try{a=await aCall('signInWithPassword',{email:b.email,password:b.password})}catch(e){if(e.code==='NET')throw e;a={idToken:'',refreshToken:'',expiresIn:'0'}}a.localId=x.j.id;a.email=b.email;return a}
+  const d=(x.j&&x.j.data)||{};if(d.email)throw{code:/unique/.test(d.email.code||'')?'EMAIL_EXISTS':'INVALID_EMAIL'};if(d.password)throw{code:'WEAK_PASSWORD',msg:pbPwMsg(d.password.message)};if(x.s===429)throw{code:'TOO_MANY_ATTEMPTS_TRY_LATER'};throw{code:'ERR',detail:x.j}}
+ if(ep==='sendOobCode'){const em=b.email||'';const x=await pbX('POST','collections/users/'+(b.requestType==='PASSWORD_RESET'?'request-password-reset':'request-verification'),{email:em});if(x.s>=400){if(x.s===429)throw{code:'TOO_MANY_ATTEMPTS_TRY_LATER'};throw{code:x.s===400&&b.requestType==='PASSWORD_RESET'?'INVALID_EMAIL':'ERR'}}return{}}
+ if(ep==='update'){const id=jwtP(b.idToken).id;if(!id)throw{code:'INVALID_ID_TOKEN'};const body={};if(b.displayName!==undefined)body.name=b.displayName;if(b.password){body.password=b.password;body.passwordConfirm=b.password;body.oldPassword=b.oldPassword||''}
+  const x=await pbX('PATCH','collections/users/records/'+id,body,b.idToken);if(x.s!==200){if(x.j&&x.j.data&&x.j.data.password)throw{code:'WEAK_PASSWORD',msg:pbPwMsg(x.j.data.password.message)};throw{code:'ERR'}}
+  if(b.password&&b.email)return await aCall('signInWithPassword',{email:b.email,password:b.password});return pbTok(b.idToken,x.j)}
+ if(ep==='delete'){const id=jwtP(b.idToken).id;if(id){const x=await pbX('DELETE','collections/users/records/'+id,null,b.idToken);if(x.s>=400&&![401,403,404].includes(x.s))throw{code:'ERR'}}return{}}
+ throw{code:'ERR'}}
+async function pbRefresh(rt){const x=await pbX('POST','collections/users/auth-refresh',null,rt);if(x.s!==200||!x.j||!x.j.token)return null;return{id_token:x.j.token,refresh_token:x.j.token,expires_in:pbExpIn(x.j.token),user_id:x.j.record&&x.j.record.id}}
 async function tok(){const s=S();if(!s)throw{code:'AUTH'};
- if(Date.now()>s.exp-60000){let r;try{r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(s.rt)})}catch(e){throw{code:'NET'}}
-  if(!r.ok)throw{code:'AUTH'};const j=await r.json();s.idToken=j.id_token;s.rt=j.refresh_token||s.rt;s.exp=Date.now()+(+j.expires_in||3600)*1000;skSet({rt:s.rt},s.rem)}
+ if(Date.now()>s.exp-60000){const j=await pbRefresh(s.rt);if(!j)throw{code:'AUTH'};s.idToken=j.id_token;s.rt=j.refresh_token;s.exp=Date.now()+(+j.expires_in||3600)*1000;skSet({rt:s.rt},s.rem)}
  return s.idToken}
-async function fs(m,p,body,q){const t=await tok();let r;
- try{r=await fetch(fbU(p,q),{method:m,headers:Object.assign({Authorization:'Bearer '+t},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined})}catch(e){throw{code:'NET'}}
- if(r.status===404)return null;if(r.status===429)fsCool=Date.now()+300000;if(!r.ok)throw{code:'FS'+r.status};return m==='DELETE'?{}:r.json()}
-async function fsList(col){let out=[],tk='';do{const d=await fs('GET',col,null,'&pageSize=300'+(tk?'&pageToken='+encodeURIComponent(tk):''));(d&&d.documents||[]).forEach(x=>out.push(fbDec(x)));tk=d&&d.nextPageToken||''}while(tk);return out}
+/* Capa de compatibilidad Firestore -> PocketBase: mismas llamadas y mismo formato de documento (fields), ids compuestos incluidos */
+const PB_ID=/^[a-z0-9]{15}$/,PBK={created:'creado',updated:'actualizado'},PBKR={creado:'created',actualizado:'updated'},COMPC=['pjs','miembros','salidas'];
+const pbId=()=>{let s='';const a='abcdefghijklmnopqrstuvwxyz0123456789';try{const u=new Uint8Array(15);crypto.getRandomValues(u);for(const v of u)s+=a[v%36]}catch(e){for(let i=0;i<15;i++)s+=a[Math.floor(Math.random()*36)]}return s};
+const pbQ=v=>'"'+String(v).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"';
+const PBSKIP=new Set(['id','collectionId','collectionName','expand','fid','password','tokenKey','emailVisibility','verified']);
+function pbDoc(col,rec){const f={};for(const k in rec){if(PBSKIP.has(k))continue;const v=rec[k],n=PBKR[k]||k;if(typeof v==='string')f[n]={stringValue:v};else if(typeof v==='boolean')f[n]={booleanValue:v};else if(typeof v==='number')f[n]={integerValue:String(Math.round(v))}}
+ let id=rec.id;if(COMPC.includes(col))id=rec.pid+'_'+rec.uid;else if((col==='reveladas'||col==='ajustes')&&rec.fid)id=rec.fid;
+ return{name:'pb/'+encodeURIComponent(id),fields:f}}
+async function pbFind(col,id,tk){let flt='';
+ if(['fichas','gmsol'].includes(col))flt='uid='+pbQ(id);
+ else if(col==='nombres')flt='nombre='+pbQ(id);
+ else if(col==='ajustes'||col==='reveladas')flt='fid='+pbQ(id);
+ else if(COMPC.includes(col)&&id.includes('_')){const i=id.indexOf('_');flt='pid='+pbQ(id.slice(0,i))+' && uid='+pbQ(id.slice(i+1))}
+ if(!flt){if(!PB_ID.test(id))return null;const x=await pbX('GET','collections/'+col+'/records/'+id,null,tk);if(x.s===404||x.s===403)return null;if(x.s===429)fsCool=Date.now()+300000;if(x.s!==200)throw{code:'FS'+x.s};return x.j}
+ const x=await pbX('GET','collections/'+col+'/records?perPage=1&filter='+encodeURIComponent(flt),null,tk);if(x.s===404)return null;if(x.s===429)fsCool=Date.now()+300000;if(x.s!==200)throw{code:'FS'+x.s};return((x.j&&x.j.items)||[])[0]||null}
+async function pbList(col,flt,tk){const out=[];let pg=1,tp=1;do{const x=await pbX('GET','collections/'+col+'/records?perPage=200&page='+pg+(flt?'&filter='+encodeURIComponent(flt):''),null,tk);if(x.s===404)return[];if(x.s===429)fsCool=Date.now()+300000;if(x.s!==200)throw{code:'FS'+x.s};(x.j.items||[]).forEach(r=>out.push(pbDoc(col,r)));tp=x.j.totalPages||1;pg++}while(pg<=tp);return out}
+async function fs(m,p,body,q){const tk=await tok();q=q||'';const sp=p.split('/'),col=sp[0],id=sp.length>1?decodeURIComponent(sp.slice(1).join('/')):'';
+ if(!id){if(m!=='GET')throw{code:'FS400'};return{documents:await pbList(col,'',tk)}}
+ if(m==='GET'){const r=await pbFind(col,id,tk);return r?pbDoc(col,r):null}
+ if(m==='DELETE'){const r=await pbFind(col,id,tk);if(!r)return{};const x=await pbX('DELETE','collections/'+col+'/records/'+r.id,null,tk);if(x.s===429)fsCool=Date.now()+300000;if(x.s>=400&&x.s!==404)throw{code:'FS'+x.s};return{}}
+ const o={};for(const k in(body&&body.fields||{})){const v=body.fields[k];o[PBK[k]||k]=v.stringValue!==undefined?v.stringValue:v.booleanValue!==undefined?v.booleanValue:+v.integerValue}
+ const ex=/currentDocument\.exists=false/.test(q);const rec=await pbFind(col,id,tk);
+ if(rec&&ex)throw{code:'FS409'};
+ if(rec){const drop=col==='users'?['email','creado']:COMPC.includes(col)||col==='fichas'||col==='gmsol'?['uid','pid']:col==='nombres'?['nombre']:col==='ajustes'||col==='reveladas'?['fid']:[];
+  drop.forEach(k=>delete o[k]);for(const k of Object.keys(o))if(rec[k]===o[k])delete o[k];
+  if(!Object.keys(o).length)return pbDoc(col,rec);
+  const x=await pbX('PATCH','collections/'+col+'/records/'+rec.id,o,tk);if(x.s===429)fsCool=Date.now()+300000;if(x.s!==200)throw{code:'FS'+x.s,detail:x.j};return pbDoc(col,x.j)}
+ if(col==='users')throw{code:'FS404'};
+ if(COMPC.includes(col)){const i=id.indexOf('_');if(i>0){o.pid=o.pid||id.slice(0,i);o.uid=o.uid||id.slice(i+1)}}
+ else if(col==='fichas'||col==='gmsol')o.uid=id;else if(col==='nombres')o.nombre=id;else if(col==='ajustes'||col==='reveladas')o.fid=id;else if(PB_ID.test(id))o.id=id;
+ const x=await pbX('POST','collections/'+col+'/records',o,tk);if(x.s===429)fsCool=Date.now()+300000;
+ if(x.s!==200&&x.s!==201){if(x.s===400&&ex)throw{code:'FS409',detail:x.j};throw{code:'FS'+x.s,detail:x.j}}return pbDoc(col,x.j)}
+async function fsList(col){const d=await fs('GET',col);return(d&&d.documents||[]).map(fbDec)}
 const RESERVED=n=>nameK(n)==='alpha';
 const nameDoc=n=>'nombres/'+encodeURIComponent(nameK(n));
 async function loadProfile(){const d=await fs('GET','users/'+S().uid);if(!d)return 'new';const p=fbDec(d);if(p.deleted)return 'deleted';S().name=p.name||S().name;S().role=p.role|0;S().gm=p.gm|0;S().prev=p.prev|0;S().prevG=String(p.prevG||'');S().gmTmp=p.gmTmp|0;S().gmLic=String(p.gmLic||'');{const n=Date.now();fs('PATCH','users/'+S().uid,fbEnc({seen:n,ping:n}),maskQ({seen:1,ping:1})).catch(()=>{})}return 'ok'}
+async function ensureName(s){ // PocketBase: el usuario ya existe con su nombre; aquí se reserva en «nombres» (único)
+ const k='mlnm:'+s.uid;try{if(localStorage.getItem(k)===nameK(s.name))return 'ok'}catch(e){}
+ const nm=nameK(s.name);if(!nm||RESERVED(s.name))return 'ok';
+ let d=null;try{d=await fs('GET',nameDoc(s.name))}catch(e){if(e.code==='NET')throw e}
+ if(d){if(fbDec(d).uid!==s.uid)return 'taken'}
+ else{try{await fs('PATCH',nameDoc(s.name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return 'taken';throw e}}
+ try{localStorage.setItem(k,nm)}catch(e){}return 'ok'}
 async function claimProfile(name){const s=S();if(RESERVED(name))return false;
  try{await fs('PATCH',nameDoc(name),fbEnc({uid:s.uid}),'&currentDocument.exists=false')}catch(e){if(['FS400','FS403','FS409'].includes(e.code))return false;throw e}
  await fs('PATCH','users/'+s.uid,fbEnc({name,email:s.email,created:Date.now(),seen:Date.now(),role:0,deleted:false}));s.name=name;s.role=0;return true}
@@ -2827,7 +2880,8 @@ async function enter(a,rem,sidIn,restore){ // a: respuesta de signIn/refresh. De
  return finishSess()}
 async function finishSess(){const s=cand;
  if(!s.owner){const st=await loadProfile();if(st==='deleted'){cand=null;skClear();return 'deleted'}
-  if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}}
+  if(st==='new'){const ok=await claimProfile(s.name);if(!ok)return 'name'}
+  if(st==='ok'){const nr=await ensureName(s);if(nr==='taken')return 'name'}}
  if(s.owner){const n=Date.now();fs('PATCH','users/'+s.uid,fbEnc({name:'ALPHA',email:s.email,created:n,seen:n,role:3,deleted:false}),maskQ({name:1,email:1,seen:1,role:1,deleted:1})).catch(()=>{});fs('PATCH','nombres/alpha',fbEnc({uid:s.uid}),maskQ({uid:1})).catch(()=>{})}
  if(SESION_UNICA){let rp={};try{const ru=await fs('GET','users/'+s.uid);if(ru)rp=fbDec(ru)}catch(e){rp={}}
   if(rp.sid&&rp.sid!==s.sid){if(s.restore){cand=null;skClear();return 'kicked'}if(!s.force){cand.other={dev:rp.sidDev||'otro dispositivo'};return 'other'}}
@@ -2838,8 +2892,8 @@ async function finishSess(){const s=cand;
  skSet({rt:s.rt,sid:s.sid||''},s.rem);if(s.rem){lsSet(UKEY,s.email);ckSet(UKEY,s.email)}else if(!skRem()){lsDel(UKEY);ckDel(UKEY)}
  if(dirty)setTimeout(flush,800);return 'ok'}
 async function restoreSession(){try{const t=skGet();if(!t)return false;const o=JSON.parse(t);if(!o.rt){skClear();return false}
- let r;try{r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(o.rt)})}catch(e){throw{code:'NET'}}
- if(!r.ok){skClear();return false}const j=await r.json();
+ const j=await pbRefresh(o.rt);
+ if(!j){skClear();return false}
  const res=await enter({idToken:j.id_token,refreshToken:j.refresh_token,expiresIn:j.expires_in,localId:j.user_id},skRem(),o.sid||'',true);if(res==='kicked')setTimeout(()=>kickedDlg(),700);
  if(res==='deleted'){setTimeout(()=>toast('Esta cuenta ha sido eliminada'),600)}if(res==='unverified'){authTab='verify';vPoll()}if(res==='name')authTab='name';return res==='ok'}
  catch(e){setTimeout(()=>{try{toast(e&&e.code==='NET'?'Sin conexión: no se pudo recuperar la sesión.':'No se pudo recuperar la sesión guardada. Entra de nuevo.')}catch(x){}},800);return false}}
@@ -2919,7 +2973,7 @@ async function doAuth(f){
    set('Si ese correo tiene cuenta, te hemos enviado un enlace para cambiar la contraseña. Revisa también el spam.','ok');return}
   if(authTab==='name'){const name=nameN(el('au').value);if(name.length<3||name.length>24||!/^[\p{L}\p{N} ._-]+$/u.test(name)||/^_|_$/.test(name)){set('El usuario debe tener entre 3 y 24 caracteres: letras, números, espacios, punto, guion o guion bajo.','err');return}
    if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
-   if(!cand){authTab='login';render();return}cand.name=name;set('Comprobando…');aCall('update',{idToken:cand.idToken,displayName:name,returnSecureToken:false}).catch(()=>{});
+   if(!cand){authTab='login';render();return}cand.name=name;set('Comprobando…');try{await aCall('update',{idToken:cand.idToken,displayName:name,returnSecureToken:false})}catch(e){}
    const res=await finishSess();if(res==='name'){set('Ese nombre también está en uso. Prueba con otro.','err');return}await afterEnter(res);return}
   const em=String(el('em').value||'').trim().toLowerCase(),pw=el('ap').value;wantRem=!!(el('rem')&&el('rem').checked);
   if(!/^\S+@\S+\.\S+$/.test(em)){set('Escribe un correo válido.','err');return}
@@ -2928,14 +2982,14 @@ async function doAuth(f){
    if(RESERVED(name)){set('Ese nombre está reservado. Elige otro.','err');return}
    if(pw.length<6){set('La contraseña debe tener al menos 6 caracteres.','err');return}
    if(pw!==el('ap2').value){set('Las contraseñas no coinciden.','err');return}
-   set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,returnSecureToken:true})}catch(e){if(e&&e.code==='EMAIL_EXISTS'){set('');emErr(el('em'),true);return}set(aMsg(e),'err');return}
+   set('Creando la cuenta…');let a;try{a=await aCall('signUp',{email:em,password:pw,name,returnSecureToken:true})}catch(e){if(e&&e.code==='EMAIL_EXISTS'){set('');emErr(el('em'),true);return}set(aMsg(e),'err');return}
    try{await aCall('update',{idToken:a.idToken,displayName:name,returnSecureToken:false})}catch(e){}
-   try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}
+   try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken,email:em})}catch(e){}
    pend={email:em,pw,idToken:a.idToken,rem:false,name};authTab='verify';render();vPoll();return}
   if(fails>0)await wait(Math.min(fails*700,5000));
   set('Comprobando…');let a;try{a=await aCall('signInWithPassword',{email:em,password:pw,returnSecureToken:true})}catch(e){if(e.code!=='NET')fails++;set(aMsg(e),'err');return}
   pend={email:em,pw,idToken:a.idToken,rem:wantRem};fails=0;
-  const res=await enter(a,wantRem);if(res==='unverified'){try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}catch(e){}}
+  const res=await enter(a,wantRem);if(res==='unverified'){try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken,email:em})}catch(e){}}
   await afterEnter(res);
  }catch(e){const m=$('#amsg');if(m){m.textContent=e&&e.code==='NET'?aMsg(e):(e&&e.code&&String(e.code).startsWith('FS')?'No se pudieron cargar tus datos ('+e.code+'). Inténtalo de nuevo.':aMsg(e));m.className='msg err'}}
  finally{authBusy=false;const b=f.querySelector('button[type=submit]');if(b){b.disabled=false;b.classList.remove('busy')}}}
@@ -2981,7 +3035,7 @@ async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elemen
  let ids=all?GAMES.map(g=>g[0]):Array.from(f.querySelectorAll('input[name=g]:checked')).map(x=>x.value);
  ids.slice().forEach(i=>{const p=GAMES.find(g=>g[0]===i);if(p&&p[4]&&!ids.includes(p[4]))ids.push(p[4])});
  pgSel=u;
- try{await fs('PATCH','users/'+u,fbEnc({prevG:ids.join(','),prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(all?'Ahora ve todos los juegos':ids.length?'Accesos guardados':'Accesos retirados');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas de Firestore.','err')}}
+ try{await fs('PATCH','users/'+u,fbEnc({prevG:ids.join(','),prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(all?'Ahora ve todos los juegos':ids.length?'Accesos guardados':'Accesos retirados');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas del servidor.','err')}}
 function gamesAdmHtml(){
  const card=([id,n,d],sub)=>{const p=gamePub(id),blk=sub&&!gamePub(gParent(id));return `<div class="gmc ${p?'approved':'pending'}${sub?' sub':''}"><div class="gmh"><b>${esc(n)}</b><span class="tag">${p?'Publicado':'Sin publicar'}</span>${p&&+gamesCfg[id+'At']?`<span class="gms">Publicado el ${rpDate(gamesCfg[id+'At'])}</span>`:''}${p&&blk?'<span class="gms">Oculto: el juego principal no está publicado</span>':''}</div><p class="hint" style="margin:0">${esc(d)}</p><div class="row"><button class="btn sm ${p?'danger':'pri'}" data-act="gpub" data-g="${id}" data-v="${p?0:1}">${p?'Retirar a los usuarios':'Publicar juego'}</button></div></div>`};
  const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
@@ -3069,7 +3123,7 @@ async function reauth(pw){const a=await aCall('signInWithPassword',{email:sessio
 async function doPw(f){const m=$('#pmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const e=n=>f.elements[n].value;
  try{if(e('p1').length<6){set('La contraseña nueva debe tener al menos 6 caracteres.','err');return}if(e('p1')!==e('p2')){set('Las contraseñas nuevas no coinciden.','err');return}
   set('Cambiando…');try{await reauth(e('p0'))}catch(x){set(x.code==='NET'?aMsg(x):'La contraseña actual no es correcta.','err');return}
-  const a=await aCall('update',{idToken:session.idToken,password:e('p1'),returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken||session.rt;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem);
+  const a=await aCall('update',{idToken:session.idToken,password:e('p1'),oldPassword:e('p0'),email:session.email,returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken||session.rt;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem);
   f.reset();set('Contraseña cambiada.','ok')}catch(x){set(aMsg(x),'err')}}
 async function doDel(f){const m=$('#dmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};
  try{set('Comprobando…');try{await reauth(f.elements.d0.value)}catch(x){set(x.code==='NET'?aMsg(x):'La contraseña no es correcta.','err');return}
@@ -3325,9 +3379,9 @@ function hubSync(){try{const b=document.body;const on=!!(session&&!booting&&docu
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.71';
-const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.70 a v00.01.71. Inicio de sesión en pantallas grandes: escala reducida (máximo 1,3×, antes 1,75×).';
+const APPV='00.01.72';
+const APPN='Actualización grande.';
+const APPD='Actualiza de v00.01.71 a v00.01.72. Migración de Firebase a un servidor propio (PocketBase): cuentas, partidas, fichas y ajustes ahora viven en rolfelix.duckdns.org. Los correos de verificación y recuperación quedan pendientes del servicio de envío.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3979,9 +4033,7 @@ function setMode(m){if(m===store.mode)return;if(m==='gm'&&!canGM()){gmReqDlg();r
 const hpMap={};let parts=[],myParts=[],invs=[],partMem={},partInv={},partPJ={},partId=null,partSig='',flashId=null;
 let joinP=null;let apState={},reqState={},banMap={},denyState={},exits=[],kicks=[];const exSeen=new Set(),kkSeen=new Set();const pjDirty=new Set(),partSeen={},invSeen=new Set();
 const pjData=c=>{const o={};for(const k in c){if(k[0]==='_'||['step','mode','q','pid','rev'].includes(k))continue;o[k]=c[k]}return JSON.stringify(o)};
-async function fsQuery(col,field,val){const t=await tok();let r;
- try{r=await fetch(`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents:runQuery?key=${FB.apiKey}`,{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({structuredQuery:{from:[{collectionId:col}],where:{fieldFilter:{field:{fieldPath:field},op:'EQUAL',value:{stringValue:val}}}}})})}catch(e){throw{code:'NET'}}
- if(r.status===429)fsCool=Date.now()+300000;if(!r.ok)throw{code:'FS'+r.status};const j=await r.json();return j.filter(x=>x.document).map(x=>fbDec(x.document))}
+async function fsQuery(col,field,val){const tk=await tok();return(await pbList(col,(PBK[field]||field)+'='+pbQ(val),tk)).map(fbDec)}
 function pullInto(c,r){let nc;try{nc=normalize(JSON.parse(r.data))}catch(e){return}nc.id=c.id;nc.pid=c.pid;nc.rev=r.rev|0;nc.step=c.step;nc.mode=c.mode;nc._ph=pjData(nc);
  const i=store.chars.findIndex(x=>x.id===c.id);if(i>=0)store.chars[i]=nc;save();if(session&&!document.hidden)render(1)}
 function flashCard(){setTimeout(()=>{if(!flashId)return;const el=document.querySelector('.card[data-cid="'+flashId+'"]');if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}const t=document.querySelector('.chapter');if(t&&store.cur===flashId){t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash')}flashId=null},60)}
@@ -4169,14 +4221,14 @@ document.addEventListener('change',async e=>{const t=e.target;if(!t||t.id!=='rpf
  try{rpImg=await rpShrink(f);$('#rpname').textContent=f.name.slice(0,40);$('#rppv').innerHTML=`<img class="rpi" src="${rpImg}" alt="Vista previa de la imagen adjunta"> <button type="button" class="btn sm ghost" data-act="rpimgx">Quitar imagen</button>`;m.textContent='';m.className='msg'}catch(x){m.textContent='No se pudo leer esa imagen.';m.className='msg err'}});
 async function doRpt(f){const m=$('#rpmsg'),tx=String(f.elements.tx.value||'').trim();if(tx.length<5){m.textContent='Cuéntanos un poco más (mínimo 5 letras).';m.className='msg err';return}
  const btn=f.querySelector('button[type=submit]');btn.disabled=true;
- try{const id=uid()+uid();await fs('PATCH','reportes/'+id,fbEnc({uid:session.uid,name:session.name,cat:f.elements.cat.value,text:tx.slice(0,3000),img:rpImg||'',status:'open',reply:'',created:Date.now()}));await rpLoad();rpSent()}catch(e){btn.disabled=false;m.textContent=e.code==='NET'?aMsg(e):'No se pudo enviar. Inténtalo de nuevo.';m.className='msg err'}}
+ try{const id=pbId();await fs('PATCH','reportes/'+id,fbEnc({uid:session.uid,name:session.name,cat:f.elements.cat.value,text:tx.slice(0,3000),img:rpImg||'',status:'open',reply:'',created:Date.now()}));await rpLoad();rpSent()}catch(e){btn.disabled=false;m.textContent=e.code==='NET'?aMsg(e):'No se pudo enviar. Inténtalo de nuevo.';m.className='msg err'}}
 async function doReq(f){const m=$('#rmsg'),pid=f.dataset.p,rs=String(f.elements.rs.value||'').trim();if(denyState[pid]==='1'){m.textContent='El Game Master ya denegó una solicitud de cambio.';m.className='msg err';return}if(rs.length<5){m.textContent='Explica brevemente el motivo (mínimo 5 letras).';m.className='msg err';return}
  const nc=store.chars.find(x=>x.id===f.elements.nc.value);if(!nc){m.textContent='Elige el personaje por el que quieres cambiar.';m.className='msg err';return}
  try{await fs('PATCH','pjs/'+pid+'_'+session.uid,fbEnc({req:'1',reason:rs.slice(0,120),rc:nc.id,rd:pjData(nc)}),maskQ({req:1,reason:1,rc:1,rd:1}));try{$('#dlg').close()}catch(x){}toast('Solicitud enviada al Game Master');partSig='';await loadParts();render(1)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function doPartNew(f){const m=$('#pmsg2');const name=nameN(f.elements.pn.value);if(name.length<2||name.length>40){m.textContent='Escribe un nombre de entre 2 y 40 caracteres.';m.className='msg err';return}
 const lic=!isAdmin()&&(session.role|0)<2&&(session.gm|0)!==1;
  if(lic&&(session.gmLic||!((session.gmTmp|0)>0))){m.textContent=session.gmLic?'Tu licencia temporal es para una sola partida y ya la has usado.':'No tienes licencia de Game Master.';m.className='msg err';return}
- try{const id=uid()+uid();const E=f.elements,lib=E.pmode&&E.pmode.value==='libre',era=lib?0:+E.pe.value===2?2:1,maxlvl=lib?0:Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,mode:E.pmode&&E.pmode.value==='libre'?'libre':'manual',desc:String(E.pd.value||'').slice(0,300),code:await newCode()}));if(lic){await fs('PATCH','users/'+session.uid,fbEnc({gmTmp:0,gmLic:id}),maskQ({gmTmp:1,gmLic:1}));session.gmTmp=0;session.gmLic=id}try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
+ try{const id=pbId();const E=f.elements,lib=E.pmode&&E.pmode.value==='libre',era=lib?0:+E.pe.value===2?2:1,maxlvl=lib?0:Math.max(0,Math.min(30,parseInt(E.pl.value)||0)),maxp=Math.max(1,Math.min(12,parseInt(E.pm.value)||6));await fs('PATCH','partidas/'+id,fbEnc({name,gm:session.uid,gmName:session.name,created:Date.now(),game:E.pg.value||'nb',era,maxlvl,maxp,mode:E.pmode&&E.pmode.value==='libre'?'libre':'manual',desc:String(E.pd.value||'').slice(0,300),code:await newCode()}));if(lic){await fs('PATCH','users/'+session.uid,fbEnc({gmTmp:0,gmLic:id}),maskQ({gmTmp:1,gmLic:1}));session.gmTmp=0;session.gmLic=id}try{$('#dlg').close()}catch(x){}toast('Partida creada');partSig='';await loadParts();partId=id;scr='part';gmStag=true;render();loadPart(id)}catch(e){m.textContent=aMsg(e);m.className='msg err'}}
 async function kickPlayer(pid,u){for(const col of ['pjs','miembros']){try{await fs('DELETE',col+'/'+pid+'_'+u)}catch(e){}}}
 
 
@@ -4725,8 +4777,8 @@ document.addEventListener('click',e=>{
   case 'simgm':simNoGM=!simNoGM;render(1);break;
   case 'gpub':{if(!isAdmin())break;const g=b.dataset.g,v=b.dataset.v==='1'?1:0,gn=(GAMES.find(x=>x[0]===g)||[0,'este juego'])[1];if(!GAMES.some(x=>x[0]===g))break;
    if(v){showDlg('¿Publicar '+esc(gn)+'?',`<p style="margin:0">Todos los usuarios podrán entrar a <b>${esc(gn)}</b> y recibirán una notificación avisándoles de que ya está publicado.</p><div class="row"><button class="btn pri" data-act="gpubok" data-g="${g}">Sí, publicar y avisar</button></div>`,true);break}
-   b.disabled=true;fs('PATCH','ajustes/juegos',fbEnc({[g]:0}),maskQ({[g]:1})).then(async()=>{await loadGames();toast('Juego retirado: los usuarios ya no pueden entrar');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo cambiar. Revisa las reglas de Firestore.')});break}
-  case 'gpubok':{if(!isAdmin())break;const g=b.dataset.g;if(!GAMES.some(x=>x[0]===g))break;b.disabled=true;const now=Date.now();fs('PATCH','ajustes/juegos',fbEnc({[g]:1,[g+'At']:now}),maskQ({[g]:1,[g+'At']:1})).then(async()=>{await loadGames();try{$('#dlg').close()}catch(x){}toast('Juego publicado: los usuarios recibirán la notificación');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo publicar. Revisa las reglas de Firestore.')});break}
+   b.disabled=true;fs('PATCH','ajustes/juegos',fbEnc({[g]:0}),maskQ({[g]:1})).then(async()=>{await loadGames();toast('Juego retirado: los usuarios ya no pueden entrar');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo cambiar. Revisa las reglas del servidor.')});break}
+  case 'gpubok':{if(!isAdmin())break;const g=b.dataset.g;if(!GAMES.some(x=>x[0]===g))break;b.disabled=true;const now=Date.now();fs('PATCH','ajustes/juegos',fbEnc({[g]:1,[g+'At']:now}),maskQ({[g]:1,[g+'At']:1})).then(async()=>{await loadGames();try{$('#dlg').close()}catch(x){}toast('Juego publicado: los usuarios recibirán la notificación');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo publicar. Revisa las reglas del servidor.')});break}
   case 'notifclr':{const rh=store.rpHide=store.rpHide||[];
    store.pubDel=Array.from(new Set((store.pubDel||[]).concat(pubList().map(x=>x.k)))).slice(-100);
    if(gmRes)(store.gmHide=store.gmHide||[]).push(gmRes.updated);
@@ -4758,7 +4810,7 @@ document.addEventListener('click',e=>{
   case 'admdel2':if(canAdm()){const u=b.dataset.u;admState=null;const x=regCache&&regCache.find(y=>y.id===u);if(!x||u===session.uid||(x.role|0)>=myRole())break;
     (async()=>{try{await fs('PATCH','users/'+u,fbEnc({deleted:true,role:0}),maskQ({deleted:1,role:1}));try{await fs('DELETE','fichas/'+u)}catch(e){}try{await fs('DELETE',nameDoc(x.name))}catch(e){}x.deleted=true;admOpen=null;admView(true);toast('Cuenta eliminada')}catch(e){toast('No se pudo eliminar')}})()}break;
   case 'vcheck':{if(!pend)break;b.disabled=true;vContinue().catch(e=>flash(aMsg(e),'err')).finally(()=>{b.disabled=false});break}
-  case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
+  case 'vresend':{if(!pend)break;b.disabled=true;(async()=>{try{let id=pend.idToken;try{await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:id,email:pend.email})}catch(e){if(e.code==='NET')throw e;const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken;await aCall('sendOobCode',{requestType:'VERIFY_EMAIL',idToken:a.idToken,email:pend.email})}flash('Correo reenviado a '+pend.email+'. Revisa también el spam.','ok')}catch(e){flash(aMsg(e),'err')}setTimeout(()=>{b.disabled=false},30000)})();break}
   case 'new':{if(charFull('nb'))break;const n=blank();store.chars.push(n);store.cur=n.id;save();render();break}
   case 'sheet':sheetOpen(b.dataset.id);break;
   case 'help':b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap');helpDlg(b.dataset.k);break;
