@@ -1419,6 +1419,17 @@ html[data-dev=phone] dialog:has(.cbub.auto)>.grid{padding-bottom:78px}
 
 html:not([data-dev=phone]) dialog.acctd .cbub:not(.auto){position:absolute;top:14px;right:14px;bottom:auto;width:42px;height:42px;box-shadow:0 6px 16px rgba(37,99,235,.4),inset 0 2px 0 rgba(255,255,255,.3)}
 html:not([data-dev=phone]) dialog.acctd .cbub svg{width:20px;height:20px}
+
+html[data-dev=desktop] .adp,html[data-dev=tablet] .adp{max-width:none;width:100%;padding-left:clamp(16px,2.6vw,64px);padding-right:clamp(16px,2.6vw,64px)}
+html[data-dev=desktop] .adl{grid-template-columns:250px minmax(0,1fr);gap:28px}
+html[data-dev=desktop] .adp .tiles,html[data-dev=tablet] .adp .tiles{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.ovg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
+.ovp{padding:16px 18px;display:grid;gap:8px;align-content:start}.ovp>b{font-size:.95rem}
+.ovk{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:.88rem;padding:5px 0;border-bottom:1px solid var(--line)}.ovk:last-child{border-bottom:0}
+.ovk span{color:var(--muted);display:flex;align-items:center;gap:7px;min-width:0}.ovk span small{font-size:.7rem;font-weight:700;color:#93C5FD}.ovk>b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ovd{width:8px;height:8px;border-radius:50%;background:#34D399;flex:none}
+.ovb{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:10px;font-size:.86rem}.ovb span{color:var(--muted)}.ovb i{height:8px;border-radius:99px;background:rgba(120,130,150,.22);position:relative;overflow:hidden}.ovb i:after{content:"";position:absolute;inset:0;width:var(--w);background:var(--accent,#3B82F6);border-radius:99px}.ovb b{font-variant-numeric:tabular-nums}
+.okc{color:#34D399}.warc{color:#F59E0B}.mutc{color:var(--muted)}
 </style>
 
 <style id="lifecss">
@@ -3057,11 +3068,34 @@ function rpAdmHtml(){const L=rpAll.filter(r=>!rpExp(r)&&(r.status==='done')===(r
 function topbarSync(){const t=document.getElementById('topbar');if(t)t.dataset.sig=''}
 const ADMNAV=[['General',[['ov','Resumen','M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z']]],['Usuarios',[['acc','Cuentas','M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM4 21c1-4 4-6 8-6s7 2 8 6'],['rol','Roles y permisos','M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z'],['gm','Game Masters','M5 20V9l7-5 7 5v11zM9 20v-6h6v6']]],['Contenido',[['jg','Juegos','M4 8h16v10H4zM8 8V5h8v3M9 13h2M15 13h.01']]],['Soporte',[['rp','Incidencias','M12 3l10 18H2zM12 10v5M12 18h.01']]],['Sistema',[['set','Ajustes','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12l2-1-2-4-2 .5-1.5-1L15 4h-4l-.5 2.5-1.5 1-2-.5-2 4 2 1v2l-2 1 2 4 2-.5 1.5 1L11 20h4l.5-2.5 1.5-1 2 .5 2-4-2-1z']]]];
 function admNav(){const bd={rp:rpOpenN(),gm:gmPendN()};return ADMNAV.map(([g,L])=>`<div class="ang"><small>${g}</small>${L.map(([k,n,d])=>`<button type="button" class="ani" data-act="admtab" data-v="${k}" aria-current="${admTab===k?'page':'false'}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg><span>${n}</span>${bd[k]?`<i class="bdg2">${bd[k]}</i>`:''}</button>`).join('')}</div>`).join('')}
+let admX={parts:null,ms:null,ok:null,at:0};
+async function admXLoad(){try{const t0=performance.now();const r=await fetch(PBU+'/api/health',{cache:'no-store'});admX.ok=r.ok;admX.ms=Math.round(performance.now()-t0)}catch(e){admX.ok=false;admX.ms=null}
+ try{admX.parts=await fsList('partidas')}catch(e){admX.parts=null}admX.at=Date.now();if(admLive()&&admTab==='ov')admView(true)}
+const ago=t=>{const m=Math.round((Date.now()-(+t||0))/60000);return !t?'—':m<1?'ahora':m<60?'hace '+m+' min':m<1440?'hace '+Math.round(m/60)+' h':'hace '+Math.round(m/1440)+' d'};
+function ovPanels(){const U=(regCache||[]).filter(x=>!x.deleted),del=(regCache||[]).filter(x=>x.deleted).length,onl=U.filter(isOn).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
+ const rn=['Sin permisos','Ver cuentas','Administrador','Superusuario'],cnt=[0,1,2,3].map(v=>U.filter(x=>(x.role|0)===v).length),mx=Math.max(1,...cnt);
+ const gmP=U.filter(x=>(x.gm|0)===1&&(x.role|0)<2).length,gmT=U.filter(x=>(x.gmTmp|0)>0&&(x.role|0)<2).length,gmU=U.filter(x=>x.gmLic).length;
+ const rec=U.slice().sort((a,b)=>(+b.created||0)-(+a.created||0)).slice(0,6);
+ const P=admX.parts,pa=P?P.filter(x=>x.end!=='1').length:null,pf=P?P.length-pa:null;
+ const byG={};(P||[]).forEach(x=>{const g=x.game||'nb';byG[g]=(byG[g]||0)+1});
+ const rps=(rpAll||[]).slice().sort((a,b)=>(+b.created||0)-(+a.created||0)).slice(0,5);
+ const host=(()=>{try{return new URL(PBU).host}catch(e){return PBU}})();
+ const pn=(t,b)=>`<section class="onl ovp"><b>${t}</b>${b}</section>`,kv=(k,v)=>`<div class="ovk"><span>${k}</span><b>${v}</b></div>`;
+ return `<div class="ovg">
+ ${pn('En línea ahora ('+onl.length+')',onl.length?onl.slice(0,12).map(r=>`<div class="ovk"><span><i class="ovd"></i>${esc(r.name||'Usuario')}${(r.role|0)>=2?` <small>${(r.role|0)>=3?'Superusuario':'Admin'}</small>`:''}</span><b>${ago(r.ping)}</b></div>`).join('')+(onl.length>12?`<p class="hint" style="margin:6px 0 0">y ${onl.length-12} más…</p>`:''):'<p class="hint" style="margin:0">Nadie conectado.</p>')}
+ ${pn('Cuentas por rol',cnt.map((n,v)=>`<div class="ovb"><span>${rn[v]}</span><i style="--w:${Math.round(n/mx*100)}%"></i><b>${n}</b></div>`).join('')+kv('Eliminadas',del))}
+ ${pn('Game Masters',kv('Licencia permanente',gmP)+kv('Licencia temporal sin usar',gmT)+kv('Licencia temporal en uso',gmU)+kv('Solicitudes pendientes',gmPendN())+kv('Por rol de administrador',U.filter(x=>(x.role|0)>=2).length))}
+ ${pn('Partidas',P?kv('Activas',pa)+kv('Finalizadas',pf)+kv('Total',P.length)+Object.keys(byG).map(g=>kv(esc(gameName(g)),byG[g])).join(''):'<p class="hint" style="margin:0">Cargando…</p>')}
+ ${pn('Juegos',GAMES.map(g=>`<div class="ovk"><span>${g[4]?'↳ ':''}${esc(g[1])}</span><b class="${gamePub(g[0])?'okc':'mutc'}">${gamePub(g[0])?'Publicado':'Oculto'}</b></div>`).join(''))}
+ ${pn('Últimas altas',rec.map(r=>`<div class="ovk"><span>${esc(r.name||'Usuario')}</span><b>${fdate(r.created)}</b></div>`).join('')||'<p class="hint" style="margin:0">Sin datos.</p>')}
+ ${pn('Incidencias recientes',rps.map(r=>`<div class="ovk"><span>${esc(r.name||'Usuario')} · ${esc(rpCatName(r.cat))}</span><b class="${r.status==='done'?'okc':'warc'}">${r.status==='done'?'Resuelta':'Abierta'}</b></div>`).join('')||'<p class="hint" style="margin:0">Sin incidencias.</p>')}
+ ${pn('Servidor y app',kv('Servidor',esc(host))+kv('Estado de la API',admX.ok===null?'Comprobando…':admX.ok?`<span class="okc">En marcha${admX.ms!=null?' · '+admX.ms+' ms':''}</span>`:'<span class="warc">Sin respuesta</span>')+kv('Base de datos','PocketBase')+kv('Versión de la app',APPV)+kv('Cuentas totales',U.length))}
+ </div>`}
 function ovHtml(){const allU=(regCache||[]).filter(x=>!x.deleted),all=allU.filter(x=>(x.role|0)<3),onl=allU.filter(isOn),stf=all.filter(x=>(x.role|0)>=1).length,pub=GAMES.filter(g=>gamePub(g[0])).length;
  const tile=(k,v,l,t)=>`<button type="button" class="tile ${k}" data-act="admtab" data-v="${t}"><b>${v}</b><span>${l}</span></button>`;
  const todo=[];if(rpOpenN())todo.push(['rp',rpOpenN()+' incidencia'+(rpOpenN()>1?'s':'')+' sin resolver']);if(gmPendN())todo.push(['gm',gmPendN()+' solicitud'+(gmPendN()>1?'es':'')+' de Game Master']);
  return `<div class="grid"><div class="admh"><span class="ago" id="admago"></span><button class="btn sm ghost" data-act="admre">Actualizar</button></div><div class="tiles">${tile('n',all.length,'Cuentas','acc')}${tile('st',stf,'Con permisos','rol')}${tile('rp',rpOpenN(),'Incidencias','rp')}${tile('gm',gmPendN(),'Solicitudes GM','gm')}${tile('jg',pub+'/'+GAMES.length,'Juegos publicados','jg')}</div>
- <div class="onl"><b>Requiere tu atención</b><div class="todo">${todo.map(([t,x])=>`<button type="button" class="btn sm" data-act="admtab" data-v="${t}">${x} →</button>`).join('')||'<span class="hint" style="margin:0">Todo al día. No hay nada pendiente.</span>'}</div></div>`}
+ <div class="onl"><b>Requiere tu atención</b><div class="todo">${todo.map(([t,x])=>`<button type="button" class="btn sm" data-act="admtab" data-v="${t}">${x} →</button>`).join('')||'<span class="hint" style="margin:0">Todo al día. No hay nada pendiente.</span>'}</div></div>${ovPanels()}`}
 function rolHtml(){const L=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3),st=L.filter(x=>(x.role|0)>=1).sort((a,b)=>(b.role|0)-(a.role|0)||String(a.name).localeCompare(String(b.name),'es')),oth=L.filter(x=>(x.role|0)===0).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));
  const row=r=>{const rl=r.role|0,on=(r.prev|0)===1;return `<div class="gmc"><div class="gmh"><b>${esc(r.name)}</b><span class="gms">${esc(r.email||'')}</span></div><div class="row"><div class="seg" role="group" aria-label="Rol de ${esc(r.name)}">${[0,1,2].map(v=>`<button type="button" data-act="admrole" data-u="${esc(r.id)}" data-r="${v}" aria-pressed="${rl===v}">${['Ninguno','Ver','Admin'][v]}</button>`).join('')}</div>${rl===2?`<button class="btn sm ${on?'ghost':'pri'}" data-act="gprev" data-u="${esc(r.id)}" data-v="${on?0:1}">${on?'Quitar acceso a juegos sin publicar':'Dar acceso a juegos sin publicar'}</button>`:''}</div></div>`};
  return `<div class="grid"><p class="hint" style="margin:0"><b>Ver</b>: puede consultar las cuentas. <b>Admin</b>: además gestiona incidencias, autoriza Game Masters y elimina cuentas. Solo tú das o quitas roles.</p><b>Equipo (${st.length})</b><div class="alist">${st.map(row).join('')||'<p class="hint">Todavía no hay nadie con permisos.</p>'}</div><b>Dar un rol a otra cuenta</b><div class="row"><select id="rolsel" aria-label="Cuenta">${oth.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')||'<option value="">No hay cuentas</option>'}</select><button class="btn sm" data-act="rolpick" data-r="1">Dar «Ver»</button><button class="btn sm pri" data-act="rolpick" data-r="2">Dar «Admin»</button></div></div>`}
@@ -3113,7 +3147,7 @@ function simFx(dir,then){if(lfRM()){then();return}
  document.body.appendChild(o);setTimeout(then,dir==='in'?720:620);setTimeout(()=>o.classList.add('end'),dir==='in'?1150:1000);setTimeout(()=>o.remove(),dir==='in'?1750:1600)}
 function goAdmin(tab){const wasSim=scr!=='admin';exitFx(()=>simFxIf(wasSim,()=>{store.cur=null;store.npcCur=null;admTab=['rp','gm','jg','rol','set','acc','ov'].includes(tab)?tab:'ov';admSig='';admOpen=null;admState=null;regCache=null;scr='admin';dockSig='';try{const d=$('#dlg');if(d.open)d.close()}catch(e){}try{save()}catch(e){}render()}))}
 function simFxIf(c,f){if(c&&session&&session.owner)simFx('out',f);else f()}
-function admPaint(){if(admTab==='ov'||admTab==='rol'||admTab==='set'){if(regCache)admView(true);else{admShow('<p class="hint">Cargando…</p>');admLoad()}Promise.all([rpLoad(),gmLoad()]).then(()=>{if(admLive()&&admTab==='ov')admView(true)}).catch(()=>{});return}
+function admPaint(){if(admTab==='ov'&&Date.now()-admX.at>45000){admX.at=Date.now();admXLoad()}if(admTab==='ov'||admTab==='rol'||admTab==='set'){if(regCache)admView(true);else{admShow('<p class="hint">Cargando…</p>');admLoad()}Promise.all([rpLoad(),gmLoad()]).then(()=>{if(admLive()&&admTab==='ov')admView(true)}).catch(()=>{});return}
 if(admTab==='jg'){loadGames().then(()=>{if(admLive()&&admTab==='jg'){if(!regCache)admLoad();else admView(true)}});if(regCache)admView(true);else admLoad();return}
  if(admTab==='gm'){admShow(gmAdmHtml());gmLoad().then(()=>{if(admLive()&&admTab==='gm')admShow(gmAdmHtml())});return}
  if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admLive()&&admTab==='rp')admShow(rpAdmHtml())}).catch(()=>{});return}
@@ -3439,9 +3473,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.82';
-const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.81 a v00.01.82. Panel de administración: se elimina el botón duplicado Simular usuario de la cabecera; queda el de la barra superior.';
+const APPV='00.01.83';
+const APPN='Actualización grande.';
+const APPD='Actualiza de v00.01.82 a v00.01.83. Panel de administración a ancho completo en PC y tablet, con resumen ampliado: usuarios en línea, cuentas por rol, Game Masters, partidas, estado de juegos, últimas altas, incidencias recientes y estado del servidor.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
