@@ -2760,10 +2760,37 @@ html[data-dev=desktop] body.admbub .adp{padding-top:32px}
 .lglegal button,.lgllnk{background:none;border:0;padding:4px 2px;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;min-height:32px}
 .lglegal button:hover,.lgllnk:hover{text-decoration-thickness:2px}
 .lglegal button:focus-visible,.lgllnk:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:4px}
-.legal{display:grid;gap:8px;max-height:62dvh;overflow:auto;padding-right:6px;font-size:.95rem;line-height:1.5;overscroll-behavior:contain}
-.legal h4{margin:12px 0 0;font-size:1rem;color:var(--head)}
-.legal p,.legal ul{margin:0}.legal ul{padding-left:20px;display:grid;gap:4px}
-.legal small{color:var(--muted)}
+dialog.lgld{width:min(660px,calc(100vw - 24px));padding:22px 22px 100px;background:var(--h-bg,var(--surface));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+dialog.lgld:focus,dialog.lgld:focus-visible{outline:none}
+dialog.lgld>.grid{gap:14px}
+dialog.lgld h3{display:flex;align-items:center;gap:12px;margin:0;font-size:1.3rem;line-height:1.15}
+.lglic{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--pc,#2563EB),var(--acc,#7C3AED));box-shadow:0 8px 18px -8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3)}
+.lglic svg{width:22px;height:22px}
+.lglmeta{margin:-8px 0 0 54px;font-size:.8rem;color:var(--h-mut,var(--muted))}
+.lgltabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:16px;background:var(--seg-bg,rgba(120,125,140,.14))}
+.lgltabs button{border:0;border-radius:12px;padding:10px 8px;min-height:44px;font:inherit;font-weight:700;font-size:.92rem;background:transparent;color:var(--h-mut,var(--muted));cursor:pointer;transition:background .22s,color .22s,box-shadow .22s}
+.lgltabs button[aria-pressed=true]{background:var(--seg-on,var(--h-card,#fff));color:var(--seg-ink,var(--h-ink,var(--ink)));box-shadow:0 2px 8px -2px rgba(0,0,0,.28)}
+.lgltabs button:focus-visible,.lglall:focus-visible,.lglsec summary:focus-visible{outline:2px solid var(--pc,currentColor);outline-offset:2px}
+.lglbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:2px 2px -4px;font-size:.82rem;color:var(--h-mut,var(--muted))}
+.lglall{background:none;border:0;padding:6px 4px;font:inherit;font-weight:700;color:var(--acc,var(--pc,inherit));text-decoration:underline;text-underline-offset:2px;cursor:pointer;min-height:32px}
+.lglintro{display:grid;gap:6px;padding:12px 14px;border-radius:14px;border:1px solid var(--h-line,var(--line));background:var(--in-bg,rgba(120,125,140,.08));font-size:.92rem;line-height:1.55}
+.lglintro p,.lglintro ul{margin:0}
+.lglsec{border:1px solid var(--h-line,var(--line));border-radius:16px;background:var(--in-bg,rgba(120,125,140,.06));overflow:hidden;transition:border-color .2s}
+.lglsec[open]{border-color:var(--pc,var(--h-line))}
+.lglsec summary{list-style:none;display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:54px;cursor:pointer;font-weight:700;font-size:.98rem;line-height:1.25;-webkit-tap-highlight-color:transparent}
+.lglsec summary::-webkit-details-marker{display:none}
+.lglsec summary span{flex:1}
+.lgln{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:800 .82rem var(--sans,system-ui);color:#fff;background:linear-gradient(135deg,var(--pc,#2563EB),var(--acc,#7C3AED))}
+.lglch{flex:none;width:9px;height:9px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg);margin:-4px 4px 0 0;opacity:.6;transition:transform .25s,margin .25s}
+.lglsec[open] .lglch{transform:rotate(225deg);margin-top:4px}
+.lglb{display:grid;gap:8px;padding:0 16px 14px 56px;font-size:.92rem;line-height:1.55;color:var(--h-ink,var(--ink))}
+.lglb p,.lglb ul{margin:0}.lglb ul{padding-left:18px;display:grid;gap:4px}
+.lglb a,.lglintro a,.lglcon a{color:var(--acc,var(--pc,inherit));font-weight:700;text-underline-offset:2px;word-break:break-word}
+.lglcon{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;border:1px solid var(--h-line,var(--line));background:var(--in-bg,rgba(120,125,140,.08));font-size:.92rem;line-height:1.4}
+.lglcon .lglic{width:38px;height:38px;border-radius:12px}
+.lglcon div{min-width:0}
+@media(max-width:480px){dialog.lgld{padding:18px 16px 96px}.lglb{padding:0 14px 14px 14px}.lglmeta{margin-left:54px}}
+@media(prefers-reduced-motion:no-preference){.lglsec[open] .lglb{animation:rowin .26s ease-out both}dialog.lgld .lglbody{animation:rowin .28s ease-out both}}
 </style>
 </head><body>
 <div class="wrap" id="app"></div>
@@ -3590,9 +3617,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.101';
-const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.100 a v00.01.101. Modo Game Master: cada partida tiene ahora un cronómetro. Botón Comenzar partida; el GM puede Pausar, Posponer partida (el botón pasa a Continuar partida) o Finalizar. El cronómetro se detiene al pausar, posponer o finalizar y sigue al continuar. Al finalizar, todos los jugadores reciben un resumen: tiempo, NPC fallecidos, jugadores caídos y revividos y quién recibió más daño. ADMIN/ALPHA: requiere campos nuevos en la colección partidas del servidor (tst, tacc, tseg, stats); ver docs/servidor-cronometro.md.';
+const APPV='00.01.102';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.101 a v00.01.102. Legal: rediseño de las ventanas del Aviso legal y de la Protección de datos (apartados desplegables, cambio entre ambos textos, enlaces y contacto).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3743,8 +3770,15 @@ datos:['Protección de datos',[
 ['h','10. Cambios en esta política'],
 ['p','Esta política puede actualizarse. La versión vigente es la publicada en la app.']
 ]]};
-function legalHtml(k){const d=LEGAL[k];if(!d)return'';return '<div class="legal" tabindex="0">'+d[1].map(([t,v])=>t==='h'?'<h4>'+esc(v)+'</h4>':t==='ul'?'<ul>'+v.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<p>'+esc(v)+'</p>').join('')+'</div>'}
-function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(d[0],legalHtml(k),true)}
+const LEG_DATE='15 de octubre de 2026';
+const LEG_IC={aviso:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',datos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 8l8 6 8-6"/></svg>'};
+function legalLnk(t){return esc(t).split(LEG_MAIL).join('<a href="mailto:'+LEG_MAIL+'">'+LEG_MAIL+'</a>').split(LEG_URL).join('<a href="'+LEG_URL+'" target="_blank" rel="noopener">'+LEG_URL+'</a>').split('www.aepd.es').join('<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>')}
+function legalBody(k){const d=LEGAL[k];if(!d)return'';let intro='';const secs=[];
+ d[1].forEach(([t,v])=>{if(t==='h'){const m=/^(\d+)\.\s*(.*)$/.exec(v);secs.push({n:m?m[1]:'',t:m?m[2]:v,b:''})}else{const h=t==='ul'?'<ul>'+v.map(x=>'<li>'+legalLnk(x)+'</li>').join('')+'</ul>':'<p>'+legalLnk(v)+'</p>';if(secs.length)secs[secs.length-1].b+=h;else intro+=h}});
+ return `<div class="lglbody">${intro?`<div class="lglintro">${intro}</div>`:''}<div class="lglbar"><span>${secs.length} apartados</span><button type="button" class="lglall" data-act="lglall">Desplegar todo</button></div><div class="grid" style="gap:10px">${secs.map((x,i)=>`<details class="lglsec"${i===0?' open':''}><summary><b class="lgln" aria-hidden="true">${esc(x.n||i+1)}</b><span>${esc(x.t)}</span><i class="lglch" aria-hidden="true"></i></summary><div class="lglb">${x.b}</div></details>`).join('')}</div></div>`}
+function legalHtml(k){return `<div class="lgltabs" role="group" aria-label="Documento legal">${['aviso','datos'].map(x=>`<button type="button" data-act="legalt" data-v="${x}" aria-pressed="${x===k}">${LEGAL[x][0]}</button>`).join('')}</div><div id="lglc" aria-live="polite">${legalBody(k)}</div><div class="lglcon"><span class="lglic" aria-hidden="true">${LEG_IC.mail}</span><div><b>¿Dudas o quieres ejercer tus derechos?</b><br><a href="mailto:${LEG_MAIL}">${LEG_MAIL}</a></div></div>`}
+function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(`<span class="lglic" aria-hidden="true">${LEG_IC[k]}</span><span id="lglt">${d[0]}</span>`,`<p class="lglmeta">Revisado el ${LEG_DATE}</p>`+legalHtml(k),true);const dl=$('#dlg');if(dl){dl.classList.add('lgld');dl.setAttribute('tabindex','-1');try{dl.focus({preventScroll:true})}catch(e){}}}
+function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contains('lgld'))return;const c=dl.querySelector('#lglc'),t=dl.querySelector('#lglt'),ic=dl.querySelector('h3 .lglic');if(!c)return;c.innerHTML=legalBody(k);if(t)t.textContent=LEGAL[k][0];if(ic)ic.innerHTML=LEG_IC[k];dl.querySelectorAll('.lgltabs button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===k)));dl.scrollTo&&dl.scrollTo({top:0,behavior:'smooth'})}
 function legalLinks(acc){const a='<button type="button" data-act="legala">Aviso legal</button>',b=`<button type="button" data-act="legald">${acc?'Política de protección de datos':'Protección de datos'}</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+a+' y la '+b+'.':a+'<span aria-hidden="true">·</span>'+b}</p>`}
 function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal</button><button type="button" class="btn" data-act="legald">Protección de datos</button></div></div></div>`,true)}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
@@ -5107,6 +5141,8 @@ document.addEventListener('click',e=>{
   case 'ajustes':ajustesDlg();break;
   case 'legala':legalDlg('aviso');break;
   case 'legald':legalDlg('datos');break;
+  case 'legalt':legalSwap(b.dataset.v);break;
+  case 'lglall':{const ds=Array.from(document.querySelectorAll('#dlg .lglsec')),all=ds.every(x=>x.open);ds.forEach(x=>x.open=!all);b.textContent=all?'Desplegar todo':'Plegar todo';break}
   case 'jgtoggle':jgToggle();break;
   case 'chkupd2':checkUpdate(true).then(x=>toast(x==='new'?'Hay una actualización disponible':x==='same'?'Ya tienes la última versión':'No se pudo comprobar ahora')).catch(()=>toast('No se pudo comprobar ahora'));break;
   case 'notif':notifDlg();rpLoad().then(()=>{if(!Array.from(document.querySelectorAll('#dlg textarea')).some(t=>t.value)&&$('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
