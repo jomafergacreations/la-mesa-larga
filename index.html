@@ -2892,12 +2892,12 @@ async function beat(){if(!session||session.owner||document.hidden||Date.now()<fs
 async function onlRefresh(){if(onlBusy||!canInc()||document.hidden||Date.now()<fsCool)return;onlBusy=true;onlT=Date.now();try{const L=await fsList('users');onlL=L.filter(r=>!r.deleted&&isOn(r)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));onlDraw()}catch(e){}finally{onlBusy=false}}
 function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!booting&&(scr==='menu'&&(document.querySelector('#app .bubbles')||store.mode==='gm')));let e=document.getElementById('onl');
  if(!on){if(e)e.remove();return}
- if(Date.now()-onlT>55000&&!onlBusy){beat();onlRefresh()}
+ if(Date.now()-onlT>4500&&!onlBusy)onlRefresh()
  if(!e){e=document.createElement('div');e.id='onl';e.addEventListener('click',ev=>{if(ev.target.closest('[data-onl]')){onlOpen=!onlOpen;onlDraw()}});b.appendChild(e)}
  const n=onlL.length,rn=r=>(r.role|0)>=3?'Superusuario':(r.role|0)>=2?'Administrador':'';
  const h=(onlOpen?'':`<button type="button" class="onb" data-onl="1" aria-expanded="${onlOpen}" aria-label="${n} ${n===1?'usuario':'usuarios'} en línea"><i class="ond" aria-hidden="true"></i><b>${n}</b><span>en línea</span></button>`)+(onlOpen?`<div class="onp" role="status" data-onl="1" title="Toca para cerrar"><b>Conectados ahora</b>${n?onlL.slice(0,30).map(r=>`<div class="onr"><i class="ond" aria-hidden="true"></i><span>${esc(r.name||'Usuario')}</span>${rn(r)?`<em>${rn(r)}</em>`:''}</div>`).join(''):'<p class="hint" style="margin:0">Nadie conectado.</p>'}${n>30?`<p class="hint" style="margin:4px 0 0">y ${n-30} más…</p>`:''}</div>`:'');
  if(e.dataset.s!==h){e.dataset.s=h;e.innerHTML=h}}catch(x){}}
-setInterval(()=>{beat();onlRefresh()},60000);setTimeout(()=>{beat();onlRefresh()},4000);
+setInterval(beat,60000);setInterval(onlRefresh,5000);setTimeout(()=>{beat();onlRefresh()},4000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){beat();onlRefresh()}});
 document.addEventListener('pointerdown',e=>{if(onlOpen&&!(e.target.closest&&e.target.closest('#onl'))){onlOpen=false;onlDraw()}},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&onlOpen){onlOpen=false;onlDraw()}});
@@ -3495,9 +3495,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.87';
+const APPV='00.01.88';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.86 a v00.01.87. Nuevo diseño de los avisos emergentes (píldora con icono de confirmación, adaptada al tema claro y oscuro) y se quita el botón Copiar código de Añadir jugador (queda Copiar invitación).';
+const APPD='Actualiza de v00.01.87 a v00.01.88. Las notificaciones (amistades, invitaciones, solicitudes) y el contador En línea se refrescan cada 5 s, y la lista de partidas también. Si PocketBase responde 429 (límite de peticiones) la app se pausa 5 minutos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4191,7 +4191,7 @@ async function loadPart(pid){if(!session)return;
   const k=store.cur;if(k&&store.pjc[k]&&store.pjc[k]._pj.pid===pid){const x=pjm[store.pjc[k]._pj.uid];if(x&&x.rev>(store.pjc[k].rev|0)&&!pjDirty.has(k))pullPJ(k,x.raw)}
   if(changed&&scr==='part'&&partId===pid&&!store.cur)render(1)}catch(e){}}
 let hpBusy=false;setInterval(async()=>{if(!session||document.hidden||hpBusy||store.cur)return;if(scr!=='part'&&scr!=='ppart')return;hpBusy=true;try{if(scr==='part'&&partId)await loadPart(partId);else if(scr==='ppart')await loadParts()}catch(e){}hpBusy=false},3500);
-setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},8000);
+setInterval(()=>{if(!session||document.hidden)return;if(!store.cur||(store.pjc&&store.pjc[store.cur])){loadParts();if(partId&&(scr==='part'||store.cur))loadPart(partId)}else loadParts()},5000);
 const ENVSVG='<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="36" rx="5" fill="currentColor" opacity=".9"/><path class="flap" d="M6 20l26 20 26-20" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';
 function envFx(txt,kind){let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}if(red)return;const o=document.createElement('div');o.id='envfx';o.className=kind||'open';o.innerHTML=`<div class="en">${ENVSVG}<div class="ec"></div></div><b>${esc(txt)}</b>`;document.body.appendChild(o);setTimeout(()=>o.classList.add('out'),1250);setTimeout(()=>o.remove(),1600)}
 function rdName(d){try{const c=JSON.parse(d);return (c.name||'Sin nombre')+' · nivel '+(c.level||1)}catch(e){return 'Personaje'}}
@@ -4378,7 +4378,7 @@ const socN=()=>soc.inq.length+soc.invs.length+soc.gmReq.length+soc.myReq.filter(
 async function socEnsureCode(){if(soc.code||!session)return;
  try{const d=await fs('GET','codigos/'+session.uid);if(d){const r=fbDec(d);soc.code=r.code||'';if(r.name!==session.name)fs('PATCH','codigos/'+session.uid,fbEnc({name:session.name})).catch(()=>{});return}}catch(e){return}
  for(let i=0;i<5;i++){const c=fcNew();try{await fs('PATCH','codigos/'+session.uid,fbEnc({uid:session.uid,code:c,name:session.name}),'&currentDocument.exists=false');soc.code=c;return}catch(e){if(e.code==='FS409'){try{const d=await fs('GET','codigos/'+session.uid);if(d){soc.code=fbDec(d).code||'';return}}catch(x){}}else if(e.code!=='FS400')return}}}
-async function socLoad(force){if(!session||soc.busy||document.hidden||(!force&&Date.now()-soc.at<20000)||Date.now()<fsCool)return;soc.busy=true;
+async function socLoad(force){if(!session||soc.busy||document.hidden||(!force&&Date.now()-soc.at<4500)||Date.now()<fsCool)return;soc.busy=true;
  try{await socEnsureCode();const u=session.uid,ok=p=>p.then(x=>x,()=>null);
   const [A,B,I,R1,R2,P,O]=await Promise.all([ok(fsQuery('amistades','a',u)),ok(fsQuery('amistades','b',u)),ok(fsQuery('invitaciones','dest',u)),ok(fsQuery('solicitudes','uid',u)),ok(fsQuery('solicitudes','gm',u)),ok(fsList('presencia')),ok(fsQuery('invitaciones','gm',u))]);
   if(!A&&!B&&!I&&!R1&&!R2){soc.ok=false;return}soc.ok=true;
@@ -4394,7 +4394,7 @@ async function socLoad(force){if(!session||soc.busy||document.hidden||(!force&&D
   const sg=JSON.stringify([ids,soc.fr.map(x=>[x.id,socOn(x.uid)])]);const ch=sg!==soc.sig;soc.sig=sg;
   if(ch){topbarSync();if(scr==='menu'&&!store.cur&&!document.querySelector('#dlg[open]'))render(1)}
   if(socRe&&document.getElementById('socmark')&&$('#dlg').open)socRe()}catch(e){}finally{soc.busy=false}}
-setInterval(()=>socLoad(),45000);setTimeout(()=>socLoad(true),5000);
+setInterval(()=>socLoad(),5000);setTimeout(()=>socLoad(true),5000);
 const socDot=u=>`<i class="ovd${socOn(u)?'':' off'}" aria-hidden="true"></i>`;
 function friendsDlg(){socRe=friendsDlg;
  const fr=soc.fr.map(f=>`<div class="frr"><span>${socDot(f.uid)}<b>${esc(f.name)}</b><small>${socOn(f.uid)?'En línea':soc.pres[f.uid]?'Visto '+ago(soc.pres[f.uid]):'Desconectado'}</small></span><button type="button" class="btn sm ghost danger" data-act="frm1" data-id="${esc(f.id)}" data-n="${esc(f.name)}">Eliminar</button></div>`).join('');
