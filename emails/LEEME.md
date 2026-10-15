@@ -1,6 +1,6 @@
 # Plantillas de correo tematizadas (sin activar)
 
-Paleta del inicio de sesión (rojo borgoña + dorado sobre fondo oscuro). Los correos no pueden cambiar de tema, así que usan siempre la versión oscura.
+Mismo aspecto que la app: logo real, la mesa con cajas, barajas y libros, y botón degradado rojo. Tema claro por defecto y oscuro automático en los clientes que lo admiten (Apple Mail, Gmail móvil, Outlook moderno). Las imágenes se cargan desde GitHub Pages (`icon-192.png` y `emails/img/`), así que deben seguir publicadas.
 
 PocketBase > Ajustes > Plantillas de correo:
 - `verificacion.html` -> "Verificación de correo". Asunto sugerido: `Verifica tu cuenta de {APP_NAME}`
