@@ -1414,14 +1414,45 @@ html[data-dev=desktop] body.authdark #app:has(.authhub){zoom:var(--az,1);min-hei
 .tbd hr{border:0;border-top:1px solid rgba(120,125,140,.28);margin:5px 4px}.tbrole{font-style:normal;font-size:.62rem;font-weight:800;letter-spacing:.07em;padding:2px 7px;border-radius:99px;background:rgba(37,99,235,.16);color:var(--pc)}.tbrole.su{background:linear-gradient(135deg,#F59E0B,#EA580C);color:#fff}.tbrole.gm{background:rgba(124,58,237,.2);color:#7C3AED}
 .tbi .bdg{position:static;margin-left:2px}
 html[data-dev=desktop] .hb{display:none}
-.jgwrap{grid-column:1/-1;display:block;position:relative;z-index:1}.bubbles.hubmain .bpb{grid-column:1/-1}
-html[data-dev] .bubbles .jgwrap>.bub:nth-child(n){width:100%;box-sizing:border-box;align-self:auto}.jgin{display:none;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px;margin-top:20px}
+/* burbujas de la pantalla principal */
+.hmx{all:unset;box-sizing:border-box;cursor:pointer;position:relative;isolation:isolate;display:grid;align-content:end;gap:4px;width:100%;min-height:196px;padding:26px 30px;border-radius:34px 34px 34px 8px;overflow:hidden;color:#fff;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;-webkit-tap-highlight-color:transparent}
+.hmx:hover{transform:translateY(-3px)}.hmx:active{transform:scale(.985)}.hmx:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.hmx::before{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 34px),repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 34px);-webkit-mask-image:linear-gradient(100deg,#000 0%,transparent 70%);mask-image:linear-gradient(100deg,#000 0%,transparent 70%)}
+.hmx .tt{display:grid;gap:3px;max-width:min(62%,430px);position:relative;z-index:2}
+.hmx .hme{font-style:normal;font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;opacity:.78;display:flex;align-items:center;gap:8px}.hmx .hme::before{content:"";width:22px;height:2px;border-radius:2px;background:currentColor;opacity:.7}
+.hmx .tt b{font-size:clamp(1.7rem,6.4vw,2.5rem);font-weight:900;line-height:1;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.25)}
+.hmx .tt>span{font-size:.9rem;line-height:1.35;opacity:.9}
+.hmx .go{position:absolute;right:20px;bottom:18px;z-index:3;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.4rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform .4s cubic-bezier(.2,.8,.2,1),background .2s}
+.hmx:hover .go{background:rgba(255,255,255,.34)}.jgb .go{transform:rotate(90deg)}.jgwrap[data-open="1"] .jgb .go{transform:rotate(-90deg)}
+.hmart{position:absolute;inset:0;z-index:1;pointer-events:none}
+.jgb{background:radial-gradient(120% 140% at 85% 10%,#a1307a 0%,transparent 55%),linear-gradient(135deg,#1c1048 0%,#3b1a72 52%,#5b1f6e 100%);box-shadow:0 26px 44px -22px rgba(76,29,149,.8),inset 0 1px 0 rgba(255,255,255,.2)}
+.hmcards{position:absolute;right:max(78px,7%);top:50%;width:200px;height:150px;translate:0 -50%}
+.hmc{position:absolute;bottom:0;left:50%;width:88px;height:124px;margin-left:-44px;border-radius:14px;display:grid;place-items:center;border:2px solid rgba(255,255,255,.55);box-shadow:0 14px 26px -8px rgba(0,0,0,.6);transform-origin:50% 120%;transform:translateX(var(--x)) rotate(var(--r));transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.hmc svg{width:42px;height:42px}
+.hmc.c1{--x:-52px;--r:-14deg;background:linear-gradient(160deg,#5b7cff,#2a1b8a);color:#fff}
+.hmc.c2{--x:0px;--r:0deg;z-index:2;background:linear-gradient(160deg,#fff35a,#e0d100);color:#0a0a0c;border-color:#0a0a0c}
+.hmc.c3{--x:52px;--r:14deg;background:linear-gradient(160deg,#ffb067,#c2410c);color:#fff}
+.jgb:hover .hmc.c1,.jgwrap[data-open="1"] .hmc.c1{--x:-70px;--r:-22deg}.jgb:hover .hmc.c3,.jgwrap[data-open="1"] .hmc.c3{--x:70px;--r:22deg}.jgb:hover .hmc.c2,.jgwrap[data-open="1"] .hmc.c2{--r:0deg;translate:0 -8px}
+.bpb{background:radial-gradient(90% 120% at 88% 30%,#0f8f86 0%,transparent 60%),linear-gradient(135deg,#04222d 0%,#06444f 55%,#08665f 100%);box-shadow:0 26px 44px -22px rgba(6,95,100,.85),inset 0 1px 0 rgba(255,255,255,.18)}
+.bpb::before{-webkit-mask-image:linear-gradient(100deg,#000 0%,transparent 75%);mask-image:linear-gradient(100deg,#000 0%,transparent 75%)}
+.hmradar{position:absolute;right:max(76px,7%);top:50%;width:156px;height:156px;translate:0 -50%;border-radius:50%;border:1.5px solid rgba(94,234,212,.7);background:radial-gradient(circle,rgba(45,212,191,.2),rgba(45,212,191,.04) 70%);box-shadow:0 0 34px rgba(45,212,191,.28),inset 0 0 22px rgba(45,212,191,.18)}
+.hmradar::before,.hmradar::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(94,234,212,.4)}.hmradar::before{inset:22%}.hmradar::after{inset:42%}
+.hmsweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(94,234,212,.6),rgba(94,234,212,0) 30%);background-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 70%,#000);animation:hmSweep 4.4s linear infinite}
+.hmradar .hmsweep::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:50%;transform-origin:50% 0;rotate:180deg;background:linear-gradient(#5eead4,transparent);opacity:.9;translate:-1px 0}
+.hmb{position:absolute;width:9px;height:9px;border-radius:50%;background:#99f6e4;box-shadow:0 0 10px #5eead4}.hmb::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid #5eead4;opacity:0}
+.hmb.b1{left:24%;top:30%}.hmb.b2{left:66%;top:44%}.hmb.b3{left:44%;top:72%}
+html[data-dev=phone] .hmx{min-height:176px;padding:20px 20px 22px;border-radius:28px 28px 28px 8px}
+html[data-dev=phone] .hmx .tt{max-width:72%}html[data-dev=phone] .hmx .go{right:14px;bottom:14px;width:40px;height:40px}
+html[data-dev=phone] .hmcards{right:8px;top:10px;translate:none;scale:.72;transform-origin:100% 0}html[data-dev=phone] .hmradar{right:-8px;top:-8px;translate:none;scale:.78;transform-origin:100% 0}
+@media(prefers-reduced-motion:no-preference){
+ @keyframes hmSweep{to{transform:rotate(360deg)}}@keyframes hmPing{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.6);opacity:0}}@keyframes hmBob{50%{translate:0 -5px}}
+ .hmb::after{animation:hmPing 2.4s ease-out infinite}.hmb.b2::after{animation-delay:.8s}.hmb.b3::after{animation-delay:1.6s}
+ .hmc{animation:hmBob 5.5s ease-in-out infinite}.hmc.c2{animation-delay:-1.8s}.hmc.c3{animation-delay:-3.4s}.jgwrap[data-open="1"] .hmc.c2{animation:none}}
+
+.jgwrap{grid-column:1/-1;display:block;position:relative;z-index:1}.bubbles.hubmain>.hmx{grid-column:1/-1}
+
+.jgin{display:none;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px;margin-top:20px}
 .jgwrap[data-open="1"] .jgin{display:grid}
-.bubbles.hubmain .jgb .go,.bubbles.hubmain .bpb .go{display:block;font-size:1.9rem;line-height:1;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.jgb .go{transform:rotate(90deg)}.jgwrap[data-open="1"] .jgb .go{transform:rotate(-90deg)}
-html[data-dev] .bubbles.hubmain>.bpb,html[data-dev] .bubbles.hubmain .jgb{min-height:170px;padding-top:106px}
-html[data-dev=phone] .bubbles.hubmain>.bpb,html[data-dev=phone] .bubbles.hubmain .jgb{min-height:140px;padding-top:80px}
-.jgb{background:radial-gradient(circle at 18% 18%,#8B5CF6,#4F46E5 55%,#1E3A8A)!important}
 @keyframes jgIn{from{opacity:0;transform:translateY(28px) scale(.92)}to{opacity:1;transform:none}}@keyframes jgOut{to{opacity:0;transform:translateY(14px) scale(.96)}}
 .jgin.anim>.bub{animation:jgIn .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*95ms+60ms)}
 .jgin.anim.out>.bub{animation:jgOut .22s ease-in both;animation-delay:calc((2 - var(--i))*45ms)}
@@ -3520,6 +3551,7 @@ function authFit(){try{const b=document.body;const reg=document.documentElement.
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
 let jgOpen=false;
+const hmx=(cls,act,eye,title,sub,art,extra)=>`<button type="button" class="hmx ${cls}" data-act="${act}"${extra||''}><span class="hmart" aria-hidden="true">${art}</span><span class="tt"><i class="hme">${eye}</i><b>${title}</b><span>${sub}</span></span><span class="go" aria-hidden="true">→</span></button>`;
 function jgToggle(){const w=document.getElementById('jgwrap'),inn=document.getElementById('jgin');if(!w||!inn||w.dataset.busy)return;const open=!jgOpen;jgOpen=open;const btn=w.querySelector('[data-act=jgtoggle]');if(btn){btn.setAttribute('aria-expanded',String(open));const sp=btn.querySelector('.tt>span');if(sp)sp.textContent=open?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.'}
  if(lfRM()||!inn.animate){w.dataset.open=open?1:0;return}
  w.dataset.busy=1;inn.style.overflow='hidden';
@@ -3535,9 +3567,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.95';
-const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.93 a v00.01.95. Pantalla principal rediseñada: dos burbujas, Juegos y Buscar partida. Al pulsar Juegos se expande con animación (altura + entrada escalonada) mostrando Cosmere, Cyberpunk y Dune; se vuelve a plegar al pulsarla otra vez (estado recordado mientras no se recargue). Incluye el arreglo del botón de cerrar flotante en móvil (v00.01.94).';
+const APPV='00.01.96';
+const APPN='Actualización media.';
+const APPD='Actualiza de v00.01.95 a v00.01.96. Burbujas de la pantalla principal con diseño propio: Juegos muestra un abanico de cartas (Cosmere, Cyberpunk, Dune) sobre degradado ciruela y Buscar partida un radar animado con ondas y puntos sobre degradado turquesa. Textura de rejilla, título grande y flecha circular; respetan el modo de movimiento reducido.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3851,9 +3883,9 @@ function screen0(){
   csOpt(0,'s','#9FC3F0',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)+csOpt(1,'g','#F0D58A',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas.','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1));
  const jgt=(i,h)=>h.replace('<button','<button style="--i:'+i+'"');
  return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles hubmain">
-  <div class="jgwrap" id="jgwrap" data-open="${jgOpen?1:0}">${hubTile('t1 jgb',DIEI,'Juegos',jgOpen?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.','jgtoggle',0).replace('data-act="jgtoggle"','data-act="jgtoggle" aria-expanded="'+(!!jgOpen)+'" aria-controls="jgin"')}
+  <div class="jgwrap" id="jgwrap" data-open="${jgOpen?1:0}">${hmx('jgb','jgtoggle','Tu biblioteca','Juegos',jgOpen?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.',`<span class="hmcards"><span class="hmc c1">${ORB}</span><span class="hmc c2">${CYBER}</span><span class="hmc c3">${DUNE}</span></span>`,' aria-expanded="'+(!!jgOpen)+'" aria-controls="jgin"')}
    <div class="jgin" id="jgin">${jgt(0,hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1))}${jgt(1,hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1))}${jgt(2,hubTile('t3 dun',DUNE,'Dune','Arenas, especia y el desierto de Arrakis.','dune',1))}</div></div>
-  ${hubTile('t2 bpb',LUPA,'Buscar partida','Únete con el código de tu Game Master o mira las salas de tus amigos.','partfind',0)}</div>${partsPlayer()}`}
+  ${hmx('bpb','partfind','Salas abiertas','Buscar partida','Únete con un código o mira las salas de tus amigos.','<span class="hmradar"><span class="hmsweep"></span><i class="hmb b1"></i><i class="hmb b2"></i><i class="hmb b3"></i></span>')}</div>${partsPlayer()}`}
 
 
 /* ---------- Creación de mazos: contador de vida (cada jugador ve solo el suyo) ---------- */
