@@ -1414,6 +1414,17 @@ html[data-dev=desktop] body.authdark #app:has(.authhub){zoom:var(--az,1);min-hei
 .tbd hr{border:0;border-top:1px solid rgba(120,125,140,.28);margin:5px 4px}.tbrole{font-style:normal;font-size:.62rem;font-weight:800;letter-spacing:.07em;padding:2px 7px;border-radius:99px;background:rgba(37,99,235,.16);color:var(--pc)}.tbrole.su{background:linear-gradient(135deg,#F59E0B,#EA580C);color:#fff}.tbrole.gm{background:rgba(124,58,237,.2);color:#7C3AED}
 .tbi .bdg{position:static;margin-left:2px}
 html[data-dev=desktop] .hb{display:none}
+.jgwrap{grid-column:1/-1;display:block;position:relative;z-index:1}.bubbles.hubmain .bpb{grid-column:1/-1}
+html[data-dev] .bubbles .jgwrap>.bub:nth-child(n){width:100%;box-sizing:border-box;align-self:auto}.jgin{display:none;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px;margin-top:20px}
+.jgwrap[data-open="1"] .jgin{display:grid}
+.bubbles.hubmain .jgb .go,.bubbles.hubmain .bpb .go{display:block;font-size:1.9rem;line-height:1;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.jgb .go{transform:rotate(90deg)}.jgwrap[data-open="1"] .jgb .go{transform:rotate(-90deg)}
+html[data-dev] .bubbles.hubmain>.bpb,html[data-dev] .bubbles.hubmain .jgb{min-height:170px;padding-top:106px}
+html[data-dev=phone] .bubbles.hubmain>.bpb,html[data-dev=phone] .bubbles.hubmain .jgb{min-height:140px;padding-top:80px}
+.jgb{background:radial-gradient(circle at 18% 18%,#8B5CF6,#4F46E5 55%,#1E3A8A)!important}
+@keyframes jgIn{from{opacity:0;transform:translateY(28px) scale(.92)}to{opacity:1;transform:none}}@keyframes jgOut{to{opacity:0;transform:translateY(14px) scale(.96)}}
+.jgin.anim>.bub{animation:jgIn .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*95ms+60ms)}
+.jgin.anim.out>.bub{animation:jgOut .22s ease-in both;animation-delay:calc((2 - var(--i))*45ms)}
 @media(prefers-reduced-motion:no-preference){dialog:has(>.cbub)[open]{animation:dlgfade .2s ease-out}dialog.dclosing:has(>.cbub){animation:dlgfadeo .16s ease-in forwards}}
 @keyframes dlgfade{from{opacity:0}to{opacity:1}}@keyframes dlgfadeo{to{opacity:0}}
 #topbar .tbi,#topbar .tbbrand{white-space:nowrap}#topbar .tbr{gap:4px}@media(max-width:1500px){html[data-dev=desktop] #topbar .tbi{padding:0 9px;gap:6px;font-size:.84rem}html[data-dev=desktop] #topbar .tbbrand b{font-size:.95rem}}@media(max-width:1360px){html[data-dev=desktop] #topbar .tbmode span{display:none}}@media(max-width:1100px){html[data-dev=desktop] #topbar .simpill span,html[data-dev=desktop] #topbar .tbi:not(.tbu):not(.tbbell)>span:not([aria-hidden]){display:none}}
@@ -3508,15 +3519,25 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
+let jgOpen=false;
+function jgToggle(){const w=document.getElementById('jgwrap'),inn=document.getElementById('jgin');if(!w||!inn||w.dataset.busy)return;const open=!jgOpen;jgOpen=open;const btn=w.querySelector('[data-act=jgtoggle]');if(btn){btn.setAttribute('aria-expanded',String(open));const sp=btn.querySelector('.tt>span');if(sp)sp.textContent=open?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.'}
+ if(lfRM()||!inn.animate){w.dataset.open=open?1:0;return}
+ w.dataset.busy=1;inn.style.overflow='hidden';
+ if(open){w.dataset.open=1;inn.classList.remove('out');inn.classList.add('anim');const h=inn.scrollHeight;
+  const a=inn.animate([{height:'0px',marginTop:'0px'},{height:h+'px',marginTop:'20px'}],{duration:420,easing:'cubic-bezier(.2,.8,.2,1)'});
+  a.onfinish=a.oncancel=()=>{inn.style.overflow='';inn.classList.remove('anim');delete w.dataset.busy};setTimeout(()=>{try{inn.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}},260)}
+ else{inn.classList.add('anim','out');const h=inn.offsetHeight;
+  const a=inn.animate([{height:h+'px',marginTop:'20px'},{height:'0px',marginTop:'0px'}],{duration:340,easing:'cubic-bezier(.4,0,.2,1)',delay:90,fill:'both'});
+  a.onfinish=a.oncancel=()=>{w.dataset.open=0;inn.style.overflow='';inn.classList.remove('anim','out');a.cancel();delete w.dataset.busy}}}
 function simBack(){try{const ph=document.documentElement.dataset.dev==='phone',on=!!(session&&session.owner&&!booting&&ph&&scr!=='admin');let e=document.getElementById('simback');if(!on){if(e)e.remove();return}if(!e){e=document.createElement('button');e.id='simback';e.type='button';e.dataset.act='admpanel';e.innerHTML=SHLD+'<span>Volver al panel</span>';document.body.appendChild(e)}}catch(x){}}
 function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(session&&!booting&&document.querySelector('#app .bubbles'));b.classList.toggle('hubs',on);let t=document.getElementById('htab');
  if(on&&!t){const w=document.createElement('div');w.innerHTML=AUTHBG;t=w.firstElementChild;if(t){t.id='htab';b.appendChild(t)}}else if(!on&&t)t.remove()}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.94';
-const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.93 a v00.01.94. Arreglo del botón de cerrar flotante en móvil: ya no salta ni rebota al abrir y cerrar las ventanas. La ventana ahora entra y sale solo con fundido (sin escala) para que el botón se quede quieto, y la burbuja aparece con un fundido suave sin efecto elástico.';
+const APPV='00.01.95';
+const APPN='Actualización grande.';
+const APPD='Actualiza de v00.01.93 a v00.01.95. Pantalla principal rediseñada: dos burbujas, Juegos y Buscar partida. Al pulsar Juegos se expande con animación (altura + entrada escalonada) mostrando Cosmere, Cyberpunk y Dune; se vuelve a plegar al pulsarla otra vez (estado recordado mientras no se recargue). Incluye el arreglo del botón de cerrar flotante en móvil (v00.01.94).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3828,10 +3849,11 @@ function screen0(){
  if(scr==='arch')return hubBar(['rol','Rol'])+csRoot('Roshar · la tierra de las tormentas','El archivo de las tormentas',`<div class="csso" role="status"><span class="csic w-r" aria-hidden="true">${STORM}</span><b>Próximamente</b><span>Las tormentas todavía se están formando. Vuelve pronto.</span></div>`,'ro');
  if(scr==='cosmere')return hubBar(['menu','Inicio'])+csRoot('Cosmere · la chispa de Adonalsium','Cosmere',
   csOpt(0,'s','#9FC3F0',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)+csOpt(1,'g','#F0D58A',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas.','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1));
- return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles">
-  ${hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1)}
-  ${hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1)}
-  ${hubTile('t3 dun',DUNE,'Dune','Arenas, especia y el desierto de Arrakis.','dune',1)}</div>${partsPlayer()}`}
+ const jgt=(i,h)=>h.replace('<button','<button style="--i:'+i+'"');
+ return hubBar()+`<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">La Mesa Larga</h1>${welcomeHTML()}<div class="bubbles hubmain">
+  <div class="jgwrap" id="jgwrap" data-open="${jgOpen?1:0}">${hubTile('t1 jgb',DIEI,'Juegos',jgOpen?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.','jgtoggle',0).replace('data-act="jgtoggle"','data-act="jgtoggle" aria-expanded="'+(!!jgOpen)+'" aria-controls="jgin"')}
+   <div class="jgin" id="jgin">${jgt(0,hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1))}${jgt(1,hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1))}${jgt(2,hubTile('t3 dun',DUNE,'Dune','Arenas, especia y el desierto de Arrakis.','dune',1))}</div></div>
+  ${hubTile('t2 bpb',LUPA,'Buscar partida','Únete con el código de tu Game Master o mira las salas de tus amigos.','partfind',0)}</div>${partsPlayer()}`}
 
 
 /* ---------- Creación de mazos: contador de vida (cada jugador ve solo el suyo) ---------- */
@@ -4236,7 +4258,7 @@ function pjLock(){try{const c=store&&store.cur&&store.chars&&store.chars.find(x=
  const bn=document.getElementById('pjdeadbn');
  if(dead){if(!bn){const h=document.querySelector('.chapter')||document.querySelector('main');if(h&&h.parentNode){const d=document.createElement('div');d.id='pjdeadbn';d.setAttribute('role','alert');d.innerHTML='<b>Personaje fallecido.</b> Su ficha y su vida están bloqueadas: solo el Game Master puede revivirlo.';h.parentNode.insertBefore(d,h)}}}else if(bn)bn.remove()}catch(e){}}
 {const rd=render;render=function(){const x=rd.apply(this,arguments);pjLock();return x}}
-const DEAD_OK=new Set(['home','go','help','prev','next','gohome','notif','theme','acct','logout','export','sheet','copytext','qmode','mode','tbm','qprev','qnext','qform','closedlg']);
+const DEAD_OK=new Set(['jgtoggle','home','go','help','prev','next','gohome','notif','theme','acct','logout','export','sheet','copytext','qmode','mode','tbm','qprev','qnext','qform','closedlg']);
 ['click','keydown','beforeinput','change'].forEach(ev=>document.addEventListener(ev,e=>{if(!document.body.classList.contains('pjdead'))return;const t=e.target;if(!t||!t.closest||t.closest('dialog,#fdock,.hdock,.steps'))return;
  if(ev==='click'){const b=t.closest('[data-act]');if(!b||DEAD_OK.has(b.dataset.act))return;e.preventDefault();e.stopImmediatePropagation();toast('Personaje fallecido: solo el Game Master puede revivirlo')}
  else if(t.matches&&t.matches('[data-f],[data-q]')){e.preventDefault();e.stopImmediatePropagation()}},true));
@@ -4290,7 +4312,6 @@ function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';ret
 function partsGM(){return `<section class="partsec"><div class="psh"><h2 class="hh2" style="margin:0">Mis partidas</h2><button class="btn pri" data-act="partnew">+ Nueva partida</button></div>
  ${parts.length?`<div class="npcgrid" style="margin-top:14px">${parts.map((p,i)=>`<article class="card npcc${gmStag?' stg':''}" style="--i:${i}">${p.end==='1'?`<button type="button" class="pcx" data-act="partdel" data-id="${p.id}" aria-label="Eliminar la partida finalizada de la lista" title="Eliminar de la lista">✕</button>`:''}<h3>${esc(p.name)}</h3><div class="meta ptags">${partTags(p)}</div><div class="row"><button class="btn pri" data-act="partopen" data-id="${p.id}">Abrir</button></div></article>`).join('')}</div>`:'<section class="glass" style="margin-top:14px"><p class="hint" style="margin:0">Aún no tienes partidas. Crea una e invita a tus jugadores para ver y editar sus fichas.</p></section>'}</section>`}
 function partsPlayer(){let h='';
- h+=`<section class="partsec"><button type="button" class="gmb findcard" data-act="partfind"><span class="gmi">${LUPA}</span><span class="fct"><b>Buscar partida</b><small>Únete con el código de tu Game Master o mira las salas de tus amigos.</small></span><i class="fca" aria-hidden="true">›</i></button></section>`;
  if(kicks.length)h+=`<section class="partsec"><h2 class="hh2">Expulsado de</h2><div class="npcgrid">${kicks.map((k,i)=>`<article class="card npcc" style="--i:${i}"><h3>${esc(k.pname||'Partida')}</h3><div class="meta"><span>Expulsado por ${esc(k.gmName||'el Game Master')}</span></div><p class="hint" style="margin:0"><b>Motivo:</b> ${esc(k.reason||'—')}</p><div class="row"><button class="btn ghost" data-act="kickdel" data-id="${k.id}">Eliminar de mi lista</button></div></article>`).join('')}</div></section>`;
  if(myParts.length)h+=`<section class="partsec"><h2 class="hh2">Mis partidas</h2><div class="npcgrid">${myParts.map((p,k)=>{const c=store.chars.find(x=>x.pid===p.id);return `<article class="card npcc" style="--i:${k}"><h3>${esc(p.name)}</h3><div class="meta ptags"><span>Game Master: ${esc(p.gmName||'—')}</span>${partTags(p)}</div><p class="hint" style="margin:0">${c?'Personaje: <b>'+esc(c.name||'Sin nombre')+'</b>':apState[p.id]==='n'?'El Game Master ha pedido otro personaje: no puedes volver a elegir el anterior.':'Sin personaje elegido.'}</p>${c?`<span class="apb ${apState[p.id]==='p'?'wait':'ok'}">${apState[p.id]==='p'?'Pendiente de aprobación del GM':'Aprobado por el GM'}</span>`:''}<div class="row">${c&&apState[p.id]==='y'?(reqState[p.id]==='1'?'<span class="apb wait">Cambio solicitado · esperando al GM</span>':denyState[p.id]==='1'?'<span class="apb wait">El GM denegó tu solicitud de cambio</span>':`<button class="btn" data-act="pjreq" data-p="${p.id}">Solicitar cambio de personaje</button>`):`<button class="btn" data-act="pjlink" data-p="${p.id}">${c?'Cambiar personaje':'Elegir personaje'}</button>`}<button class="btn pri" data-act="ppopen" data-p="${p.id}">Abrir partida</button><button class="btn ghost" data-act="partleave" data-p="${p.id}">Salir</button></div></article>`}).join('')}</div></section>`;
  return h}
@@ -4938,6 +4959,7 @@ document.addEventListener('click',e=>{
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
   case 'rpt':rptDlg();break;
   case 'ajustes':ajustesDlg();break;
+  case 'jgtoggle':jgToggle();break;
   case 'chkupd2':checkUpdate(true).then(x=>toast(x==='new'?'Hay una actualización disponible':x==='same'?'Ya tienes la última versión':'No se pudo comprobar ahora')).catch(()=>toast('No se pudo comprobar ahora'));break;
   case 'notif':notifDlg();rpLoad().then(()=>{if(!Array.from(document.querySelectorAll('#dlg textarea')).some(t=>t.value)&&$('#dlg').open&&$('#dlg').classList.contains('rptd')&&$('#dlg h2')&&/Notificaciones/.test($('#dlg').textContent.slice(0,40)))notifDlg()});break;
   case 'rprep':{const r=(rpMine||[]).find(x=>x.id===b.dataset.id);rptDlg('Sobre mi aviso «'+(r?String(r.text||'').slice(0,60):'')+'»: ');break}
