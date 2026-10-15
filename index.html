@@ -1416,6 +1416,9 @@ html[data-dev=desktop] body.authdark #app:has(.authhub){zoom:var(--az,1);min-hei
 html:not([data-dev=phone]) dialog .cbub.auto{display:none}
 html[data-dev=phone] dialog .cbub.auto{width:52px;height:52px;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 html[data-dev=phone] dialog:has(.cbub.auto)>.grid{padding-bottom:78px}
+
+html:not([data-dev=phone]) dialog.acctd .cbub:not(.auto){position:absolute;top:14px;right:14px;bottom:auto;width:42px;height:42px;box-shadow:0 6px 16px rgba(37,99,235,.4),inset 0 2px 0 rgba(255,255,255,.3)}
+html:not([data-dev=phone]) dialog.acctd .cbub svg{width:20px;height:20px}
 </style>
 
 <style id="lifecss">
@@ -2856,7 +2859,7 @@ const isOn=r=>!!r&&Date.now()-(+r.ping||0)<ONL_MS;
 let onlL=[],onlOpen=false,onlBusy=false,onlT=0;
 async function beat(){if(!session||document.hidden||Date.now()<fsCool)return;try{await fs('PATCH','users/'+session.uid,fbEnc({ping:Date.now()}))}catch(e){}}
 async function onlRefresh(){if(onlBusy||!canInc()||document.hidden||Date.now()<fsCool)return;onlBusy=true;onlT=Date.now();try{const L=await fsList('users');onlL=L.filter(r=>!r.deleted&&isOn(r)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));onlDraw()}catch(e){}finally{onlBusy=false}}
-function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!booting&&(scr==='menu'&&document.querySelector('#app .bubbles')));let e=document.getElementById('onl');
+function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!booting&&(scr==='menu'&&(document.querySelector('#app .bubbles')||store.mode==='gm')));let e=document.getElementById('onl');
  if(!on){if(e)e.remove();return}
  if(Date.now()-onlT>55000&&!onlBusy){beat();onlRefresh()}
  if(!e){e=document.createElement('div');e.id='onl';e.addEventListener('click',ev=>{if(ev.target.closest('[data-onl]')){onlOpen=!onlOpen;onlDraw()}});b.appendChild(e)}
@@ -3161,7 +3164,7 @@ function acctDlg(){
  <p class="hint" style="margin:0">Correo: <b>${esc(session.email)}</b></p>
  ${gmLicLabel()&&!session.owner?`<p class="hint" style="margin:0">Licencia de Game Master: <b>${esc(gmLicLabel())}</b></p>`:''}
  <div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?</button></div>
- ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>${esc(session.name)}</b>: está bloqueado porque tu rol es Superusuario.</p>':''}
+ ${session.owner?'<p class="hint" style="margin:0">Tu nombre de usuario es <b>'+esc(session.name)+'</b>: está bloqueado porque tu rol es Superusuario.</p>':''}
  ${`<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Imagen de usuario</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
  </div><div class="accR grid">
  <div class="grid"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}. Cuando se publique una actualización te avisaremos aquí y arriba del todo.</p><div class="row"><button class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div>
@@ -3436,9 +3439,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.80';
+const APPV='00.01.81';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.79 a v00.01.80. La lista de usuarios en línea se cierra al pulsar fuera o con Esc.';
+const APPD='Actualiza de v00.01.80 a v00.01.81. La burbuja de usuarios en línea también aparece en modo Game Master; el botón de cerrar de la ventana de cuenta pasa a la esquina superior derecha en PC; corregido el texto del nombre bloqueado del Superusuario.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
