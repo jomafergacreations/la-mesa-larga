@@ -1412,6 +1412,10 @@ html[data-dev=desktop] body.authdark #app:has(.authhub){zoom:var(--az,1);min-hei
 #onl .onp{min-width:200px;max-width:280px;max-height:50vh;overflow:auto;padding:12px 14px;border-radius:18px;border:1px solid var(--h-line,rgba(232,190,120,.24));background:var(--h-card,rgba(30,21,34,.92));color:var(--h-ink,inherit);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:var(--shadow,0 14px 30px -16px rgba(0,0,0,.6));display:grid;gap:7px;animation:onin .25s cubic-bezier(.2,.8,.2,1)}@keyframes onin{from{opacity:0;transform:translateY(8px) scale(.97)}}
 #onl .onr{display:flex;align-items:center;gap:8px;font-size:.88rem}#onl .onr em{margin-left:auto;font-style:normal;font-size:.72rem;color:var(--acc,inherit);font-weight:700}
 @media(prefers-reduced-motion:reduce){#onl .ond,#onl .onp{animation:none}#onl .onb{transition:none}}
+
+html:not([data-dev=phone]) dialog .cbub.auto{display:none}
+html[data-dev=phone] dialog .cbub.auto{width:52px;height:52px;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+html[data-dev=phone] dialog:has(.cbub.auto)>.grid{padding-bottom:78px}
 </style>
 
 <style id="lifecss">
@@ -3165,7 +3169,7 @@ ${session.owner?'':`<form id="renform" class="grid" novalidate><b>Nombre de usua
  ${session.owner?'':`<form id="chform" class="grid" novalidate><b>Cambiar correo</b><label class="f">Correo nuevo<input type="email" name="c1" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email" required></label>${pwf('c0','Contraseña actual','current-password')}<div id="cmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Enviar enlace de confirmación</button></div></form>`}
  <form id="pwform" class="grid" novalidate><b>Cambiar contraseña</b>${pwf('p0','Contraseña actual','current-password')}${pwf('p1','Contraseña nueva','new-password')}${pwf('p2','Repite la nueva','new-password')}<div id="pmsg" class="msg" role="alert"></div><div class="row"><button class="btn" type="submit">Cambiar contraseña</button></div><p class="hint" style="margin:0">Si no te acuerdas de la actual, cierra sesión y usa «¿Has olvidado tu contraseña?».</p></form>
  ${session.owner?'':`<form id="delform" class="grid" novalidate><b>Borrar la cuenta</b><p class="hint">Se borran la cuenta y todas sus fichas, también de la nube. No se puede deshacer.</p>${pwf('d0','Tu contraseña','current-password')}<div id="dmsg" class="msg" role="alert"></div><div class="row"><button class="btn danger" type="submit">Borrar cuenta y fichas</button></div></form>`}</div></div></div>`,true);
- const d=$('#dlg');d.classList.add('acctd');const b=document.createElement('button');b.type='button';b.className='cbub';b.setAttribute('data-act','closedlg');b.setAttribute('aria-label','Cerrar cuenta');b.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';d.appendChild(b)}
+ const d=$('#dlg');d.classList.add('acctd');d.querySelectorAll('.cbub.auto').forEach(x=>x.remove());const b=document.createElement('button');b.type='button';b.className='cbub';b.setAttribute('data-act','closedlg');b.setAttribute('aria-label','Cerrar cuenta');b.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';d.appendChild(b)}
 async function reauth(pw){const a=await aCall('signInWithPassword',{email:session.email,password:pw,returnSecureToken:true});session.idToken=a.idToken;session.rt=a.refreshToken;session.exp=Date.now()+(+a.expiresIn||3600)*1000;skSet({rt:session.rt},session.rem)}
 async function doPw(f){const m=$('#pmsg');const set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const e=n=>f.elements[n].value;
  try{if(e('p1').length<6){set('La contraseña nueva debe tener al menos 6 caracteres.','err');return}if(e('p1')!==e('p2')){set('Las contraseñas nuevas no coinciden.','err');return}
@@ -3431,9 +3435,9 @@ function hubSync(){try{onlDraw();const b=document.body;const on=!!(session&&!boo
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.77';
-const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.76 a v00.01.77. Botón Ver/Ocultar contraseña: un solo botón por formulario, funcional en móvil (no roba el foco) y fuera del orden del tabulador.';
+const APPV='00.01.78';
+const APPN='Actualización media.';
+const APPD='Actualiza de v00.01.77 a v00.01.78. Botón Añadir jugador en la partida del GM (código, plazas y copiar invitación; se bloquea al llegar al máximo de 1 a 12) y botón flotante de cerrar en las ventanas en móvil.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4190,7 +4194,7 @@ function pjViewScreen(){const v=store.pjv;if(!v){scr='part';return partScreen()}
 function partScreen(){const p=parts.find(x=>x.id===partId);if(!p){scr='menu';return gmHome()}
  const mem=partMem[p.id]||[],nl=(store.npcs||[]).filter(x=>x.pid===p.id);
  return hubBar(['menu','Volver'])+`<h1 class="hh">${esc(p.name)}</h1><p class="hs">Partida · tú eres el Game Master${p.end==='1'?' · <b>finalizada</b>':''}</p><div class="meta ptags">${partTags(p)}</div>${p.desc?`<p class="hint pdesc">${esc(p.desc)}</p>`:''}
- <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length})</h3></div>
+ <section class="glass"><div class="psh"><h3 style="margin:0">Jugadores (${mem.length}${(p.maxp|0)?'/'+(p.maxp|0):''})</h3>${p.end==='1'?'':`<button type="button" class="btn pri sm" data-act="partadd" data-id="${esc(p.id)}"${(p.maxp|0)&&mem.length>=(p.maxp|0)?' disabled':''}>${(p.maxp|0)&&mem.length>=(p.maxp|0)?'Partida completa':'Añadir jugador'}</button>`}</div>
  <div class="codebox"><span>Código de la partida</span><b id="pcode" aria-label="Código de unión">${esc(p.code||'······')}</b>${p.code?`<button class="btn sm" data-act="codecopy" data-c="${esc(p.code)}">Copiar</button>`:''}</div>
  <p class="hint">Dale este código a tus jugadores: lo escriben en <b>Buscar partida</b> y se unen a tu sala. Quien se une elige un personaje, y tú puedes ver y modificar su ficha. Solo hay un Game Master por partida, y eres tú.</p>
  ${mem.length?`<div class="npcgrid">${mem.map((m,i)=>memCard(p,m,i)).join('')}</div>`:'<p class="hint" style="margin:0">Todavía no se ha unido nadie. Comparte el código de la partida.</p>'}
@@ -4524,7 +4528,7 @@ async function copy(txt,ok){try{await navigator.clipboard.writeText(txt);toast(o
 document.addEventListener('click',e=>{const d=e.target;if(!d||d.tagName!=='DIALOG'||dn!==d||d.id==='updf'||d.hasAttribute('data-nobd'))return;
  const r=d.getBoundingClientRect();if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom)return;
  const b=d.querySelector('[data-act=closedlg]');if(b)b.click();else try{d.close()}catch(x){d.removeAttribute('open')}},false)})();
-function showDlg(title,html,closeOnly){const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>${title}</h3>${html}<div class="row">${closeOnly?'':'<button class="btn pri" data-act="doimport">Importar</button>'}<button class="btn" data-act="closedlg">Cerrar</button></div></div>`;try{d.showModal()}catch(e){d.setAttribute('open','')}}
+function showDlg(title,html,closeOnly){const d=$('#dlg');d.className='';d.innerHTML=`<div class="grid"><h3>${title}</h3>${html}<div class="row">${closeOnly?'':'<button class="btn pri" data-act="doimport">Importar</button>'}<button class="btn" data-act="closedlg">Cerrar</button></div></div>`;try{d.showModal()}catch(e){d.setAttribute('open','')}try{if(!d.querySelector('.cbub')){const b=document.createElement('button');b.type='button';b.className='cbub auto';b.setAttribute('data-act','closedlg');b.setAttribute('aria-label','Cerrar');b.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';d.appendChild(b)}}catch(e){}}
 function dupSig(o){const x=JSON.parse(JSON.stringify(o));for(const k of ['id','pid','rev','_ph','_pj','step','mode','q','done','dupOf','shared','created','player'])delete x[k];x.name=String(x.name||'').replace(/ \(copia\)$/,'');return JSON.stringify(x)}
 function normalize(o){const b=blank();const c=Object.assign(b,o||{});c.id=uid();c.attrs=Object.assign(blank().attrs,o&&o.attrs);c.powers=Object.assign({alo:[],fer:[]},o&&o.powers);c.talents=Object.assign({ancestry:'',notes:''},o&&o.talents);
  if(!Array.isArray(c.cultures))c.cultures=['',''];if(!Array.isArray(c.goals))c.goals=['',''];if(!Array.isArray(c.extra))c.extra=[];c.skills=Object.assign({},o&&o.skills);
@@ -4729,6 +4733,13 @@ document.addEventListener('click',e=>{
   case 'theme':setTheme(v);setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'partfind':findDlg();break
+  case 'partadd':{const p=parts.find(x=>x.id===b.dataset.id);if(!p)break;const n=(partMem[p.id]||[]).length,mx=p.maxp|0,left=mx?Math.max(0,mx-n):0;
+   if(mx&&!left){toast('La partida está completa');break}
+   const msg='Únete a mi partida «'+p.name+'» en La Mesa Larga: entra, pulsa «Buscar partida» e introduce el código '+(p.code||'')+'.';
+   showDlg('Añadir jugador',`<div class="grid"><p class="hint" style="margin:0">${mx?`Plazas: <b>${n} de ${mx}</b> ocupadas · quedan <b>${left}</b>.`:'Esta partida no tiene límite de jugadores.'} Pásales el código: lo escriben en <b>Buscar partida</b> y se unen a tu sala.</p>
+   <div class="codebox"><span>Código de la partida</span><b aria-label="Código de unión">${esc(p.code||'······')}</b></div>
+   <div class="row">${p.code?`<button type="button" class="btn pri" data-act="codecopy" data-c="${esc(p.code)}">Copiar código</button><button type="button" class="btn" data-act="invcopy" data-t="${esc(msg)}">Copiar invitación</button>`:'<p class="hint" style="margin:0">El código se está generando…</p>'}</div></div>`,true);break}
+  case 'invcopy':{const t=b.dataset.t;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Invitación copiada')).catch(()=>toast('No se pudo copiar'));break}
   case 'codecopy':{const c=b.dataset.c;(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('Código copiado')).catch(()=>toast('Código: '+c));break}
   case 'partnew':showDlg('Nueva partida',`<form id="partform" class="grid" novalidate><p class="hint" style="margin:0">Tú serás el Game Master de esta partida, y lo serás siempre. Elige el nombre y las reglas de la mesa.</p>
 <div class="f"><span style="font-weight:700">¿Cómo quieres jugar la partida?</span><div class="seg" role="group" aria-label="Modo de partida"><button type="button" data-act="pmodeset" data-v="manual" aria-pressed="true">Según el manual</button><button type="button" data-act="pmodeset" data-v="libre" aria-pressed="false">Ir por libre</button></div><input type="hidden" name="pmode" value="manual"><small class="hint" id="pmodeh">Se aplican las reglas del manual: era y nivel máximo de los personajes.</small></div>
