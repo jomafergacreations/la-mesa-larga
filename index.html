@@ -1298,6 +1298,7 @@ body.authdark .atable .n{fill:var(--obl);stroke:none;font:800 11px system-ui,san
 body.authdark .atable .mp{fill:var(--pc)}
 body.authdark .lgt{left:0;right:0;justify-content:center;pointer-events:none}
 body.authdark .lgt .thm{pointer-events:auto;background-color:var(--h-card);background-image:linear-gradient(var(--seg-bg),var(--seg-bg));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html[data-dev=desktop] body.authdark .lgt{top:max(16px,env(safe-area-inset-top));bottom:auto;left:max(16px,env(safe-area-inset-left));right:auto;justify-content:flex-start}
 body.authdark #vtag{left:50%;transform:translateX(-50%);bottom:calc(58px + env(safe-area-inset-bottom,0px))}
 body.authdark .atable .ac{fill:var(--acc)}
 body.authdark .atable .ln{fill:none;stroke:var(--ob1);stroke-width:1.4;opacity:.9}
@@ -3409,9 +3410,9 @@ function hubSync(){try{const b=document.body;const on=!!(session&&!booting&&docu
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.74';
-const APPN='Actualización media.';
-const APPD='Actualiza de v00.01.73 a v00.01.74. Cambio de correo: opción en la pantalla de contraseña olvidada y en Ajustes de la cuenta, y página de confirmación (?cambiarcorreo=).';
+const APPV='00.01.75';
+const APPN='Actualización menor.';
+const APPD='Actualiza de v00.01.74 a v00.01.75. En PC, el selector de tema del inicio de sesión pasa a la esquina superior izquierda y ya no tapa la versión.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
