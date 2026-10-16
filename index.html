@@ -1549,6 +1549,34 @@ html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt>span{font-size:.76rem}
 html:not([data-dev=phone]) .bubbles.hubmain .hmcards{scale:.46}html:not([data-dev=phone]) .bubbles.hubmain .hmradar{scale:.5}
 html:not([data-dev=phone]) .bubbles.hubmain .hmx .go{width:32px;height:32px}
 }
+@media(min-width:900px){
+html:not([data-dev=phone]) .bubbles.hubmain{min-height:max(300px,calc(100vh - 275px))}
+html:not([data-dev=phone]) #onl{bottom:max(10px,env(safe-area-inset-bottom))}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt b{font-size:clamp(1.9rem,3vw,4rem)}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt>span{font-size:clamp(.9rem,1.2vw,1.45rem)}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .hme{font-size:clamp(.66rem,.8vw,.95rem)}
+html:not([data-dev=phone]) .bubbles.hubmain .jgin .tt b{font-size:clamp(1.2rem,2.3vw,2.9rem)}
+html:not([data-dev=phone]) .bubbles.hubmain .jgin .bub.cyb .tt b{font-size:clamp(.95rem,1.85vw,2.4rem)}
+html:not([data-dev=phone]) .bubbles.hubmain .jgin .tt>span{font-size:clamp(.88rem,1.15vw,1.4rem)}
+html:not([data-dev=phone]) .jgwrap .jgin{display:grid;visibility:hidden;pointer-events:none}
+html:not([data-dev=phone]) .jgwrap[data-open="1"] .jgin{visibility:visible;pointer-events:auto}
+html:not([data-dev=phone]) .jgin>.bub{will-change:transform,opacity}
+html:not([data-dev=phone]) .jgin.anim .go{backdrop-filter:none;-webkit-backdrop-filter:none}
+@media(prefers-reduced-motion:no-preference){
+html:not([data-dev=phone]) .jgin>.bub{animation:bubFloat 6s ease-in-out infinite alternate}
+html:not([data-dev=phone]) .jgin>.bub:nth-child(2){animation-duration:7.4s;animation-delay:-2.2s}html:not([data-dev=phone]) .jgin>.bub:nth-child(3){animation-duration:6.6s;animation-delay:-4s}
+html:not([data-dev=phone]) .jgwrap:not([data-open="1"]) .jgin>.bub{animation-play-state:paused}
+html:not([data-dev=phone]) .jgin.side.anim>.bub{animation:jgInS .72s cubic-bezier(.22,.7,.2,1) calc(var(--i)*120ms+60ms) both,bubFloat 6s ease-in-out calc(var(--i)*-2s) infinite alternate}
+html:not([data-dev=phone]) .jgin.side.anim.out>.bub{animation:jgOutS .3s cubic-bezier(.4,0,.8,.6) calc((2 - var(--i))*45ms) both,bubFloat 6s ease-in-out calc(var(--i)*-2s) infinite alternate}
+}
+}
+@media(min-width:900px) and (max-width:1250px){
+html:not([data-dev=phone]) .bubbles.hubmain{min-height:max(300px,calc(100vh - 262px))}
+html:not([data-dev=phone]) .bubbles.hubmain{grid-template-columns:minmax(270px,27vw) minmax(0,1fr)}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt{max-width:84%}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt b{font-size:1.5rem;white-space:nowrap}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt>span{font-size:.8rem}
+}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3727,9 +3755,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.114';
+const APPV='00.01.115';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.113 a v00.01.114. En pantallas anchas, la pantalla principal aprovecha todo el alto y el ancho: las burbujas de la izquierda y las tarjetas de juegos de la derecha crecen con la ventana, ocupan la altura disponible y los títulos ya no se parten. El móvil no cambia.';
+const APPD='Actualiza de v00.01.114 a v00.01.115. Pantallas anchas: textos más grandes en las burbujas y en las tarjetas de juegos; las tarjetas recuperan el suave balanceo flotante; el botón de usuarios en línea baja y ya no tapa la tarjeta de Dune; y la animación del panel de juegos va más fluida en monitores de alta frecuencia (las tarjetas se preparan de antemano y solo se animan en la tarjeta gráfica). El móvil no cambia.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
