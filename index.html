@@ -1463,6 +1463,7 @@ html[data-dev=phone] .hmcards{right:8px;top:10px;translate:none;scale:.72;transf
 .gmb.findcard{grid-template-columns:auto 1fr auto;align-items:center;gap:14px;width:100%;padding:14px 16px}.findcard .fct{display:grid;gap:3px}.findcard .fct b{font-size:1.08rem}.findcard .fca{font-style:normal;font-size:1.9rem;line-height:1;opacity:.55;transition:transform .2s,opacity .2s}.findcard:hover .fca{transform:translateX(4px);opacity:.9}.findcard .gmi svg{width:24px;height:24px}
 html[data-dev=desktop] .gmb.findcard{min-height:0}
 #simback{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:max(18px,calc(env(safe-area-inset-bottom) + 12px));z-index:41;display:flex;align-items:center;gap:8px;min-height:46px;padding:0 16px 0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font:inherit;font-weight:700;font-size:.9rem;box-shadow:0 10px 24px rgba(37,99,235,.45);cursor:pointer}#simback svg{width:20px;height:20px}
+html[data-dev=phone] #onl{right:auto;left:max(14px,env(safe-area-inset-left));bottom:max(24px,calc(env(safe-area-inset-bottom) + 18px));align-items:flex-start}html[data-dev=phone] body:has(#simback) #onl{bottom:max(80px,calc(env(safe-area-inset-bottom) + 74px))}
 @media(prefers-reduced-motion:no-preference){#simback{animation:simin .3s cubic-bezier(.2,.8,.2,1)}}
 @keyframes simin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 #onl .onb.none{border-color:rgba(248,113,113,.7);background:rgba(127,29,29,.88);color:#fff}#onl .onb.none span{color:rgba(255,255,255,.82)}#onl .onb.none .ond{background:#F87171;animation:none;box-shadow:none}
@@ -3627,9 +3628,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.107';
+const APPV='00.01.108';
 const APPN='Actualización menor.';
-const APPD='Actualiza de v00.01.106 a v00.01.107. Ritmo de la burbuja Juegos invertido: al abrir es más lenta y pausada (algo más de un segundo, con las tarjetas entrando una a una) y al cerrar es rápida (medio segundo). Además, los refrescos internos de la app ya no cortan la animación a mitad.';
+const APPD='Actualiza de v00.01.107 a v00.01.108. En móvil, la burbuja En línea pasa a la esquina inferior izquierda, para que no quede encima del botón de menú (y se sube sobre Volver al panel cuando ALPHA simula un usuario).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
