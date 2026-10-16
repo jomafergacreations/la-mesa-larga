@@ -1584,6 +1584,11 @@ html:not([data-dev=phone]) .jgin .bgi{display:grid;position:absolute;z-index:1;l
 html:not([data-dev=phone]) .jgin .bgi svg{width:100%;height:auto}
 html:not([data-dev=phone]) .jgin .bub.gal .gxb svg{left:2%;right:auto;top:8%;width:96%;height:auto;aspect-ratio:1}
 }
+/* modo rendimiento */
+html.perf *,html.perf *::before,html.perf *::after{animation:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;text-shadow:none!important;will-change:auto!important}
+html.perf :not(svg):not(svg *){filter:none!important}
+html.perf .bub,html.perf .hmx,html.perf .gmb,html.perf .glass,html.perf .btn,html.perf .hlp,html.perf #onl .onb,html.perf .tbin,html.perf dialog{box-shadow:none!important}
+html.perf .cyx,html.perf .hmsweep,html.perf .hmb{display:none!important}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3762,9 +3767,25 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.116';
+/* modo rendimiento: se activa solo si la app detecta pocos fotogramas por segundo (y se puede forzar en Ajustes) */
+const PKEY='lm_perf';let perfOn=false;
+const perfGet=()=>{try{const v=localStorage.getItem(PKEY);return v==='on'||v==='off'?v:'auto'}catch(e){return 'auto'}};
+const perfAuto=()=>{try{return localStorage.getItem(PKEY+'_a')==='1'}catch(e){return false}};
+function perfApply(){const m=perfGet();perfOn=m==='on'||(m==='auto'&&perfAuto());document.documentElement.classList.toggle('perf',perfOn)}
+function perfSet(m){try{if(m==='auto'){localStorage.removeItem(PKEY);localStorage.removeItem(PKEY+'_a')}else localStorage.setItem(PKEY,m)}catch(e){}perfApply();perfMon()}
+function perfSeg(){const m=perfGet();return `<div class="thm" role="group" aria-label="Rendimiento">${[['auto','Auto'],['on','Ligero'],['off','Completo']].map(([k,n])=>`<button type="button" data-act="perf" data-v="${k}" aria-pressed="${m===k}">${n}</button>`).join('')}</div>`}
+let perfRun=false;
+function perfMon(){if(perfRun||perfGet()!=='auto'||perfAuto()||lfRM())return;perfRun=true;
+ let t0=0,last=0,n=0,slow=0,bad=0,start=performance.now(),acc=0;
+ const f=now=>{if(perfGet()!=='auto'||perfAuto()){perfRun=false;return}
+  if(document.hidden||!session){last=0;t0=0;n=0;slow=0;acc=0;start=now;requestAnimationFrame(f);return}
+  if(last){const d=now-last;if(d>400){t0=0;n=0;slow=0;acc=0}else{n++;acc+=d;if(d>34)slow++}}last=now;if(!t0)t0=now;
+  if(now-start>6000&&now-t0>3000&&n>30){const fps=n/(acc/1000);if(fps<42||slow/n>.3){if(++bad>=2){try{localStorage.setItem(PKEY+'_a','1')}catch(e){}perfApply();perfRun=false;try{toast('Modo rendimiento activado: la app iba lenta. Puedes cambiarlo en Ajustes.')}catch(e){}return}}else bad=0;t0=0;n=0;slow=0;acc=0}
+  requestAnimationFrame(f)};requestAnimationFrame(f)}
+perfApply();setTimeout(perfMon,2000);
+const APPV='00.01.117';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.115 a v00.01.116. Menos tirones en el panel de juegos: la lluvia y el barrido de Cyberpunk ya no recalculan el diseño en cada fotograma (ahora solo se mueven en la GPU) y los efectos internos de las tarjetas se pausan mientras el panel se abre o se cierra. Las tarjetas se ven más llenas: espiral de Cosmere más grande y emblema de Cyberpunk de fondo.';
+const APPD='Actualiza de v00.01.116 a v00.01.117. Nuevo modo rendimiento automático: si la app detecta pocos fotogramas por segundo, se activa un modo ligero (sin desenfoques, sombras grandes ni animaciones continuas) y avisa. En Ajustes puedes dejarlo en Auto, forzarlo (Ligero) o desactivarlo (Completo).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3926,7 +3947,7 @@ function legalHtml(k){return `<div class="lgltabs" role="group" aria-label="Docu
 function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(`<span class="lglic" aria-hidden="true">${LEG_IC[k]}</span><span id="lglt">${d[0]}</span>`,`<p class="lglmeta">Revisado el ${LEG_DATE}</p>`+legalHtml(k),true);const dl=$('#dlg');if(dl){dl.classList.add('lgld');dl.setAttribute('tabindex','-1');try{dl.focus({preventScroll:true})}catch(e){}}}
 function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contains('lgld'))return;const c=dl.querySelector('#lglc'),t=dl.querySelector('#lglt'),ic=dl.querySelector('h3 .lglic');if(!c)return;c.innerHTML=legalBody(k);if(t)t.textContent=LEGAL[k][0];if(ic)ic.innerHTML=LEG_IC[k];dl.querySelectorAll('.lgltabs button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===k)));dl.scrollTo&&dl.scrollTo({top:0,behavior:'smooth'})}
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
-function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
+function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
  const sig=['tb',scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
@@ -4583,7 +4604,7 @@ function pjLock(){try{const c=store&&store.cur&&store.chars&&store.chars.find(x=
  const bn=document.getElementById('pjdeadbn');
  if(dead){if(!bn){const h=document.querySelector('.chapter')||document.querySelector('main');if(h&&h.parentNode){const d=document.createElement('div');d.id='pjdeadbn';d.setAttribute('role','alert');d.innerHTML='<b>Personaje fallecido.</b> Su ficha y su vida están bloqueadas: solo el Game Master puede revivirlo.';h.parentNode.insertBefore(d,h)}}}else if(bn)bn.remove()}catch(e){}}
 {const rd=render;render=function(){const x=rd.apply(this,arguments);pjLock();return x}}
-const DEAD_OK=new Set(['jgtoggle','home','go','help','prev','next','gohome','notif','theme','acct','logout','export','sheet','copytext','qmode','mode','tbm','qprev','qnext','qform','closedlg']);
+const DEAD_OK=new Set(['jgtoggle','home','go','help','prev','next','gohome','notif','theme','perf','acct','logout','export','sheet','copytext','qmode','mode','tbm','qprev','qnext','qform','closedlg']);
 ['click','keydown','beforeinput','change'].forEach(ev=>document.addEventListener(ev,e=>{if(!document.body.classList.contains('pjdead'))return;const t=e.target;if(!t||!t.closest||t.closest('dialog,#fdock,.hdock,.steps'))return;
  if(ev==='click'){const b=t.closest('[data-act]');if(!b||DEAD_OK.has(b.dataset.act))return;e.preventDefault();e.stopImmediatePropagation();toast('Personaje fallecido: solo el Game Master puede revivirlo')}
  else if(t.matches&&t.matches('[data-f],[data-q]')){e.preventDefault();e.stopImmediatePropagation()}},true));
@@ -5251,6 +5272,7 @@ document.addEventListener('click',e=>{
  switch(a){
   case 'atab':{const from=authTab;authTab=v;render();authSwap(from,v);break}
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
+  case 'perf':perfSet(v);{const sd=document.querySelector('#dlg[open] .setdlg');if(sd){const q=sd.querySelector('[aria-label=Rendimiento]');if(q)q.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)))}}break;
   case 'theme':setTheme(v);{const sd=document.querySelector('#dlg[open] .setdlg');if(sd)sd.querySelectorAll('.thm button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)))}setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'partfind':findDlg();break
