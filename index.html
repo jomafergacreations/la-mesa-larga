@@ -3783,9 +3783,9 @@ function perfMon(){if(perfRun||perfGet()!=='auto'||perfAuto()||lfRM())return;per
   if(now-start>6000&&now-t0>3000&&n>30){const fps=n/(acc/1000);if(fps<42||slow/n>.3){if(++bad>=2){try{localStorage.setItem(PKEY+'_a','1')}catch(e){}perfApply();perfRun=false;try{toast('Modo rendimiento activado: la app iba lenta. Puedes cambiarlo en Ajustes.')}catch(e){}return}}else bad=0;t0=0;n=0;slow=0;acc=0}
   requestAnimationFrame(f)};requestAnimationFrame(f)}
 perfApply();setTimeout(perfMon,2000);
-const APPV='00.01.117';
+const APPV='00.01.118';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.116 a v00.01.117. Nuevo modo rendimiento automático: si la app detecta pocos fotogramas por segundo, se activa un modo ligero (sin desenfoques, sombras grandes ni animaciones continuas) y avisa. En Ajustes puedes dejarlo en Auto, forzarlo (Ligero) o desactivarlo (Completo).';
+const APPD='Actualiza de v00.01.117 a v00.01.118. El selector de rendimiento (Automático, Modo ligero, Modo completo) también aparece en el menú Ajustes de la barra superior y en el menú móvil, no solo en el cuadro de Ajustes.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3883,7 +3883,7 @@ const isTab=()=>document.documentElement.dataset.dev==='tablet';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const GEAR='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 const roleEm=()=>(isAdmin()?'<em class="tbrole su">SUPER</em>':canAdm()?'<em class="tbrole">ADMIN</em>':'')+(store.mode==='gm'?'<em class="tbrole gm">GM</em>':'');
-const setItems=it=>[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(getTheme()===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')+'<hr>'+it('chkupd2','Buscar actualizaciones')+it('rpt','¿Algo no funciona?'+(isAdmin()&&rpOpenN()?'<em>'+rpOpenN()+'</em>':''))+'<hr>'+it('legala','Aviso legal y protección de datos');
+const setItems=it=>[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n])=>it('theme',TI[k]+'<span>'+n+'</span>'+(getTheme()===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')+'<hr>'+[['auto','Rendimiento automático'],['on','Modo ligero'],['off','Modo completo']].map(([k,n])=>it('perf','<span>'+n+'</span>'+(perfGet()===k?'<em>✓</em>':''),'data-v="'+k+'"')).join('')+'<hr>'+it('chkupd2','Buscar actualizaciones')+it('rpt','¿Algo no funciona?'+(isAdmin()&&rpOpenN()?'<em>'+rpOpenN()+'</em>':''))+'<hr>'+it('legala','Aviso legal y protección de datos');
 
 /* v00.01.99 · aviso legal y protección de datos */
 const LEG_MAIL='lamesalarga001@gmail.com',LEG_URL='https://jomafergacreations.github.io/la-mesa-larga/';
@@ -5272,7 +5272,7 @@ document.addEventListener('click',e=>{
  switch(a){
   case 'atab':{const from=authTab;authTab=v;render();authSwap(from,v);break}
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
-  case 'perf':perfSet(v);{const sd=document.querySelector('#dlg[open] .setdlg');if(sd){const q=sd.querySelector('[aria-label=Rendimiento]');if(q)q.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)))}}break;
+  case 'perf':perfSet(v);{const sd=document.querySelector('#dlg[open] .setdlg');if(sd){const q=sd.querySelector('[aria-label=Rendimiento]');if(q)q.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)))}}{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);setTimeout(closeTpop,160);break;
   case 'theme':setTheme(v);{const sd=document.querySelector('#dlg[open] .setdlg');if(sd)sd.querySelectorAll('.thm button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)))}setTimeout(closeTpop,160);{const t=document.getElementById('topbar');if(t)t.dataset.sig=''}setTimeout(()=>{if(session)fdockUpdate(cur())},60);break;
   case 'gmgame':{const g=NPCGAMES.find(x=>x[0]===v);if(!g)break;if(!g[2]){toast(g[1]+': todavía está en preparación');break}if(store.gmGame!==v){store.gmGame=v;gmStag=true;save();render()}break}
   case 'partfind':findDlg();break
