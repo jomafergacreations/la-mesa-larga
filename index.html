@@ -1513,6 +1513,23 @@ html[data-dev=phone] .hb .bell{margin-left:auto}
 #fdock .fd{position:relative}#fdock .fd .bdg{position:absolute;top:2px;right:4px}
 /* campana y avisos con el lenguaje de las burbujas */
 html:root:root body.hubs .hb .bell,html:root:root .hb .bell{width:48px;height:48px;border-radius:18px 18px 18px 6px;border:0;color:#fff;background:linear-gradient(135deg,#4A2478,#9B2C5F);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 10px 22px -10px rgba(140,40,110,.85),inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .2s,box-shadow .2s}
+/* pantalla ancha: burbujas más pequeñas a la izquierda, juegos desplegados a la derecha (el móvil no cambia) */
+@media(min-width:900px){
+html:not([data-dev=phone]) .bubbles.hubmain{grid-template-columns:minmax(300px,390px) minmax(0,1fr);column-gap:30px;row-gap:16px;align-items:start}
+html:not([data-dev=phone]) .jgwrap{display:contents}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx{grid-column:1;min-height:150px;padding:20px 22px;border-radius:28px 28px 28px 8px}
+html:not([data-dev=phone]) .bubbles.hubmain .jgb{grid-row:1}html:not([data-dev=phone]) .bubbles.hubmain .bpb{grid-row:2}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt{max-width:66%}html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt b{font-size:1.75rem}html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt>span{font-size:.84rem}
+html:not([data-dev=phone]) .bubbles.hubmain .hmx .go{right:14px;bottom:14px;width:38px;height:38px}
+html:not([data-dev=phone]) .bubbles.hubmain .hmcards{right:6px;top:8px;translate:none;scale:.62;transform-origin:100% 0}
+html:not([data-dev=phone]) .bubbles.hubmain .hmradar{right:-10px;top:-10px;translate:none;scale:.7;transform-origin:100% 0}
+html:not([data-dev=phone]) .jgb .go{transform:none}html:not([data-dev=phone]) .jgwrap[data-fan="1"] .jgb .go{transform:rotate(180deg)}
+html:not([data-dev=phone]) .bubbles.hubmain .jgin{grid-column:2;grid-row:1/span 2;margin-top:0;align-self:stretch;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+html:not([data-dev=phone]) .bubbles.hubmain .jgin>.bub:nth-child(n){min-height:316px}
+@keyframes jgInS{from{opacity:0;transform:translateX(-46px) scale(.92)}to{opacity:1;transform:none}}@keyframes jgOutS{to{opacity:0;transform:translateX(-34px) scale(.94)}}
+.jgin.side.anim>.bub{animation:jgInS .72s cubic-bezier(.22,.7,.2,1) both;animation-delay:calc(var(--i)*120ms+60ms)}
+.jgin.side.anim.out>.bub{animation:jgOutS .3s cubic-bezier(.4,0,.8,.6) both;animation-delay:calc((2 - var(--i))*45ms)}
+}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3658,11 +3675,17 @@ detectDev();let devT=0;addEventListener('resize',()=>{clearTimeout(devT);devT=se
 function authFit(){try{const b=document.body;const reg=document.documentElement.dataset.dev==='phone'&&b.classList.contains('authdark')&&!!document.querySelector('.authhub #au');b.classList.toggle('authreg',reg)}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(authFit)};addEventListener('resize',go);addEventListener('orientationchange',go);
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
-let jgOpen=false,jgPend=false,jgQ=false,jgAn=null;/* mientras se anima Juegos, los refrescos internos esperan para no cortar el movimiento */
+let jgOpen=false,jgPend=false,jgQ=false,jgAn=null,jgSF=null,jgTm=0;const jgSide=()=>{try{return document.documentElement.dataset.dev!=='phone'&&matchMedia('(min-width:900px)').matches}catch(e){return false}};/* mientras se anima Juegos, los refrescos internos esperan para no cortar el movimiento */
 {const r1=render;render=function(){const w=document.getElementById('jgwrap');if(w&&w.dataset.busy&&scr==='menu'){jgPend=true;return}return r1.apply(this,arguments)}}
 const hmx=(cls,act,eye,title,sub,art,extra)=>`<button type="button" class="hmx ${cls}" data-act="${act}"${extra||''}><span class="hmart" aria-hidden="true">${art}</span><span class="tt"><i class="hme">${eye}</i><b>${title}</b><span>${sub}</span></span><span class="go" aria-hidden="true">→</span></button>`;
-function jgToggle(){const w=document.getElementById('jgwrap'),inn=document.getElementById('jgin');if(!w||!inn)return;if(w.dataset.busy){jgQ=!jgQ;if(jgAn){const q=jgAn;jgAn=null;q.forEach(x=>{try{x.finish()}catch(e){}})}return}const open=!jgOpen;jgOpen=open;const btn=w.querySelector('[data-act=jgtoggle]');if(btn){btn.setAttribute('aria-expanded',String(open));const sp=btn.querySelector('.tt>span');if(sp)sp.textContent=open?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.'}
+function jgToggle(){const w=document.getElementById('jgwrap'),inn=document.getElementById('jgin');if(!w||!inn)return;if(w.dataset.busy&&jgSF){jgSF()}if(w.dataset.busy){jgQ=!jgQ;if(jgAn){const q=jgAn;jgAn=null;q.forEach(x=>{try{x.finish()}catch(e){}})}return}const open=!jgOpen;jgOpen=open;const btn=w.querySelector('[data-act=jgtoggle]');if(btn){btn.setAttribute('aria-expanded',String(open));const sp=btn.querySelector('.tt>span');if(sp)sp.textContent=open?'Elige a qué quieres jugar.':'Cosmere, Cyberpunk y Dune.'}
  if(lfRM()||!inn.animate){w.dataset.open=w.dataset.fan=open?1:0;return}
+ if(jgSide()){/* pantalla ancha: las burbujas a la izquierda y los juegos se despliegan a la derecha */
+  clearTimeout(jgTm);w.dataset.busy=1;
+  const done=()=>{clearTimeout(jgTm);jgSF=null;inn.classList.remove('anim','out','side');delete w.dataset.busy;if(jgPend){jgPend=false;try{render(1)}catch(e){}}};
+  if(open){w.dataset.open=1;w.dataset.fan=1;inn.classList.remove('out');inn.classList.add('anim','side');jgSF=done;jgTm=setTimeout(done,1000)}
+  else{w.dataset.fan=0;inn.classList.add('anim','out','side');jgSF=()=>{w.dataset.open=0;done()};jgTm=setTimeout(jgSF,360)}
+  return}
  /* solo transform, opacity y clip-path: el diseño se recalcula una vez y no en cada fotograma */
  const fol=[];for(let e=w.nextElementSibling;e;e=e.nextElementSibling)fol.push(e);const tops=()=>fol.map(e=>e.getBoundingClientRect().top);
  const t0=tops();w.dataset.busy=1;fol.forEach(e=>{e.style.willChange='transform'});
@@ -3685,9 +3708,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.112';
+const APPV='00.01.113';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.111 a v00.01.112. Al cerrar la burbuja de Juegos mientras aún se abre, el toque ya no se pierde: cierra a la primera. En el móvil el saludo sube a la parte alta y es más grande, con la campana en su misma fila. Nuevo diseño de botones en toda la app (forma asimétrica, brillo y rejilla, como las burbujas), incluido el botón de usuarios en línea; los botones nuevos seguirán este estilo.';
+const APPD='Actualiza de v00.01.112 a v00.01.113. En ordenador y pantallas anchas, la pantalla principal pasa a dos columnas: las burbujas (más pequeñas) a la izquierda y, al pulsar Juegos, las tarjetas de Cosmere, Cyberpunk y Dune se despliegan con animación a la derecha. El móvil no cambia.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
