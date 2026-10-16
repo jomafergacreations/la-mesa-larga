@@ -1563,11 +1563,8 @@ html:not([data-dev=phone]) .jgwrap[data-open="1"] .jgin{visibility:visible;point
 html:not([data-dev=phone]) .jgin>.bub{will-change:transform,opacity}
 html:not([data-dev=phone]) .jgin.anim .go{backdrop-filter:none;-webkit-backdrop-filter:none}
 @media(prefers-reduced-motion:no-preference){
-html:not([data-dev=phone]) .jgin>.bub{animation:bubFloat 6s ease-in-out infinite alternate}
-html:not([data-dev=phone]) .jgin>.bub:nth-child(2){animation-duration:7.4s;animation-delay:-2.2s}html:not([data-dev=phone]) .jgin>.bub:nth-child(3){animation-duration:6.6s;animation-delay:-4s}
-html:not([data-dev=phone]) .jgwrap:not([data-open="1"]) .jgin>.bub{animation-play-state:paused}
-html:not([data-dev=phone]) .jgin.side.anim>.bub{animation:jgInS .72s cubic-bezier(.22,.7,.2,1) calc(var(--i)*120ms+60ms) both,bubFloat 6s ease-in-out calc(var(--i)*-2s) infinite alternate}
-html:not([data-dev=phone]) .jgin.side.anim.out>.bub{animation:jgOutS .3s cubic-bezier(.4,0,.8,.6) calc((2 - var(--i))*45ms) both,bubFloat 6s ease-in-out calc(var(--i)*-2s) infinite alternate}
+html:not([data-dev=phone]) .jgin.side.anim>.bub{animation:jgInS .72s cubic-bezier(.22,.7,.2,1) calc(var(--i)*120ms+60ms) both}
+html:not([data-dev=phone]) .jgin.side.anim.out>.bub{animation:jgOutS .3s cubic-bezier(.4,0,.8,.6) calc((2 - var(--i))*45ms) both}
 }
 }
 @media(min-width:900px) and (max-width:1250px){
@@ -1593,6 +1590,13 @@ html.perf .cyx,html.perf .hmsweep,html.perf .hmb{display:none!important}
 .bubbles::before,.bubbles::after{display:none!important}
 html[data-dev=phone] .hmx:hover,html[data-dev=phone] .bub:hover{transform:none!important}
 @media(hover:none){.hmx:hover,.bub:hover{transform:none!important}}
+/* limpieza de animaciones: sin flotación de tarjetas, sin latido de En línea, sin icono flotante, sin anillos del saludo, sin brillo animado de la barra; efectos de tarjetas solo al pasar el ratón */
+#onl .ond,#onl .onb.none .ond{animation:none!important}
+.wel .wi{animation:none!important}
+#welfx .wr{display:none!important}
+html:root:root #topbar .tbin{animation:none!important}
+.jgin .bub *,.jgin .bub *::before,.jgin .bub *::after{animation-play-state:paused}
+.jgin .bub:hover *,.jgin .bub:hover *::before,.jgin .bub:hover *::after,.jgin .bub:focus-visible *,.jgin .bub:focus-visible *::before,.jgin .bub:focus-visible *::after{animation-play-state:running}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3787,9 +3791,9 @@ function perfMon(){if(perfRun||perfGet()!=='auto'||perfAuto()||lfRM())return;per
   if(now-start>6000&&now-t0>3000&&n>30){const fps=n/(acc/1000);if(fps<42||slow/n>.3){if(++bad>=2){try{localStorage.setItem(PKEY+'_a','1')}catch(e){}perfApply();perfRun=false;try{toast('Modo rendimiento activado: la app iba lenta. Puedes cambiarlo en Ajustes.')}catch(e){}return}}else bad=0;t0=0;n=0;slow=0;acc=0}
   requestAnimationFrame(f)};requestAnimationFrame(f)}
 perfApply();setTimeout(perfMon,2000);
-const APPV='00.01.119';
+const APPV='00.01.120';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.118 a v00.01.119. Al cerrar Juegos en el móvil la burbuja de Buscar partida ya no da el saltito final (el efecto al pasar el dedo seguía activo y la subía 3 px). Se eliminan las burbujitas flotantes decorativas de la pantalla principal.';
+const APPD='Actualiza de v00.01.119 a v00.01.120. Limpieza de animaciones para ir más ligero: las tarjetas de juego ya no flotan, los efectos internos de las tarjetas (estrellas, lluvia, dunas) solo se mueven al pasar el ratón, se quitan el latido del punto de En línea, el icono flotante del saludo, los anillos de la pantalla de bienvenida y el brillo animado de la barra superior. Los fondos de ambiente solo se mantienen en las pantallas de cada juego.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
