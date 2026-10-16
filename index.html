@@ -1577,6 +1577,13 @@ html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt{max-width:84%}
 html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt b{font-size:1.5rem;white-space:nowrap}
 html:not([data-dev=phone]) .bubbles.hubmain .hmx .tt>span{font-size:.8rem}
 }
+@media(min-width:900px){
+html:not([data-dev=phone]) .jgin.anim .bub *,html:not([data-dev=phone]) .jgin.anim .bub *::before,html:not([data-dev=phone]) .jgin.anim .bub *::after{animation-play-state:paused!important}
+html:not([data-dev=phone]) .jgwrap:not([data-open="1"]) .jgin .bub *,html:not([data-dev=phone]) .jgwrap:not([data-open="1"]) .jgin .bub *::before,html:not([data-dev=phone]) .jgwrap:not([data-open="1"]) .jgin .bub *::after{animation-play-state:paused!important}
+html:not([data-dev=phone]) .jgin .bgi{display:grid;position:absolute;z-index:1;left:50%;top:42%;width:64%;translate:-50% -50%;opacity:.16;color:#FCEE0A;filter:drop-shadow(0 0 18px rgba(252,238,10,.6));pointer-events:none}
+html:not([data-dev=phone]) .jgin .bgi svg{width:100%;height:auto}
+html:not([data-dev=phone]) .jgin .bub.gal .gxb svg{left:2%;right:auto;top:8%;width:96%;height:auto;aspect-ratio:1}
+}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -2129,9 +2136,9 @@ html.modeswap,html.modeswap body,html.modeswap #topbar,html.modeswap #topbar *,h
 .bub.cyb .tt em::after{content:"_";margin-left:2px}
 html[data-dev] .bubbles .bub.cyb:nth-child(n){border-radius:6px 28px 6px 28px}
 html[data-dev] .bub.cyb .ti{border-radius:14px}
-.cyx{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:0}
-.cyx .cr{position:absolute;top:-150px;font:400 12px/1.15 'Share Tech Mono',ui-monospace,monospace;white-space:pre;color:#0A0A0C;opacity:.2}
-.cyx .cs{position:absolute;left:0;right:0;top:-30%;height:26%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.6) 50%,rgba(255,255,255,0))}
+.cyx{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:0;container-type:size}
+.cyx .cr{position:absolute;top:0;will-change:transform;font:400 12px/1.15 'Share Tech Mono',ui-monospace,monospace;white-space:pre;color:#0A0A0C;opacity:.2}
+.cyx .cs{position:absolute;left:0;right:0;top:0;will-change:transform;height:26%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.6) 50%,rgba(255,255,255,0))}
 .cyx .cg{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 38px 6px rgba(255,255,255,.65)}
 html[data-cyb][data-dev][data-dev]:root body.hub{--h-bg:#07070A;--h-card:#121208;--h-ink:#FCEE0A;--h-mut:#CFC43A;--h-line:#4D4809;--pc:#FCEE0A;background:#07070A;color:#FCEE0A}
 html[data-cyb][data-dev][data-dev]:root #fdock,html[data-cyb][data-dev][data-dev]:root #topbar .tbin{background:rgba(10,10,6,.88);border-color:rgba(252,238,10,.5);color:#FCEE0A}
@@ -2180,8 +2187,8 @@ html[data-cyb] body.hub .hh.cyh{font-family:'Orbitron',var(--sans),sans-serif;fo
 @keyframes cyGl{0%,90%,100%{transform:none;text-shadow:none}91%{transform:translate(-2px,0) skewX(-6deg);text-shadow:2px 0 #00F0FF,-2px 0 #FF2A6D}93%{transform:translate(2px,1px);text-shadow:-2px 0 #00F0FF,2px 0 #FF2A6D}95%{transform:translate(-1px,-1px) skewX(4deg);text-shadow:1px 0 #00F0FF,-1px 0 #FF2A6D}97%{transform:none;text-shadow:none}}
 @keyframes cyNeon{0%,17%,22%,25%,52%,57%,100%{opacity:1}19%,24%,54%{opacity:.5}}
 @keyframes cyBlink{50%{opacity:0}}
-@keyframes cyDrop{from{top:-150px}to{top:100%}}
-@keyframes cyScan{from{top:-30%}to{top:110%}}
+@keyframes cyDrop{from{transform:translateY(-150px)}to{transform:translateY(100cqh)}}
+@keyframes cyScan{from{transform:translateY(-115%)}to{transform:translateY(423%)}}
 @keyframes cyGhost{0%,88%,100%{opacity:0}90%{opacity:.9;clip-path:inset(10% 0 55% 0);transform:translate(3px,0)}93%{opacity:.9;clip-path:inset(60% 0 8% 0);transform:translate(-3px,0)}96%{opacity:.9;clip-path:inset(30% 0 40% 0);transform:translate(2px,0)}}
 @keyframes cyHz{to{background-position:34px 0}}
 @keyframes cySoIn{0%{opacity:0;transform:translateX(-14px) skewX(-8deg)}40%{opacity:1;transform:translateX(8px)}70%{transform:translateX(-4px)}100%{opacity:1;transform:none}}
@@ -3755,9 +3762,9 @@ function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(ses
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
-const APPV='00.01.115';
+const APPV='00.01.116';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.114 a v00.01.115. Pantallas anchas: textos más grandes en las burbujas y en las tarjetas de juegos; las tarjetas recuperan el suave balanceo flotante; el botón de usuarios en línea baja y ya no tapa la tarjeta de Dune; y la animación del panel de juegos va más fluida en monitores de alta frecuencia (las tarjetas se preparan de antemano y solo se animan en la tarjeta gráfica). El móvil no cambia.';
+const APPD='Actualiza de v00.01.115 a v00.01.116. Menos tirones en el panel de juegos: la lluvia y el barrido de Cyberpunk ya no recalculan el diseño en cada fotograma (ahora solo se mueven en la GPU) y los efectos internos de las tarjetas se pausan mientras el panel se abre o se cierra. Las tarjetas se ven más llenas: espiral de Cosmere más grande y emblema de Cyberpunk de fondo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -3982,7 +3989,7 @@ const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 function hubBar(back){return (store.mode==='gm'?`<div class="gmribbon" role="note"><span>${PENI}</span><b>Modo Game Master</b>${gmLicTipo()?`<em class="gmlic">Licencia ${gmLicTipo()}</em>`:''}<small>Tú diriges la mesa</small></div>`:'')+`<div class="hb"><button type="button" class="av lgs avb" data-act="acct" aria-label="Abrir mi cuenta" title="Mi cuenta">${store.avatar?avImg(''):`<b>${avIni()}</b>`}</button><span class="hn"><b>${esc(session.name)}</b>${isAdmin()?'<em class="supr">SUPER</em>':canAdm()?'<em>admin</em>':''}${store.mode==='gm'?'<em class="gmem">GM</em>':''}</span>${bellBtn("bell")}<button type="button" class="hlp frb" data-act="friends" aria-label="Amigos"><span aria-hidden="true">☺</span>Amigos${socN()?`<i class="bdg">${socN()}</i>`:''}</button></div>${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function dnWord(id,sw,cl){return `<svg class="${cl}" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg>`}
-function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX:''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
+function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX+'<span class="bgi" aria-hidden="true">'+ic+'</span>':''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 /* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
 const CYBER='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.500-6 10-6 10 6 10 6-3.500 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.200" fill="currentColor"/><path d="M12 2.500v2M12 19.500v2M4.500 18.500l1.500-1.300M19.500 18.500 18 17.200" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></svg>';
 const CYBFX=(()=>{const ch='01<>/{}#$%=+';let h='<span class="cyx" aria-hidden="true">';for(let i=0;i<9;i++){let s='';const n=9+(i*3)%7;for(let k=0;k<n;k++)s+=ch.charAt((i*7+k*5)%ch.length)+'\n';h+=`<b class="cr" style="left:${6+i*11}%;--t:${(4+(i%4)*1.3).toFixed(1)}s;--d:-${(i*0.9).toFixed(1)}s">${s}</b>`}return h+'<i class="cs"></i><i class="cg"></i></span>'})();
