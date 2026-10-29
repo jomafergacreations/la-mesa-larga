@@ -1818,6 +1818,30 @@ html[data-cyb] #sidebar .sbi,html[data-cyb] #sidebar .sbind{border-radius:4px;cl
 html[data-cyb] #sidebar .sbind{box-shadow:inset 3px 0 0 var(--ui-acc)}
 @media(prefers-reduced-motion:reduce){#sidebar,#sidebar *,body.has-sb,#topbar{transition:none!important}}
 html.perf #sidebar,html.perf #sidebar *,html.perf body.has-sb{transition:none!important}
+
+/* ===== Barra inferior de cristal (paso 4) ===== */
+html[data-dev=phone] body.has-mb #fdock,html[data-dev=phone] body.has-mb #fbub,html[data-dev=tablet] body.has-mb #fdock,html[data-dev=tablet] body.has-mb #fbub{display:none!important}
+body.has-mb{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+#mbar{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:62;display:flex;align-items:stretch;gap:2px;width:min(calc(100vw - 20px),520px);padding:6px;border-radius:var(--ui-r-xl);color:var(--ui-ink);background:var(--ui-glass-bg-strong);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow)}
+#mbar,#mbar button,#mmore,#mmore button{font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif}
+#mbar .mbind{position:absolute;left:0;top:0;z-index:0;pointer-events:none;border-radius:var(--ui-r-lg);background:color-mix(in srgb,var(--ui-acc) 24%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-acc) 50%,transparent);opacity:0;transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)}
+#mbar .mbi{all:unset;box-sizing:border-box;position:relative;z-index:1;flex:1;min-width:0;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--ui-ink);border-radius:var(--ui-r-lg);-webkit-tap-highlight-color:transparent;transition:transform var(--ui-t-fast) var(--ui-spring)}
+#mbar .mbi:active{transform:scale(.92)}#mbar .mbi svg{width:23px;height:23px}#mbar .mbi span{font-size:.7rem;font-weight:700;line-height:1}
+#mbar .mbi.cur{color:var(--ui-acc)}html[data-lm=d] #mbar .mbi.cur{color:color-mix(in srgb,var(--ui-acc) 65%,#fff)}
+#mbar .mbi:focus-visible{outline:2px solid var(--ui-acc);outline-offset:-2px}
+#mbar .mbi .bdg{position:absolute;top:4px;left:calc(50% + 6px);right:auto}
+#mbar .mbacc .avs,#mbar .mbacc [class*=av]{width:24px;height:24px}
+#mmore{position:fixed;right:max(10px,calc(50vw - 250px));bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:63;min-width:220px;padding:6px;display:flex;flex-direction:column;gap:2px;border-radius:var(--ui-r-lg);color:var(--ui-ink);background:var(--ui-glass-bg-strong);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow);transform-origin:bottom right;opacity:0;transform:translateY(10px) scale(.94);pointer-events:none;visibility:hidden;transition:opacity var(--ui-t-fast),transform var(--ui-t-base) var(--ui-spring),visibility 0s var(--ui-t-base)}
+#mmore.open{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition-delay:0s}
+#mmore button{all:unset;box-sizing:border-box;cursor:pointer;padding:12px 14px;min-height:44px;border-radius:var(--ui-r-sm);font-weight:700;font-size:.95rem;color:var(--ui-ink);font-family:inherit}
+#mmore button:active{background:color-mix(in srgb,var(--ui-acc) 22%,transparent)}#mmore .dng{color:#E5484D}
+#mmore button:focus-visible{outline:2px solid var(--ui-acc);outline-offset:-2px}
+html[data-cos] #mbar,html[data-cos] #mmore{border-radius:30px}
+html[data-dun] #mbar,html[data-dun] #mmore{border-radius:28px 28px 28px 10px}
+html[data-cyb] #mbar,html[data-cyb] #mmore{border-radius:6px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+html[data-cyb] #mbar .mbind{border-radius:4px;box-shadow:inset 0 3px 0 var(--ui-acc)}
+@media(prefers-reduced-motion:reduce){#mbar,#mbar *,#mmore{transition:none!important}}
+html.perf #mbar,html.perf #mbar *,html.perf #mmore{transition:none!important}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4074,9 +4098,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.125';
+const APPV='00.01.126';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.124 a v00.01.125. Nueva barra lateral plegable con árbol de navegación (Inicio, Juegos, Administración, Amigos) y barra superior con la ruta y las acciones, en ordenador. Nuevo deslizador de opacidad del cristal en Ajustes.';
+const APPD='Actualiza de v00.01.125 a v00.01.126. En móvil y tablet, el menú de burbujas se sustituye por una barra inferior de cristal con indicador deslizante (Inicio, Amigos, Avisos, Ajustes y Cuenta con su menú).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4293,7 +4317,30 @@ document.addEventListener('click',e=>{if(!e.target.closest('#topbar .tbm')||e.ta
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTb()});
 {let ly=0;addEventListener('scroll',()=>{const t=document.getElementById('topbar');if(!t)return;const y=scrollY;if(y>90&&y>ly+4&&!t.querySelector('.tbm.open'))t.classList.add('hide');else if(y<ly-4||y<=90)t.classList.remove('hide');ly=y},{passive:true})}
 addEventListener('resize',()=>{setTimeout(()=>{if(session&&!booting){dockSig='';fdockUpdate(cur())}tbInd()},160)});
-function fdockUpdate(c){let d=document.getElementById('fdock');const AB=!!(session&&!booting&&scr==='admin'&&isAdmin());document.body.classList.toggle('admbub',AB);
+
+/* ===== Barra inferior de cristal (paso 4: móvil y tablet) ===== */
+let mbSigV='';
+function mbSync(c,AB){const H=document.documentElement,dev=H.dataset.dev;let m=document.getElementById('mbar');
+ const on=!!(session&&!booting&&(dev==='phone'||dev==='tablet')&&!AB&&!(c&&!c.done));
+ if(!on){if(m)m.remove();const x=document.getElementById('mmore');if(x)x.remove();document.body.classList.remove('has-mb');mbSigV='';return}
+ document.body.classList.add('has-mb');
+ const home=(scr==='menu'&&!c),sig=[scr,home,store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
+ const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
+ if(sig===mbSigV&&!first)return;mbSigV=sig;
+ const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
+ m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}${t('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',0,notifN()||'')}${t('ajustes',GEAR,'Ajustes',0)}<button type="button" class="mbi mbacc" data-act="mmore" aria-haspopup="menu" aria-expanded="false" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button>`;
+ let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
+ x.classList.remove('open');
+ x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
+ requestAnimationFrame(()=>mbInd());setTimeout(mbInd,300)}
+function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;const t=el||m.querySelector('.mbi.cur');
+ if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
+function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;mbInd(b);setTimeout(()=>mbInd(),520)});
+document.addEventListener('click',e=>{if(e.target.closest('#mbar .mbacc'))return;if(!e.target.closest('#mmore')||e.target.closest('#mmore [data-act]'))mbClose()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
+addEventListener('resize',()=>setTimeout(mbInd,200));
+function fdockUpdate(c){let d=document.getElementById('fdock');const AB=!!(session&&!booting&&scr==='admin'&&isAdmin());document.body.classList.toggle('admbub',AB);mbSync(c,AB);
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove();dockSig='';return}
  if(isDesk()&&!AB){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const fb0=document.getElementById('fbub');if(fb0)fb0.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove()}
@@ -5707,6 +5754,7 @@ document.addEventListener('click',e=>{
   case 'rvopen':{{const pp=document.getElementById('npcpop');if(pp)pp.remove()}const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;rvDlg(n);break}
   case 'sbgrp':{const g=b.dataset.g;sbOpen[g]=!sbOpen[g];const kd=b.nextElementSibling;b.setAttribute('aria-expanded',String(!!sbOpen[g]));if(kd&&kd.classList.contains('sbkids'))kd.classList.toggle('open',!!sbOpen[g]);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>sbInd(),300);break}
   case 'sbcol':{try{localStorage.setItem(SBKEY,sbColl()?'0':'1')}catch(x){}const t=document.getElementById('topbar');if(t)t.dataset.sig='';topbarUpdate(cur());break}
+  case 'mmore':{const x=document.getElementById('mmore');if(!x)break;const o=!x.classList.contains('open');x.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o));break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
   case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}if(isAdmin()){goAdmin('rp');break}incDlg();break;
   case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
