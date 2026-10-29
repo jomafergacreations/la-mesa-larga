@@ -1597,6 +1597,42 @@ html[data-dev=phone] .hmx:hover,html[data-dev=phone] .bub:hover{transform:none!i
 html:root:root #topbar .tbin{animation:none!important}
 .jgin .bub *,.jgin .bub *::before,.jgin .bub *::after{animation-play-state:paused}
 .jgin .bub:hover *,.jgin .bub:hover *::before,.jgin .bub:hover *::after,.jgin .bub:focus-visible *,.jgin .bub:focus-visible *::before,.jgin .bub:focus-visible *::after{animation-play-state:running}
+/* ===== Variables de INTERFAZ (separadas de las del tema de cada juego) =====
+   Aquí solo van radios, desenfoques, sombras, tiempos y curvas. Los colores propios de cada juego
+   (--pc, --acc, --h-*, etc.) NO se tocan. Todavía no las usa ningún componente. */
+:root{
+ --ui-r-xs:10px;--ui-r-sm:14px;--ui-r-md:20px;--ui-r-lg:28px;--ui-r-xl:36px;--ui-r-pill:999px;
+ --ui-blur:22px;--ui-sat:1.6;--ui-glass-blur:blur(var(--ui-blur)) saturate(var(--ui-sat));
+ --ui-t-fast:150ms;--ui-t-base:240ms;--ui-t-slow:350ms;--ui-t-theme:520ms;
+ --ui-ease:cubic-bezier(.2,.8,.2,1);--ui-spring:cubic-bezier(.34,1.4,.5,1);--ui-ease-out:cubic-bezier(.16,1,.3,1);
+ --ui-bd-w:1px;--ui-gap:12px;
+ /* acento de la interfaz: por defecto neutro (menú principal); cada juego lo sobreescribe */
+ --ui-acc:#7C6CF0;--ui-acc-ink:#fff;
+}
+html[data-lm=d]{
+ --ui-glass-bg:rgba(24,22,36,.52);--ui-glass-bg-strong:rgba(24,22,36,.78);--ui-solid:#1B1826;
+ --ui-glass-bd:rgba(255,255,255,.16);--ui-glass-hl:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.04);
+ --ui-ink:#F4F1FA;--ui-ink-mut:rgba(244,241,250,.68);
+ --ui-shadow:0 1px 2px rgba(0,0,0,.30),0 8px 24px -8px rgba(0,0,0,.50),0 24px 56px -20px rgba(0,0,0,.45);
+}
+html[data-lm=l]{
+ --ui-glass-bg:rgba(255,255,255,.58);--ui-glass-bg-strong:rgba(255,255,255,.84);--ui-solid:#F7F4FB;
+ --ui-glass-bd:rgba(255,255,255,.75);--ui-glass-hl:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(60,40,100,.06);
+ --ui-ink:#1D1830;--ui-ink-mut:rgba(29,24,48,.66);
+ --ui-shadow:0 1px 2px rgba(40,30,80,.10),0 8px 24px -8px rgba(40,30,80,.18),0 24px 56px -20px rgba(40,30,80,.20);
+}
+/* el acento de la interfaz sigue al juego activo (misma estructura y animaciones en todos) */
+html[data-cos]{--ui-acc:#8B7BFF;--ui-acc-ink:#fff}
+html[data-cyb]{--ui-acc:#FCEE0A;--ui-acc-ink:#0A0A0C}
+html[data-dun]{--ui-acc:#E9A957;--ui-acc-ink:#2A1708}
+/* respaldos: sin soporte de desenfoque, "reducir transparencia", modo ligero -> superficies sólidas y sin desenfoque */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+@media(prefers-reduced-transparency:reduce){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+@media(prefers-contrast:more){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+html.perf{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}
+/* reducir movimiento: tiempos a cero (las animaciones de interfaz leerán estas variables) */
+@media(prefers-reduced-motion:reduce){:root{--ui-t-fast:0ms;--ui-t-base:0ms;--ui-t-slow:0ms;--ui-t-theme:0ms}}
+html.perf{--ui-t-fast:0ms;--ui-t-base:0ms;--ui-t-slow:0ms;--ui-t-theme:0ms}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3791,9 +3827,9 @@ function perfMon(){if(perfRun||perfGet()!=='auto'||perfAuto()||lfRM())return;per
   if(now-start>6000&&now-t0>3000&&n>30){const fps=n/(acc/1000);if(fps<42||slow/n>.3){if(++bad>=2){try{localStorage.setItem(PKEY+'_a','1')}catch(e){}perfApply();perfRun=false;try{toast('Modo rendimiento activado: la app iba lenta. Puedes cambiarlo en Ajustes.')}catch(e){}return}}else bad=0;t0=0;n=0;slow=0;acc=0}
   requestAnimationFrame(f)};requestAnimationFrame(f)}
 perfApply();setTimeout(perfMon,2000);
-const APPV='00.01.120';
+const APPV='00.01.121';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.119 a v00.01.120. Limpieza de animaciones para ir más ligero: las tarjetas de juego ya no flotan, los efectos internos de las tarjetas (estrellas, lluvia, dunas) solo se mueven al pasar el ratón, se quitan el latido del punto de En línea, el icono flotante del saludo, los anillos de la pantalla de bienvenida y el brillo animado de la barra superior. Los fondos de ambiente solo se mantienen en las pantallas de cada juego.';
+const APPD='Actualiza de v00.01.120 a v00.01.121. Preparación interna del nuevo estilo de interfaz (variables de cristal, tiempos y acento por juego, con respaldos para modo ligero y accesibilidad). No cambia nada de lo que se ve.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
