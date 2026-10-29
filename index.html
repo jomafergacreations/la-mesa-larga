@@ -1609,30 +1609,106 @@ html:root:root #topbar .tbin{animation:none!important}
  /* acento de la interfaz: por defecto neutro (menú principal); cada juego lo sobreescribe */
  --ui-acc:#7C6CF0;--ui-acc-ink:#fff;
 }
-html[data-lm=d]{
+html[data-lm=d],[data-ui=d]{
  --ui-glass-bg:rgba(24,22,36,.52);--ui-glass-bg-strong:rgba(24,22,36,.78);--ui-solid:#1B1826;
  --ui-glass-bd:rgba(255,255,255,.16);--ui-glass-hl:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.04);
  --ui-ink:#F4F1FA;--ui-ink-mut:rgba(244,241,250,.68);
  --ui-shadow:0 1px 2px rgba(0,0,0,.30),0 8px 24px -8px rgba(0,0,0,.50),0 24px 56px -20px rgba(0,0,0,.45);
 }
-html[data-lm=l]{
+html[data-lm=l],[data-ui=l]{
  --ui-glass-bg:rgba(255,255,255,.58);--ui-glass-bg-strong:rgba(255,255,255,.84);--ui-solid:#F7F4FB;
  --ui-glass-bd:rgba(255,255,255,.75);--ui-glass-hl:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(60,40,100,.06);
  --ui-ink:#1D1830;--ui-ink-mut:rgba(29,24,48,.66);
  --ui-shadow:0 1px 2px rgba(40,30,80,.10),0 8px 24px -8px rgba(40,30,80,.18),0 24px 56px -20px rgba(40,30,80,.20);
 }
 /* el acento de la interfaz sigue al juego activo (misma estructura y animaciones en todos) */
-html[data-cos]{--ui-acc:#8B7BFF;--ui-acc-ink:#fff}
-html[data-cyb]{--ui-acc:#FCEE0A;--ui-acc-ink:#0A0A0C}
-html[data-dun]{--ui-acc:#E9A957;--ui-acc-ink:#2A1708}
+html[data-cos],[data-ug=cos]{--ui-acc:#8B7BFF;--ui-acc-ink:#fff}
+html[data-cyb],[data-ug=cyb]{--ui-acc:#FCEE0A;--ui-acc-ink:#0A0A0C}
+html[data-dun],[data-ug=dun]{--ui-acc:#E9A957;--ui-acc-ink:#2A1708}
+[data-ug=neu]{--ui-acc:#7C6CF0;--ui-acc-ink:#fff}
 /* respaldos: sin soporte de desenfoque, "reducir transparencia", modo ligero -> superficies sólidas y sin desenfoque */
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
-@media(prefers-reduced-transparency:reduce){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
-@media(prefers-contrast:more){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
-html.perf{--ui-blur:0px;--ui-sat:1;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-blur:none;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+@media(prefers-reduced-transparency:reduce){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-blur:none;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+@media(prefers-contrast:more){:root{--ui-blur:0px;--ui-sat:1;--ui-glass-blur:none;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}}
+html.perf{--ui-blur:0px;--ui-sat:1;--ui-glass-blur:none;--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:var(--ui-solid)}
 /* reducir movimiento: tiempos a cero (las animaciones de interfaz leerán estas variables) */
 @media(prefers-reduced-motion:reduce){:root{--ui-t-fast:0ms;--ui-t-base:0ms;--ui-t-slow:0ms;--ui-t-theme:0ms}}
 html.perf{--ui-t-fast:0ms;--ui-t-base:0ms;--ui-t-slow:0ms;--ui-t-theme:0ms}
+/* ===== Galería interna de componentes de interfaz (solo administradores; #galeria-ui) ===== */
+#uigal{position:fixed;inset:0;z-index:99990;overflow:auto;background:var(--ui-solid,#15121f);color:var(--ui-ink,#fff);font-family:var(--sans,system-ui);-webkit-overflow-scrolling:touch}
+#uigal *{box-sizing:border-box}
+#uigal .ug-top{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px clamp(12px,3vw,28px);background:var(--ui-glass-bg);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border-bottom:1px solid var(--ui-glass-bd)}
+#uigal .ug-top h1{font-size:1.05rem;margin:0 auto 0 0}
+#uigal .ug-wrap{padding:clamp(12px,3vw,28px);display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr))}
+.ug-pane{position:relative;border-radius:var(--ui-r-xl);padding:18px;color:var(--ui-ink);background:radial-gradient(60% 50% at 12% 8%,color-mix(in srgb,var(--ui-acc) 55%,transparent),transparent 70%),radial-gradient(50% 45% at 92% 90%,rgba(255,120,170,.38),transparent 70%),linear-gradient(160deg,var(--ui-solid),color-mix(in srgb,var(--ui-solid) 70%,var(--ui-acc)));border:1px solid var(--ui-glass-bd);display:grid;gap:18px;overflow:hidden}
+.ug-pane h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;margin:0;color:var(--ui-ink-mut);font-weight:800}
+.ug-pane h3{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;color:var(--ui-ink-mut);font-weight:800}
+.ug-glass{background:var(--ui-glass-bg);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:var(--ui-bd-w) solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow)}
+.ug-btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:var(--ui-r-sm);font-weight:700;font-size:.9rem;color:var(--ui-ink);transition:transform var(--ui-t-fast) var(--ui-spring),background-color var(--ui-t-base) var(--ui-ease),box-shadow var(--ui-t-base) var(--ui-ease),opacity var(--ui-t-base)}
+.ug-btn svg,.ug-ic svg{width:18px;height:18px;flex:none}
+.ug-btn:hover{transform:translateY(-1px)}.ug-btn:active{transform:scale(.96)}
+.ug-btn:focus-visible,.ug-nav:focus-visible,.ug-tab:focus-visible,.ug-mi:focus-visible,.ug-ic:focus-visible{outline:2px solid var(--ui-acc);outline-offset:2px}
+.ug-btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--ui-acc) 88%,#fff),var(--ui-acc));color:var(--ui-acc-ink);box-shadow:var(--ui-glass-hl),0 8px 20px -8px var(--ui-acc)}
+.ug-btn.sec{background:var(--ui-glass-bg);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl)}
+.ug-btn.gho{background:transparent}.ug-btn.gho:hover{background:color-mix(in srgb,var(--ui-ink) 9%,transparent)}
+.ug-btn.dan{background:rgba(220,60,60,.16);color:#FF8F8F;border:1px solid rgba(255,120,120,.4)}
+html[data-lm=l] .ug-pane[data-ui=l] .ug-btn.dan,.ug-pane[data-ui=l] .ug-btn.dan{color:#B42318}
+.ug-btn[disabled]{opacity:.45;pointer-events:none}
+.ug-ic{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:var(--ui-r-sm);color:var(--ui-ink);transition:transform var(--ui-t-fast) var(--ui-spring),background-color var(--ui-t-base)}
+.ug-ic:hover{background:color-mix(in srgb,var(--ui-ink) 10%,transparent)}.ug-ic:active{transform:scale(.92)}
+.ug-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ug-shell{container-type:inline-size;position:relative;display:grid;grid-template-columns:auto 1fr;gap:12px;height:400px}
+.ug-side{position:relative;width:236px;border-radius:var(--ui-r-lg);padding:12px;display:flex;flex-direction:column;gap:4px;overflow:hidden;transition:width var(--ui-t-slow) var(--ui-ease)}
+.ug-shell.col .ug-side{width:68px}
+.ug-brand{display:flex;align-items:center;gap:10px;padding:4px 6px 10px;font-weight:800;white-space:nowrap}
+.ug-brand i{flex:none;width:32px;height:32px;border-radius:11px 11px 11px 4px;background:linear-gradient(135deg,var(--ui-acc),color-mix(in srgb,var(--ui-acc) 40%,#f0a))}
+.ug-tree{position:relative;display:grid;gap:2px}
+.ug-ind{position:absolute;left:0;top:0;z-index:0;border-radius:var(--ui-r-sm);background:color-mix(in srgb,var(--ui-acc) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-acc) 45%,transparent);transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-ease),height var(--ui-t-base) var(--ui-ease);pointer-events:none}
+.ug-nav{all:unset;box-sizing:border-box;position:relative;z-index:1;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:38px;padding:0 10px;border-radius:var(--ui-r-sm);font-weight:600;font-size:.88rem;white-space:nowrap;color:var(--ui-ink);transition:background-color var(--ui-t-fast)}
+.ug-nav:hover{background:color-mix(in srgb,var(--ui-ink) 8%,transparent)}.ug-nav svg{width:18px;height:18px;flex:none}
+.ug-nav.sub{margin-left:18px;font-weight:500;color:var(--ui-ink-mut);min-height:34px}
+.ug-nav span{transition:opacity var(--ui-t-base)}.ug-shell.col .ug-nav span,.ug-shell.col .ug-brand b{opacity:0}
+.ug-shell.col .ug-brand b{width:0}
+.ug-sub{display:grid;gap:2px;overflow:hidden;transition:grid-template-rows var(--ui-t-base) var(--ui-ease)}
+.ug-crumb>*{flex:none}.ug-crumb b{min-width:0;overflow:hidden;text-overflow:ellipsis}
+@container (max-width:700px){.ug-crumb>:nth-child(-n+2){display:none}}
+.ug-main{display:grid;grid-template-rows:auto 1fr;gap:12px;min-width:0}
+.ug-bar{display:flex;align-items:center;gap:6px;border-radius:var(--ui-r-lg);padding:8px 10px 8px 16px;min-width:0}
+.ug-crumb{margin-right:auto;display:flex;gap:6px;align-items:center;font-size:.86rem;color:var(--ui-ink-mut);white-space:nowrap;overflow:hidden}.ug-crumb b{color:var(--ui-ink)}
+.ug-game{border-radius:var(--ui-r-lg);padding:18px;background:var(--ui-solid);color:var(--ui-ink);border:1px solid color-mix(in srgb,var(--ui-ink) 14%,transparent);box-shadow:var(--ui-shadow);display:grid;gap:8px;align-content:start}
+.ug-game b{font-size:1.05rem}.ug-game p{margin:0;color:var(--ui-ink-mut);font-size:.9rem;line-height:1.45}
+.ug-tabs{position:relative;display:inline-flex;padding:4px;border-radius:var(--ui-r-pill);gap:2px}
+.ug-tab{all:unset;box-sizing:border-box;cursor:pointer;position:relative;z-index:1;padding:0 16px;min-height:34px;display:grid;place-items:center;border-radius:var(--ui-r-pill);font-weight:700;font-size:.86rem;color:var(--ui-ink-mut);transition:color var(--ui-t-base)}
+.ug-tab[aria-selected=true]{color:var(--ui-ink)}
+.ug-tabs .ug-ind{border-radius:var(--ui-r-pill);background:color-mix(in srgb,var(--ui-acc) 30%,var(--ui-glass-bg-strong))}
+.ug-menu{display:grid;gap:2px;min-width:210px;padding:6px;border-radius:var(--ui-r-md);width:max-content;max-width:100%;transform-origin:top left;animation:ugPop var(--ui-t-base) var(--ui-spring) both}
+.ug-mi{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:38px;padding:0 12px;border-radius:var(--ui-r-sm);font-weight:600;font-size:.88rem}
+.ug-mi:hover{background:color-mix(in srgb,var(--ui-ink) 10%,transparent)}.ug-mi em{margin-left:auto;font-style:normal;color:var(--ui-acc)}
+.ug-mi hr,.ug-menu hr{border:0;border-top:1px solid var(--ui-glass-bd);margin:4px 6px;width:auto}
+@keyframes ugPop{from{opacity:0;transform:translateY(-6px) scale(.94)}to{opacity:1;transform:none}}
+.ug-dwrap{position:absolute;inset:0;z-index:20;display:grid;place-items:center;padding:16px;background:rgba(8,6,16,.42);animation:ugFade var(--ui-t-base) var(--ui-ease) both}
+.ug-dwrap.out{animation:ugFadeO var(--ui-t-base) var(--ui-ease) both}
+.ug-dlg{width:min(380px,100%);border-radius:var(--ui-r-lg);padding:20px;display:grid;gap:12px;animation:ugDlg var(--ui-t-slow) var(--ui-spring) both}
+.ug-dwrap.out .ug-dlg{animation:ugDlgO var(--ui-t-base) var(--ui-ease) both}
+.ug-dlg,.ug-menu,.ug-toast{background:var(--ui-glass-bg-strong)}
+.ug-dlg h4{margin:0;font-size:1.05rem}.ug-dlg p{margin:0;color:var(--ui-ink-mut);font-size:.92rem;line-height:1.45}
+@keyframes ugFade{from{opacity:0}}@keyframes ugFadeO{to{opacity:0}}
+@keyframes ugDlg{from{opacity:0;transform:translateY(14px) scale(.94)}}@keyframes ugDlgO{to{opacity:0;transform:translateY(8px) scale(.97)}}
+.ug-toasts{position:absolute;left:0;right:0;bottom:14px;z-index:30;display:grid;justify-items:center;gap:8px;pointer-events:none}
+.ug-toast{pointer-events:auto;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--ui-r-pill);font-weight:600;font-size:.88rem;animation:ugToast var(--ui-t-slow) var(--ui-spring) both}
+.ug-toast.out{animation:ugToastO var(--ui-t-base) var(--ui-ease) both}.ug-toast i{width:9px;height:9px;border-radius:50%;background:var(--ui-acc);flex:none}
+@keyframes ugToast{from{opacity:0;transform:translateY(16px) scale(.92)}}@keyframes ugToastO{to{opacity:0;transform:translateY(8px) scale(.96)}}
+.ug-list{display:grid;gap:6px}.ug-li{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--ui-r-md);font-weight:600;font-size:.88rem}.ug-li i{width:10px;height:10px;border-radius:50%;background:var(--ui-acc)}
+.ug-phone{position:relative;width:min(300px,100%);height:360px;margin:0 auto;border-radius:36px;border:1px solid var(--ui-glass-bd);background:linear-gradient(180deg,color-mix(in srgb,var(--ui-solid) 85%,var(--ui-acc)),var(--ui-solid));overflow:hidden;box-shadow:var(--ui-shadow)}
+.ug-phone .ug-game{margin:44px 14px 0}
+.ug-dock{position:absolute;left:12px;right:12px;bottom:12px;border-radius:26px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.ug-dock .ug-ind{border-radius:20px}
+.ug-dk{all:unset;box-sizing:border-box;position:relative;z-index:1;cursor:pointer;display:grid;justify-items:center;gap:2px;padding:8px 0 6px;font-size:.66rem;font-weight:700;color:var(--ui-ink-mut);border-radius:20px;transition:color var(--ui-t-base)}
+.ug-dk svg{width:21px;height:21px}.ug-dk[aria-current=true]{color:var(--ui-ink)}
+.ug-dk:focus-visible{outline:2px solid var(--ui-acc);outline-offset:-2px}
+.ug-ring{position:fixed;z-index:100000;pointer-events:none;border-radius:50%;border:2px solid rgba(255,255,255,.85);box-shadow:0 0 22px 4px rgba(255,255,255,.5),inset 0 0 18px rgba(255,255,255,.35)}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3827,9 +3903,64 @@ function perfMon(){if(perfRun||perfGet()!=='auto'||perfAuto()||lfRM())return;per
   if(now-start>6000&&now-t0>3000&&n>30){const fps=n/(acc/1000);if(fps<42||slow/n>.3){if(++bad>=2){try{localStorage.setItem(PKEY+'_a','1')}catch(e){}perfApply();perfRun=false;try{toast('Modo rendimiento activado: la app iba lenta. Puedes cambiarlo en Ajustes.')}catch(e){}return}}else bad=0;t0=0;n=0;slow=0;acc=0}
   requestAnimationFrame(f)};requestAnimationFrame(f)}
 perfApply();setTimeout(perfMon,2000);
-const APPV='00.01.121';
+
+/* ===== Galería interna de componentes (paso 2): se abre con #galeria-ui, solo administradores ===== */
+const UGI={home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/></svg>',users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.6 3.2 2.3 3.5 5.2"/></svg>',shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.500 8-8 9-4.500-1-8-4-8-9V6z"/></svg>',gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.900 4.900l2.100 2.100M17 17l2.100 2.100M4.900 19.100L7 17M17 7l2.100-2.100"/></svg>',bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7.500 2 7.500H4S6 15 6 9z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',half:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>',menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',side:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>'};
+function uigPane(lm){const I=UGI,n=(k,ic,t,sub,cur)=>`<button type="button" class="ug-nav${sub?' sub':''}" data-ugc="nav" data-k="${k}"${cur?' aria-current="page"':''}>${ic||''}<span>${t}</span></button>`;
+ return `<section class="ug-pane" data-ui="${lm}" data-ug="neu" aria-label="Interfaz ${lm==='d'?'oscura':'clara'}"><h2>Interfaz ${lm==='d'?'oscura':'clara'}</h2>
+ <div><h3>Estructura: menú lateral colapsable + barra superior con ruta y acciones</h3>
+ <div class="ug-shell"><aside class="ug-side ug-glass" aria-label="Navegación"><div class="ug-brand"><i></i><b>La Mesa Larga</b></div>
+  <div class="ug-tree"><span class="ug-ind" aria-hidden="true"></span>${n('home',I.home,'Inicio','',1)}${n('cos',I.book,'Cosmere')}${n('cos1','','Cartas',1)}${n('cos2','','Personajes',1)}${n('cyb',I.book,'Cyberpunk')}${n('dun',I.book,'Dune')}${n('adm',I.shield,'Administración')}</div>
+  <div style="margin-top:auto"><button type="button" class="ug-nav" data-ugc="collapse" aria-label="Plegar menú">${I.side}<span>Plegar menú</span></button></div></aside>
+  <div class="ug-main"><div class="ug-bar ug-glass"><div class="ug-crumb"><span>Inicio</span>${I.chev.replace('<svg','<svg width="14" height="14"')}<span>Cosmere</span>${I.chev.replace('<svg','<svg width="14" height="14"')}<b>Personajes</b></div>
+   <button type="button" class="ug-ic" aria-label="Avisos">${I.bell}</button><button type="button" class="ug-ic" data-ugc="theme" aria-label="Cambiar tema (revelado circular)">${I.half}</button><button type="button" class="ug-btn pri" data-ugc="menu" aria-haspopup="menu" aria-expanded="false">Menú ${I.chev.replace('<svg','<svg style="transform:rotate(90deg)"')}</button></div>
+   <div class="ug-game"><b>Zona de juego (opaca y nítida)</b><p>Aquí viven los tableros, cartas, fichas y textos largos. Mantienen el aspecto propio de cada juego; el cristal queda solo en la navegación y lo flotante.</p></div></div>
+  <div class="ug-menuhost" style="position:absolute;right:8px;top:62px;z-index:10"></div>
+ </div></div>
+ <div class="ug-row"><div class="ug-tabs ug-glass" role="tablist" aria-label="Pestañas"><span class="ug-ind" aria-hidden="true"></span>${['Cartas','Rol','Partidas'].map((t,i)=>`<button type="button" role="tab" class="ug-tab" data-ugc="tab" aria-selected="${i===0}">${t}</button>`).join('')}</div>
+  <button type="button" class="ug-btn sec" data-ugc="dlg">Abrir diálogo</button><button type="button" class="ug-btn sec" data-ugc="toast">Mostrar aviso</button><button type="button" class="ug-btn sec" data-ugc="shuf">Reordenar lista</button></div>
+ <div><h3>Botones</h3><div class="ug-row"><button type="button" class="ug-btn pri">Principal</button><button type="button" class="ug-btn sec">Secundario</button><button type="button" class="ug-btn gho">Fantasma</button><button type="button" class="ug-btn dan">Peligro</button><button type="button" class="ug-btn pri">${I.plus}Con icono</button><button type="button" class="ug-ic ug-glass" aria-label="Menú">${I.menu}</button><button type="button" class="ug-btn sec" disabled>Desactivado</button></div></div>
+ <div class="ug-list" data-ugl="1">${['Mazo del Cosmere','Sesión del viernes','Ficha de Kaladin','Dado de rol'].map((t,i)=>`<div class="ug-li ug-glass" data-id="${i}"><i></i>${t}</div>`).join('')}</div>
+ <div><h3>Barra inferior (móvil)</h3><div class="ug-phone"><div class="ug-game"><b>Zona de juego</b><p>Contenido opaco bajo la barra flotante de cristal.</p></div>
+  <nav class="ug-dock ug-glass" aria-label="Navegación móvil"><span class="ug-ind" aria-hidden="true"></span>${[['Inicio',I.home],['Juegos',I.book],['Amigos',I.users],['Ajustes',I.gear]].map(([t,ic],i)=>`<button type="button" class="ug-dk" data-ugc="dk"${i===0?' aria-current="true"':''}>${ic}<span>${t}</span></button>`).join('')}</nav></div></div>
+ <div class="ug-toasts" aria-live="polite"></div></section>`}
+function uigInd(box,el){const ind=box.querySelector(':scope>.ug-ind');if(!ind||!el)return;const b=box.getBoundingClientRect(),r=el.getBoundingClientRect();ind.style.width=r.width+'px';ind.style.height=r.height+'px';ind.style.transform=`translate(${r.left-b.left}px,${r.top-b.top}px)`}
+function uigInit(root){if(innerWidth<560)root.querySelectorAll('.ug-shell').forEach(x=>x.classList.add('col'));root.querySelectorAll('.ug-tree').forEach(t=>uigInd(t,t.querySelector('[aria-current]')));root.querySelectorAll('.ug-tabs').forEach(t=>uigInd(t,t.querySelector('[aria-selected=true]')));root.querySelectorAll('.ug-dock').forEach(t=>uigInd(t,t.querySelector('[aria-current]')))}
+function uigClose(){const g=document.getElementById('uigal');if(g)g.remove();if(UGR){document.documentElement.dataset.lm=UGR;UGR=''}try{if(location.hash==='#galeria-ui')history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+let UGR='';
+function uigOpen(){if(document.getElementById('uigal'))return;const g=document.createElement('div');g.id='uigal';g.setAttribute('role','dialog');g.setAttribute('aria-label','Galería de interfaz');
+ g.innerHTML=`<div class="ug-top"><h1>Galería de interfaz · claro y oscuro</h1><div class="ug-tabs ug-glass" role="group" aria-label="Acento"><span class="ug-ind" aria-hidden="true"></span>${[['neu','Neutro'],['cos','Cosmere'],['cyb','Cyberpunk'],['dun','Dune']].map(([k,n],i)=>`<button type="button" class="ug-tab" data-ugc="acc" data-k="${k}" aria-selected="${i===0}">${n}</button>`).join('')}</div><button type="button" class="ug-btn sec" data-ugc="solid" aria-pressed="false">Probar modo sólido</button><button type="button" class="ug-btn pri" data-ugc="close">Cerrar</button></div><div class="ug-wrap">${uigPane('d')}${uigPane('l')}</div>`;
+ document.body.appendChild(g);requestAnimationFrame(()=>{uigInit(g);requestAnimationFrame(()=>uigInit(g))});
+ g.addEventListener('click',uigClick);addEventListener('resize',()=>uigInit(g))}
+function uigMotion(){return !(lfRM()||perfOn)}
+function uigClick(e){const b=e.target.closest('[data-ugc]');const g=document.getElementById('uigal');if(!g)return;
+ if(!b){if(!e.target.closest('.ug-menu'))g.querySelectorAll('.ug-menu').forEach(m=>m.remove());return}
+ const a=b.dataset.ugc,pane=b.closest('.ug-pane');
+ if(a==='close')return uigClose();
+ if(a==='nav'){const t=b.closest('.ug-tree');t.querySelectorAll('[aria-current]').forEach(x=>x.removeAttribute('aria-current'));b.setAttribute('aria-current','page');uigInd(t,b);const cr=pane.querySelector('.ug-crumb b');if(cr)cr.textContent=b.textContent;return}
+ if(a==='collapse'){const sh=b.closest('.ug-shell');sh.classList.toggle('col');const t=sh.querySelector('.ug-tree');const f=()=>uigInd(t,t.querySelector('[aria-current]'));f();setTimeout(f,380);return}
+ if(a==='tab'){const t=b.closest('.ug-tabs');t.querySelectorAll('[role=tab]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));uigInd(t,b);return}
+ if(a==='acc'){const t=b.closest('.ug-tabs');t.querySelectorAll('.ug-tab').forEach(x=>x.setAttribute('aria-selected',String(x===b)));uigInd(t,b);g.querySelectorAll('.ug-pane').forEach(p=>{p.dataset.ug=b.dataset.k});requestAnimationFrame(()=>uigInit(g));return}
+ if(a==='solid'){const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(on));b.textContent=on?'Volver al cristal':'Probar modo sólido';document.documentElement.classList.toggle('perf',on||perfOn);return}
+ if(a==='dk'){const t=b.closest('.ug-dock');t.querySelectorAll('.ug-dk').forEach(x=>x.removeAttribute('aria-current'));b.setAttribute('aria-current','true');uigInd(t,b);return}
+ if(a==='menu'){const h=pane.querySelector('.ug-menuhost');if(h.firstChild){h.innerHTML='';b.setAttribute('aria-expanded','false');return}b.setAttribute('aria-expanded','true');e.stopPropagation();const I=UGI;h.innerHTML=`<div class="ug-menu ug-glass" role="menu">${[['light','Claro'],['dark','Oscuro'],['auto','Automático']].map(([k,n],i)=>`<button type="button" role="menuitem" class="ug-mi"><span>${n}</span>${i===2?'<em>✓</em>':''}</button>`).join('')}<hr><button type="button" role="menuitem" class="ug-mi">Buscar actualizaciones</button><button type="button" role="menuitem" class="ug-mi">¿Algo no funciona?</button></div>`;return}
+ if(a==='dlg'){const sh=pane.querySelector('.ug-shell');const w=document.createElement('div');w.className='ug-dwrap';w.innerHTML='<div class="ug-dlg ug-glass" role="alertdialog" aria-modal="true" aria-label="Diálogo de ejemplo"><h4>¿Cerrar la partida?</h4><p>Los diálogos son cristal flotante con entrada y salida suaves. El contenido interior sigue legible sobre el fondo.</p><div class="ug-row" style="justify-content:flex-end"><button type="button" class="ug-btn gho" data-ugc="dx">Cancelar</button><button type="button" class="ug-btn pri" data-ugc="dx">Aceptar</button></div></div>';pane.appendChild(w);const f=w.querySelector('.ug-btn.pri');if(f)f.focus();return}
+ if(a==='dx'){const w=b.closest('.ug-dwrap');w.classList.add('out');setTimeout(()=>w.remove(),uigMotion()?260:0);return}
+ if(a==='toast'){const c=pane.querySelector('.ug-toasts');const t=document.createElement('div');t.className='ug-toast ug-glass';t.setAttribute('role','status');t.innerHTML='<i></i>Partida guardada';c.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),uigMotion()?260:0)},2400);return}
+ if(a==='shuf'){const l=pane.querySelector('[data-ugl]');const kids=[...l.children];const first=kids.map(k=>k.getBoundingClientRect().top);const o=kids.slice().sort(()=>Math.random()-.5);o.forEach(k=>l.appendChild(k));if(!uigMotion())return;o.forEach(k=>{const d=first[kids.indexOf(k)]-k.getBoundingClientRect().top;if(d)k.animate([{transform:`translateY(${d}px)`},{transform:'none'}],{duration:320,easing:'cubic-bezier(.34,1.2,.5,1)'})});return}
+ if(a==='theme'){uigTheme(b);return}}
+function uigTheme(btn){const r=btn.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+ const flip=()=>{const d=document.documentElement;if(!UGR)UGR=d.dataset.lm;d.dataset.lm=d.dataset.lm==='d'?'l':'d'};
+ if(!uigMotion()||!document.startViewTransition){const g=document.getElementById('uigal');if(g&&uigMotion()){g.style.transition='opacity .22s';g.style.opacity='.0';setTimeout(()=>{flip();g.style.opacity='1'},230)}else flip();return}
+ const vt=document.startViewTransition(flip);vt.ready.then(()=>{document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:560,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});
+  const ring=document.createElement('div');ring.className='ug-ring';document.body.appendChild(ring);const a=ring.animate([{left:x+'px',top:y+'px',width:'0px',height:'0px',opacity:.95},{left:(x-rad)+'px',top:(y-rad)+'px',width:(rad*2)+'px',height:(rad*2)+'px',opacity:0}],{duration:560,easing:'cubic-bezier(.3,.7,.2,1)'});a.onfinish=()=>ring.remove()}).catch(()=>{})}
+function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&canAdm())uigOpen()}catch(e){}}
+addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
+setInterval(uigCheck,1500);
+const APPV='00.01.122';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.120 a v00.01.121. Preparación interna del nuevo estilo de interfaz (variables de cristal, tiempos y acento por juego, con respaldos para modo ligero y accesibilidad). No cambia nada de lo que se ve.';
+const APPD='Actualiza de v00.01.121 a v00.01.122. Nueva galería interna de componentes de interfaz (solo administradores, dirección con #galeria-ui) para aprobar el nuevo estilo de cristal antes de migrar las pantallas. No cambia nada de las pantallas actuales.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
