@@ -1842,6 +1842,26 @@ html[data-cyb] #mbar,html[data-cyb] #mmore{border-radius:6px;clip-path:polygon(0
 html[data-cyb] #mbar .mbind{border-radius:4px;box-shadow:inset 0 3px 0 var(--ui-acc)}
 @media(prefers-reduced-motion:reduce){#mbar,#mbar *,#mmore{transition:none!important}}
 html.perf #mbar,html.perf #mbar *,html.perf #mmore{transition:none!important}
+
+/* ===== Diálogos, avisos y menús de cristal (paso 5) ===== */
+html:root:root dialog#dlg:not(.admd):not(#updf),html:root:root dialog#dlg.lgld{background:var(--ui-glass-bg-strong);color:var(--ui-ink);border:1px solid var(--ui-glass-bd);border-radius:var(--ui-r-lg);box-shadow:var(--ui-glass-hl),var(--ui-shadow);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur)}
+html:root:root dialog#dlg:not(.admd):not(#updf) h3,html:root:root dialog#dlg:not(.admd):not(#updf) .hint{color:inherit}
+html:root:root dialog#dlg:not(.admd):not(#updf) .hint{opacity:.8}
+html[data-cos]:root dialog#dlg:not(.admd):not(#updf){border-radius:30px}
+html[data-dun]:root dialog#dlg:not(.admd):not(#updf){border-radius:28px 28px 28px 10px}
+html[data-cyb]:root dialog#dlg:not(.admd):not(#updf){border-radius:6px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+dialog#dlg[open]:not(#updf){animation:uidlg var(--ui-t-base) var(--ui-spring) both}
+dialog#dlg[open]:not(#updf)::backdrop{animation:uibd var(--ui-t-base) var(--ui-ease) both}
+dialog#dlg:not(.admd):not(#updf)::backdrop{background:rgba(10,10,20,.42)}
+@keyframes uidlg{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes uibd{from{opacity:0}to{opacity:1}}
+html:root:root div.toast{background:var(--ui-glass-bg-strong);color:var(--ui-ink);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur)}
+html:root:root div.toast:not([hidden]){animation:uitoast var(--ui-t-base) var(--ui-spring) both}
+@keyframes uitoast{from{opacity:0;transform:translate(-50%,16px) scale(.92)}to{opacity:1;transform:translate(-50%,0)}}
+html:root:root #topbar .tbd,html:root:root #mmore,html:root:root #tpop{background:var(--ui-glass-bg-strong);color:var(--ui-ink);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur)}
+html:root:root #topbar .tbd button{color:var(--ui-ink)}
+@media(prefers-reduced-motion:reduce){dialog#dlg[open],dialog#dlg[open]::backdrop,div.toast{animation:none!important}}
+html.perf dialog#dlg[open],html.perf dialog#dlg[open]::backdrop,html.perf div.toast{animation:none!important}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4098,9 +4118,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.126';
+const APPV='00.01.127';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.125 a v00.01.126. En móvil y tablet, el menú de burbujas se sustituye por una barra inferior de cristal con indicador deslizante (Inicio, Amigos, Avisos, Ajustes y Cuenta con su menú).';
+const APPD='Actualiza de v00.01.126 a v00.01.127. Diálogos, avisos y menús desplegables con cristal (se adaptan al tema y respetan el deslizador de opacidad) y entrada con muelle.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
