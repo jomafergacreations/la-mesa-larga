@@ -1709,6 +1709,35 @@ html[data-lm=l] .ug-pane[data-ui=l] .ug-btn.dan,.ug-pane[data-ui=l] .ug-btn.dan{
 .ug-ring{position:fixed;z-index:100000;pointer-events:none;border-radius:50%;border:2px solid rgba(255,255,255,.85);box-shadow:0 0 22px 4px rgba(255,255,255,.5),inset 0 0 18px rgba(255,255,255,.35)}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 ::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+/* ---- Galería: ambientación Cyberpunk 2077 (solo interfaz; el tema real de Cyberpunk no se toca) ---- */
+.ug-pane[data-ug=cyb]{--ui-cy:#00F0FF;--ui-mg:#FF2A6D;--ui-r-sm:6px;--ui-r-md:8px;--ui-r-lg:10px;--ui-r-pill:6px;--ui-acc:#FCEE0A;--ui-acc-ink:#0A0A0C;--ui-ease:cubic-bezier(.2,.9,.2,1);--ui-spring:cubic-bezier(.3,1.25,.4,1);font-family:'Share Tech Mono',ui-monospace,monospace;letter-spacing:.02em}
+.ug-pane[data-ug=cyb][data-ui=d]{--ui-solid:#0A0A10;--ui-glass-bg:rgba(10,10,16,.60);--ui-glass-bg-strong:rgba(10,10,16,.90);--ui-glass-bd:rgba(252,238,10,.55);--ui-ink:#F6F3D2;--ui-ink-mut:rgba(246,243,210,.66);--ui-glass-hl:inset 0 0 0 1px rgba(0,240,255,.14),inset 0 1px 0 rgba(252,238,10,.3);--ui-shadow:0 0 0 1px rgba(0,0,0,.6),0 10px 28px -10px rgba(252,238,10,.28),0 24px 50px -22px rgba(255,42,109,.35);
+ background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px),linear-gradient(rgba(252,238,10,.05) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px) 0 0/44px 44px,radial-gradient(55% 45% at 10% 6%,rgba(255,42,109,.45),transparent 70%),radial-gradient(50% 45% at 94% 92%,rgba(0,240,255,.34),transparent 70%),radial-gradient(40% 30% at 70% 10%,rgba(252,238,10,.16),transparent 70%),#07070C}
+.ug-pane[data-ug=cyb][data-ui=l]{--ui-acc:#0A0A0C;--ui-acc-ink:#FCEE0A;--ui-solid:#FFF35E;--ui-glass-bg:rgba(255,247,92,.55);--ui-glass-bg-strong:rgba(255,246,80,.94);--ui-glass-bd:#0A0A0C;--ui-ink:#0A0A0C;--ui-ink-mut:rgba(10,10,12,.72);--ui-glass-hl:inset 0 0 0 1px rgba(255,255,255,.35);--ui-shadow:4px 4px 0 rgba(10,10,12,.85);
+ background:repeating-linear-gradient(135deg,rgba(10,10,12,.06) 0 2px,transparent 2px 9px),radial-gradient(50% 40% at 90% 8%,rgba(255,42,109,.35),transparent 70%),radial-gradient(45% 40% at 8% 94%,rgba(0,240,255,.4),transparent 70%),#FCEE0A}
+.ug-pane[data-ug=cyb]::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:40;background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;border-radius:inherit}
+.ug-pane[data-ug=cyb] :is(h2,h3,.ug-crumb,.ug-nav,.ug-tab,.ug-btn,.ug-dk,.ug-mi,.ug-li,.ug-toast,.ug-dlg p,.ug-game p){text-transform:uppercase;letter-spacing:.07em}
+.ug-pane[data-ug=cyb] :is(.ug-brand b,.ug-game b,.ug-dlg h4){font-family:'Orbitron',var(--sans),sans-serif;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.ug-pane[data-ug=cyb] :is(.ug-btn,.ug-bar,.ug-side,.ug-menu,.ug-dlg,.ug-toast,.ug-tabs,.ug-dock,.ug-li,.ug-game){border-radius:6px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.ug-pane[data-ug=cyb] .ug-side{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+.ug-pane[data-ug=cyb] .ug-ic,.ug-pane[data-ug=cyb] .ug-nav,.ug-pane[data-ug=cyb] .ug-mi,.ug-pane[data-ug=cyb] .ug-tab,.ug-pane[data-ug=cyb] .ug-dk{border-radius:4px}
+.ug-pane[data-ug=cyb] .ug-ind{border-radius:4px;background:color-mix(in srgb,var(--ui-acc) 22%,transparent);box-shadow:inset 3px 0 0 var(--ui-acc),0 0 16px -2px color-mix(in srgb,var(--ui-acc) 55%,transparent)}
+.ug-pane[data-ug=cyb][data-ui=l] .ug-ind{background:rgba(10,10,12,.14);box-shadow:inset 3px 0 0 #0A0A0C}
+.ug-pane[data-ug=cyb] .ug-tabs .ug-ind{background:color-mix(in srgb,var(--ui-acc) 26%,transparent)}
+.ug-pane[data-ug=cyb][data-ui=d] .ug-btn.pri{background:var(--ui-acc);color:#0A0A0C;box-shadow:0 0 18px -2px rgba(252,238,10,.65)}
+.ug-pane[data-ug=cyb][data-ui=d] .ug-btn.sec{border-color:rgba(0,240,255,.55);color:#BFFBFF;box-shadow:inset 0 0 12px -4px rgba(0,240,255,.5)}
+.ug-pane[data-ug=cyb][data-ui=d] .ug-btn.dan{background:rgba(255,42,109,.16);color:#FF7DA3;border-color:rgba(255,42,109,.7)}
+.ug-pane[data-ug=cyb][data-ui=l] .ug-btn.dan{background:#FF2A6D;color:#0A0A0C;border-color:#0A0A0C}
+.ug-pane[data-ug=cyb] .ug-toast i{background:var(--ui-mg);box-shadow:0 0 10px var(--ui-mg);border-radius:1px}
+.ug-pane[data-ug=cyb] .ug-li i{background:var(--ui-cy);border-radius:1px;box-shadow:0 0 8px var(--ui-cy)}
+.ug-pane[data-ug=cyb][data-ui=l] .ug-li i{background:#0A0A0C;box-shadow:none}
+.ug-pane[data-ug=cyb] .ug-mi em{color:var(--ui-cy)}.ug-pane[data-ug=cyb][data-ui=l] .ug-mi em{color:#0A0A0C}
+.ug-pane[data-ug=cyb] .ug-brand b{font-size:.78rem}
+.ug-pane[data-ug=cyb] .ug-brand i{border-radius:2px;background:linear-gradient(135deg,#FCEE0A 0 55%,#FF2A6D 55%);clip-path:polygon(0 0,100% 0,100% 70%,70% 100%,0 100%)}
+.ug-pane[data-ug=cyb] .ug-game{border-color:var(--ui-glass-bd);background:var(--ui-solid)}
+.ug-pane[data-ug=cyb] .ug-phone{border-radius:14px}
+.ug-pane[data-ug=cyb] .ug-brand:hover b{animation:cyGl .8s steps(1) 1}
+.ug-pane[data-ug=cyb] .ug-dwrap{background:rgba(0,0,0,.55)}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3958,9 +3987,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.122';
+const APPV='00.01.123';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.121 a v00.01.122. Nueva galería interna de componentes de interfaz (solo administradores, dirección con #galeria-ui) para aprobar el nuevo estilo de cristal antes de migrar las pantallas. No cambia nada de las pantallas actuales.';
+const APPD='Actualiza de v00.01.122 a v00.01.123. En la galería interna, el acento Cyberpunk adopta la estética de Cyberpunk 2077 (neón amarillo, cian y magenta, líneas de barrido, esquinas cortadas y tipografías técnicas). Solo afecta a la galería.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
