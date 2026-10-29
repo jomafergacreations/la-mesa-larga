@@ -1866,6 +1866,29 @@ html:root:root #topbar .tbd,html:root:root #mmore,html:root:root #tpop{backgroun
 html:root:root #topbar .tbd button{color:var(--ui-ink)}
 @media(prefers-reduced-motion:reduce){dialog#dlg[open],dialog#dlg[open]::backdrop,div.toast{animation:none!important}}
 html.perf dialog#dlg[open],html.perf dialog#dlg[open]::backdrop,html.perf div.toast{animation:none!important}
+
+/* ===== Núcleo de componentes (paso 7): botones, campos, segmentos y etiquetas con los tokens ===== */
+html[data-cos]{--ui-r-xs:14px;--ui-r-sm:20px;--ui-r-md:26px}
+html[data-dun]{--ui-r-xs:10px;--ui-r-sm:16px;--ui-r-md:22px}
+html[data-cyb]{--ui-r-xs:3px;--ui-r-sm:5px;--ui-r-md:6px}
+html:root:root .btn{border-radius:var(--ui-r-sm) var(--ui-r-sm) var(--ui-r-sm) 5px;transition:transform var(--ui-t-fast) var(--ui-spring),box-shadow var(--ui-t-base),filter var(--ui-t-base),background-color var(--ui-t-base)}
+html:root:root .btn.sm{border-radius:var(--ui-r-xs) var(--ui-r-xs) var(--ui-r-xs) 4px}
+html[data-cos]:root:root .btn,html[data-cos]:root:root .btn.sm{border-radius:var(--ui-r-pill)}
+html[data-cyb]:root:root .btn,html[data-cyb]:root:root .btn.sm{border-radius:var(--ui-r-sm)}
+html:root:root .btn:hover:not(:disabled){transform:translateY(-1px) scale(1.012)}
+html:root:root .btn:active:not(:disabled){transform:scale(.95);transition-duration:90ms}
+html:root:root :is(.btn,.chip,.thm button,.seg button,.tbi,.sbi,.mbi):focus-visible{outline:2px solid var(--ui-acc);outline-offset:2px}
+html:root:root :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,select){border-radius:var(--ui-r-xs);transition:box-shadow var(--ui-t-base) var(--ui-ease),border-color var(--ui-t-base)}
+html:root:root :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,select):focus{outline:none;border-color:var(--ui-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--ui-acc) 35%,transparent)}
+html:root:root .thm button,html:root:root .seg button{transition:transform var(--ui-t-fast) var(--ui-spring),background-color var(--ui-t-base),color var(--ui-t-base),box-shadow var(--ui-t-base),opacity var(--ui-t-base)}
+html:root:root .thm button:active,html:root:root .seg button:active{transform:scale(.94)}
+html:root:root .thm button[aria-pressed="true"]{animation:uipop var(--ui-t-base) var(--ui-spring)}
+@keyframes uipop{from{transform:scale(.88)}to{transform:none}}
+html:root:root .chip{transition:transform var(--ui-t-fast) var(--ui-spring),background-color var(--ui-t-base),border-color var(--ui-t-base)}
+html:root:root .chip:active{transform:scale(.94)}
+html:root:root .gmc{border-radius:var(--ui-r-md)}
+@media(prefers-reduced-motion:reduce){html:root:root .btn,html:root:root .thm button,html:root:root .chip{transition:none;animation:none}}
+html.perf:root:root .btn,html.perf:root:root .thm button,html.perf:root:root .chip{transition:none;animation:none}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4122,9 +4145,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.128';
+const APPV='00.01.129';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.127 a v00.01.128. Al cambiar el tema, la nueva apariencia se revela en círculo desde el botón con un halo en el borde (sin movimiento si lo tienes reducido o en modo Ligero). Las pantallas entran con un pequeño muelle.';
+const APPD='Actualiza de v00.01.128 a v00.01.129. Botones, campos, selectores y etiquetas de toda la app adoptan el nuevo sistema: esquinas por juego, rebote al pulsar y foco con el acento del juego.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
