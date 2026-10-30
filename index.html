@@ -11284,11 +11284,11 @@ html:root:root .bubbles.hubmain.gamesscr .bub .tt{padding:8px 12px;border-radius
 html:root:root .bubbles.hubmain.gamesscr .bub .tt b{font-size:1rem}
 html:root:root .bubbles.hubmain.gamesscr .bub .tt small,html:root:root .bubbles.hubmain.gamesscr .bub .tt span,html:root:root .bubbles.hubmain.gamesscr .bub .tt em{font-size:.72rem;line-height:1.25}
 /* v158: lente de cristal que amplía lo que hay debajo al arrastrar */
-.mbmag{display:block;position:absolute;inset:0;font-style:normal;overflow:hidden;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 120ms}
+.mbmag{display:block;position:absolute;inset:0;font-style:normal;overflow:hidden;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 80ms}
 #mbar.drag .mbmag{opacity:1}
-.mbmagin{position:absolute;left:0;top:0;display:flex;align-items:stretch;gap:2px;padding:6px;box-sizing:border-box;will-change:transform}
+.mbmagin{position:absolute;left:0;top:0;transition:transform 60ms linear;display:flex;align-items:stretch;gap:2px;padding:6px;box-sizing:border-box;will-change:transform}
 .mbmagin .mbi{pointer-events:none}
-html:root:root:not([data-cyb]) #mbar.drag .mbind{background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 55%),color-mix(in srgb,var(--ui-solid) 88%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(255,255,255,.55),inset 5px 0 7px -4px rgba(255,60,140,.45),inset -5px 0 7px -4px rgba(40,200,255,.45),inset 0 -8px 12px -8px rgba(255,255,255,.5),0 14px 26px -10px rgba(0,0,0,.45);transition:transform 60ms linear,opacity var(--ui-t-fast)}
+html:root:root:not([data-cyb]) #mbar.drag .mbind{background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 55%),color-mix(in srgb,var(--ui-solid) 95%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(255,255,255,.55),inset 5px 0 7px -4px rgba(255,60,140,.45),inset -5px 0 7px -4px rgba(40,200,255,.45),inset 0 -8px 12px -8px rgba(255,255,255,.5),0 14px 26px -10px rgba(0,0,0,.45);transition:transform 60ms linear,opacity var(--ui-t-fast)}
 html:root:root:not([data-cyb]) #mbar.drag .mbind::after{z-index:3}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12220,9 +12220,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.158';
+const APPV='00.01.159';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.157 a v00.01.158. Al arrastrar, el indicador de la barra inferior es una lente de cristal que amplía los iconos que tiene debajo, crece sobre la barra y recorre todos los botones de forma continua.';
+const APPD='Actualiza de v00.01.158 a v00.01.159. La lente de la barra inferior ya no se desincroniza: lo que amplía va exactamente bajo ella mientras la arrastras.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12447,22 +12447,22 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
  requestAnimationFrame(()=>mbInd());setTimeout(mbInd,300)}
 let mbSel=null;
-function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll('.mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector('.mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector('.mbi.cur');
+function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll(':scope > .mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector(':scope > .mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector(':scope > .mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
 document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 (function(){let st=null,sup=0;
-const items=m=>[...m.querySelectorAll('.mbi:not(.mbmode)')];
+const items=m=>[...m.querySelectorAll(':scope > .mbi:not(.mbmode)')];
 const near=(m,cx)=>{let best=null,bd=1e9;items(m).forEach(t=>{const r=t.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-cx);if(d<bd){bd=d;best=t}});return best};
 document.addEventListener('pointerdown',e=>{const m=document.getElementById('mbar');if(!m||!e.target.closest||!e.target.closest('#mbar')||(e.pointerType==='mouse'&&e.button))return;st={id:e.pointerId,x:e.clientX,on:false,m}},true);
 document.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const m=st.m;if(!m.isConnected){st=null;return}
  if(!st.on){if(Math.abs(e.clientX-st.x)<8)return;st.on=true;m.classList.add('drag');try{m.setPointerCapture(e.pointerId)}catch(x){}}
  const i=m.querySelector('.mbind'),its=items(m);if(!i||!its.length)return;const a=m.getBoundingClientRect(),r0=its[0].getBoundingClientRect(),w=r0.width,bl=a.left+m.clientLeft,bt=a.top+m.clientTop;
- i.style.width=w+'px';let x=e.clientX-bl-w/2;x=Math.max(8,Math.min(m.clientWidth-w-8,x));const y=r0.top-bt;i.style.opacity='1';i.style.transform='translate('+x+'px,'+y+'px) scale(1.22)';
+ i.style.width=w+'px';let x=e.clientX-bl-w/2;x=Math.max(8,Math.min(m.clientWidth-w-8,x));const y=r0.top-bt;const pm=/translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)/.exec(i.style.transform||'');const ox=pm?+pm[1]:x,oy=pm?+pm[2]:y;i.style.opacity='1';i.style.transform='translate('+x+'px,'+y+'px) scale(1.22)';
  let g=i.querySelector('.mbmag');if(!g){g=document.createElement('span');g.className='mbmag';g.setAttribute('aria-hidden','true');i.appendChild(g)}
  if(!g.firstChild){const c=document.createElement('div');c.className='mbmagin';c.style.width=m.clientWidth+'px';c.style.height=m.clientHeight+'px';[...m.children].forEach(k=>{if(k.classList.contains('mbi')){const q=k.cloneNode(true);q.removeAttribute('data-act');q.classList.remove('hov');c.appendChild(q)}});g.appendChild(c)}
- g.firstChild.style.transform='translate('+(-x)+'px,'+(-y)+'px)';
+ {const c=g.firstChild;if(!c.dataset.r){c.dataset.r='1';c.style.transition='none';c.style.transform='translate('+(-ox)+'px,'+(-oy)+'px)';void c.offsetWidth;c.style.transition=''}c.style.transform='translate('+(-x)+'px,'+(-y)+'px)'}
  const n=near(m,e.clientX);m.querySelectorAll('.mbi.hov').forEach(t=>{if(t!==n)t.classList.remove('hov')});if(n)n.classList.add('hov')},true);
 const end=e=>{if(!st||e.pointerId!==st.id)return;const s=st;st=null;if(!s.on)return;const m=s.m;m.classList.remove('drag');setTimeout(()=>{const g=m.querySelector('.mbmag');if(g&&!m.classList.contains('drag'))g.remove()},260);m.querySelectorAll('.mbi.hov').forEach(t=>t.classList.remove('hov'));
  const n=e.type==='pointercancel'?null:near(m,e.clientX);if(n&&!n.classList.contains('cur'))n.click();else mbInd();sup=Date.now()};
