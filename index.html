@@ -11341,6 +11341,19 @@ html[data-adm][data-lm=l]:root:root .adp .seg button{color:var(--ui-ink)}
 html[data-adm][data-lm=l]:root:root .adp .seg button[aria-pressed=true]{background:linear-gradient(180deg,#fff,rgba(255,255,255,.7));color:#1C1730;box-shadow:0 2px 8px -3px rgba(60,40,110,.4)}
 html[data-adm][data-lm=l] .admnav .ani[aria-current=page]{color:#4C3FC4}
 #topbar .tbpan{color:var(--ui-acc,#6d5ce7);gap:6px;padding:0 12px}#topbar .tbpan svg{width:20px;height:20px;flex:none}html[data-dev=phone] #topbar .tbpan span{display:none}html[data-dev=phone] #topbar .tbpan{padding:0 10px}
+html[data-dev=phone] .adp .adx{display:none}
+html[data-dev=phone] .adp .adx.open{display:block}
+html[data-dev=phone] .adp .adi{all:unset;box-sizing:border-box;flex:none;width:24px;height:24px;border-radius:50%;border:1.6px solid currentColor;display:inline-grid;place-items:center;font:italic 700 .86rem/1 Georgia,'Times New Roman',serif;cursor:pointer;opacity:.8;margin-left:auto;-webkit-tap-highlight-color:transparent}
+html[data-dev=phone] .adp .adi[aria-expanded=true]{background:var(--ui-acc,#6d5ce7);border-color:var(--ui-acc,#6d5ce7);color:#fff;opacity:1}
+html[data-dev=phone] .adp .adph>div{position:relative}
+html[data-dev=phone] .adp .adph .adi{position:absolute;right:0;top:-3px;margin:0}
+html[data-dev=phone] .adp .adirow{display:flex;justify-content:flex-end;margin-bottom:6px}
+html[data-dev=phone] .adp .acc>:first-child{cursor:pointer;display:flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+html[data-dev=phone] .adp .acc>:first-child::after{content:'';flex:none;width:8px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(2px) rotate(-135deg);margin-left:auto;opacity:.7;transition:transform .28s var(--ui-spring,ease)}
+html[data-dev=phone] .adp .acc>:first-child.hasi::after{margin-left:10px}
+html[data-dev=phone] .adp .acc.ac>:first-child::after{transform:translateY(-2px) rotate(45deg)}
+html[data-dev=phone] .adp .acc.ac>:not(:first-child){display:none}
+html[data-dev=phone] .adp .acc.ac{padding-bottom:10px}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -11801,7 +11814,29 @@ function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('
 /* reordenación animada de listas (FLIP) */
 function uiFlipCap(root){const m=new Map();if(!root||!uiMotionOk())return m;root.querySelectorAll('.arow').forEach(r=>{const h=r.querySelector('[data-u]');if(h)m.set(h.dataset.u,r.getBoundingClientRect().top)});return m}
 function uiFlipRun(root,m){if(!root||!m||!m.size)return;root.querySelectorAll('.arow').forEach(r=>{const h=r.querySelector('[data-u]');if(!h||!m.has(h.dataset.u))return;const d=m.get(h.dataset.u)-r.getBoundingClientRect().top;if(Math.abs(d)>1&&r.animate)r.animate([{transform:`translateY(${d}px)`},{transform:'none'}],{duration:300,easing:'cubic-bezier(.34,1.2,.5,1)'})})}
-function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}const fc=uiFlipCap(p);p.innerHTML=html;admStag(p);uiFlipRun(p,fc)}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){const fc=uiFlipCap(r);r.innerHTML=html;uiFlipRun(r,fc);return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
+
+/* ===== Panel en móvil: textos largos en «i» y tarjetas plegables ===== */
+const admCl={};
+function admPhone(){try{
+ if(document.documentElement.dataset.dev!=='phone'||scr!=='admin')return;
+ const R=document.querySelector('.adp');if(!R)return;
+ R.querySelectorAll('p.hint,.adph p').forEach(p=>{if(p.dataset.ai||p.closest('.msg'))return;p.dataset.ai='1';
+  if(p.textContent.trim().length<70)return;
+  const b=document.createElement('button');b.type='button';b.className='adi';b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Más información');b.textContent='i';b._p=p;p.classList.add('adx');
+  const pv=p.previousElementSibling;
+  if(pv&&pv.matches('b,h1,h2,h3,.gmh,.admh')){pv.appendChild(b);pv.classList.add('hasi')}
+  else{const r=document.createElement('div');r.className='adirow';r.appendChild(b);p.before(r)}});
+ const tl=R.querySelector('.admroot .tiles');if(tl&&!tl.closest('.tilesec')){const sec=document.createElement('section');sec.className='onl tilesec';sec.innerHTML='<b>Resumen</b>';tl.before(sec);sec.appendChild(tl)}
+ R.querySelectorAll('.admroot .onl,.admroot .gmc').forEach(el=>{if(el.dataset.ac)return;const h=el.firstElementChild;if(!h)return;
+  if([...el.children].filter(c=>c!==h&&!c.classList.contains('adx')&&!c.classList.contains('adirow')).length<1)return;
+  el.dataset.ac='1';el.classList.add('acc');const k=admTab+'|'+h.textContent.trim().slice(0,40);el.dataset.ack=k;
+  const c=k in admCl?admCl[k]:el.classList.contains('ovp');el.classList.toggle('ac',c);h.setAttribute('role','button');h.setAttribute('aria-expanded',c?'false':'true')})
+}catch(e){}}
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;
+ const i=t.closest('.adp .adi');if(i){const p=i._p;if(p){const o=p.classList.toggle('open');i.setAttribute('aria-expanded',o?'true':'false')}return}
+ const h=t.closest('.adp .acc>:first-child');if(!h||document.documentElement.dataset.dev!=='phone')return;if(t.closest('[data-act],button,a,select,input,label'))return;
+ const el=h.parentElement,c=el.classList.toggle('ac');admCl[el.dataset.ack]=c;h.setAttribute('aria-expanded',c?'false':'true')});
+function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}const fc=uiFlipCap(p);p.innerHTML=html;admPhone();admStag(p);uiFlipRun(p,fc)}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){const fc=uiFlipCap(r);r.innerHTML=html;uiFlipRun(r,fc);return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
 function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}
 let gmRes=null;
 function gmUnread(){return !!(gmRes&&!(store.gmRead||[]).includes(gmRes.updated))}
@@ -12271,9 +12306,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.165';
+const APPV='00.01.166';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.164 a v00.01.165. En el panel de administración, «Simular usuario» pasa a la barra superior y la barra inferior queda solo con las secciones del panel.';
+const APPD='Actualiza de v00.01.165 a v00.01.166. En el panel de administración en móvil, los textos largos van tras un icono «i» y las tarjetas se pliegan y despliegan al pulsar su título.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13403,7 +13438,7 @@ let pg='',popSel='',prevPct=null,prevNums=[];
 document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)return;if(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|email|url|tel|)$/.test(t.type||''))){if(t.form&&t.form.id==='impform')return;if(t.dataset&&t.dataset.nolimit)return;if(!t.maxLength||t.maxLength<0||t.maxLength>120)t.maxLength=120}},true);
 /* v74 botón atrás del sistema */
 (function(){let hk=null,pop=false;const snap=()=>({s:scr,c:store&&store.cur||null,p:typeof partId!=='undefined'?partId:null});const key=o=>o.s+'|'+o.c+'|'+o.p;
- const r0=render;render=function(k){if(session&&!booting&&isAdmin()&&!simU&&scr!=='admin'&&!(store&&store.cur)&&['menu','games','find','friends'].includes(scr)){scr='admin';if(!['ov','acc','rol','jg','rp','set'].includes(admTab))admTab='ov'}r0.apply(this,arguments);try{document.body.classList.toggle('fixscr',!!session&&!booting&&['menu','games','find','friends','admin'].includes(scr)&&!(store&&store.cur))}catch(e){}{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
+ const r0=render;render=function(k){setTimeout(admPhone,0);if(session&&!booting&&isAdmin()&&!simU&&scr!=='admin'&&!(store&&store.cur)&&['menu','games','find','friends'].includes(scr)){scr='admin';if(!['ov','acc','rol','jg','rp','set'].includes(admTab))admTab='ov'}r0.apply(this,arguments);try{document.body.classList.toggle('fixscr',!!session&&!booting&&['menu','games','find','friends','admin'].includes(scr)&&!(store&&store.cur))}catch(e){}{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  var __nr=render;render=function(){const x=__nr.apply(this,arguments);try{navSave()}catch(e){}return x};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
