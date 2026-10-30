@@ -1942,6 +1942,10 @@ html[data-dev=phone] .tbgm span{display:none}html[data-dev=phone] .tbgm{padding:
 html[data-dev=phone] #topbar .tbmenu{display:grid;place-items:center;width:42px;height:42px;padding:0;flex:none}html[data-dev=phone] #topbar .tbmenu svg{width:22px;height:22px}
 html[data-dev=phone] body.admbub #fdock,html[data-dev=phone] body.admbub #fbub{display:none!important}
 body.sbopen{overflow:hidden}
+
+#sidebar .sbnav>*,#sidebar .sbkids>*{flex-shrink:0}
+#mbar.hassel .mbi.cur:not(.sel){color:var(--ui-ink)}#mbar .mbi.sel{color:var(--ui-acc)}html[data-lm=d] #mbar .mbi.sel{color:color-mix(in srgb,var(--ui-acc) 65%,#fff)}
+html[data-dev=phone] .bubbles.hubmain #jgwrap{display:none!important}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4202,9 +4206,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.133';
+const APPV='00.01.134';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.132 a v00.01.133. Móvil con el nuevo diseño completo: barra superior con tu saludo, modo Game Master y botón de tema; barra inferior de cristal con Inicio, Amigos, Avisos, Ajustes y Menú; y un cajón lateral con el árbol de juegos, tu cuenta y el cambio de modo (también se abre deslizando desde el borde izquierdo).';
+const APPD='Actualiza de v00.01.133 a v00.01.134. Móvil: la barra inferior mantiene marcada la pestaña que pulsas mientras su panel está abierto, el árbol de juegos del menú ya no se corta y se quita la burbuja de Juegos de la pantalla principal (los juegos están en el menú).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4417,7 +4421,7 @@ function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!
 /* cajón lateral en móvil */
 function sbDrawer(o){const a=document.getElementById('sidebar');if(!a||document.documentElement.dataset.dev!=='phone')return;let sc=document.getElementById('sbscrim');
  if(o){if(!sc){sc=document.createElement('div');sc.id='sbscrim';document.body.appendChild(sc)}requestAnimationFrame(()=>sc.classList.add('on'))}else if(sc){sc.classList.remove('on');setTimeout(()=>{if(!document.getElementById('sbscrim').classList.contains('on'))sc.remove()},320)}
- a.classList.toggle('open',!!o);a.setAttribute('aria-hidden',o?'false':'true');document.body.classList.toggle('sbopen',!!o);if(o)setTimeout(()=>sbInd(),320)}
+ a.classList.toggle('open',!!o);a.setAttribute('aria-hidden',o?'false':'true');if(!o&&mbSel==='sbopen'){mbSel=null;mbInd()}document.body.classList.toggle('sbopen',!!o);if(o)setTimeout(()=>sbInd(),320)}
 document.addEventListener('click',e=>{const a=document.getElementById('sidebar');if(!a||!a.classList.contains('open'))return;
  if(e.target.closest('#sbscrim')||(e.target.closest('#sidebar [data-act]')&&!e.target.closest('[data-act=sbgrp]')&&!e.target.closest('[data-act=sbcol]')))sbDrawer(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')sbDrawer(false)});
@@ -4456,10 +4460,12 @@ function mbSync(c,AB){const H=document.documentElement,dev=H.dataset.dev;let m=d
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
  requestAnimationFrame(()=>mbInd());setTimeout(mbInd,300)}
-function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;const t=el||m.querySelector('.mbi.cur');
+let mbSel=null;
+function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll('.mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector('.mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector('.mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
-document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;mbInd(b);setTimeout(()=>mbInd(),520)});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome')?null:a;mbInd()});
+document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 document.addEventListener('click',e=>{if(e.target.closest('#mbar .mbacc'))return;if(!e.target.closest('#mmore')||e.target.closest('#mmore [data-act]'))mbClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
 addEventListener('resize',()=>setTimeout(mbInd,200));
