@@ -12197,9 +12197,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.151';
+const APPV='00.01.152';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.150 a v00.01.151. Tema Cyberpunk: las barras superior, inferior y lateral ya no se recortan ni se desenfocan, usan el amarillo/negro del tema y se han quitado animaciones que hacían ir a tirones la interfaz.';
+const APPD='Actualiza de v00.01.151 a v00.01.152. Se elimina el botón «‹ Inicio» de todas las pantallas: para volver al inicio se usa la barra inferior o la lateral.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12459,7 +12459,7 @@ const GALX='<span class="gxb" aria-hidden="true"><svg class="gxa" viewBox="0 0 2
 const NAIL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v1.200a1 1 0 0 1-1 1h-2.100l-1.400 12.800-1.500 3-1.500-3L9.100 6.200H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="currentColor"/></svg>';
 const BOOK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.500C6.500 4.500 9.500 4.500 12 6c2.500-1.500 5.500-1.500 8-.5V19c-2.500-1-5.500-1-8 .5-2.500-1.500-5.500-1.500-8-.5z M12 6v13.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/></svg>';
 const STORM='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16.500a4 4 0 0 1-.500-7.900A5.500 5.500 0 0 1 17 7.500a4.500 4.500 0 0 1 .500 9H7z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M12.500 11l-2 3.500h3l-2 3.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-function hubBar(back){return `${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
+function hubBar(back){if(back&&back[0]==='menu')back=null;return `${back?`<button type="button" class="hback" data-act="${back[0]}">‹ ${back[1]}</button>`:''}`}
 function dnWord(id,sw,cl){return `<svg class="${cl}" viewBox="0 0 420 84" role="img" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="84"><stop offset="0" style="stop-color:var(--dg1)"/><stop offset=".55" style="stop-color:var(--dg2)"/><stop offset="1" style="stop-color:var(--dg3)"/></linearGradient></defs><g fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 8H46A34 34 0 0 1 46 76H12"/><path pathLength="1" d="M12 8V26M12 58V76" opacity=".7"/><path pathLength="1" d="M108 6V44A26 26 0 0 0 160 44V6"/><path pathLength="1" d="M214 78V36A27 27 0 0 1 268 36V78"/><path pathLength="1" d="M214 14L268 70" opacity=".45"/><path pathLength="1" d="M372 8H336A30 30 0 0 0 336 76H372"/><path pathLength="1" d="M326 42H388" opacity=".8"/></g></svg>`}
 function hubTile(cls,ic,t,d,act,soon){return `<button type="button" class="bub ${cls}${soon?' soon':''}" data-act="${act}">${cls.indexOf('gal')>-1?GALX:''}${cls.indexOf('cyb')>-1?CYBFX+'<span class="bgi" aria-hidden="true">'+ic+'</span>':''}${cls.indexOf('dun')>-1?DNX:''}<span class="ti">${ic}</span><span class="tt">${cls.indexOf('dun')>-1?`<b class="dnbt" aria-label="Dune">${dnWord('dnwb',5.4,'dnbl')}</b>`:`<b>${t}</b>`}<span>${d}</span>${soon?'<em>Próximamente</em>':'<em class="ph" aria-hidden="true" style="visibility:hidden">Próximamente</em>'}</span>${soon?'':'<span class="go">→</span>'}</button>`}
 /* ---------- Cyberpunk: icono, burbuja, fondo, intro y arranque «Próximamente» ---------- */
