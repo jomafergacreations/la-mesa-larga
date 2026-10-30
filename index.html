@@ -4192,7 +4192,7 @@ body.sbopen{overflow:hidden}
 #mbar .mbi.sel{color:var(--ui-acc)}
 html[data-lm=d] #mbar .mbi.sel{color:color-mix(in srgb,var(--ui-acc) 65%,#fff)}
 
-html[data-dev=phone] .bubbles.hubmain #jgwrap{display:none!important}
+
 
 
 
@@ -7193,6 +7193,40 @@ html:not([data-dev=phone]) .jgin>.bub{animation:uipg var(--ui-t-slow) var(--ui-s
 @media(max-width:1099px){html:not([data-dev=phone]) .bubbles.hubmain{grid-template-columns:1fr}html:not([data-dev=phone]) .bubbles.hubmain .jgin,html:not([data-dev=phone]) .bubbles.hubmain .bpb{grid-column:1}html:not([data-dev=phone]) .bubbles.hubmain .bpb{grid-row:1}html:not([data-dev=phone]) .bubbles.hubmain .jgin{grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}html:not([data-dev=phone]) .bubbles.hubmain{row-gap:16px}html:not([data-dev=phone]) .bubbles.hubmain .jgin>.bub:nth-child(n){min-height:340px;padding:84px 12px 14px}html:not([data-dev=phone]) .bubbles.hubmain .jgin .tt b{font-size:1.15rem}html:not([data-dev=phone]) .bubbles.hubmain .jgin .bub.cyb .tt b{font-size:.88rem;letter-spacing:0}html:not([data-dev=phone]) .bubbles.hubmain .jgin .tt>span{font-size:.8rem}}
 @media(prefers-reduced-motion:reduce){.jgin>.bub{animation:none!important}}
 html.perf .jgin>.bub{animation:none!important}
+/* ===== Diseño nuevo de componentes (paso 15) ===== */
+html:root:root .btn::after{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 60%)}
+html:root:root .btn.ghost::after{background:none}
+html:root:root .btn{border-radius:var(--ui-r-pill);border:1px solid var(--ui-glass-bd);background:color-mix(in srgb,var(--ui-ink) 9%,transparent);color:var(--ui-ink);box-shadow:none;padding:11px 20px}
+html:root:root .btn.pri{background:linear-gradient(135deg,var(--ui-acc),color-mix(in srgb,var(--ui-acc) 62%,#000));color:var(--ui-acc-ink);border-color:transparent;box-shadow:0 10px 22px -10px color-mix(in srgb,var(--ui-acc) 85%,#000)}
+html:root:root .btn.danger{background:color-mix(in srgb,#E5484D 14%,transparent);color:#E5484D;border-color:color-mix(in srgb,#E5484D 45%,transparent)}
+html:root:root .btn.ghost{background:transparent}
+.thm,.seg{position:relative}.thm .sgi,.seg .sgi{position:absolute;left:0;top:0;z-index:0;pointer-events:none;border-radius:inherit;background:var(--ui-glass-bg-strong);box-shadow:var(--ui-glass-hl),0 2px 8px rgba(0,0,0,.18);transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-spring),height var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)}
+.thm.hasgi button,.seg.hasgi button{position:relative;z-index:1}
+.thm.hasgi button[aria-pressed="true"],.seg.hasgi button[aria-pressed="true"]{background:transparent!important;box-shadow:none!important;animation:none}
+html[data-dev=phone] dialog#dlg:not(#updf){inset:auto 0 0 0;margin:0;width:100%;max-width:none;max-height:90dvh;border-radius:var(--ui-r-xl) var(--ui-r-xl) 0 0;padding-top:30px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));border-bottom:0;transform-origin:bottom center;transition:transform var(--ui-t-base) var(--ui-spring)}
+html[data-dev=phone] dialog#dlg:not(#updf)::before{content:"";position:absolute;top:9px;left:50%;width:42px;height:5px;margin-left:-21px;border-radius:5px;background:var(--ui-ink);opacity:.28}
+html[data-dev=phone] dialog#dlg[open]:not(#updf){animation:uisheet var(--ui-t-slow) var(--ui-spring) both}
+@keyframes uisheet{from{transform:translateY(100%)}to{transform:none}}
+html[data-dev=phone] dialog#dlg>.cbub{position:sticky;top:6px;float:right;right:auto;bottom:auto;width:38px;height:38px;margin:-14px -4px -38px 8px;background:color-mix(in srgb,var(--ui-ink) 12%,transparent);color:var(--ui-ink);box-shadow:none;border:1px solid var(--ui-glass-bd);animation:none;z-index:6}
+html[data-dev=phone] dialog#dlg>.cbub svg{width:18px;height:18px}
+html[data-dev=phone] dialog#dlg>.grid,html[data-dev=phone] dialog#dlg:has(.cbub.auto)>.grid{padding-bottom:6px}
+html[data-dev=phone] dialog#dlg .row{gap:10px}
+html[data-dev=phone] dialog#dlg .row .btn{flex:1}
+html[data-dev=phone] dialog#dlg::backdrop{background:rgba(8,8,16,.5)}
+html[data-dev=phone] #sidebar.open .sbnav>.sbi,html[data-dev=phone] #sidebar.open .sbft>.sbi,html[data-dev=phone] #sidebar.open .sbnav>.sbkids.open>*{animation:sbit var(--ui-t-slow) var(--ui-spring) both}
+html[data-dev=phone] #sidebar.open .sbnav>.sbi:nth-of-type(2){animation-delay:40ms}html[data-dev=phone] #sidebar.open .sbnav>.sbi:nth-of-type(3){animation-delay:80ms}html[data-dev=phone] #sidebar.open .sbnav>.sbi:nth-of-type(4){animation-delay:120ms}html[data-dev=phone] #sidebar.open .sbnav>.sbi:nth-of-type(5){animation-delay:160ms}
+html[data-dev=phone] #sidebar.open .sbft>.sbi:nth-child(1){animation-delay:200ms}html[data-dev=phone] #sidebar.open .sbft>.sbi:nth-child(2){animation-delay:240ms}html[data-dev=phone] #sidebar.open .sbft>.sbi:nth-child(3){animation-delay:280ms}html[data-dev=phone] #sidebar.open .sbft>.sbi:nth-child(4){animation-delay:320ms}
+@keyframes sbit{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+html[data-dev=phone] #sidebar .sbkids{border-left:2px solid color-mix(in srgb,var(--ui-ink) 14%,transparent);margin-left:22px;padding-left:6px}
+html[data-dev=phone] .bubbles.hubmain{display:flex;flex-direction:column;gap:16px}
+html[data-dev=phone] .bubbles.hubmain .jgwrap{order:1;display:block}
+html[data-dev=phone] .bubbles.hubmain .jgwrap::before{content:"Tus juegos";display:block;margin:2px 4px 10px;font-weight:800;font-size:1.05rem;letter-spacing:.01em}
+html[data-dev=phone] .bubbles.hubmain .jgin{display:flex!important;visibility:visible!important;pointer-events:auto!important;gap:12px;margin:0 -16px;padding:2px 16px 10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;grid-template-columns:none}
+html[data-dev=phone] .bubbles.hubmain .jgin::-webkit-scrollbar{display:none}
+html[data-dev=phone] .bubbles.hubmain .jgin>.bub:nth-child(n){flex:0 0 min(64vw,250px);height:290px;min-height:0;scroll-snap-align:center;padding:76px 16px 16px;animation:uipg var(--ui-t-slow) var(--ui-spring) both;animation-delay:calc(var(--i)*70ms)}
+html[data-dev=phone] .bubbles.hubmain .jgin .tt b{font-size:1.2rem}html[data-dev=phone] .bubbles.hubmain .jgin .bub.cyb .tt b{font-size:.95rem;letter-spacing:0}html[data-dev=phone] .bubbles.hubmain .jgin .tt>span{font-size:.82rem}
+html[data-dev=phone] .bubbles.hubmain .bpb{order:0}
+html:root:root dialog#dlg .btn.pri,html:root:root body .btn.pri{background:linear-gradient(135deg,var(--ui-acc),color-mix(in srgb,var(--ui-acc) 62%,#000));color:var(--ui-acc-ink);border-color:transparent}
 </style>
 </head><body>
 <div class="wrap" id="app"></div>
@@ -8090,9 +8124,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.136';
+const APPV='00.01.137';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.135 a v00.01.136. Limpieza total de la interfaz anterior: se eliminan el dock y la burbuja de menú, los menús desplegables de la barra superior, la cabecera con avatar y Amigos de cada pantalla, el saludo duplicado y el botón desplegable de Juegos. En PC y tablet los juegos quedan siempre visibles junto a Buscar partida; en móvil se entra por el menú.';
+const APPD='Actualiza de v00.01.136 a v00.01.137. Móvil rediseñado: los paneles se abren como hojas desde abajo (con asa; deslizando hacia abajo se cierran), botones nuevos sin cuadrícula, selectores con indicador deslizante, menú lateral con entrada escalonada y árbol con guía, y la pantalla principal con un carrusel de tus juegos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -8343,6 +8377,17 @@ document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mb
 document.addEventListener('click',e=>{if(e.target.closest('#mbar .mbacc'))return;if(!e.target.closest('#mmore')||e.target.closest('#mmore [data-act]'))mbClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
 addEventListener('resize',()=>setTimeout(mbInd,200));
+/* ===== Móvil: hojas inferiores, selectores con indicador y gesto de cierre (paso 15) ===== */
+function uiSegInd(){document.querySelectorAll('.thm,.seg').forEach(g=>{const on=g.querySelector('button[aria-pressed="true"]');let i=g.querySelector(':scope>.sgi');
+ if(!on){if(i)i.style.opacity='0';return}
+ if(!i){i=document.createElement('span');i.className='sgi';i.setAttribute('aria-hidden','true');g.prepend(i);g.classList.add('hasgi')}
+ const a=g.getBoundingClientRect(),b=on.getBoundingClientRect();if(!a.width)return;i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left-g.clientLeft)+'px,'+(b.top-a.top-g.clientTop)+'px)'})}
+{let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(uiSegInd)};new MutationObserver(go).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['aria-pressed']});addEventListener('resize',go)}
+{const d=document.getElementById('dlg');if(d){new MutationObserver(()=>{if(document.documentElement.dataset.dev!=='phone')return;const c=d.querySelector(':scope>.cbub');if(c&&d.firstElementChild!==c)d.prepend(c)}).observe(d,{childList:true});
+ d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom){try{d.close()}catch(x){}}});
+ let y0=null,t0=0;d.addEventListener('touchstart',e=>{if(document.documentElement.dataset.dev!=='phone')return;const r=d.getBoundingClientRect(),t=e.touches[0];y0=(t.clientY-r.top<34&&d.scrollTop<4)?t.clientY:null;t0=Date.now()},{passive:true});
+ d.addEventListener('touchmove',e=>{if(y0===null)return;const dy=e.touches[0].clientY-y0;if(dy>0){d.style.transition='none';d.style.transform='translateY('+dy+'px)'}},{passive:true});
+ d.addEventListener('touchend',e=>{if(y0===null)return;const dy=e.changedTouches[0].clientY-y0;d.style.transition='';d.style.transform='';y0=null;if(dy>110||(dy>50&&Date.now()-t0<220)){try{d.close()}catch(x){}}},{passive:true})}}
 function fdockUpdate(c){mbSync(c);
  if(!session||booting){['topbar','sidebar','sbscrim','mmore'].forEach(id=>{const e=document.getElementById(id);if(e)e.remove()});document.body.classList.remove('has-tb','has-sb');document.documentElement.style.removeProperty('--sbw');return}
  topbarUpdate(c)}
