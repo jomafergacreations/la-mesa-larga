@@ -6403,16 +6403,15 @@ html[data-lm=d] #mbar .mbi.sel{color:color-mix(in srgb,var(--ui-acc) 65%,#fff)}
 
 
 
-:root{--bgrid:linear-gradient(color-mix(in srgb,currentColor 9%,transparent) 1px,transparent 1px) 0 0/12px 12px,linear-gradient(90deg,color-mix(in srgb,currentColor 9%,transparent) 1px,transparent 1px) 0 0/12px 12px}
 
 
-html:root:root .btn{position:relative;isolation:isolate;overflow:hidden;border-radius:16px 16px 16px 5px;font-weight:700;letter-spacing:.01em;box-shadow:0 8px 18px -12px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.1);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,filter .2s}
+html:root:root .btn{position:relative;isolation:isolate;overflow:hidden;border-radius:16px;font-weight:700;letter-spacing:.01em;box-shadow:0 8px 18px -12px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.1);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,filter .2s}
 
 
-html:root:root .btn::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:var(--bgrid),linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,0) 55%,rgba(0,0,0,.14))}
+html:root:root .btn::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,0) 55%,rgba(0,0,0,.14))}
 
 
-html:root:root .btn.ghost::after{background:var(--bgrid)}
+html:root:root .btn.ghost::after{background:none}
 
 
 html:root:root .btn:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.06)}
@@ -6421,7 +6420,7 @@ html:root:root .btn:hover:not(:disabled){transform:translateY(-1px);filter:brigh
 html:root:root .btn:active:not(:disabled){transform:scale(.96)}
 
 
-html:root:root .btn.sm{border-radius:13px 13px 13px 4px}
+html:root:root .btn.sm{border-radius:13px}
 
 
 html:root:root .btn.pri{box-shadow:0 12px 24px -12px color-mix(in srgb,var(--accent,#7C3AED) 80%,#000),inset 0 0 0 1px rgba(255,255,255,.22)}
@@ -6431,44 +6430,29 @@ html:root:root .btn.danger{box-shadow:0 8px 18px -12px rgba(220,60,40,.6),inset 
 
 
 
-html:root:root .tbi{border-radius:14px 14px 14px 5px}
+html:root:root .tbi{border-radius:14px}
 
 
-html:root:root .hlp{border-radius:16px 16px 16px 5px;font-weight:700;box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
+html:root:root .hlp{border-radius:16px;font-weight:700;box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
 
 
-html:root:root .gmb{border-radius:24px 24px 24px 7px}
+html:root:root .gmb{border-radius:24px}
 
 
-html:root:root .hq,html:root:root .ufb{border-radius:12px 12px 12px 4px}
+html:root:root .hq,html:root:root .ufb{border-radius:12px}
 
 
-html:root:root .mtpb{border-radius:16px 16px 16px 5px}
+html:root:root .mtpb{border-radius:16px}
 
 
-html:root:root .chip,html:root:root .seg button,html:root:root .qbig button{border-radius:12px 12px 12px 4px}
+html:root:root .chip,html:root:root .seg button,html:root:root .qbig button{border-radius:12px}
 
 
-html:root:root .hback{display:inline-flex;align-items:center;gap:4px;padding:6px 16px 6px 12px;min-height:38px;margin:-6px 0 12px;border-radius:14px 14px 14px 5px;border:1px solid var(--h-line,rgba(128,128,128,.35));background:var(--bgrid),var(--h-card,rgba(255,255,255,.7));color:var(--h-ink,inherit);font-weight:700;box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
+html:root:root .hback{display:inline-flex;align-items:center;gap:4px;padding:6px 16px 6px 12px;min-height:38px;margin:-6px 0 12px;border-radius:14px;border:1px solid var(--h-line,rgba(128,128,128,.35));background:var(--h-card,rgba(255,255,255,.7));color:var(--h-ink,inherit);font-weight:700;box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
 
 
-html:root:root #invpop .btn,html:root:root #npcpop .btn,html:root:root #expop .btn{border-radius:14px 14px 14px 4px}
+html:root:root #invpop .btn,html:root:root #npcpop .btn,html:root:root #expop .btn{border-radius:14px}
 
-
-
-html:root:root #onl .onb{position:relative;isolation:isolate;overflow:hidden;gap:9px;padding:8px 8px 8px 14px;border:0;border-radius:22px 22px 22px 6px;color:#fff;background:var(--bgrid),linear-gradient(135deg,#4A2478,#1E1038 72%);box-shadow:0 14px 26px -12px rgba(110,40,170,.85),inset 0 0 0 1px rgba(255,255,255,.18);-webkit-backdrop-filter:none;backdrop-filter:none}
-
-
-html:root:root #onl .onb span{color:rgba(255,255,255,.78);font-weight:600}
-
-
-html:root:root #onl .onb::after{content:"";flex:none;width:26px;height:26px;border-radius:50%;margin-left:2px;background:rgba(255,255,255,.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);transition:transform .25s}
-
-
-html:root:root #onl .onb[aria-expanded=true]::after{transform:rotate(180deg)}
-
-
-html:root:root #onl .onb.none{background:var(--bgrid),linear-gradient(135deg,#9B2C3F,#4A0F1C 72%);box-shadow:0 14px 26px -12px rgba(220,60,60,.8),inset 0 0 0 1px rgba(255,255,255,.2)}
 
 
 @media(prefers-reduced-motion:reduce){html:root:root .btn,html:root:root .btn:hover,html:root:root .btn:active{transition:none;transform:none}
@@ -11278,6 +11262,17 @@ html:root:root:not([data-cyb]) #mbar.drag .mbind{scale:1.12;transition:transform
 #onl{--onl-top:84px}
 html[data-dev=phone] #onl{left:auto;right:max(14px,env(safe-area-inset-right));bottom:auto;top:var(--onl-top);align-items:flex-end}
 html[data-dev=phone] body:has(#simback) #onl{bottom:auto}
+/* v155: indicador "en línea" y pastillas en lenguaje cristal (sin rejilla ni esquinas asimétricas) */
+html:root:root #onl .onb{position:relative;display:flex;align-items:center;gap:9px;padding:7px 7px 7px 14px;border:1px solid var(--ui-glass-bd);border-radius:999px;color:var(--ui-ink);background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.06)),var(--ui-glass-bg);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);box-shadow:var(--ui-glass-hl),var(--ui-shadow);overflow:visible;transition:transform var(--ui-t-base) var(--ui-spring)}
+html:root:root #onl .onb:active{transform:scale(.96)}
+html:root:root #onl .onb span{color:var(--ui-ink);opacity:.72;font-weight:600}
+html:root:root #onl .onb b{color:var(--ui-ink)}
+html:root:root #onl .onb::after{content:"";flex:none;width:28px;height:28px;border-radius:50%;margin-left:2px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.12)) ,color-mix(in srgb,var(--ui-acc) 22%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 0 0 1px rgba(255,255,255,.4);-webkit-mask:none;mask:none;transition:transform .25s}
+html:root:root #onl .onb::before{content:"";position:absolute;right:7px;top:50%;width:28px;height:28px;margin-top:-14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat;z-index:1;pointer-events:none;transition:transform .25s}
+html:root:root #onl .onb[aria-expanded=true]::after,html:root:root #onl .onb[aria-expanded=true]::before{transform:rotate(180deg)}
+html:root:root #onl .onb.none{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.04)),color-mix(in srgb,#F87171 26%,var(--ui-glass-bg));border-color:color-mix(in srgb,#F87171 55%,transparent);color:var(--ui-ink)}
+html:root:root #onl .onb.none .ond{background:#F87171}
+html:root:root #onl .onp{border-radius:var(--ui-r-lg);border:1px solid var(--ui-glass-bd);background:var(--ui-glass-bg-strong);color:var(--ui-ink);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);box-shadow:var(--ui-glass-hl),var(--ui-shadow)}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12208,9 +12203,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.154';
+const APPV='00.01.155';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.153 a v00.01.154. La barra inferior es más translúcida (efecto cristal), el indicador de sección es de cristal y se puede arrastrar por la barra, y el indicador de usuarios en línea pasa a la parte superior, bajo la barra de arriba.';
+const APPD='Actualiza de v00.01.154 a v00.01.155. Se elimina la rejilla y las esquinas asimétricas del diseño antiguo (indicador de usuarios en línea, botón de volver y botones) y pasan al lenguaje de cristal.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
