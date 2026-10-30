@@ -11322,10 +11322,24 @@ html:root:root .adp .tile span,html:root:root .adp .ovk span{color:var(--ui-ink-
 html:root:root .adp .btn{border-radius:var(--ui-r-pill);border:1px solid var(--ui-glass-bd);background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.05)),var(--ui-glass-bg);color:var(--ui-ink);box-shadow:var(--ui-glass-hl)}
 html:root:root .adp .btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--ui-acc) 82%,#fff),var(--ui-acc));color:#fff;border-color:transparent}
 html:root:root .adp .btn.danger{color:#F87171}
+html:root:root .adp .seg button{white-space:nowrap;padding-inline:10px;min-width:0}
 html:root:root .adp .seg{border-radius:var(--ui-r-pill);background:var(--ui-glass-bg);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl)}
 html[data-dev=phone] #mbar.adm .mbi span{font-size:.58rem}
 html[data-dev=phone] #mbar.adm .mbi:not(.mbmode){min-width:0}
 html:not([data-dev=phone]) #sidebar .sbi[data-v=set]{display:none}
+/* v162: panel de administración también en tema claro */
+html[data-adm][data-lm=l][data-adm]{--bg:#F5F1F8;--mist:#FFFFFF;--surface:rgba(255,255,255,.72);--field:#FFFFFF;--ink:#1C1730;--muted:#6B6580;--line:rgba(60,40,110,.16);--accent:#6C5CE7;--accent-ink:#fff;--head:#1C1730;--frame:#CFC6E2;--gold:#6C5CE7;--ok:#16A36A;--warn:#D97706;--h-bg:#F5F1F8;--h-card:#FFFFFF;--h-ink:#1C1730;--h-mut:#6B6580;--h-line:rgba(60,40,110,.16);color-scheme:light}
+html[data-adm][data-lm=l] body,html[data-adm][data-lm=l] body.hub{background:radial-gradient(70% 50% at 10% 0,#FFE3D6 0,transparent 60%),radial-gradient(60% 45% at 100% 20%,#E3DAFF 0,transparent 62%),radial-gradient(70% 50% at 50% 100%,#D9E8FF 0,transparent 65%),#F5F1F8;background-attachment:fixed;color:#1C1730}
+html[data-adm][data-lm=d] body,html[data-adm][data-lm=d] body.hub{background:radial-gradient(70% 45% at 10% 0,rgba(124,108,240,.18) 0,transparent 60%),radial-gradient(60% 40% at 100% 90%,rgba(80,130,255,.12) 0,transparent 62%),#0D1017;background-attachment:fixed}
+html[data-adm][data-lm=l][data-adm] .tbin{background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.75);color:#1C1730;box-shadow:0 10px 30px -18px rgba(60,40,110,.45)}
+html[data-adm][data-lm=l] #topbar .tbi,html[data-adm][data-lm=l] #topbar .tbin button{color:#1C1730}
+html[data-adm][data-lm=l] #topbar .tbi:hover{background:rgba(108,92,231,.14)}
+html[data-adm][data-lm=l] #topbar .tbi.cur{color:#4C3FC4;background:rgba(108,92,231,.16)}
+html[data-adm][data-lm=l]:root:root .adp .btn.danger{color:#C2362B}
+html[data-adm][data-lm=l]:root:root .adp .btn.pri{color:#fff}
+html[data-adm][data-lm=l]:root:root .adp .seg button{color:var(--ui-ink)}
+html[data-adm][data-lm=l]:root:root .adp .seg button[aria-pressed=true]{background:linear-gradient(180deg,#fff,rgba(255,255,255,.7));color:#1C1730;box-shadow:0 2px 8px -3px rgba(60,40,110,.4)}
+html[data-adm][data-lm=l] .admnav .ani[aria-current=page]{color:#4C3FC4}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12256,9 +12270,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.161';
+const APPV='00.01.162';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.160 a v00.01.161. Panel de administración rediseñado con el lenguaje de cristal y barra inferior propia para el superusuario (Resumen, Cuentas, Roles, Simular, Juegos, Incidencias). Al simular un usuario, se vuelve la barra de jugador.';
+const APPD='Actualiza de v00.01.161 a v00.01.162. El panel de administración ahora tiene un tema claro de cristal (fondo pastel, textos oscuros y tarjetas translúcidas) y un fondo suave en el oscuro.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
