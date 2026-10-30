@@ -1914,6 +1914,19 @@ html[data-dev=tablet] #topbar{padding:10px 12px}html[data-dev=tablet] #topbar .t
 html[data-dev=tablet] #topbar .tbr>.tbi:not(.tbu):not(.tbmode)>span:not(.bdg):not([aria-hidden]),html[data-dev=tablet] #topbar .tbr .tbm:not(:has(.tbu))>.tbi>span{display:none}
 html[data-dev=tablet] #topbar .tbu>span:not(.avs):not([class*=av]){max-width:90px;overflow:hidden;text-overflow:ellipsis}
 html[data-dev=tablet] #topbar .tbmode>span{display:none}
+
+/* barra superior: saludo, modo GM y tema; el resto vive en la barra lateral */
+.tbwel{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:2px 8px}
+.tbwel .wi{display:grid;place-items:center;width:30px;height:30px;flex:none}.tbwel .wi svg{width:26px;height:26px}
+.tbwel .wt{display:flex;flex-direction:column;min-width:0;line-height:1.2}.tbwel .wt b{font-size:1.02rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tbwel .wt span{font-size:.84rem;opacity:.78;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbgm{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--ui-r-pill);font-weight:800;font-size:.84rem;white-space:nowrap;background:linear-gradient(135deg,#D9603F,#9B2C3F);color:#fff}.tbgm svg{width:16px;height:16px}
+#topbar .tbth{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;flex:none;transition:transform var(--ui-t-fast) var(--ui-spring),background-color var(--ui-t-base)}#topbar .tbth svg{width:22px;height:22px}#topbar .tbth:active{transform:rotate(25deg) scale(.9)}
+body.has-tb .wel{display:none}
+html[data-dev=tablet] .tbgm span{display:none}html[data-dev=tablet] .tbwel .wt span{display:none}
+#sidebar .sbi .bdg{position:static;margin-left:auto;flex:none}#sidebar.col .sbi .bdg{position:absolute;top:4px;right:8px;margin:0}
+#sidebar .sbi.gmon{color:#FF9A7A}#sidebar .sbi.sbsim{color:var(--ui-acc)}
+#sidebar .sbft{display:flex;flex-direction:column;gap:2px}
+#sidebar .sbic .avs,#sidebar .sbic [class*=av]{width:24px;height:24px}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4174,9 +4187,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.131';
+const APPV='00.01.132';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.130 a v00.01.131. Ahora la tablet y el panel de administración también usan la barra lateral y la barra superior nuevas, y las listas de cuentas se reordenan con animación.';
+const APPD='Actualiza de v00.01.131 a v00.01.132. La barra superior queda solo con tu saludo del día, el aviso de modo Game Master y un único botón de tema (claro, oscuro, auto). Avisos, Amigos, cambio de modo, Ajustes, Cuenta y Cerrar sesión pasan a la barra lateral.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4265,7 +4278,7 @@ function welcome(){const d=new Date(),h=d.getHours(),k=wperiod(h),m=WMSG[k];
  const pad=n=>String(n).padStart(2,'0');
  return {k,title:m.t,sub,icon:m.i==='sun'?PSUN:TI[m.i],time:pad(h)+':'+pad(d.getMinutes()),date:(x=>x.charAt(0).toUpperCase()+x.slice(1))(d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}))}}
 function welcomeHTML(){const w=welcome();return `<div class="wel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b id="wtit">${w.title}, ${esc(session.name)}</b><span id="wsub">${esc(w.sub)}</span></div></div>`}
-function tickClock(){const el=document.querySelector('.wel');if(!el||!session)return;const w=welcome();
+function tickClock(){try{if(session&&document.getElementById('topbar'))topbarUpdate(cur())}catch(e){}const el=document.querySelector('.wel');if(!el||!session)return;const w=welcome();
  const c=document.getElementById('wclk');if(c&&c.textContent!==w.time)c.textContent=w.time;const dt=document.getElementById('wdate');if(dt&&dt.textContent!==w.date)dt.textContent=w.date;
  if(el.dataset.p!==w.k){el.dataset.p=w.k;el.classList.remove('swap');void el.offsetWidth;el.classList.add('swap');
   setTimeout(()=>{const t=document.getElementById('wtit'),u=document.getElementById('wsub'),i=el.querySelector('.wi');if(t)t.textContent=w.title+', '+session.name;if(u)u.textContent=w.sub;if(i)i.innerHTML=w.icon},220);
@@ -4347,19 +4360,18 @@ function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(`<span class="lglic" 
 function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contains('lgld'))return;const c=dl.querySelector('#lglc'),t=dl.querySelector('#lglt'),ic=dl.querySelector('h3 .lglic');if(!c)return;c.innerHTML=legalBody(k);if(t)t.textContent=LEGAL[k][0];if(ic)ic.innerHTML=LEG_IC[k];dl.querySelectorAll('.lgltabs button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===k)));dl.scrollTo&&dl.scrollTo({top:0,behavior:'smooth'})}
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
 function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Opacidad del cristal</b>${glassSlider()}<p class="hint" style="margin:0">Cuánto se ve a través de menús y paneles flotantes.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
+function tbHtml(){const w=welcome(),gm=store.mode==='gm',th=getTheme();
+ return `<div class="tbin"><div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button></div>`}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',sbSig(),scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
+ const sig=['tb',sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;sidebarUpdate(c);
 if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
-  t.innerHTML=`<div class="tbin">${sbCrumb(c)}
-  <div class="tbr"><button type="button" class="tbi" data-act="admgame">${HOUSE}<span>Simular usuario</span></button>${bellBtn("tbi tbbell")}<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${GEAR}<span>Ajustes</span>${CHEV}</button><div class="tbd" role="menu">${setItems(it2)}</div></div><div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${roleEm()}${CHEV}</button><div class="tbd" role="menu">${it2('acct','Mi cuenta')}${it2('logout','Cerrar sesión')}</div></div></div></div>`;
+  t.innerHTML=tbHtml();
   setTimeout(()=>tbInd(),30);if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in');return}
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
- t.innerHTML=`<div class="tbin">${sbCrumb(c)}
- <div class="tbr">${session.owner?`<button type="button" class="tbi simpill" data-act="admpanel" title="Simulando usuario">${SHLD}<span>Volver al panel</span></button>`:''}${bellBtn("tbi tbbell")}<button type="button" class="tbi tbmode${store.mode==='gm'?' gm':''}" data-act="mode" title="Cambiar de modo">${PENI}<span>${store.mode==='gm'?'Cambiar a Jugador':canGM()?'Cambiar a Game Master':gmReqPend?'Licencia de GM pendiente':'Solicita tu licencia de GM'}</span></button><button type="button" class="tbi" data-act="friends" aria-label="Amigos"><span aria-hidden="true">☺</span><span>Amigos</span>${socN()?`<i class="bdg">${socN()}</i>`:''}</button><div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${GEAR}<span>Ajustes</span>${CHEV}</button><div class="tbd" role="menu">${setItems(it)}</div></div>
- <div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${roleEm()}${CHEV}</button><div class="tbd" role="menu">${it('acct','Mi cuenta')}${it('logout','Cerrar sesión')}</div></div></div></div>`;
+ t.innerHTML=tbHtml();
  setTimeout(()=>tbInd(),30);
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
 
@@ -4375,15 +4387,16 @@ function sbCrumb(c){const k=sbCurKey();let p=[];if(k==='gohome'||!k)p=['Inicio']
 function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!a;if(first){a=document.createElement('aside');a=a;a.id='sidebar';document.body.appendChild(a)}
  const col=sbColl(),cur=sbCurKey(),H=document.documentElement;
  document.body.classList.add('has-sb');H.style.setProperty('--sbw',col?'76px':'272px');a.classList.toggle('col',col);
- const it=(act,ic,label,o={})=>`<button type="button" class="sbi${o.sub?' sub':''}${cur===act?' cur':''}${o.cls?' '+o.cls:''}" data-act="${o.act||act}" ${o.g?`data-g="${o.g}" aria-expanded="${o.open?'true':'false'}"`:''} ${cur===act?'aria-current="page"':''} title="${esc(label)}"><span class="sbic">${ic}</span><span class="sbt">${esc(label)}</span>${o.g?CHEV.replace('tbch','tbch sbch'):''}</button>`;
+ const it=(act,ic,label,o={})=>`<button type="button" class="sbi${o.sub?' sub':''}${cur===act?' cur':''}${o.cls?' '+o.cls:''}" data-act="${o.act||act}" ${o.g?`data-g="${o.g}" aria-expanded="${o.open?'true':'false'}"`:''} ${cur===act?'aria-current="page"':''} title="${esc(label)}"><span class="sbic">${ic}</span><span class="sbt">${esc(label)}</span>${o.bd?`<i class="bdg">${o.bd}</i>`:''}${o.g?CHEV.replace('tbch','tbch sbch'):''}</button>`;
+ const gm=store.mode==='gm';
  const ini=n=>`<b class="sbini">${esc(n[0])}</b>`;
  const sub=(id)=>GAMES.filter(g=>g[4]===id).map(g=>it(g[0],ini(g[1]),g[1],{sub:1,cls:gamePub(g[0])&&g[3]?'':'soon'})).join('');
  const gms=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.some(x=>x[4]===g[0]);return it(g[0],ini(g[1]),g[1],kids?{g:g[0],open:!!sbOpen[g[0]],sub:1}:{sub:1,cls:gamePub(g[0])?'':'soon'})+(kids?`<div class="sbkids${sbOpen[g[0]]?' open':''}">${sub(g[0])}</div>`:'')}).join('');
  a.innerHTML=`<div class="sbhd"><button type="button" class="sbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGOI}<b>La Mesa Larga</b></button></div>
  <nav class="sbnav" aria-label="Navegación"><span class="sbind" aria-hidden="true"></span>${it('gohome',HOUSE,'Inicio')}
  ${it('juegos',BOOKI,'Juegos',{act:'sbgrp',g:'g',open:!!sbOpen.g,cls:'sbgrp'})}<div class="sbkids${sbOpen.g?' open':''}">${gms}</div>
- ${canMenu()?it('admpanel',SHLD,'Administración',{act:'adm'}):''}${it('friends',FRII,'Amigos',{act:'friends'})}</nav>
- <div class="sbft"><button type="button" class="sbi" data-act="sbcol" aria-label="${col?'Expandir':'Contraer'} barra lateral" title="${col?'Expandir':'Contraer'}"><span class="sbic"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(${col?180:0}deg)"><path d="M14 6l-6 6 6 6M19 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sbt">Contraer</span></button></div>`;
+ ${canMenu()?it('admpanel',SHLD,'Administración',{act:'adm'}):''}${scr==='admin'&&isAdmin()?it('admgame',HOUSE,'Simular usuario',{sub:1}):''}${session.owner&&scr!=='admin'?it('admpanel2',SHLD,'Volver al panel',{act:'admpanel',cls:'sbsim'}):''}${it('friends',FRII,'Amigos',{act:'friends',bd:socN()||''})}${it('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',{act:'notif',bd:notifN()||''})}</nav>
+ <div class="sbft">${it('mode',PENI,gm?'Cambiar a Jugador':canGM()?'Cambiar a Game Master':gmReqPend?'Licencia de GM pendiente':'Solicita tu licencia de GM',{act:'mode',cls:gm?'gmon':''})}${it('ajustes',GEAR,'Ajustes',{act:'ajustes'})}${it('acct',avSmall(),session.name,{act:'acct'})}${it('logout',OUT,'Cerrar sesión',{act:'logout'})}<button type="button" class="sbi" data-act="sbcol" aria-label="${col?'Expandir':'Contraer'} barra lateral" title="${col?'Expandir':'Contraer'}"><span class="sbic"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(${col?180:0}deg)"><path d="M14 6l-6 6 6 6M19 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sbt">Contraer</span></button></div>`;
  requestAnimationFrame(()=>sbInd());setTimeout(sbInd,260)}
 function sbInd(el){const n=document.querySelector('#sidebar .sbnav');if(!n)return;const i=n.querySelector('.sbind');if(!i)return;const t=el||n.querySelector('.sbi.cur');
  if(!t||t.offsetParent===null){i.style.opacity='0';return}const a=n.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.height=b.height+'px';i.style.width=b.width+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
@@ -5838,6 +5851,7 @@ document.addEventListener('click',e=>{
   case 'sbgrp':{const g=b.dataset.g;sbOpen[g]=!sbOpen[g];const kd=b.nextElementSibling;b.setAttribute('aria-expanded',String(!!sbOpen[g]));if(kd&&kd.classList.contains('sbkids'))kd.classList.toggle('open',!!sbOpen[g]);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>sbInd(),300);break}
   case 'sbcol':{try{localStorage.setItem(SBKEY,sbColl()?'0':'1')}catch(x){}const t=document.getElementById('topbar');if(t)t.dataset.sig='';topbarUpdate(cur());break}
   case 'mmore':{const x=document.getElementById('mmore');if(!x)break;const o=!x.classList.contains('open');x.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o));break}
+  case 'themecyc':{const n={light:'dark',dark:'auto',auto:'light'}[getTheme()]||'dark';setTheme(n);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>{if(session)fdockUpdate(cur())},60);break}
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
   case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}if(isAdmin()){goAdmin('rp');break}incDlg();break;
   case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
