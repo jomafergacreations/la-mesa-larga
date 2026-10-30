@@ -11175,6 +11175,12 @@ html:not([data-dev=phone]):root:root body.authdark #app:has(.authhub) .lg{text-a
 html:not([data-dev=phone]):root:root body.authdark #app:has(.authhub) .lg .logo{margin:0 auto 12px}
 html:not([data-dev=phone]):root:root body.authdark #app:has(.authhub) .lgf,html:not([data-dev=phone]):root:root body.authdark #app:has(.authhub) .lg .hs{display:none}
 }
+html:not([data-dev=phone]) .abg .gl{display:none}
+html:root:root body.hub.authdark .authhub .seg{display:grid;grid-template-columns:1fr 1fr;gap:0;position:relative}
+html:root:root body.hub.authdark .authhub .seg .sgi,html:root:root body.hub.authdark .authhub .seg .pill{display:none}
+html:root:root body.hub.authdark .authhub .seg::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/2);border-radius:var(--ui-r-pill);background:var(--ui-glass-bg-strong);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),0 3px 10px -4px rgba(0,0,0,.4);transform:translateX(calc(var(--i,0)*100%));transition:transform var(--ui-t-base) var(--ui-spring)}
+html:root:root body.hub.authdark .authhub .seg[data-i="1"]{--i:1}
+html:root:root body.hub.authdark .authhub .seg button{position:relative;z-index:1;background:transparent!important;box-shadow:none!important;animation:none;transform:none}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12084,9 +12090,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.142';
+const APPV='00.01.143';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.141 a v00.01.142. Nuevo fondo de acceso con luces de colores y piezas de cristal (dado, carta, ficha) para móvil, tableta y PC; el logo ya no se difumina y el selector de tema queda centrado con su indicador alineado.';
+const APPD='Actualiza de v00.01.142 a v00.01.143. En PC y tableta se quitan las piezas de cristal del fondo de acceso, que chocaban con el formulario, y el selector Entrar/Crear cuenta ya no se descuadra.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
