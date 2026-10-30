@@ -11290,6 +11290,24 @@ html:root:root .bubbles.hubmain.gamesscr .bub .tt small,html:root:root .bubbles.
 .mbmagin .mbi{pointer-events:none}
 html:root:root:not([data-cyb]) #mbar.drag .mbind{background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 55%),color-mix(in srgb,var(--ui-solid) 95%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(255,255,255,.55),inset 5px 0 7px -4px rgba(255,60,140,.45),inset -5px 0 7px -4px rgba(40,200,255,.45),inset 0 -8px 12px -8px rgba(255,255,255,.5),0 14px 26px -10px rgba(0,0,0,.45);transition:transform 60ms linear,opacity var(--ui-t-fast)}
 html:root:root:not([data-cyb]) #mbar.drag .mbind::after{z-index:3}
+/* v160: pantallas de menú fijas (sin scroll de página ni rebote); si el contenido no cabe, se desplaza dentro de su área */
+html:has(body.fixscr){overflow:hidden;overscroll-behavior:none;height:100%}
+body.fixscr{height:100dvh;overflow:hidden;overscroll-behavior:none;box-sizing:border-box;touch-action:pan-y}
+body.fixscr #app{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box;scrollbar-width:none}
+body.fixscr #app::-webkit-scrollbar{display:none}
+html:root:root body.hubs.fixscr .wrap{overflow-x:hidden}
+html[data-dev=phone] body.fixscr #app{padding-bottom:16px}
+html[data-dev=phone] .frscr{padding:12px 14px;gap:8px}
+html[data-dev=phone] .frscr>.grid{gap:8px}
+html[data-dev=phone] .frscr .codebox{flex-wrap:nowrap;gap:8px;padding:8px 12px;margin:0}
+html[data-dev=phone] .frscr .codebox span{flex:none;font-size:.72rem;max-width:5.5em;line-height:1.15}
+html[data-dev=phone] .frscr .codebox b{font-size:1.1rem;letter-spacing:.08em;white-space:nowrap;flex:1;min-width:0}
+html[data-dev=phone] .frscr .hint{font-size:.82rem;line-height:1.3}
+html[data-dev=phone] .frscr h3{font-size:1rem}
+html[data-dev=phone] .frscr #faddform{gap:6px}
+html[data-dev=phone] .frscr #fmsg2:empty{display:none}
+html[data-dev=phone] body.fixscr .gamesscr .jgin{padding-bottom:0}
+html:root:root body.fixscr .bubbles.hubmain.gamesscr{min-height:0!important;height:auto!important;padding-bottom:0!important;margin-bottom:0!important}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12220,9 +12238,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.159';
+const APPV='00.01.160';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.158 a v00.01.159. La lente de la barra inferior ya no se desincroniza: lo que amplía va exactamente bajo ella mientras la arrastras.';
+const APPD='Actualiza de v00.01.159 a v00.01.160. Inicio, Amigos, Buscar partida y Juegos son pantallas fijas: la página ya no se desplaza ni rebota (si algún contenido no cabe, se desplaza solo dentro de su zona).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13349,7 +13367,7 @@ let pg='',popSel='',prevPct=null,prevNums=[];
 document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)return;if(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|email|url|tel|)$/.test(t.type||''))){if(t.form&&t.form.id==='impform')return;if(t.dataset&&t.dataset.nolimit)return;if(!t.maxLength||t.maxLength<0||t.maxLength>120)t.maxLength=120}},true);
 /* v74 botón atrás del sistema */
 (function(){let hk=null,pop=false;const snap=()=>({s:scr,c:store&&store.cur||null,p:typeof partId!=='undefined'?partId:null});const key=o=>o.s+'|'+o.c+'|'+o.p;
- const r0=render;render=function(k){r0.apply(this,arguments);{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
+ const r0=render;render=function(k){r0.apply(this,arguments);try{document.body.classList.toggle('fixscr',!!session&&!booting&&['menu','games','find','friends'].includes(scr)&&!(store&&store.cur))}catch(e){}{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  var __nr=render;render=function(){const x=__nr.apply(this,arguments);try{navSave()}catch(e){}return x};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
