@@ -11185,6 +11185,21 @@ html:root:root :is(.lg .logo,#welfx .wl){background:none;border:0;box-shadow:non
 html:root:root :is(.lg .logo,#welfx .wl) svg{width:100%!important;height:100%!important;filter:none;display:block}
 html:root:root body.authdark .lg .logo{box-shadow:none}
 html:root:root #sidebar .sbbrand svg{width:36px;height:36px;filter:drop-shadow(0 4px 6px rgba(120,30,70,.4))}
+/* ===== Barra inferior con modo central, menú desplegable arriba y selectores a todo el ancho (v147) ===== */
+html[data-dev=phone] #mbar .mbmode{flex:0 0 64px;margin-top:-14px;min-height:64px;border-radius:50%;background:var(--ui-glass-bg-strong);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),0 10px 22px -8px color-mix(in srgb,var(--ui-acc) 60%,transparent);color:var(--ui-ink)}
+html[data-dev=phone] #mbar .mbmode svg{width:24px;height:24px}
+html[data-dev=phone] #mbar .mbmode span{font-size:.62rem}
+html[data-dev=phone] #mbar .mbmode.gm{background:linear-gradient(180deg,color-mix(in srgb,#FF8A63 90%,#fff),#E05A3C);color:#fff;border-color:rgba(255,255,255,.5);box-shadow:var(--ui-glass-hl),0 10px 22px -8px #FF8A63}
+html[data-dev=phone] #mbar .mbmode:active{transform:scale(.9)}
+html:root:root[data-dev=phone] #sidebar{left:10px;right:10px;bottom:auto;width:auto;max-height:min(70dvh,calc(100dvh - 200px));border-radius:var(--ui-r-xl);border:1px solid var(--ui-glass-bd);padding:10px;transform-origin:top right;transform:translateY(-14px) scale(.94);opacity:0;visibility:hidden;transition:transform var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast) var(--ui-ease),visibility 0s var(--ui-t-base)}
+html:root:root[data-dev=phone] #sidebar.open{transform:none;opacity:1;visibility:visible;transition-delay:0s}
+html:root:root[data-dev=phone] #sidebar .sbhd{display:none}
+html:root:root[data-dev=phone] #sbscrim{background:rgba(8,8,16,.28)}
+html[data-dev=phone] #topbar .tbmenu svg{transition:transform var(--ui-t-base) var(--ui-spring)}
+html[data-dev=phone] body.sbopen #topbar .tbmenu svg{transform:rotate(90deg)}
+html[data-dev=phone] body.has-tb:not(.authdark){background-image:none}
+html:root:root :is(.thm,.seg):not(.lgt .thm){display:flex;width:100%;box-sizing:border-box}
+html:root:root :is(.thm,.seg):not(.lgt .thm)>button{flex:1 1 0;min-width:0;justify-content:center;text-align:center}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12118,9 +12133,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.146';
+const APPV='00.01.147';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.145 a v00.01.146. El cambio entre Jugador y Game Master (y el de tema) arranca al instante con un anillo luminoso desde el botón pulsado, que sigue fluido mientras la app prepara la pantalla nueva, y el revelado va sincronizado con él.';
+const APPD='Actualiza de v00.01.146 a v00.01.147. El botón de modo (Jugador/Game Master) pasa al centro de la barra inferior, el menú es ahora un desplegable con tres rayas en la barra superior, se quita el degradado que cortaba la parte alta de la pantalla y los selectores ocupan todo el ancho de su panel.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12201,6 +12216,7 @@ const SHLD='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.500 6v5
 const CHEV='<svg class="tbch" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const isDesk=()=>document.documentElement.dataset.dev==='desktop';
 const isTab=()=>document.documentElement.dataset.dev==='tablet';
+const MODEI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const MENUI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const GEAR='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 const roleEm=()=>(isAdmin()?'<em class="tbrole su">SUPER</em>':canAdm()?'<em class="tbrole">ADMIN</em>':'')+(store.mode==='gm'?'<em class="tbrole gm">GM</em>':'');
@@ -12270,7 +12286,7 @@ function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contai
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
 function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Opacidad del cristal</b>${glassSlider()}<p class="hint" style="margin:0">Cuánto se ve a través de menús y paneles flotantes.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
 function tbHtml(c){const w=welcome(),gm=store.mode==='gm',th=getTheme();
- return `<div class="tbin">${document.documentElement.dataset.dev==='phone'&&c&&!c.done?`<button type="button" class="tbi tbmenu" data-act="sbopen" aria-label="Menú">${MENUI}</button>`:''}<div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button></div>`}
+ return `<div class="tbin"><div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button>${document.documentElement.dataset.dev==='phone'?`<button type="button" class="tbi tbmenu" data-act="sbopen" aria-label="Menú" aria-haspopup="true" aria-expanded="false">${MENUI}</button>`:''}</div>`}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
  const sig=['tb',document.documentElement.dataset.dev,!!(c&&!c.done),sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
@@ -12311,13 +12327,13 @@ function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!
 /* cajón lateral en móvil */
 function sbDrawer(o){const a=document.getElementById('sidebar');if(!a||document.documentElement.dataset.dev!=='phone')return;let sc=document.getElementById('sbscrim');
  if(o){if(!sc){sc=document.createElement('div');sc.id='sbscrim';document.body.appendChild(sc)}requestAnimationFrame(()=>sc.classList.add('on'))}else if(sc){sc.classList.remove('on');setTimeout(()=>{if(!document.getElementById('sbscrim').classList.contains('on'))sc.remove()},320)}
- a.classList.toggle('open',!!o);a.setAttribute('aria-hidden',o?'false':'true');if(!o&&mbSel==='sbopen'){mbSel=null;mbInd()}document.body.classList.toggle('sbopen',!!o);if(o)setTimeout(()=>sbInd(),320)}
+ if(o){const tb=document.getElementById('topbar');if(tb)a.style.top=Math.round(tb.getBoundingClientRect().bottom+4)+'px'}a.classList.toggle('open',!!o);a.setAttribute('aria-hidden',o?'false':'true');document.querySelectorAll('.tbmenu').forEach(b=>b.setAttribute('aria-expanded',o?'true':'false'));if(!o&&mbSel==='sbopen'){mbSel=null;mbInd()}document.body.classList.toggle('sbopen',!!o);if(o)setTimeout(()=>sbInd(),320)}
 document.addEventListener('click',e=>{const a=document.getElementById('sidebar');if(!a||!a.classList.contains('open'))return;
  if(e.target.closest('#sbscrim')||(e.target.closest('#sidebar [data-act]')&&!e.target.closest('[data-act=sbgrp]')&&!e.target.closest('[data-act=sbcol]')))sbDrawer(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')sbDrawer(false)});
 {let x0=null,y0=0;document.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
  document.addEventListener('touchend',e=>{if(x0===null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=Math.abs(t.clientY-y0),a=document.getElementById('sidebar');
-  if(a&&dy<40&&Math.abs(dx)>70){if(!a.classList.contains('open')&&x0<22&&dx>0&&!document.querySelector('dialog[open]'))sbDrawer(true);else if(a.classList.contains('open')&&dx<0)sbDrawer(false)}x0=null},{passive:true})}
+  if(a&&a.classList.contains('open')&&(t.clientY-y0)<-60&&Math.abs(dx)<70)sbDrawer(false);x0=null},{passive:true})}
 addEventListener('resize',()=>{if(document.documentElement.dataset.dev!=='phone'){const sc=document.getElementById('sbscrim');if(sc)sc.remove();const a=document.getElementById('sidebar');if(a){a.classList.remove('open');a.removeAttribute('aria-hidden')}}});
 function sbInd(el){const n=document.querySelector('#sidebar .sbnav');if(!n)return;const i=n.querySelector('.sbind');if(!i)return;const t=el||n.querySelector('.sbi.cur');
  if(!t||t.offsetParent===null){i.style.opacity='0';return}const a=n.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.height=b.height+'px';i.style.width=b.width+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
@@ -12339,7 +12355,7 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
  const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
  if(sig===mbSigV&&!first)return;mbSigV=sig;
  const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
- m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}${t('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',0,notifN()||'')}${t('ajustes',GEAR,'Ajustes',0)}<button type="button" class="mbi mbacc" data-act="sbopen" aria-label="Menú">${MENUI}<span>Menú</span></button>`;
+ m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',0,notifN()||'')}${t('ajustes',GEAR,'Ajustes',0)}`;
  let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
@@ -12348,7 +12364,7 @@ let mbSel=null;
 function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll('.mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector('.mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector('.mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome')?null:a;mbInd()});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='mode')?null:a;mbInd()});
 document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 document.addEventListener('click',e=>{if(e.target.closest('#mbar .mbacc'))return;if(!e.target.closest('#mmore')||e.target.closest('#mmore [data-act]'))mbClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
