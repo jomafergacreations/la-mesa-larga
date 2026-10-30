@@ -11254,9 +11254,10 @@ html[data-dev=phone]:root:root:not(.perf):not([data-cyb]) #mbar{background:linea
 html[data-dev=phone][data-lm=d]:root:root:not(.perf):not([data-cyb]) #mbar{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.04)),rgba(24,22,36,.22);border-color:rgba(255,255,255,.28)}
 }
 html:root:root:not([data-cyb]) #mbar{touch-action:none;-webkit-user-select:none;user-select:none}
-html:root:root:not([data-cyb]) #mbar .mbind{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.1) 58%,rgba(255,255,255,.22)),color-mix(in srgb,var(--ui-acc) 26%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.5),inset 0 -9px 14px -9px rgba(255,255,255,.55),0 8px 18px -8px color-mix(in srgb,var(--ui-acc) 60%,transparent);scale:1;transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-spring),scale var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)}
+html:root:root:not([data-cyb]) #mbar .mbind{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.1) 58%,rgba(255,255,255,.22)),color-mix(in srgb,var(--ui-acc) 26%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.5),inset 0 -9px 14px -9px rgba(255,255,255,.55),0 8px 18px -8px color-mix(in srgb,var(--ui-acc) 60%,transparent);transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)}
 html:root:root:not([data-cyb]) #mbar .mbind::after{content:"";position:absolute;left:14%;right:14%;top:3px;height:34%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0))}
-html:root:root:not([data-cyb]) #mbar.drag .mbind{scale:1.12;transition:transform 70ms linear,scale var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)}
+html:root:root:not([data-cyb]) #mbar.drag .mbind{transition:transform 70ms linear,opacity var(--ui-t-fast)}
+#mbar.drag .mbind{z-index:2}
 #mbar.drag .mbi.cur:not(.hov){color:inherit}
 #mbar.drag .mbi.hov{color:var(--ui-acc)}
 #onl{--onl-top:84px}
@@ -12203,9 +12204,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.155';
+const APPV='00.01.156';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.154 a v00.01.155. Se elimina la rejilla y las esquinas asimétricas del diseño antiguo (indicador de usuarios en línea, botón de volver y botones) y pasan al lenguaje de cristal.';
+const APPD='Actualiza de v00.01.155 a v00.01.156. El indicador de cristal de la barra inferior ya no se sale de la barra al arrastrarlo y pasa por encima del botón de modo en lugar de por debajo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12441,8 +12442,8 @@ const near=(m,cx)=>{let best=null,bd=1e9;items(m).forEach(t=>{const r=t.getBound
 document.addEventListener('pointerdown',e=>{const m=document.getElementById('mbar');if(!m||!e.target.closest||!e.target.closest('#mbar')||(e.pointerType==='mouse'&&e.button))return;st={id:e.pointerId,x:e.clientX,on:false,m}},true);
 document.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const m=st.m;if(!m.isConnected){st=null;return}
  if(!st.on){if(Math.abs(e.clientX-st.x)<8)return;st.on=true;m.classList.add('drag');try{m.setPointerCapture(e.pointerId)}catch(x){}}
- const i=m.querySelector('.mbind'),its=items(m);if(!i||!its.length)return;const a=m.getBoundingClientRect(),r0=its[0].getBoundingClientRect(),w=i.offsetWidth;
- let x=e.clientX-a.left-w/2;x=Math.max(2,Math.min(a.width-w-2,x));i.style.opacity='1';i.style.transform='translate('+x+'px,'+(r0.top-a.top)+'px)';
+ const i=m.querySelector('.mbind'),its=items(m);if(!i||!its.length)return;const a=m.getBoundingClientRect(),r0=its[0].getBoundingClientRect(),w=r0.width;
+ i.style.width=w+'px';let x=e.clientX-a.left-w/2;x=Math.max(6,Math.min(a.width-w-6,x));i.style.opacity='1';i.style.transform='translate('+x+'px,'+(r0.top-a.top)+'px) scale(1.1)';
  const n=near(m,e.clientX);m.querySelectorAll('.mbi.hov').forEach(t=>{if(t!==n)t.classList.remove('hov')});if(n)n.classList.add('hov')},true);
 const end=e=>{if(!st||e.pointerId!==st.id)return;const s=st;st=null;if(!s.on)return;const m=s.m;m.classList.remove('drag');m.querySelectorAll('.mbi.hov').forEach(t=>t.classList.remove('hov'));
  const n=e.type==='pointercancel'?null:near(m,e.clientX);if(n&&!n.classList.contains('cur'))n.click();else mbInd();sup=Date.now()};
