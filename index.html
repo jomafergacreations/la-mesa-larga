@@ -1809,7 +1809,7 @@ html[data-lm=d] #sidebar .sbi.cur{color:color-mix(in srgb,var(--ui-acc) 70%,#fff
 #sidebar.col .sbbrand{justify-content:center;padding:6px 0}
 #sidebar .sbt,#sidebar .sbbrand b{transition:opacity var(--ui-t-base)}
 body.has-sb{padding-left:var(--sbw,272px);transition:padding-left var(--ui-t-slow) var(--ui-spring)}
-html[data-dev=desktop] body.has-sb #topbar{left:var(--sbw,272px);transition:left var(--ui-t-slow) var(--ui-spring),transform .35s var(--ui-ease)}
+html:not([data-dev=phone]) body.has-sb #topbar{left:var(--sbw,272px);transition:left var(--ui-t-slow) var(--ui-spring),transform .35s var(--ui-ease)}
 .tbcrumb{flex:1;display:flex;align-items:center;gap:8px;min-width:0;padding:0 10px;font-weight:700;font-size:.98rem;white-space:nowrap;overflow:hidden}
 .tbcrumb span{color:var(--ui-ink-mut,inherit);opacity:.85}.tbcrumb .cur{opacity:1;color:inherit;font-weight:800;overflow:hidden;text-overflow:ellipsis}.tbcrumb .tbsep{opacity:.5}
 html[data-cos] #sidebar .sbi,html[data-cos] #sidebar .sbind{border-radius:22px}
@@ -1909,6 +1909,11 @@ html:root:root .authhub{border-radius:var(--ui-r-lg);-webkit-backdrop-filter:var
 html:root:root .authhub :is(input,select){border-radius:var(--ui-r-sm)}
 @media(prefers-reduced-motion:reduce){html:root:root #admpage,html:root:root .authhub,html:root:root .admnav .ani{animation:none;transition:none}}
 html.perf:root:root #admpage,html.perf:root:root .authhub,html.perf:root:root .admnav .ani{animation:none;transition:none}
+
+html[data-dev=tablet] #topbar{padding:10px 12px}html[data-dev=tablet] #topbar .tbi{padding:8px 10px}
+html[data-dev=tablet] #topbar .tbr>.tbi:not(.tbu):not(.tbmode)>span:not(.bdg):not([aria-hidden]),html[data-dev=tablet] #topbar .tbr .tbm:not(:has(.tbu))>.tbi>span{display:none}
+html[data-dev=tablet] #topbar .tbu>span:not(.avs):not([class*=av]){max-width:90px;overflow:hidden;text-overflow:ellipsis}
+html[data-dev=tablet] #topbar .tbmode>span{display:none}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -3687,7 +3692,11 @@ function setHtml(){return `<div class="grid"><b>Herramientas</b><div class="alis
 let admLastTab='';
 function admStag(p){p.querySelectorAll('.tile,.gmc,.arow,.grid>*').forEach((e,k)=>e.style.setProperty('--k',Math.min(k,14)));if(admLastTab!==admTab){admLastTab=admTab;p.classList.remove('adin');void p.offsetWidth;p.classList.add('adin');clearTimeout(admStag.t);admStag.t=setTimeout(()=>p.classList.remove('adin'),900)}}
 function admLive(){return scr==='admin'?!!document.getElementById('admpage'):$('#dlg').classList.contains('admd')}
-function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}p.innerHTML=html;admStag(p)}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){r.innerHTML=html;return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
+
+/* reordenación animada de listas (FLIP) */
+function uiFlipCap(root){const m=new Map();if(!root||!uiMotionOk())return m;root.querySelectorAll('.arow').forEach(r=>{const h=r.querySelector('[data-u]');if(h)m.set(h.dataset.u,r.getBoundingClientRect().top)});return m}
+function uiFlipRun(root,m){if(!root||!m||!m.size)return;root.querySelectorAll('.arow').forEach(r=>{const h=r.querySelector('[data-u]');if(!h||!m.has(h.dataset.u))return;const d=m.get(h.dataset.u)-r.getBoundingClientRect().top;if(Math.abs(d)>1&&r.animate)r.animate([{transform:`translateY(${d}px)`},{transform:'none'}],{duration:300,easing:'cubic-bezier(.34,1.2,.5,1)'})})}
+function admShow(html){if(scr==='admin'){const p=document.getElementById('admpage');if(p){const n=document.getElementById('admnav');if(n){n.innerHTML=admNav();const y=n.scrollLeft;}const fc=uiFlipCap(p);p.innerHTML=html;admStag(p);uiFlipRun(p,fc)}return}const d=$('#dlg');html=admTabs()+html;const r=d.open&&d.querySelector('.admroot');if(r){const fc=uiFlipCap(r);r.innerHTML=html;uiFlipRun(r,fc);return}showDlg('Administración','<div class="admroot">'+html+'</div>',true);d.classList.add('admd')}
 function incDlg(){if(!canInc())return;admOpen=null;admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}
 let gmRes=null;
 function gmUnread(){return !!(gmRes&&!(store.gmRead||[]).includes(gmRes.updated))}
@@ -4165,9 +4174,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.130';
+const APPV='00.01.131';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.129 a v00.01.130. El panel de administración y la pantalla de acceso adoptan el nuevo sistema: menú lateral de cristal con acento, tarjetas con esquinas por juego y entrada con muelle.';
+const APPD='Actualiza de v00.01.130 a v00.01.131. Ahora la tablet y el panel de administración también usan la barra lateral y la barra superior nuevas, y las listas de cuentas se reordenan con animación.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4344,7 +4353,7 @@ function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;sidebarUpdate(c);
 if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
   t.innerHTML=`<div class="tbin">${sbCrumb(c)}
-  <div class="tbr">${bellBtn("tbi tbbell")}<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${GEAR}<span>Ajustes</span>${CHEV}</button><div class="tbd" role="menu">${setItems(it2)}</div></div><div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${roleEm()}${CHEV}</button><div class="tbd" role="menu">${it2('acct','Mi cuenta')}${it2('logout','Cerrar sesión')}</div></div></div></div>`;
+  <div class="tbr"><button type="button" class="tbi" data-act="admgame">${HOUSE}<span>Simular usuario</span></button>${bellBtn("tbi tbbell")}<div class="tbm"><button type="button" class="tbi" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${GEAR}<span>Ajustes</span>${CHEV}</button><div class="tbd" role="menu">${setItems(it2)}</div></div><div class="tbm"><button type="button" class="tbi tbu" data-act="tbm" aria-haspopup="menu" aria-expanded="false">${avSmall()}<span>${esc(session.name)}</span>${roleEm()}${CHEV}</button><div class="tbd" role="menu">${it2('acct','Mi cuenta')}${it2('logout','Cerrar sesión')}</div></div></div></div>`;
   setTimeout(()=>tbInd(),30);if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in');return}
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
@@ -4356,7 +4365,7 @@ if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role=
 
 /* ===== Barra lateral (paso 3) ===== */
 const SBKEY='lm_sb';let sbOpen={g:1,cosmere:1};
-function sbColl(){try{return localStorage.getItem(SBKEY)==='1'}catch(e){return false}}
+function sbColl(){try{const v=localStorage.getItem(SBKEY);if(v===null)return document.documentElement.dataset.dev==='tablet';return v==='1'}catch(e){return false}}
 function sbSig(){return (sbColl()?'c':'o')+(sbOpen.g?'g':'')+(sbOpen.cosmere?'k':'')+'|'+gamesSig()}
 function gamesSig(){return GAMES.map(g=>gamePub(g[0])?1:0).join('')}
 function sbCurKey(){if(scr==='menu')return 'gohome';if(scr==='admin')return 'admpanel';if(['cosmere','cyber','dune','deck','nb','arch'].includes(scr))return scr;if(typeof COS_SCR!=='undefined'&&COS_SCR.includes(scr))return 'cosmere';return ''}
@@ -4395,7 +4404,7 @@ addEventListener('resize',()=>{setTimeout(()=>{if(session&&!booting){dockSig='';
 /* ===== Barra inferior de cristal (paso 4: móvil y tablet) ===== */
 let mbSigV='';
 function mbSync(c,AB){const H=document.documentElement,dev=H.dataset.dev;let m=document.getElementById('mbar');
- const on=!!(session&&!booting&&(dev==='phone'||dev==='tablet')&&!AB&&!(c&&!c.done));
+ const on=!!(session&&!booting&&dev==='phone'&&!AB&&!(c&&!c.done));
  if(!on){if(m)m.remove();const x=document.getElementById('mmore');if(x)x.remove();document.body.classList.remove('has-mb');mbSigV='';return}
  document.body.classList.add('has-mb');
  const home=(scr==='menu'&&!c),sig=[scr,home,store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
@@ -4416,7 +4425,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
 addEventListener('resize',()=>setTimeout(mbInd,200));
 function fdockUpdate(c){let d=document.getElementById('fdock');const AB=!!(session&&!booting&&scr==='admin'&&isAdmin());document.body.classList.toggle('admbub',AB);mbSync(c,AB);
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove();dockSig='';return}
- if(isDesk()&&!AB){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const fb0=document.getElementById('fbub');if(fb0)fb0.remove();dockSig='';topbarUpdate(c);return}
+ if((isDesk()||isTab())){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const fb0=document.getElementById('fbub');if(fb0)fb0.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove()}
  const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),document.documentElement.dataset.dev,AB?notifN():'',document.documentElement.dataset.dev==='phone'?socN():''].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
