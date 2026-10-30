@@ -1808,7 +1808,7 @@ html[data-lm=d] #sidebar .sbi.cur{color:color-mix(in srgb,var(--ui-acc) 70%,#fff
 #sidebar.col .sbkids{max-height:0!important}#sidebar.col .sbi{padding:8px 10px;gap:0;justify-content:center}
 #sidebar.col .sbbrand{justify-content:center;padding:6px 0}
 #sidebar .sbt,#sidebar .sbbrand b{transition:opacity var(--ui-t-base)}
-body.has-sb{padding-left:var(--sbw,272px);transition:padding-left var(--ui-t-slow) var(--ui-spring)}
+html:not([data-dev=phone]) body.has-sb{padding-left:var(--sbw,272px);transition:padding-left var(--ui-t-slow) var(--ui-spring)}
 html:not([data-dev=phone]) body.has-sb #topbar{left:var(--sbw,272px);transition:left var(--ui-t-slow) var(--ui-spring),transform .35s var(--ui-ease)}
 .tbcrumb{flex:1;display:flex;align-items:center;gap:8px;min-width:0;padding:0 10px;font-weight:700;font-size:.98rem;white-space:nowrap;overflow:hidden}
 .tbcrumb span{color:var(--ui-ink-mut,inherit);opacity:.85}.tbcrumb .cur{opacity:1;color:inherit;font-weight:800;overflow:hidden;text-overflow:ellipsis}.tbcrumb .tbsep{opacity:.5}
@@ -1927,6 +1927,21 @@ html[data-dev=tablet] .tbgm span{display:none}html[data-dev=tablet] .tbwel .wt s
 #sidebar .sbi.gmon{color:#FF9A7A}#sidebar .sbi.sbsim{color:var(--ui-acc)}
 #sidebar .sbft{display:flex;flex-direction:column;gap:2px}
 #sidebar .sbic .avs,#sidebar .sbic [class*=av]{width:24px;height:24px}
+
+/* ===== Móvil: cajón lateral, barra superior y barra inferior (paso 11) ===== */
+html[data-dev=phone] #sidebar{width:min(310px,86vw);z-index:70;transform:translateX(-105%);visibility:hidden;transition:transform var(--ui-t-slow) var(--ui-spring),visibility 0s var(--ui-t-slow);border-radius:0 var(--ui-r-xl) var(--ui-r-xl) 0;padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px))}
+html[data-dev=phone] #sidebar.open{transform:none;visibility:visible;transition-delay:0s}
+html[data-dev=phone] #sidebar .sbi{min-height:48px}html[data-dev=phone] #sidebar [data-act=sbcol]{display:none}
+html[data-dev=phone] #sidebar .sbft{max-height:46vh;overflow-y:auto}
+#sbscrim{position:fixed;inset:0;z-index:69;background:rgba(8,8,16,.5);opacity:0;transition:opacity var(--ui-t-slow) var(--ui-ease)}#sbscrim.on{opacity:1}
+html[data-dev=phone] body.has-tb{padding-top:calc(70px + env(safe-area-inset-top,0px))}
+html[data-dev=phone] #topbar{left:0;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 6px}
+html[data-dev=phone] #topbar .tbin{gap:8px;padding:6px 8px;border-radius:var(--ui-r-lg);max-width:none}
+html[data-dev=phone] .tbwel .wt b{font-size:.98rem}html[data-dev=phone] .tbwel .wt span{font-size:.78rem}
+html[data-dev=phone] .tbgm span{display:none}html[data-dev=phone] .tbgm{padding:8px}
+html[data-dev=phone] #topbar .tbmenu{display:grid;place-items:center;width:42px;height:42px;padding:0;flex:none}html[data-dev=phone] #topbar .tbmenu svg{width:22px;height:22px}
+html[data-dev=phone] body.admbub #fdock,html[data-dev=phone] body.admbub #fbub{display:none!important}
+body.sbopen{overflow:hidden}
 .hb .bell .bdg{top:-5px;right:-3px}.hb .bell svg{width:22px;height:22px}.hb .bell:active{transform:scale(.93)}
 /* saludo móvil: sube y la campana se coloca sobre su misma fila */
 html[data-dev=phone] .hb:has(~.wel){position:relative;height:0;margin:0;z-index:6}
@@ -4187,9 +4202,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.132';
+const APPV='00.01.133';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.131 a v00.01.132. La barra superior queda solo con tu saludo del día, el aviso de modo Game Master y un único botón de tema (claro, oscuro, auto). Avisos, Amigos, cambio de modo, Ajustes, Cuenta y Cerrar sesión pasan a la barra lateral.';
+const APPD='Actualiza de v00.01.132 a v00.01.133. Móvil con el nuevo diseño completo: barra superior con tu saludo, modo Game Master y botón de tema; barra inferior de cristal con Inicio, Amigos, Avisos, Ajustes y Menú; y un cajón lateral con el árbol de juegos, tu cuenta y el cambio de modo (también se abre deslizando desde el borde izquierdo).';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4360,18 +4375,18 @@ function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(`<span class="lglic" 
 function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contains('lgld'))return;const c=dl.querySelector('#lglc'),t=dl.querySelector('#lglt'),ic=dl.querySelector('h3 .lglic');if(!c)return;c.innerHTML=legalBody(k);if(t)t.textContent=LEGAL[k][0];if(ic)ic.innerHTML=LEG_IC[k];dl.querySelectorAll('.lgltabs button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===k)));dl.scrollTo&&dl.scrollTo({top:0,behavior:'smooth'})}
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
 function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Opacidad del cristal</b>${glassSlider()}<p class="hint" style="margin:0">Cuánto se ve a través de menús y paneles flotantes.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
-function tbHtml(){const w=welcome(),gm=store.mode==='gm',th=getTheme();
- return `<div class="tbin"><div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button></div>`}
+function tbHtml(c){const w=welcome(),gm=store.mode==='gm',th=getTheme();
+ return `<div class="tbin">${document.documentElement.dataset.dev==='phone'&&c&&!c.done?`<button type="button" class="tbi tbmenu" data-act="sbopen" aria-label="Menú">${MENUI}</button>`:''}<div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button></div>`}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
+ const sig=['tb',document.documentElement.dataset.dev,!!(c&&!c.done),sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;sidebarUpdate(c);
 if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
-  t.innerHTML=tbHtml();
+  t.innerHTML=tbHtml(c);
   setTimeout(()=>tbInd(),30);if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in');return}
  const home=(scr==='menu'&&!c),th=getTheme();
  const it=(act,label,extra)=>`<button type="button" role="menuitem" data-act="${act}" ${extra||''}>${label}</button>`;
- t.innerHTML=tbHtml();
+ t.innerHTML=tbHtml(c);
  setTimeout(()=>tbInd(),30);
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
 
@@ -4385,8 +4400,8 @@ function sbLabel(k){if(k==='gohome')return 'Inicio';if(k==='admpanel')return 'Ad
 function sbCrumb(c){const k=sbCurKey();let p=[];if(k==='gohome'||!k)p=['Inicio'];else if(k==='admpanel')p=['Inicio','Administración'];else{const par=gParent(k);p=['Inicio','Juegos'];if(par)p.push(sbLabel(par));p.push(sbLabel(k))}
  return `<nav class="tbcrumb" aria-label="Ruta">${p.map((x,i)=>(i?`<span class="tbsep" aria-hidden="true">›</span>`:'')+`<span${i===p.length-1?' aria-current="page" class="cur"':''}>${esc(x)}</span>`).join('')}</nav>`}
 function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!a;if(first){a=document.createElement('aside');a=a;a.id='sidebar';document.body.appendChild(a)}
- const col=sbColl(),cur=sbCurKey(),H=document.documentElement;
- document.body.classList.add('has-sb');H.style.setProperty('--sbw',col?'76px':'272px');a.classList.toggle('col',col);
+ const H=document.documentElement,col=sbColl()&&H.dataset.dev!=='phone',cur=sbCurKey();
+ const ph=H.dataset.dev==='phone';document.body.classList.add('has-sb');H.style.setProperty('--sbw',ph?'0px':col?'76px':'272px');a.classList.toggle('col',col&&!ph);if(ph&&first){a.setAttribute('aria-hidden','true')}
  const it=(act,ic,label,o={})=>`<button type="button" class="sbi${o.sub?' sub':''}${cur===act?' cur':''}${o.cls?' '+o.cls:''}" data-act="${o.act||act}" ${o.g?`data-g="${o.g}" aria-expanded="${o.open?'true':'false'}"`:''} ${cur===act?'aria-current="page"':''} title="${esc(label)}"><span class="sbic">${ic}</span><span class="sbt">${esc(label)}</span>${o.bd?`<i class="bdg">${o.bd}</i>`:''}${o.g?CHEV.replace('tbch','tbch sbch'):''}</button>`;
  const gm=store.mode==='gm';
  const ini=n=>`<b class="sbini">${esc(n[0])}</b>`;
@@ -4398,6 +4413,18 @@ function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!
  ${canMenu()?it('admpanel',SHLD,'Administración',{act:'adm'}):''}${scr==='admin'&&isAdmin()?it('admgame',HOUSE,'Simular usuario',{sub:1}):''}${session.owner&&scr!=='admin'?it('admpanel2',SHLD,'Volver al panel',{act:'admpanel',cls:'sbsim'}):''}${it('friends',FRII,'Amigos',{act:'friends',bd:socN()||''})}${it('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',{act:'notif',bd:notifN()||''})}</nav>
  <div class="sbft">${it('mode',PENI,gm?'Cambiar a Jugador':canGM()?'Cambiar a Game Master':gmReqPend?'Licencia de GM pendiente':'Solicita tu licencia de GM',{act:'mode',cls:gm?'gmon':''})}${it('ajustes',GEAR,'Ajustes',{act:'ajustes'})}${it('acct',avSmall(),session.name,{act:'acct'})}${it('logout',OUT,'Cerrar sesión',{act:'logout'})}<button type="button" class="sbi" data-act="sbcol" aria-label="${col?'Expandir':'Contraer'} barra lateral" title="${col?'Expandir':'Contraer'}"><span class="sbic"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(${col?180:0}deg)"><path d="M14 6l-6 6 6 6M19 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sbt">Contraer</span></button></div>`;
  requestAnimationFrame(()=>sbInd());setTimeout(sbInd,260)}
+
+/* cajón lateral en móvil */
+function sbDrawer(o){const a=document.getElementById('sidebar');if(!a||document.documentElement.dataset.dev!=='phone')return;let sc=document.getElementById('sbscrim');
+ if(o){if(!sc){sc=document.createElement('div');sc.id='sbscrim';document.body.appendChild(sc)}requestAnimationFrame(()=>sc.classList.add('on'))}else if(sc){sc.classList.remove('on');setTimeout(()=>{if(!document.getElementById('sbscrim').classList.contains('on'))sc.remove()},320)}
+ a.classList.toggle('open',!!o);a.setAttribute('aria-hidden',o?'false':'true');document.body.classList.toggle('sbopen',!!o);if(o)setTimeout(()=>sbInd(),320)}
+document.addEventListener('click',e=>{const a=document.getElementById('sidebar');if(!a||!a.classList.contains('open'))return;
+ if(e.target.closest('#sbscrim')||(e.target.closest('#sidebar [data-act]')&&!e.target.closest('[data-act=sbgrp]')&&!e.target.closest('[data-act=sbcol]')))sbDrawer(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')sbDrawer(false)});
+{let x0=null,y0=0;document.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
+ document.addEventListener('touchend',e=>{if(x0===null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=Math.abs(t.clientY-y0),a=document.getElementById('sidebar');
+  if(a&&dy<40&&Math.abs(dx)>70){if(!a.classList.contains('open')&&x0<22&&dx>0&&!document.querySelector('dialog[open]'))sbDrawer(true);else if(a.classList.contains('open')&&dx<0)sbDrawer(false)}x0=null},{passive:true})}
+addEventListener('resize',()=>{if(document.documentElement.dataset.dev!=='phone'){const sc=document.getElementById('sbscrim');if(sc)sc.remove();const a=document.getElementById('sidebar');if(a){a.classList.remove('open');a.removeAttribute('aria-hidden')}}});
 function sbInd(el){const n=document.querySelector('#sidebar .sbnav');if(!n)return;const i=n.querySelector('.sbind');if(!i)return;const t=el||n.querySelector('.sbi.cur');
  if(!t||t.offsetParent===null){i.style.opacity='0';return}const a=n.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.height=b.height+'px';i.style.width=b.width+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function sbRemove(){const a=document.getElementById('sidebar');if(a)a.remove();document.body.classList.remove('has-sb');document.documentElement.style.removeProperty('--sbw')}
@@ -4417,14 +4444,14 @@ addEventListener('resize',()=>{setTimeout(()=>{if(session&&!booting){dockSig='';
 /* ===== Barra inferior de cristal (paso 4: móvil y tablet) ===== */
 let mbSigV='';
 function mbSync(c,AB){const H=document.documentElement,dev=H.dataset.dev;let m=document.getElementById('mbar');
- const on=!!(session&&!booting&&dev==='phone'&&!AB&&!(c&&!c.done));
+ const on=!!(session&&!booting&&dev==='phone'&&!(c&&!c.done));
  if(!on){if(m)m.remove();const x=document.getElementById('mmore');if(x)x.remove();document.body.classList.remove('has-mb');mbSigV='';return}
  document.body.classList.add('has-mb');
  const home=(scr==='menu'&&!c),sig=[scr,home,store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
  const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
  if(sig===mbSigV&&!first)return;mbSigV=sig;
  const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
- m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}${t('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',0,notifN()||'')}${t('ajustes',GEAR,'Ajustes',0)}<button type="button" class="mbi mbacc" data-act="mmore" aria-haspopup="menu" aria-expanded="false" aria-label="Cuenta">${avSmall()}<span>Cuenta</span></button>`;
+ m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}${t('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',0,notifN()||'')}${t('ajustes',GEAR,'Ajustes',0)}<button type="button" class="mbi mbacc" data-act="sbopen" aria-label="Menú">${MENUI}<span>Menú</span></button>`;
  let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
@@ -4438,7 +4465,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
 addEventListener('resize',()=>setTimeout(mbInd,200));
 function fdockUpdate(c){let d=document.getElementById('fdock');const AB=!!(session&&!booting&&scr==='admin'&&isAdmin());document.body.classList.toggle('admbub',AB);mbSync(c,AB);
  if(!session||booting){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove();dockSig='';return}
- if((isDesk()||isTab())){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const fb0=document.getElementById('fbub');if(fb0)fb0.remove();dockSig='';topbarUpdate(c);return}
+ if(true){if(d)d.remove();const tp=document.getElementById('tpop');if(tp)tp.remove();const fb0=document.getElementById('fbub');if(fb0)fb0.remove();dockSig='';topbarUpdate(c);return}
  {const tb=document.getElementById('topbar');if(tb)tb.remove();document.body.classList.remove('has-tb');sbRemove()}
  const sig=[scr,store.mode,c?(c.done?'d':'e'):'',session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),document.documentElement.dataset.dev,AB?notifN():'',document.documentElement.dataset.dev==='phone'?socN():''].join('|');
  const first=!d;if(first){d=document.createElement('nav');d.id='fdock';d.setAttribute('aria-label','Acciones');document.body.appendChild(d)}
@@ -5852,6 +5879,7 @@ document.addEventListener('click',e=>{
   case 'sbcol':{try{localStorage.setItem(SBKEY,sbColl()?'0':'1')}catch(x){}const t=document.getElementById('topbar');if(t)t.dataset.sig='';topbarUpdate(cur());break}
   case 'mmore':{const x=document.getElementById('mmore');if(!x)break;const o=!x.classList.contains('open');x.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o));break}
   case 'themecyc':{const n={light:'dark',dark:'auto',auto:'light'}[getTheme()]||'dark';setTheme(n);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>{if(session)fdockUpdate(cur())},60);break}
+  case 'sbopen':sbDrawer(true);break;
   case 'tbm':{const m=b.closest('.tbm'),was=m.classList.contains('open');closeTb();if(!was){m.classList.add('open');b.setAttribute('aria-expanded','true')}break}
   case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}if(isAdmin()){goAdmin('rp');break}incDlg();break;
   case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
