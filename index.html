@@ -11274,6 +11274,15 @@ html:root:root #onl .onb[aria-expanded=true]::after,html:root:root #onl .onb[ari
 html:root:root #onl .onb.none{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.04)),color-mix(in srgb,#F87171 26%,var(--ui-glass-bg));border-color:color-mix(in srgb,#F87171 55%,transparent);color:var(--ui-ink)}
 html:root:root #onl .onb.none .ond{background:#F87171}
 html:root:root #onl .onp{border-radius:var(--ui-r-lg);border:1px solid var(--ui-glass-bd);background:var(--ui-glass-bg-strong);color:var(--ui-ink);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);box-shadow:var(--ui-glass-hl),var(--ui-shadow)}
+/* v157: burbujas de Juegos a la mitad */
+html:root:root .bubbles.hubmain.gamesscr .jgin>.bub:nth-child(n),html[data-dev=phone] .bubbles.hubmain.gamesscr .jgin>.bub:nth-child(n){min-height:0;height:156px;padding:8px}
+html:root:root .bubbles.hubmain.gamesscr .jgin{gap:12px}
+html:root:root .bubbles.hubmain.gamesscr .bub .ti{width:34px;height:34px;top:8px;left:8px}
+html:root:root .bubbles.hubmain.gamesscr .bub .ti svg{width:18px;height:18px}
+html:root:root .bubbles.hubmain.gamesscr .bub .go{width:30px;height:30px;right:12px;top:50%;bottom:auto;margin-top:-34px}
+html:root:root .bubbles.hubmain.gamesscr .bub .tt{padding:8px 12px;border-radius:var(--ui-r-md)}
+html:root:root .bubbles.hubmain.gamesscr .bub .tt b{font-size:1rem}
+html:root:root .bubbles.hubmain.gamesscr .bub .tt small,html:root:root .bubbles.hubmain.gamesscr .bub .tt span,html:root:root .bubbles.hubmain.gamesscr .bub .tt em{font-size:.72rem;line-height:1.25}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12204,9 +12213,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.156';
+const APPV='00.01.157';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.155 a v00.01.156. El indicador de cristal de la barra inferior ya no se sale de la barra al arrastrarlo y pasa por encima del botón de modo en lugar de por debajo.';
+const APPD='Actualiza de v00.01.156 a v00.01.157. Las burbujas de Juegos son la mitad de grandes con todo su contenido, y el indicador de cristal de la barra inferior salta de lado en vez de pasar por encima del botón de modo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12443,7 +12452,7 @@ document.addEventListener('pointerdown',e=>{const m=document.getElementById('mba
 document.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const m=st.m;if(!m.isConnected){st=null;return}
  if(!st.on){if(Math.abs(e.clientX-st.x)<8)return;st.on=true;m.classList.add('drag');try{m.setPointerCapture(e.pointerId)}catch(x){}}
  const i=m.querySelector('.mbind'),its=items(m);if(!i||!its.length)return;const a=m.getBoundingClientRect(),r0=its[0].getBoundingClientRect(),w=r0.width;
- i.style.width=w+'px';let x=e.clientX-a.left-w/2;x=Math.max(6,Math.min(a.width-w-6,x));i.style.opacity='1';i.style.transform='translate('+x+'px,'+(r0.top-a.top)+'px) scale(1.1)';
+ i.style.width=w+'px';let x=e.clientX-a.left-w/2;const mo=m.querySelector('.mbmode');if(mo){const mr=mo.getBoundingClientRect(),lo=mr.left-a.left-w-2,hi=mr.right-a.left+2;x=e.clientX<mr.left+mr.width/2?Math.max(6,Math.min(lo,x)):Math.max(hi,Math.min(a.width-w-6,x))}else x=Math.max(6,Math.min(a.width-w-6,x));i.style.opacity='1';i.style.transform='translate('+x+'px,'+(r0.top-a.top)+'px) scale(1.1)';
  const n=near(m,e.clientX);m.querySelectorAll('.mbi.hov').forEach(t=>{if(t!==n)t.classList.remove('hov')});if(n)n.classList.add('hov')},true);
 const end=e=>{if(!st||e.pointerId!==st.id)return;const s=st;st=null;if(!s.on)return;const m=s.m;m.classList.remove('drag');m.querySelectorAll('.mbi.hov').forEach(t=>t.classList.remove('hov'));
  const n=e.type==='pointercancel'?null:near(m,e.clientX);if(n&&!n.classList.contains('cur'))n.click();else mbInd();sup=Date.now()};
