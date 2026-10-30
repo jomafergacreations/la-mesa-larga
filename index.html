@@ -11200,6 +11200,38 @@ html[data-dev=phone] body.sbopen #topbar .tbmenu svg{transform:rotate(90deg)}
 html[data-dev=phone] body.has-tb:not(.authdark){background-image:none}
 html:root:root :is(.thm,.seg):not(.lgt .thm){display:flex;width:100%;box-sizing:border-box}
 html:root:root :is(.thm,.seg):not(.lgt .thm)>button{flex:1 1 0;min-width:0;justify-content:center;text-align:center}
+/* ===== Pantalla principal en cristal: fondo, burbujas de juego y Buscar partida (v148) ===== */
+html:root:root body.hubs{background-color:var(--abg-base,#F6F0E8)!important;background-image:none!important;min-height:100dvh}
+html[data-lm=d]:root:root body.hubs{--abg-base:#0D0A15}
+html[data-mode=gm][data-lm=d]:root:root body.hubs{--abg-base:#150A0F}
+html[data-mode=gm][data-lm=l]:root:root body.hubs{--abg-base:#FBEDE4}
+body.hubs>#htab.abg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict;height:auto;left:0;right:0;bottom:0;-webkit-mask-image:none;mask-image:none;opacity:1}
+body.hubs>#htab.abg .gl{display:none}
+html[data-mode=gm] #htab.abg .o2{background:radial-gradient(closest-side,rgba(224,90,60,.45),transparent)}
+html[data-mode=gm] #htab.abg .o1{background:radial-gradient(closest-side,rgba(255,138,99,.5),transparent)}
+html:root:root .bubbles.hubmain,html:root:root .bubbles.hubmain .jgwrap{overflow:visible}
+html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;text-align:left;gap:0;padding:12px;border:0;border-radius:var(--ui-r-xl);overflow:hidden;margin:0;box-shadow:0 18px 36px -18px rgba(10,6,24,.6)}
+html:root:root .bubbles.hubmain .jgin>.bub::before{content:"";position:absolute;inset:0 0 auto 0;left:0;top:0;width:100%;height:46%;border-radius:0;background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0));transform:none;z-index:5;pointer-events:none}
+html:root:root .bubbles.hubmain .jgin>.bub::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.34),inset 0 1px 0 rgba(255,255,255,.65),inset 0 -22px 34px -22px rgba(0,0,0,.28)}
+html:root:root .bubbles.hubmain .jgin>.bub .ti{position:absolute;top:14px;left:14px;z-index:4;width:48px;height:48px;border-radius:var(--ui-r-md);display:grid;place-items:center;color:var(--ui-ink);background:var(--ui-glass-bg-strong);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),0 6px 14px -8px rgba(0,0,0,.4)}
+html:root:root .bubbles.hubmain .jgin>.bub .ti svg{width:26px;height:26px}
+html:root:root .bubbles.hubmain .jgin>.bub .tt{position:relative;z-index:4;display:block;padding:12px 56px 12px 14px;border-radius:var(--ui-r-lg);color:var(--ui-ink);text-shadow:none;background:var(--ui-glass-bg-strong);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),0 8px 18px -10px rgba(0,0,0,.45)}
+html:root:root .bubbles.hubmain .jgin>.bub .tt b{color:inherit;font-size:clamp(1.05rem,1.5vw,1.45rem);line-height:1.15;overflow-wrap:normal}
+html:root:root .bubbles.hubmain .jgin>.bub.cyb .tt b{font-size:clamp(.9rem,1.2vw,1.15rem);letter-spacing:0}
+html:root:root .bubbles.hubmain .jgin>.bub .tt>span{color:inherit;opacity:.78;font-size:clamp(.78rem,.95vw,.95rem);margin-top:4px}
+html:root:root .bubbles.hubmain .jgin>.bub .tt em{color:var(--ui-ink);background:color-mix(in srgb,var(--ui-ink) 12%,transparent);border:1px solid var(--ui-glass-bd)}
+html:root:root .bubbles.hubmain .jgin>.bub .go{display:grid;place-items:center;position:absolute;z-index:7;right:24px;bottom:calc(12px + 50% - 0px);top:auto;width:36px;height:36px;margin:0;border-radius:50%;background:var(--ui-acc);color:var(--ui-acc-ink);font-size:1.15rem;box-shadow:var(--ui-glass-hl),0 6px 14px -6px var(--ui-acc)}
+html:root:root .bubbles.hubmain .jgin>.bub.soon .go{display:none}
+html:root:root .bubbles.hubmain .jgin>.bub:active{transform:scale(.97)}
+html:root:root .bubbles.hubmain .hmx.bpb{border-radius:var(--ui-r-xl);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -24px 40px -26px rgba(0,0,0,.35),0 20px 40px -22px rgba(6,95,100,.8)}
+html:root:root .bubbles.hubmain .hmx.bpb .go{background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+html[data-dev=phone] .bubbles.hubmain .jgin{margin:0 -16px;padding:2px 16px 18px;scroll-padding-inline:16px}
+html[data-dev=phone] .bubbles.hubmain .jgin>.bub:nth-child(n){scroll-snap-align:start}
+html:root:root body.hubs .wrap{overflow-x:visible}
+html:root:root[data-dev=phone] .bubbles.hubmain .jgin>.bub:nth-child(n){box-shadow:0 12px 22px -16px rgba(10,6,24,.55)}
+html:root:root[data-dev=phone] .bubbles.hubmain .jgin{padding-bottom:26px}
+@media(min-width:1000px){html:root:not([data-dev=phone]) .bubbles.hubmain{grid-template-columns:minmax(300px,.85fr) minmax(0,3fr)}
+html:root:root .bubbles.hubmain .hmx.bpb .tt b{font-size:clamp(1.6rem,2.4vw,2.6rem);overflow-wrap:normal;hyphens:none}}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12051,7 +12083,7 @@ function authFit(){try{const b=document.body;const reg=document.documentElement.
  const iv=()=>{const a=document.getElementById('app');if(!a)return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});new MutationObserver(go).observe(document.body,{attributes:true,attributeFilter:['class']});go()};iv()})();
 function simBack(){try{const ph=document.documentElement.dataset.dev==='phone',on=!!(session&&session.owner&&!booting&&ph&&scr!=='admin');let e=document.getElementById('simback');if(!on){if(e)e.remove();return}if(!e){e=document.createElement('button');e.id='simback';e.type='button';e.dataset.act='admpanel';e.innerHTML=SHLD+'<span>Volver al panel</span>';document.body.appendChild(e)}}catch(x){}}
 function hubSync(){try{onlDraw();simBack();const b=document.body;const on=!!(session&&!booting&&document.querySelector('#app .bubbles'));b.classList.toggle('hubs',on);let t=document.getElementById('htab');
- if(on&&!t){const w=document.createElement('div');w.innerHTML=AUTHBG;t=w.firstElementChild;if(t){t.id='htab';b.appendChild(t)}}else if(!on&&t)t.remove()}catch(e){}}
+ if(on&&!t){const w=document.createElement('div');w.innerHTML=AUTHBG2;t=w.firstElementChild;if(t){t.id='htab';b.appendChild(t)}}else if(!on&&t)t.remove()}catch(e){}}
 (function(){let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(hubSync)};addEventListener('resize',go);const iv=()=>{const a=document.getElementById('app');if(!a||typeof AUTHBG==='undefined')return setTimeout(iv,200);new MutationObserver(go).observe(a,{childList:true,subtree:true});go()};iv()})();
 function azSet(){try{const d=document.documentElement;const v=d.dataset.dev==='desktop'?Math.min(1.3,1+(Math.max(1,Math.min(innerWidth/1280,innerHeight/760))-1)*.5):1;d.style.setProperty('--az',v.toFixed(3))}catch(e){}}
 azSet();addEventListener('resize',azSet);addEventListener('orientationchange',azSet);
@@ -12133,9 +12165,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.147';
+const APPV='00.01.148';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.146 a v00.01.147. El botón de modo (Jugador/Game Master) pasa al centro de la barra inferior, el menú es ahora un desplegable con tres rayas en la barra superior, se quita el degradado que cortaba la parte alta de la pantalla y los selectores ocupan todo el ancho de su panel.';
+const APPD='Actualiza de v00.01.147 a v00.01.148. Los juegos solo se abren desde la pantalla principal: se quita «Juegos» del menú. Las burbujas de juego y «Buscar partida» pasan al diseño de cristal, y el fondo de la pantalla principal estrena luces de colores en lugar de la mesa.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12319,7 +12351,6 @@ function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!
  const gms=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.some(x=>x[4]===g[0]);return it(g[0],ini(g[1]),g[1],kids?{g:g[0],open:!!sbOpen[g[0]],sub:1}:{sub:1,cls:gamePub(g[0])?'':'soon'})+(kids?`<div class="sbkids${sbOpen[g[0]]?' open':''}">${sub(g[0])}</div>`:'')}).join('');
  a.innerHTML=`<div class="sbhd"><button type="button" class="sbbrand" data-act="gohome" aria-label="La Mesa Larga, inicio">${LOGO3D}<b>La Mesa Larga</b></button></div>
  <nav class="sbnav" aria-label="Navegación"><span class="sbind" aria-hidden="true"></span>${it('gohome',HOUSE,'Inicio')}
- ${it('juegos',BOOKI,'Juegos',{act:'sbgrp',g:'g',open:!!sbOpen.g,cls:'sbgrp'})}<div class="sbkids${sbOpen.g?' open':''}">${gms}</div>
  ${canMenu()?it('admpanel',SHLD,'Administración',{act:'adm'}):''}${scr==='admin'&&isAdmin()?it('admgame',HOUSE,'Simular usuario',{sub:1}):''}${session.owner&&scr!=='admin'?it('admpanel2',SHLD,'Volver al panel',{act:'admpanel',cls:'sbsim'}):''}${it('friends',FRII,'Amigos',{act:'friends',bd:socN()||''})}${it('notif',BELL.replace(/ width="22" height="22"/,''),'Avisos',{act:'notif',bd:notifN()||''})}</nav>
  <div class="sbft">${it('mode',PENI,gm?'Cambiar a Jugador':canGM()?'Cambiar a Game Master':gmReqPend?'Licencia de GM pendiente':'Solicita tu licencia de GM',{act:'mode',cls:gm?'gmon':''})}${it('ajustes',GEAR,'Ajustes',{act:'ajustes'})}${it('acct',avSmall(),session.name,{act:'acct'})}${it('logout',OUT,'Cerrar sesión',{act:'logout'})}<button type="button" class="sbi" data-act="sbcol" aria-label="${col?'Expandir':'Contraer'} barra lateral" title="${col?'Expandir':'Contraer'}"><span class="sbic"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(${col?180:0}deg)"><path d="M14 6l-6 6 6 6M19 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sbt">Contraer</span></button></div>`;
  requestAnimationFrame(()=>sbInd());setTimeout(sbInd,260)}
