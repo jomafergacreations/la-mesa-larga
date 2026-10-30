@@ -11308,6 +11308,23 @@ html[data-dev=phone] .frscr #faddform{gap:6px}
 html[data-dev=phone] .frscr #fmsg2:empty{display:none}
 html[data-dev=phone] body.fixscr .gamesscr .jgin{padding-bottom:0}
 html:root:root body.fixscr .bubbles.hubmain.gamesscr{min-height:0!important;height:auto!important;padding-bottom:0!important;margin-bottom:0!important}
+/* v161: panel de administración en lenguaje cristal; barra inferior propia del administrador */
+html:root:root .adp .adph{display:block;border:0;padding:0 0 2px;margin-bottom:10px}
+html:root:root .adp .adph small{color:var(--ui-acc);letter-spacing:.14em}
+html:root:root .adp .adph h1{font-size:1.5rem;line-height:1.15;font-weight:800;color:var(--ui-ink);letter-spacing:-.02em}
+html:root:root .adp .adph p{color:var(--ui-ink-mut)}
+html[data-dev=phone] .adp .adph p{display:none}
+html[data-dev=phone] .adp .adl>.admnav{display:none}
+html[data-dev=phone] .adp{padding-bottom:12px}
+html:root:root .adp .tile,html:root:root .adp .gmc,html:root:root .adp .arow,html:root:root .adp .ovp,html:root:root .adp .onp{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.02)),var(--ui-glass-bg);border:1px solid var(--ui-glass-bd);border-radius:var(--ui-r-lg);color:var(--ui-ink);box-shadow:var(--ui-glass-hl),var(--ui-shadow);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur)}
+html:root:root .adp .tile{padding:14px 14px;text-align:left}
+html:root:root .adp .tile span,html:root:root .adp .ovk span{color:var(--ui-ink-mut)}
+html:root:root .adp .btn{border-radius:var(--ui-r-pill);border:1px solid var(--ui-glass-bd);background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.05)),var(--ui-glass-bg);color:var(--ui-ink);box-shadow:var(--ui-glass-hl)}
+html:root:root .adp .btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--ui-acc) 82%,#fff),var(--ui-acc));color:#fff;border-color:transparent}
+html:root:root .adp .btn.danger{color:#F87171}
+html:root:root .adp .seg{border-radius:var(--ui-r-pill);background:var(--ui-glass-bg);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl)}
+html[data-dev=phone] #mbar.adm .mbi span{font-size:.58rem}
+html[data-dev=phone] #mbar.adm .mbi:not(.mbmode){min-width:0}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12238,9 +12255,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.160';
+const APPV='00.01.161';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.159 a v00.01.160. Inicio, Amigos, Buscar partida y Juegos son pantallas fijas: la página ya no se desplaza ni rebota (si algún contenido no cabe, se desplaza solo dentro de su zona).';
+const APPD='Actualiza de v00.01.160 a v00.01.161. Panel de administración rediseñado con el lenguaje de cristal y barra inferior propia para el superusuario (Resumen, Cuentas, Roles, Simular, Juegos, Incidencias). Al simular un usuario, se vuelve la barra de jugador.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12455,11 +12472,14 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
  const on=!!(session&&!booting&&dev==='phone'&&!(c&&!c.done));
  if(!on){if(m)m.remove();const x=document.getElementById('mmore');if(x)x.remove();document.body.classList.remove('has-mb');mbSigV='';return}
  document.body.classList.add('has-mb');
- const home=(scr==='menu'&&!c),sig=[scr,home,store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
+ const adm=!!(scr==='admin'&&isAdmin()),home=(scr==='menu'&&!c),sig=[scr,home,adm?admTab+rpOpenN()+'/'+gmPendN():'',store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
  const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
  if(sig===mbSigV&&!first)return;mbSigV=sig;
  const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
- m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',scr==='friends',socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('gofind',LUPA,'Buscar',scr==='find')}${t('gogames',DIEI,'Juegos',scr==='games')}`;
+ if(adm){const ai=(k,l)=>{const d=(ADMNAV.flatMap(g=>g[1]).find(x=>x[0]===k)||[0,0,''])[2],cur=admTab===k,bd=k==='rp'?rpOpenN():k==='rol'?gmPendN():0;return `<button type="button" class="mbi${cur?' cur':''}" data-act="admtab" data-v="${k}" ${cur?'aria-current="page"':''} aria-label="${l}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg><span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`};
+  m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${ai('ov','Resumen')}${ai('acc','Cuentas')}${ai('rol','Roles')}<button type="button" class="mbi mbmode" data-act="admgame" aria-label="Simular usuario">${MODEI}<span>Simular</span></button>${ai('jg','Juegos')}${ai('rp','Incidencias')}`;m.classList.add('adm')}
+ else{m.classList.remove('adm');
+ m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',scr==='friends',socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('gofind',LUPA,'Buscar',scr==='find')}${t('gogames',DIEI,'Juegos',scr==='games')}`;}
  let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
@@ -12468,7 +12488,7 @@ let mbSel=null;
 function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll(':scope > .mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector(':scope > .mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector(':scope > .mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='admtab'||a==='admgame'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
 document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 (function(){let st=null,sup=0;
 const items=m=>[...m.querySelectorAll(':scope > .mbi:not(.mbmode)')];
@@ -13367,7 +13387,7 @@ let pg='',popSel='',prevPct=null,prevNums=[];
 document.addEventListener('focusin',e=>{const t=e.target;if(!t||!t.tagName)return;if(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|email|url|tel|)$/.test(t.type||''))){if(t.form&&t.form.id==='impform')return;if(t.dataset&&t.dataset.nolimit)return;if(!t.maxLength||t.maxLength<0||t.maxLength>120)t.maxLength=120}},true);
 /* v74 botón atrás del sistema */
 (function(){let hk=null,pop=false;const snap=()=>({s:scr,c:store&&store.cur||null,p:typeof partId!=='undefined'?partId:null});const key=o=>o.s+'|'+o.c+'|'+o.p;
- const r0=render;render=function(k){r0.apply(this,arguments);try{document.body.classList.toggle('fixscr',!!session&&!booting&&['menu','games','find','friends'].includes(scr)&&!(store&&store.cur))}catch(e){}{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
+ const r0=render;render=function(k){r0.apply(this,arguments);try{document.body.classList.toggle('fixscr',!!session&&!booting&&['menu','games','find','friends','admin'].includes(scr)&&!(store&&store.cur))}catch(e){}{let vt=document.getElementById('vtag');const show=(!session&&!booting)||(session&&scr==='menu'&&!(store&&store.cur));if(show){if(!vt){vt=document.createElement('div');vt.id='vtag';vt.setAttribute('aria-label','Versión de la app');document.body.appendChild(vt)}vt.textContent='v'+APPV}else if(vt)vt.remove()}document.body.classList.toggle('authdark',!session&&!booting);document.body.classList.toggle('pend',scr==='part'&&isEnd(partId));if(scr!=='arch')stormOff();try{if(!session||booting||pop)return;const o=snap(),kk=key(o);if(hk===null){history.replaceState(o,'');hk=kk;return}if(kk!==hk){history.pushState(o,'');hk=kk}}catch(e){}};
  var __nr=render;render=function(){const x=__nr.apply(this,arguments);try{navSave()}catch(e){}return x};
  window.addEventListener('popstate',e=>{try{const dl=$('#dlg');if(dl&&dl.open){dl.close();history.pushState(snap(),'');return}
   const o=e.state;if(!o||!session)return;pop=true;scr=o.s;store.cur=o.c&&cur&&store.chars&&(store.chars.some(x=>x.id===o.c)||(store.pjc&&store.pjc[o.c]))?o.c:null;if(o.p)partId=o.p;hk=key(o);if(scr==='pjview'&&!store.pjv)scr='part';render();pop=false;window.scrollTo(0,0)}catch(x){pop=false}})})();
@@ -13826,7 +13846,7 @@ document.addEventListener('click',e=>{
   case 'rprep':{const r=(rpMine||[]).find(x=>x.id===b.dataset.id);rptDlg('Sobre mi aviso «'+(r?String(r.text||'').slice(0,60):'')+'»: ');break}
   case 'admrp':if(isAdmin()){goAdmin('rp');break}admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
   case 'rptab':rpTab=b.dataset.v;if(admLive())admView(true);else rptDlg();break;
-  case 'admtab':admTab=b.dataset.v;if(admTab==='gm'&&scr==='admin'&&isAdmin())admTab='rol';admSig='';if(admTab==='jg'){loadGames().then(()=>{if(admLive()&&admTab==='jg'){if(!regCache)admLoad();else admView(true)}});if(!regCache)admLoad();else admView(true)}else if(admTab==='gm'){admShow(gmAdmHtml());gmLoad().then(()=>{if(admLive()&&admTab==='gm')admShow(gmAdmHtml())})}else if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}else{if(!regCache||admTab==='rol'||admTab==='ov'||admTab==='acc')admLoad();else admView(true);if(admTab==='ov'||admTab==='rol')Promise.all([rpLoad(),gmLoad()]).then(()=>{if(admLive()&&(admTab==='ov'||admTab==='rol'))admView(true)}).catch(()=>{})}break;
+  case 'admtab':admTab=b.dataset.v;setTimeout(()=>{try{mbSync()}catch(e){}},0);if(admTab==='gm'&&scr==='admin'&&isAdmin())admTab='rol';admSig='';if(admTab==='jg'){loadGames().then(()=>{if(admLive()&&admTab==='jg'){if(!regCache)admLoad();else admView(true)}});if(!regCache)admLoad();else admView(true)}else if(admTab==='gm'){admShow(gmAdmHtml());gmLoad().then(()=>{if(admLive()&&admTab==='gm')admShow(gmAdmHtml())})}else if(admTab==='rp'){admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())})}else{if(!regCache||admTab==='rol'||admTab==='ov'||admTab==='acc')admLoad();else admView(true);if(admTab==='ov'||admTab==='rol')Promise.all([rpLoad(),gmLoad()]).then(()=>{if(admLive()&&(admTab==='ov'||admTab==='rol'))admView(true)}).catch(()=>{})}break;
   case 'rpzoom':b.classList.toggle('big');break;
   case 'rpimgx':rpImg='';{const a=$('#rppv'),n=$('#rpname');if(a)a.innerHTML='';if(n)n.textContent=''}break;
   case 'rpdone':{const id=b.dataset.id,ta=document.querySelector('textarea[data-rr="'+id+'"]'),rs=String((ta&&ta.value)||'').trim();if(rs.length<2){toast('Escribe una respuesta para el usuario');break}b.disabled=true;fs('PATCH','reportes/'+id,fbEnc({status:'done',reply:rs.slice(0,2000),by:session.owner?'ALPHA':session.name,updated:Date.now()}),maskQ({status:1,reply:1,by:1,updated:1})).then(()=>rpLoad()).then(()=>{toast('Aviso marcado como solucionado');if(admLive())admView(true);else if($('#dlg').classList.contains('nfd'))notifDlg();else rptDlg()}).catch(()=>{b.disabled=false;toast('No se pudo guardar la respuesta')});break}
