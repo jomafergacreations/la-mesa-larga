@@ -11092,6 +11092,47 @@ dialog#dlg.dclosing:not(#updf)::backdrop{animation:uibdo 170ms ease-in both!impo
 html[data-dev=phone] dialog#dlg.dclosing:not(#updf){animation:uisheetout 170ms cubic-bezier(.4,0,1,1) both!important}
 @keyframes uiout{to{opacity:0;transform:translateY(18px) scale(.96)}}
 @keyframes uisheetout{to{transform:translateY(100%)}}
+/* ===== Pantalla de acceso con el lenguaje de cristal (v140) ===== */
+html:root:root body.hub.authdark{--ui-acc:var(--pc);--ui-acc-ink:#fff}
+html[data-dev=phone]:root:root body.authdark .wrap,html[data-dev=phone]:root:root body.authdark #app{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+html:root:root body.hub.authdark .authhub{position:relative;background:var(--ui-glass-bg);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:var(--ui-bd-w,1px) solid var(--ui-glass-bd);border-radius:var(--ui-r-xl);box-shadow:var(--ui-glass-hl),var(--ui-shadow);padding:20px;gap:14px;color:var(--ui-ink)}
+html:root:root body.hub.authdark .authhub::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(70% 40% at 15% 0,color-mix(in srgb,var(--ui-acc) 9%,transparent),transparent 70%)}
+html:root:root body.hub.authdark .authhub>*{position:relative}
+html:root:root body.hub.authdark .authhub .seg{border-radius:var(--ui-r-pill);padding:4px;background:color-mix(in srgb,var(--ui-ink) 9%,transparent);border:1px solid var(--ui-glass-bd);box-shadow:none}
+html:root:root body.hub.authdark .authhub .seg .pill{display:none}
+html:root:root body.hub.authdark .authhub .seg button{border-radius:var(--ui-r-pill);min-height:44px;font-weight:700;color:var(--ui-ink);opacity:.72;transition:opacity var(--ui-t-base),transform var(--ui-t-fast) var(--ui-spring)}
+html:root:root body.hub.authdark .authhub .seg button[aria-pressed="true"]{opacity:1;color:var(--ui-ink)}
+html:root:root body.hub.authdark .authhub .seg .sgi{background:var(--ui-glass-bg-strong);box-shadow:var(--ui-glass-hl),0 3px 10px -4px rgba(0,0,0,.4);border:1px solid var(--ui-glass-bd)}
+html:root:root body.hub.authdark .authhub label.f{color:var(--ui-ink);opacity:.8;font-weight:650}
+html:root:root body.hub.authdark .authhub input[type=text],html:root:root body.hub.authdark .authhub input[type=password],html:root:root body.hub.authdark .authhub input[type=email]{min-height:52px;border-radius:var(--ui-r-md);background:color-mix(in srgb,var(--ui-ink) 7%,transparent);border:1px solid var(--ui-glass-bd);color:var(--ui-ink);padding-inline:16px;box-shadow:inset 0 1px 2px rgba(0,0,0,.12);transition:box-shadow var(--ui-t-base) var(--ui-ease),border-color var(--ui-t-base),background-color var(--ui-t-base),transform var(--ui-t-base) var(--ui-spring)}
+html:root:root body.hub.authdark .authhub input:focus{border-color:var(--ui-acc);background:color-mix(in srgb,var(--ui-ink) 11%,transparent);box-shadow:0 0 0 4px color-mix(in srgb,var(--ui-acc) 30%,transparent);transform:translateY(-1px)}
+html:root:root body.hub.authdark .authhub .pw .btn{min-height:52px;border-radius:var(--ui-r-md);background:var(--ui-glass-bg-strong);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl);color:var(--ui-ink)}
+html:root:root body.hub.authdark .authhub .btn.pri{border-radius:var(--ui-r-pill);min-height:54px;background:linear-gradient(180deg,color-mix(in srgb,var(--ui-acc) 88%,#fff),var(--ui-acc));color:var(--ui-acc-ink);border:0;box-shadow:var(--ui-glass-hl),0 12px 26px -12px var(--ui-acc);letter-spacing:.01em}
+html:root:root body.hub.authdark .authhub .btn.ghost{border-radius:var(--ui-r-pill);width:max-content;max-width:100%;margin-inline:auto;background:var(--ui-glass-bg);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl);color:var(--ui-ink)}
+html:root:root body.hub.authdark .authhub .row{justify-content:center}
+html:root:root body.hub.authdark .authhub .lglegal{text-align:center;margin:2px 0 0}
+html:root:root body.hub.authdark .authhub .lglegal button{color:var(--ui-ink);opacity:.72;text-decoration:none;border-radius:var(--ui-r-pill);padding:8px 4px;background:transparent;border:0;transition:opacity var(--ui-t-base),background-color var(--ui-t-base)}
+html:root:root body.hub.authdark .authhub .lglegal button:hover{opacity:1;background:color-mix(in srgb,var(--ui-ink) 8%,transparent)}
+html:root:root body.hub.authdark .authhub .chk input{accent-color:var(--ui-acc)}
+html:root:root body.hub.authdark .authhub .msg.err{color:#FF8A7A}
+html:root:root body.hub.authdark .lgt .thm{background:var(--ui-glass-bg);-webkit-backdrop-filter:var(--ui-glass-blur);backdrop-filter:var(--ui-glass-blur);border:1px solid var(--ui-glass-bd);box-shadow:var(--ui-glass-hl),var(--ui-shadow);padding:4px;color:var(--ui-ink)}
+html:root:root body.hub.authdark .lgt .thm button{color:var(--ui-ink);opacity:.72;min-height:40px;padding:0 14px}
+html:root:root body.hub.authdark .lgt .thm button[aria-pressed="true"]{opacity:1;background:transparent;box-shadow:none}
+html:root:root body.hub.authdark .lgt .thm .sgi{background:var(--ui-glass-bg-strong);box-shadow:var(--ui-glass-hl),0 3px 10px -4px rgba(0,0,0,.4);border:1px solid var(--ui-glass-bd)}
+html:root:root body.hub.authdark .lg .logo{border-radius:var(--ui-r-lg);box-shadow:var(--ui-glass-hl),0 14px 30px -14px var(--ui-acc)}
+html:root:root body.hub.authdark .lg .tg{color:var(--ui-acc)}
+@keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
+html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
+html:root:root #app.pg-t .authhub>:nth-child(2),html:root:root #app.go-enter .authhub>:nth-child(2){animation-delay:40ms}
+html:root:root #app.pg-t .authhub>:nth-child(3),html:root:root #app.go-enter .authhub>:nth-child(3){animation-delay:80ms}
+html:root:root #app.pg-t .authhub>:nth-child(4),html:root:root #app.go-enter .authhub>:nth-child(4){animation-delay:120ms}
+html:root:root #app.pg-t .authhub form,html:root:root #app.pg-t .authhub .hint{animation:none}
+@media(prefers-reduced-motion:reduce){html:root:root #app .authhub,html:root:root #app .authhub>*{animation:none!important}}
+html.perf:root:root #app .authhub,html.perf:root:root #app .authhub>*{animation:none!important}
+html:root:root body.hub.authdark.noglass .authhub,html.perf:root:root body.hub.authdark .authhub{background:var(--ui-solid)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:root:root body.hub.authdark .authhub,html:root:root body.hub.authdark .lgt .thm{background:var(--ui-solid)}}
+
 @keyframes uibdo{to{opacity:0}}
 @media(prefers-reduced-motion:reduce){dialog#dlg.dclosing,dialog#dlg.dclosing::backdrop{animation:none!important}}
 </style>
@@ -11988,9 +12029,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.139';
+const APPV='00.01.140';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.138 a v00.01.139. Se eliminan las animaciones antiguas de cambio de tema, de modo Jugador/Game Master y de simular usuario: todos usan el revelado circular desde donde pulsas (halo cálido hacia Game Master, frío hacia Jugador). Además, los paneles de la barra inferior vuelven a cerrarse con animación.';
+const APPD='Actualiza de v00.01.139 a v00.01.140. La pantalla de acceso estrena el diseño de cristal: tarjeta translúcida, selector Entrar/Crear cuenta con indicador deslizante, campos y botones redondeados, selector de tema flotante y entrada animada con resorte. El cambio de tema usa el revelado circular.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
