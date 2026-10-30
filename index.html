@@ -4206,9 +4206,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.134';
+const APPV='00.01.135';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.133 a v00.01.134. Móvil: la barra inferior mantiene marcada la pestaña que pulsas mientras su panel está abierto, el árbol de juegos del menú ya no se corta y se quita la burbuja de Juegos de la pantalla principal (los juegos están en el menú).';
+const APPD='Actualiza de v00.01.134 a v00.01.135. La barra lateral aparece plegada por defecto (solo iconos) y sus submenús (Juegos, Cosmere) salen cerrados; se abren solos al entrar en uno de esos juegos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -4395,8 +4395,8 @@ if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role=
  if(first&&!matchMedia('(prefers-reduced-motion:reduce)').matches)t.classList.add('in')}
 
 /* ===== Barra lateral (paso 3) ===== */
-const SBKEY='lm_sb';let sbOpen={g:1,cosmere:1};
-function sbColl(){try{const v=localStorage.getItem(SBKEY);if(v===null)return document.documentElement.dataset.dev==='tablet';return v==='1'}catch(e){return false}}
+const SBKEY='lm_sb';let sbOpen={},sbLastCur='';
+function sbColl(){try{const v=localStorage.getItem(SBKEY);if(v===null)return true;return v==='1'}catch(e){return false}}
 function sbSig(){return (sbColl()?'c':'o')+(sbOpen.g?'g':'')+(sbOpen.cosmere?'k':'')+'|'+gamesSig()}
 function gamesSig(){return GAMES.map(g=>gamePub(g[0])?1:0).join('')}
 function sbCurKey(){if(scr==='menu')return 'gohome';if(scr==='admin')return 'admpanel';if(['cosmere','cyber','dune','deck','nb','arch'].includes(scr))return scr;if(typeof COS_SCR!=='undefined'&&COS_SCR.includes(scr))return 'cosmere';return ''}
@@ -4404,7 +4404,7 @@ function sbLabel(k){if(k==='gohome')return 'Inicio';if(k==='admpanel')return 'Ad
 function sbCrumb(c){const k=sbCurKey();let p=[];if(k==='gohome'||!k)p=['Inicio'];else if(k==='admpanel')p=['Inicio','Administración'];else{const par=gParent(k);p=['Inicio','Juegos'];if(par)p.push(sbLabel(par));p.push(sbLabel(k))}
  return `<nav class="tbcrumb" aria-label="Ruta">${p.map((x,i)=>(i?`<span class="tbsep" aria-hidden="true">›</span>`:'')+`<span${i===p.length-1?' aria-current="page" class="cur"':''}>${esc(x)}</span>`).join('')}</nav>`}
 function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!a;if(first){a=document.createElement('aside');a=a;a.id='sidebar';document.body.appendChild(a)}
- const H=document.documentElement,col=sbColl()&&H.dataset.dev!=='phone',cur=sbCurKey();
+ const H=document.documentElement,col=sbColl()&&H.dataset.dev!=='phone',cur=sbCurKey();if(cur!==sbLastCur){sbLastCur=cur;const par=gParent(cur);if(cur==='cosmere'||par==='cosmere'){sbOpen.g=1;sbOpen.cosmere=1}else if(GAMES.some(x=>x[0]===cur))sbOpen.g=1}
  const ph=H.dataset.dev==='phone';document.body.classList.add('has-sb');H.style.setProperty('--sbw',ph?'0px':col?'76px':'272px');a.classList.toggle('col',col&&!ph);if(ph&&first){a.setAttribute('aria-hidden','true')}
  const it=(act,ic,label,o={})=>`<button type="button" class="sbi${o.sub?' sub':''}${cur===act?' cur':''}${o.cls?' '+o.cls:''}" data-act="${o.act||act}" ${o.g?`data-g="${o.g}" aria-expanded="${o.open?'true':'false'}"`:''} ${cur===act?'aria-current="page"':''} title="${esc(label)}"><span class="sbic">${ic}</span><span class="sbt">${esc(label)}</span>${o.bd?`<i class="bdg">${o.bd}</i>`:''}${o.g?CHEV.replace('tbch','tbch sbch'):''}</button>`;
  const gm=store.mode==='gm';
@@ -5881,7 +5881,7 @@ document.addEventListener('click',e=>{
   case 'ppopen':{partId=b.dataset.p;scr='ppart';render();fetchRevealed();break}
   case 'npcpx':{const pp=document.getElementById('npcpop');if(pp)pp.remove();break}
   case 'rvopen':{{const pp=document.getElementById('npcpop');if(pp)pp.remove()}const n=revealed.find(x=>x._id===b.dataset.id);if(!n)break;rvDlg(n);break}
-  case 'sbgrp':{const g=b.dataset.g;sbOpen[g]=!sbOpen[g];const kd=b.nextElementSibling;b.setAttribute('aria-expanded',String(!!sbOpen[g]));if(kd&&kd.classList.contains('sbkids'))kd.classList.toggle('open',!!sbOpen[g]);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>sbInd(),300);break}
+  case 'sbgrp':{const g=b.dataset.g;if(document.getElementById('sidebar').classList.contains('col')){try{localStorage.setItem(SBKEY,'0')}catch(x){}sbOpen[g]=1;const t0=document.getElementById('topbar');if(t0)t0.dataset.sig='';topbarUpdate(cur());break}sbOpen[g]=!sbOpen[g];const kd=b.nextElementSibling;b.setAttribute('aria-expanded',String(!!sbOpen[g]));if(kd&&kd.classList.contains('sbkids'))kd.classList.toggle('open',!!sbOpen[g]);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>sbInd(),300);break}
   case 'sbcol':{try{localStorage.setItem(SBKEY,sbColl()?'0':'1')}catch(x){}const t=document.getElementById('topbar');if(t)t.dataset.sig='';topbarUpdate(cur());break}
   case 'mmore':{const x=document.getElementById('mmore');if(!x)break;const o=!x.classList.contains('open');x.classList.toggle('open',o);b.setAttribute('aria-expanded',String(o));break}
   case 'themecyc':{const n={light:'dark',dark:'auto',auto:'light'}[getTheme()]||'dark';setTheme(n);const t=document.getElementById('topbar');if(t)t.dataset.sig='';setTimeout(()=>{if(session)fdockUpdate(cur())},60);break}
