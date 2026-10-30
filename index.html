@@ -12118,9 +12118,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.145';
+const APPV='00.01.146';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.144 a v00.01.145. El logo recupera los colores coral y carmesí y su capa inferior es ahora un cristal grueso en 3D, con bisel, reflejos y brillo de borde.';
+const APPD='Actualiza de v00.01.145 a v00.01.146. El cambio entre Jugador y Game Master (y el de tema) arranca al instante con un anillo luminoso desde el botón pulsado, que sigue fluido mientras la app prepara la pantalla nueva, y el revelado va sincronizado con él.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12145,18 +12145,20 @@ const TKEY='mesa-larga-tema';
 function getTheme(){try{const v=localStorage.getItem(TKEY);return v==='light'||v==='dark'?v:'auto'}catch(e){return 'auto'}}
 function applyTheme(v){const r=document.documentElement;if(v==='light'||v==='dark')r.setAttribute('data-theme',v);else r.removeAttribute('data-theme');
  document.querySelectorAll('.thm button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)));lmSync()}
-let uiPtr={x:innerWidth/2,y:innerHeight/2};
-document.addEventListener('pointerdown',e=>{uiPtr={x:e.clientX,y:e.clientY}},{capture:true,passive:true});
+let uiPtr={x:innerWidth/2,y:innerHeight/2},uiPtrT=0;
+document.addEventListener('pointerdown',e=>{uiPtr={x:e.clientX,y:e.clientY};uiPtrT=performance.now()},{capture:true,passive:true});
 function uiMotionOk(){return !matchMedia('(prefers-reduced-motion:reduce)').matches&&!document.documentElement.classList.contains('perf')}
 let uiVT=false;
 {let sy=0,sx=0,tg=null;addEventListener('touchstart',e=>{const t=e.touches[0];if(!t)return;sy=t.clientY;sx=t.clientX;tg=e.target},{passive:true});
 addEventListener('touchmove',e=>{if(e.touches.length!==1||!e.cancelable)return;const t=e.touches[0];if(Math.abs(t.clientY-sy)<Math.abs(t.clientX-sx))return;const se=document.scrollingElement;if(!se||se.scrollHeight>se.clientHeight+1)return;
  for(let n=tg;n&&n!==document.documentElement;n=n.parentElement){if(n.nodeType!==1)continue;const o=getComputedStyle(n).overflowY;if((o==='auto'||o==='scroll')&&n.scrollHeight>n.clientHeight+1)return}
  e.preventDefault()},{passive:false})}
-function uiRing(x,y,rad,D,tint){const g=document.createElement('div');g.className='ug-ring';const d=rad*2;g.style.cssText='left:'+(x-rad)+'px;top:'+(y-rad)+'px;width:'+d+'px;height:'+d+'px;will-change:transform,opacity';if(tint){g.style.borderColor=tint;g.style.boxShadow='0 0 26px 6px '+tint+',inset 0 0 20px '+tint}document.body.appendChild(g);const a=g.animate([{transform:'scale(0)',opacity:.95},{transform:'scale(1)',opacity:0}],{duration:D,easing:'cubic-bezier(.3,.7,.2,1)'});a.onfinish=a.oncancel=()=>g.remove()}
-function uiReveal(run,tint){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiPtr,rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=560;
- uiVT=true;r.classList.add('uivt');const vt=document.startViewTransition(()=>{r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}});
- vt.ready.then(()=>{r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});uiRing(x,y,rad,D,tint)}).catch(()=>{});const end=()=>{uiVT=false;r.classList.remove('uivt')};vt.finished.then(end,end)}
+function uiRing(x,y,rad,D,tint){const g=document.createElement('div');g.className='ug-ring';const d=rad*2;g.style.cssText='left:'+(x-rad)+'px;top:'+(y-rad)+'px;width:'+d+'px;height:'+d+'px;will-change:transform,opacity';if(tint){g.style.borderColor=tint;g.style.boxShadow='0 0 26px 6px '+tint+',inset 0 0 20px '+tint;g.style.background='radial-gradient(closest-side,transparent 60%,color-mix(in srgb,'+tint+' 30%,transparent) 97%,transparent)'}document.body.appendChild(g);const a=g.animate([{transform:'scale(0)',opacity:.95},{transform:'scale(1)',opacity:0}],{duration:D,easing:'cubic-bezier(.3,.7,.2,1)'});a.onfinish=a.oncancel=()=>g.remove()}
+function uiOrigin(){const fresh=performance.now()-uiPtrT<1500;if(fresh)return uiPtr;const e=document.querySelector('#topbar .tbgm,#topbar .tbth,#topbar');if(e){const b=e.getBoundingClientRect();if(b.width)return{x:b.left+b.width/2,y:b.top+b.height/2}}return{x:innerWidth/2,y:innerHeight/2}}
+function uiReveal(run,tint){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
+ uiVT=true;r.classList.add('uivt');const end=()=>{uiVT=false;r.classList.remove('uivt')};const t0=performance.now();uiRing(x,y,rad,D,tint);
+ requestAnimationFrame(()=>{let vt;try{vt=document.startViewTransition(()=>{r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}})}catch(e){try{run()}catch(x){}end();return}
+  vt.ready.then(()=>{const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
 function themeFade(run){const r=document.documentElement;if(document.startViewTransition&&uiMotionOk()){uiReveal(run);return}r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}}
 function setTheme(v){try{if(v==='auto')localStorage.removeItem(TKEY);else localStorage.setItem(TKEY,v)}catch(e){}themeFade(()=>applyTheme(v))}
 
