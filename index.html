@@ -11246,6 +11246,24 @@ html[data-dev=phone] .bubbles.hubmain.gamesscr .jgin>.bub:nth-child(n){min-heigh
 html[data-dev=phone]:root:root #sidebar :is([data-act=gohome],[data-act=gofind],[data-act=gogames],[data-act=friends],[data-act=mode]){display:none}
 html[data-dev=phone] #mbar .mbi svg{width:23px;height:23px}
 .frscr{display:grid;gap:12px}.frscr>.grid{gap:12px}
+/* Cyberpunk (v150b): barras sólidas sin recortes ni desenfoque, sin animaciones de pintura costosas */
+html[data-cyb]:root:root #mbar,html[data-cyb]:root:root #mmore{clip-path:none;border-radius:6px 20px 6px 20px;background:rgba(8,8,6,.97);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid #FCEE0A;color:#FCEE0A;box-shadow:inset 0 0 0 1px rgba(252,238,10,.12),0 0 20px -6px rgba(252,238,10,.55)}
+html[data-cyb]:root:root #mbar .mbi{color:#FCEE0A;font-family:'Orbitron',var(--sans),sans-serif;text-transform:uppercase;letter-spacing:.03em;border-radius:3px}
+html[data-cyb]:root:root #mbar .mbi span{font-size:.54rem;font-weight:800}
+html[data-cyb]:root:root #mbar .mbi.cur{color:#FCEE0A}
+html[data-cyb]:root:root #mbar .mbind{background:rgba(252,238,10,.16);box-shadow:inset 0 3px 0 #FCEE0A;border-radius:3px}
+html[data-cyb][data-dev=phone]:root:root #mbar .mbmode{background:#FCEE0A;color:#0A0A0C;border:1px solid #0A0A0C;border-radius:14px 4px 14px 4px;box-shadow:0 0 0 1px #FCEE0A,0 6px 16px -6px rgba(252,238,10,.7)}
+html[data-cyb][data-dev=phone]:root:root #mbar .mbmode.gm{background:#FF2A6D;color:#fff;border-color:#0A0A0C;box-shadow:0 0 0 1px #FF2A6D,0 6px 16px -6px rgba(255,42,109,.7)}
+html[data-cyb][data-lm=l]:root:root #mbar,html[data-cyb][data-lm=l]:root:root #mmore{background:#FCEE0A;border-color:#0A0A0C;color:#0A0A0C;box-shadow:0 10px 22px -12px rgba(10,10,12,.55)}
+html[data-cyb][data-lm=l]:root:root #mbar .mbi{color:#0A0A0C}
+html[data-cyb][data-lm=l]:root:root #mbar .mbind{background:rgba(10,10,12,.14);box-shadow:inset 0 3px 0 #0A0A0C}
+html[data-cyb][data-lm=l][data-dev=phone]:root:root #mbar .mbmode{background:#0A0A0C;color:#FCEE0A;border-color:#FCEE0A;box-shadow:0 0 0 1px #0A0A0C,0 6px 14px -6px rgba(10,10,12,.6)}
+html[data-cyb][data-lm=l][data-dev=phone]:root:root #mbar .mbmode.gm{background:#FF2A6D;color:#fff;border-color:#0A0A0C;box-shadow:0 0 0 1px #0A0A0C}
+html[data-cyb]:root:root #topbar .tbin,html[data-cyb]:root:root #sidebar{-webkit-backdrop-filter:none;backdrop-filter:none;animation:none!important}
+html[data-cyb]:root:root #sidebar{background:rgba(8,8,6,.97)}
+html[data-cyb][data-lm=l]:root:root #sidebar{background:#FCEE0A}
+html[data-cyb] .cyhz{animation:none!important}
+html[data-cyb] #cyfx .cysc{animation:none!important}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12179,9 +12197,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.150';
+const APPV='00.01.151';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.149 a v00.01.150. Amigos ya no es una ventana emergente: es una pantalla propia que conserva la barra inferior (móvil) y la lateral (tablet y PC), igual que Buscar partida y Juegos.';
+const APPD='Actualiza de v00.01.150 a v00.01.151. Tema Cyberpunk: las barras superior, inferior y lateral ya no se recortan ni se desenfocan, usan el amarillo/negro del tema y se han quitado animaciones que hacían ir a tirones la interfaz.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
