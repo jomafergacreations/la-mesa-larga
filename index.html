@@ -11245,6 +11245,7 @@ html:root:root .bubbles.hubmain.gamesscr .jgin>.bub:nth-child(n){height:auto;min
 html[data-dev=phone] .bubbles.hubmain.gamesscr .jgin>.bub:nth-child(n){min-height:230px}
 html[data-dev=phone]:root:root #sidebar :is([data-act=gohome],[data-act=gofind],[data-act=gogames],[data-act=friends],[data-act=mode]){display:none}
 html[data-dev=phone] #mbar .mbi svg{width:23px;height:23px}
+.frscr{display:grid;gap:12px}.frscr>.grid{gap:12px}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -12178,9 +12179,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.149';
+const APPV='00.01.150';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.148 a v00.01.149. La barra inferior ahora lleva a Buscar partida y a Juegos, cada uno en su propia pantalla; Avisos y Ajustes quedan solo en el menú. Inicio muestra tus partidas.';
+const APPD='Actualiza de v00.01.149 a v00.01.150. Amigos ya no es una ventana emergente: es una pantalla propia que conserva la barra inferior (móvil) y la lateral (tablet y PC), igual que Buscar partida y Juegos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12350,9 +12351,9 @@ const SBKEY='lm_sb';let sbOpen={},sbLastCur='';
 function sbColl(){try{const v=localStorage.getItem(SBKEY);if(v===null)return true;return v==='1'}catch(e){return false}}
 function sbSig(){return (sbColl()?'c':'o')+(sbOpen.g?'g':'')+(sbOpen.cosmere?'k':'')+'|'+gamesSig()}
 function gamesSig(){return GAMES.map(g=>gamePub(g[0])?1:0).join('')}
-function sbCurKey(){if(scr==='menu')return 'gohome';if(scr==='games')return 'gogames';if(scr==='find')return 'gofind';if(scr==='admin')return 'admpanel';if(['cosmere','cyber','dune','deck','nb','arch'].includes(scr))return scr;if(typeof COS_SCR!=='undefined'&&COS_SCR.includes(scr))return 'cosmere';return ''}
+function sbCurKey(){if(scr==='menu')return 'gohome';if(scr==='games')return 'gogames';if(scr==='find')return 'gofind';if(scr==='friends')return 'friends';if(scr==='admin')return 'admpanel';if(['cosmere','cyber','dune','deck','nb','arch'].includes(scr))return scr;if(typeof COS_SCR!=='undefined'&&COS_SCR.includes(scr))return 'cosmere';return ''}
 function sbLabel(k){if(k==='gohome')return 'Inicio';if(k==='admpanel')return 'Administración';const g=GAMES.find(x=>x[0]===k);return g?g[1]:''}
-function sbCrumb(c){const k=sbCurKey();let p=[];if(k==='gohome'||!k)p=['Inicio'];else if(k==='gogames')p=['Inicio','Juegos'];else if(k==='gofind')p=['Inicio','Buscar partida'];else if(k==='admpanel')p=['Inicio','Administración'];else{const par=gParent(k);p=['Inicio','Juegos'];if(par)p.push(sbLabel(par));p.push(sbLabel(k))}
+function sbCrumb(c){const k=sbCurKey();let p=[];if(k==='gohome'||!k)p=['Inicio'];else if(k==='gogames')p=['Inicio','Juegos'];else if(k==='gofind')p=['Inicio','Buscar partida'];else if(k==='friends')p=['Inicio','Amigos'];else if(k==='admpanel')p=['Inicio','Administración'];else{const par=gParent(k);p=['Inicio','Juegos'];if(par)p.push(sbLabel(par));p.push(sbLabel(k))}
  return `<nav class="tbcrumb" aria-label="Ruta">${p.map((x,i)=>(i?`<span class="tbsep" aria-hidden="true">›</span>`:'')+`<span${i===p.length-1?' aria-current="page" class="cur"':''}>${esc(x)}</span>`).join('')}</nav>`}
 function sidebarUpdate(c){let a=document.getElementById('sidebar');const first=!a;if(first){a=document.createElement('aside');a=a;a.id='sidebar';document.body.appendChild(a)}
  const H=document.documentElement,col=sbColl()&&H.dataset.dev!=='phone',cur=sbCurKey();if(cur!==sbLastCur){sbLastCur=cur;const par=gParent(cur);if(cur==='cosmere'||par==='cosmere'){sbOpen.g=1;sbOpen.cosmere=1}else if(GAMES.some(x=>x[0]===cur))sbOpen.g=1}
@@ -12399,7 +12400,7 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
  const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
  if(sig===mbSigV&&!first)return;mbSigV=sig;
  const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
- m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',0,socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('gofind',LUPA,'Buscar',scr==='find')}${t('gogames',DIEI,'Juegos',scr==='games')}`;
+ m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',scr==='friends',socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('gofind',LUPA,'Buscar',scr==='find')}${t('gogames',DIEI,'Juegos',scr==='games')}`;
  let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
@@ -12408,7 +12409,7 @@ let mbSel=null;
 function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll('.mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector('.mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector('.mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
 document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 document.addEventListener('click',e=>{if(e.target.closest('#mbar .mbacc'))return;if(!e.target.closest('#mmore')||e.target.closest('#mmore [data-act]'))mbClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')mbClose()});
@@ -12595,7 +12596,8 @@ function screen0(){
   csOpt(0,'s','#9FC3F0',CARDS,'Creación de mazos','Contador de vida y mazos de Nacidos de la Bruma.','deck',canSeeGame('deck')?0:1)+csOpt(1,'g','#F0D58A',GEM,'Rol','Nacidos de la Bruma · El archivo de las tormentas.','rol',(canSeeGame('nb')||canSeeGame('arch'))?0:1));
  const jgt=(i,h)=>h.replace('<button','<button style="--i:'+i+'"');
  if(scr==='games')return `<h1 class="scrt">Juegos</h1><div class="bubbles hubmain gamesscr"><div class="jgwrap" id="jgwrap" data-open="1" data-fan="1"><div class="jgin" id="jgin">${jgt(0,hubTile('t1 gal',ORB,'Cosmere','Mazos y rol en el universo de Brandon Sanderson.','cosmere',canSeeGame('cosmere')?0:1))}${jgt(1,hubTile('t2 cyb',CYBER,'Cyberpunk','Neón, cromo y calles sin ley.','cyber',1))}${jgt(2,hubTile('t3 dun',DUNE,'Dune','Arenas, especia y el desierto de Arrakis.','dune',1))}</div></div></div>`;
- if(scr==='find'){setTimeout(()=>{try{if(document.querySelector('#ftpane[data-t=fr]')){fpRender();friendPartsLoad()}}catch(e){}},60);return `<h1 class="scrt">Buscar partida</h1><div class="bubbles scrmain"><section class="findscr">${findShell('code')}</section></div>`}
+ if(scr==='friends')return `<h1 class="scrt">Amigos</h1><div class="bubbles scrmain"><section class="findscr frscr">${friendsHtml()}</section></div>`;
+if(scr==='find'){setTimeout(()=>{try{if(document.querySelector('#ftpane[data-t=fr]')){fpRender();friendPartsLoad()}}catch(e){}},60);return `<h1 class="scrt">Buscar partida</h1><div class="bubbles scrmain"><section class="findscr">${findShell('code')}</section></div>`}
  const pp=partsPlayer();return hubBar()+`<h1 class="scrt">Inicio</h1><div class="bubbles scrmain homescr">${pp||`<div class="homeempty"><b>Aún no estás en ninguna partida</b><span>Busca una con un código o elige un juego para crear tus fichas.</span></div>`}</div>`}
 
 
@@ -13216,18 +13218,19 @@ async function socLoad(force){if(!session||soc.busy||document.hidden||(!force&&D
   if(soc.sig!==null){ids.filter(k=>!soc.seen.has(k)).forEach(k=>{const f=k[0];let t='';if(f==='f'){const x=soc.inq.find(y=>'f'+y.id===k);t=x&&x.name+' quiere ser tu amigo'}else if(f==='i'){const x=soc.invs.find(y=>'i'+y.id===k);t=x&&x.gmn+' te invita a «'+x.pname+'»'}else if(f==='r'){const x=soc.gmReq.find(y=>'r'+y.id===k);t=x&&x.name+' quiere unirse a «'+x.pname+'»'}else{const x=soc.myReq.find(y=>k==='m'+y.id+y.status);t=x&&(x.status==='ok'?'Tu solicitud para «'+x.pname+'» ha sido aceptada':'Tu solicitud para «'+x.pname+'» ha sido rechazada')}if(t)toast(t)})}
   ids.forEach(k=>soc.seen.add(k));
   const sg=JSON.stringify([ids,soc.fr.map(x=>[x.id,socOn(x.uid)]),soc.outInv.map(x=>x.id+x.dest),soc.outq.map(x=>x.id),soc.myReq.map(x=>x.id+x.status),soc.code]);const ch=sg!==soc.sig;soc.sig=sg;
-  if(ch){topbarSync();if(scr==='menu'&&!store.cur&&!document.querySelector('#dlg[open]'))render(1)}
+  if(ch){topbarSync();if(scr==='menu'&&!store.cur&&!document.querySelector('#dlg[open]'))render(1);else if(scr==='friends'&&!document.querySelector('#dlg[open]')&&!(document.activeElement&&document.activeElement.name==='fc'))render(1)}
   const D=$('#dlg');if(ch&&D.open){if(socRe&&document.getElementById('socmark'))softRe(socRe);else if(D.classList.contains('nfd'))softRe(notifDlg)}}catch(e){}finally{soc.busy=false}}
 setInterval(()=>socLoad(),5000);setTimeout(()=>socLoad(true),5000);
 const socDot=u=>`<i class="ovd${socOn(u)?'':' off'}" aria-hidden="true"></i>`;
-function friendsDlg(){socRe=friendsDlg;
+function friendsHtml(){
  const fr=soc.fr.map(f=>`<div class="frr"><span>${socDot(f.uid)}<b>${esc(f.name)}</b><small>${socOn(f.uid)?'En línea':soc.pres[f.uid]?'Visto '+ago(soc.pres[f.uid]):'Desconectado'}</small></span><button type="button" class="btn sm ghost danger" data-act="frm1" data-id="${esc(f.id)}" data-n="${esc(f.name)}">Eliminar</button></div>`).join('');
- showDlg('Amigos',`<div class="grid" id="socmark"><div class="codebox"><span>Tu código de amigo</span><b aria-label="Código de amigo">${esc(soc.code||'········')}</b>${soc.code?`<button class="btn sm" data-act="fcopy" data-c="${esc(soc.code)}">Copiar</button>`:''}</div>
+ return `<div class="grid" id="socmark"><div class="codebox"><span>Tu código de amigo</span><b aria-label="Código de amigo">${esc(soc.code||'········')}</b>${soc.code?`<button class="btn sm" data-act="fcopy" data-c="${esc(soc.code)}">Copiar</button>`:''}</div>
  <p class="hint" style="margin:0">Dale este código a quien quieras tener como amigo. Solo tus amigos pueden ver si estás en línea.</p>
  <form id="faddform" class="grid" novalidate><label class="f">Añadir amigo con su código<input name="fc" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="CÓDIGO" style="text-transform:uppercase;letter-spacing:.2em;font-weight:700"></label><div id="fmsg2" class="msg" role="alert"></div><div class="row"><button class="btn pri" type="submit">Enviar solicitud</button></div></form>
  ${soc.inq.length?`<h3 style="margin:0">Solicitudes recibidas</h3>${soc.inq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b></span><span class="row" style="gap:6px"><button class="btn pri sm" data-act="facc" data-id="${esc(x.id)}">Aceptar</button><button class="btn sm" data-act="fdel" data-id="${esc(x.id)}">Rechazar</button></span></div>`).join('')}`:''}
  ${soc.outq.length?`<h3 style="margin:0">Solicitudes enviadas</h3>${soc.outq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b><small>Pendiente</small></span><button class="btn sm ghost" data-act="fdel" data-id="${esc(x.id)}">Cancelar</button></div>`).join('')}`:''}
- <h3 style="margin:0">Mis amigos (${soc.fr.length})</h3>${fr||'<p class="hint" style="margin:0">Todavía no tienes amigos. Comparte tu código o escribe el de otra persona.</p>'}</div>`,true)}
+ <h3 style="margin:0">Mis amigos (${soc.fr.length})</h3>${fr||'<p class="hint" style="margin:0">Todavía no tienes amigos. Comparte tu código o escribe el de otra persona.</p>'}</div>`}
+function friendsDlg(){socRe=null;try{const D=$('#dlg');if(D&&D.open)D.close()}catch(e){}if(scr==='friends'){render();return}exitFx(()=>{store.cur=null;store.npcCur=null;scr='friends';try{save()}catch(x){}render()})}
 async function doFriendAdd(f){const m=$('#fmsg2'),set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const c=fcNorm(f.elements.fc.value);
  if(c.length<8){set('El código de amigo tiene 8 caracteres.','err');return}if(c===soc.code){set('Ese es tu propio código.','err');return}
  try{set('Buscando…');const r=(await fsQuery('codigos','code',c))[0];if(!r){set('No existe ningún usuario con ese código.','err');return}
