@@ -11324,6 +11324,10 @@ html:root:root .bubbles.hubmain .jgin>.bub .tt,html:root:root .bubbles.hubmain.g
 html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){border-radius:var(--bubr)}
 /* v179b: sin desenfoque en elementos repetidos; fondo algo mas opaco como compensacion */
 html:root:root .glass,html:root:root #onl .onb,html:root:root #onl .onp,html:root:root body.hubs .hlp,html:root:root .hmx .go,html:root:root .hmx.bpb .go,html:root:root .bubbles.hubmain .jgin>.bub .ti,html:root:root .bubbles.hubmain .jgin>.bub .tt,html:root:root .adp .tile,html:root:root .adp .gmc,html:root:root .adp .arow,html:root:root .adp .ovp,html:root:root .adp .onp,html:root:root #vtag,html:root:root #updf .uf,html:root:root .dnpan,html:root:root body.authdark .lgt .thm,html:root:root .homeempty,html:root:root .ug-glass,html:root:root #uigal .ug-top{--ui-glass-bg:color-mix(in srgb,var(--ui-solid) 82%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}
+/* v181: barra inferior solida (sin cristal); se conserva el indicador deslizante */
+html:root:root:root:root:root:not([data-cyb]) #mbar{background:var(--ui-solid);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid color-mix(in srgb,var(--ui-ink) 14%,transparent);box-shadow:0 10px 24px -12px rgba(0,0,0,.45)}
+html:root:root:root:root:root:not([data-cyb]) #mbar .mbind{background:color-mix(in srgb,var(--ui-acc) 20%,var(--ui-solid));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-acc) 45%,transparent)}
+html:root:root:not([data-cyb]) #mbar .mbind::after{display:none}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
@@ -12315,9 +12319,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.180';
+const APPV='00.01.181';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.179 a v00.01.180. Menos desenfoques (se mantienen en barras y ventanas) y se elimina el control de opacidad del cristal: ahora es fija.';
+const APPD='Actualiza de v00.01.180 a v00.01.181. La barra inferior deja de ser de cristal: fondo sólido, conservando el indicador deslizante.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
