@@ -3046,7 +3046,7 @@ html[data-dev=desktop] #npcpop{top:86px}
 
 
 
-html[data-mode=gm]::before,html[data-mode=gm]::after{content:'';position:fixed;top:0;bottom:0;width:7px;z-index:70;pointer-events:none;background:linear-gradient(#D9603F,#6E1F3A)}
+/* marco lateral del modo GM retirado: cortaba el fondo en los bordes */
 
 
 html[data-mode=gm]::before{left:0}
@@ -11408,6 +11408,9 @@ html .gvx .gvp .btn.arm{outline:2px solid var(--ui-acc,#6d5ce7)}
 html .gvx .pgav{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ui-acc,#6d5ce7);color:#fff}
 html .gvx .gvd summary{cursor:pointer;font-weight:700;padding:6px 0}
 /* Sin fundidos desde transparente al cambiar de pantalla, pestaña o tema: solo movimiento */
+html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n),html:root:root #app[class*="go-"] .bubbles.hubmain .jgin>.bub:nth-child(n){animation:none}
+@keyframes bubInflate{from{opacity:1;transform:scale(.92)}to{opacity:1;transform:none}}
+body.hubs>#htab.abg::after{content:'';position:absolute;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 96px);background:linear-gradient(180deg,var(--abg-base,#F6F0E8) 0,color-mix(in srgb,var(--abg-base,#F6F0E8) 60%,transparent) 40%,transparent 100%);pointer-events:none;z-index:3}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
@@ -12414,9 +12417,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.175';
+const APPV='00.01.176';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.174 a v00.01.175. Al cambiar de pestaña, de tema o de pantalla el contenido ya no se vuelve transparente y opaco: solo se desliza suavemente.';
+const APPD='Actualiza de v00.01.175 a v00.01.176. Los juegos de la pantalla Juegos ya no oscilan (ninguno se mueve), se retira el marco rojo lateral del modo GM y el borde superior se funde con el fondo sin corte.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
