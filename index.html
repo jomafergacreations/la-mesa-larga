@@ -11315,9 +11315,16 @@ html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o1{background
 html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o2{background:radial-gradient(closest-side,rgba(190,30,76,.46),transparent)}
 html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o3{background:radial-gradient(closest-side,rgba(235,140,40,.34),transparent)}
 html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o4{background:radial-gradient(closest-side,rgba(130,24,56,.4),transparent)}
+/* v185: cambio de pantalla con ascenso suave escalonado (solo vertical: nada se corta por los lados ni se vuelve transparente) */
+html:root:root #app.go-fwd>*:not(.bgd),html:root:root #app.go-back>*:not(.bgd){animation-duration:.46s;animation-timing-function:cubic-bezier(.22,1.2,.36,1);animation-fill-mode:both}
+html:root:root #app.go-fwd>*:not(.bgd):nth-child(2),html:root:root #app.go-back>*:not(.bgd):nth-child(2){animation-delay:45ms}
+html:root:root #app.go-fwd>*:not(.bgd):nth-child(3),html:root:root #app.go-back>*:not(.bgd):nth-child(3){animation-delay:90ms}
+html:root:root #app.go-fwd>*:not(.bgd):nth-child(4),html:root:root #app.go-back>*:not(.bgd):nth-child(4){animation-delay:135ms}
+html:root:root #app.go-fwd>*:not(.bgd):nth-child(n+5),html:root:root #app.go-back>*:not(.bgd):nth-child(n+5){animation-delay:180ms}
+@media(prefers-reduced-motion:reduce){html:root:root #app.go-fwd>*,html:root:root #app.go-back>*{animation:none!important}}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-@keyframes hIn{from{opacity:1;transform:none}to{opacity:1;transform:none}}
-@keyframes hBack{from{opacity:1;transform:none}to{opacity:1;transform:none}}
+@keyframes hIn{from{opacity:1;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes hBack{from{opacity:1;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hEnter{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes pgf{from{opacity:1}to{opacity:1}}
 @keyframes uipg{from{opacity:1;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -12303,9 +12310,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.184';
+const APPV='00.01.185';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.183 a v00.01.184. Corrige el desplazamiento lateral que aparecía al volver a Juegos (y otras pantallas): la pantalla ya aparece en su sitio desde el primer instante.';
+const APPD='Actualiza de v00.01.184 a v00.01.185. Al cambiar de pantalla con la barra inferior, el contenido asciende con un movimiento suave y escalonado, sin cortes laterales.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
