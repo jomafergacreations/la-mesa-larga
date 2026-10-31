@@ -11324,6 +11324,12 @@ html:root:root #app.go-fwd>*:not(.bgd):nth-child(n+5),html:root:root #app.go-bac
 @media(prefers-reduced-motion:reduce){html:root:root #app.go-fwd>*,html:root:root #app.go-back>*{animation:none!important}}
 /* v186: posicion inicial fija mientras se construye la pantalla, para que el primer fotograma pesado no se coma el inicio de la animacion */
 html:root:root #app.go-pre>*:not(.bgd){transform:translate3d(0,20px,0);animation:none}
+/* v188: indicador "en línea" abajo a la derecha sobre la barra de navegacion; rojo con 0, verde con 1 o mas */
+html[data-dev=phone]:root:root #onl{top:auto;left:auto;right:max(14px,env(safe-area-inset-right));bottom:var(--onl-bot,calc(env(safe-area-inset-bottom,0px) + 94px));align-items:flex-end}
+html[data-dev=phone]:root:root body:has(#simback) #onl{bottom:var(--onl-bot,calc(env(safe-area-inset-bottom,0px) + 94px))}
+html:root:root #onl .onb:not(.none){background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.04)),color-mix(in srgb,#34C77B 28%,var(--ui-glass-bg));border-color:color-mix(in srgb,#34C77B 60%,transparent)}
+html:root:root #onl .onb:not(.none) .ond{background:#2FBF71;box-shadow:0 0 0 3px color-mix(in srgb,#2FBF71 30%,transparent)}
+html:root:root #onl .onb.none .ond{background:#F87171;box-shadow:0 0 0 3px color-mix(in srgb,#F87171 28%,transparent)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -11556,7 +11562,7 @@ function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!boo
  if(!e){e=document.createElement('div');e.id='onl';e.addEventListener('click',ev=>{if(ev.target.closest('[data-onl]')){onlOpen=!onlOpen;onlDraw()}});b.appendChild(e)}
  const n=onlL.length,rn=r=>(r.role|0)>=3?'Superusuario':(r.role|0)>=2?'Administrador':'';
  const h=(onlOpen?'':`<button type="button" class="onb${n?'':' none'}" data-onl="1" aria-expanded="${onlOpen}" aria-label="${n} ${n===1?'usuario':'usuarios'} en línea"><i class="ond" aria-hidden="true"></i><b>${n}</b><span>en línea</span></button>`)+(onlOpen?`<div class="onp" role="status" data-onl="1" title="Toca para cerrar"><b>Conectados ahora</b>${n?onlL.slice(0,30).map(r=>`<div class="onr"><i class="ond" aria-hidden="true"></i><span>${esc(r.name||'Usuario')}</span>${rn(r)?`<em>${rn(r)}</em>`:''}</div>`).join(''):'<p class="hint" style="margin:0">Nadie conectado.</p>'}${n>30?`<p class="hint" style="margin:4px 0 0">y ${n-30} más…</p>`:''}</div>`:'');
- if(e.dataset.s!==h){e.dataset.s=h;e.innerHTML=h}try{const tb=document.querySelector('#topbar .tbin')||document.getElementById('topbar');if(tb)e.style.setProperty('--onl-top',Math.round(tb.getBoundingClientRect().bottom+8)+'px')}catch(x){}}catch(x){}}
+ if(e.dataset.s!==h){e.dataset.s=h;e.innerHTML=h}try{const tb=document.querySelector('#topbar .tbin')||document.getElementById('topbar');if(tb)e.style.setProperty('--onl-top',Math.round(tb.getBoundingClientRect().bottom+8)+'px');const mb=document.getElementById('mbar');if(mb){const r=mb.getBoundingClientRect();if(r.height)e.style.setProperty('--onl-bot',Math.round(innerHeight-r.top+10)+'px')}}catch(x){}}catch(x){}}
 setInterval(beat,60000);setInterval(onlRefresh,5000);setTimeout(()=>{beat();onlRefresh()},4000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){beat();onlRefresh()}});
 document.addEventListener('pointerdown',e=>{if(onlOpen&&!(e.target.closest&&e.target.closest('#onl'))){onlOpen=false;onlDraw()}},true);
@@ -12313,9 +12319,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.187';
+const APPV='00.01.188';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.186 a v00.01.187. Los cambios de pestaña de la barra inferior usan un revelado circular desde el icono pulsado: sin tirones ni cortes, porque la pantalla anterior se mantiene hasta que la nueva está lista.';
+const APPD='Actualiza de v00.01.187 a v00.01.188. El indicador de usuarios en línea pasa abajo a la derecha, sobre la barra de navegación: rojo con 0 y verde con 1 o más.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
