@@ -11328,6 +11328,30 @@ html:root:root .glass,html:root:root #onl .onb,html:root:root #onl .onp,html:roo
 html:root:root:root:root:root:not([data-cyb]) #mbar{background:var(--ui-solid);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid color-mix(in srgb,var(--ui-ink) 14%,transparent);box-shadow:0 10px 24px -12px rgba(0,0,0,.45)}
 html:root:root:root:root:root:not([data-cyb]) #mbar .mbind{background:color-mix(in srgb,var(--ui-acc) 20%,var(--ui-solid));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-acc) 45%,transparent)}
 html:root:root:not([data-cyb]) #mbar .mbind::after{display:none}
+/* v182: fondo tematizado por modo (jugador = azul/turquesa con dados y cartas; GM = rojo/ambar con hexagonos y runas). Fuera de ALPHA (data-adm) */
+html:root:root:not([data-adm]) body.hubs>#htab.abg::before{content:'';position:absolute;inset:0;background:var(--abg-pat,transparent);opacity:var(--abg-pop,.07);-webkit-mask-image:var(--abg-pimg);mask-image:var(--abg-pimg);-webkit-mask-size:180px 180px;mask-size:180px 180px;-webkit-mask-repeat:repeat;mask-repeat:repeat}
+html:root:root:not([data-adm]):not([data-mode=gm]){--abg-pimg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg transform='rotate(-14 38 40)'%3E%3Crect x='18' y='20' width='40' height='40' rx='9'/%3E%3Cg fill='black' stroke='none'%3E%3Ccircle cx='30' cy='32' r='3.2'/%3E%3Ccircle cx='46' cy='32' r='3.2'/%3E%3Ccircle cx='38' cy='40' r='3.2'/%3E%3Ccircle cx='30' cy='48' r='3.2'/%3E%3Ccircle cx='46' cy='48' r='3.2'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(12 128 58)'%3E%3Crect x='112' y='36' width='32' height='46' rx='6'/%3E%3Cpath d='M120 50h16M120 58h10'/%3E%3C/g%3E%3Ccircle cx='40' cy='130' r='15'/%3E%3Ccircle cx='40' cy='130' r='8'/%3E%3Cg transform='rotate(18 130 130)'%3E%3Crect x='110' y='110' width='40' height='40' rx='9'/%3E%3Cg fill='black' stroke='none'%3E%3Ccircle cx='122' cy='122' r='3.2'/%3E%3Ccircle cx='138' cy='138' r='3.2'/%3E%3Ccircle cx='130' cy='130' r='3.2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--abg-pat:#3B5BDB}
+html:root:root:not([data-adm])[data-mode=gm]{--abg-pimg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 18l20 11.5v23L40 64 20 52.5v-23z'/%3E%3Cg transform='rotate(10 130 50)'%3E%3Cpath d='M130 24l24 42h-48z'/%3E%3Cpath d='M130 38l9 16h-18z'/%3E%3C/g%3E%3Cpath d='M44 112v36M26 130h36M32 118l24 24M56 118L32 142'/%3E%3Cg transform='rotate(-8 130 132)'%3E%3Cpath d='M130 108l22 12.7v25.4L130 159l-22-12.7v-25.4z'/%3E%3Ccircle cx='130' cy='133' r='6'/%3E%3C/g%3E%3C/svg%3E");--abg-pat:#B83A24;--abg-pop:.05}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]){--abg-pat:#9FB6FF;--abg-pop:.06}
+html[data-lm=d]:root:root:not([data-adm])[data-mode=gm]{--abg-pat:#FF9A78;--abg-pop:.06}
+html[data-lm=l]:root:root:not([data-adm]):not([data-mode=gm]) body.hubs{--abg-base:#EEF2FB}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]) body.hubs{--abg-base:#0A0D1C}
+html[data-lm=l]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o1{background:radial-gradient(closest-side,rgba(84,132,255,.36),transparent)}
+html[data-lm=l]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o2{background:radial-gradient(closest-side,rgba(124,108,240,.30),transparent)}
+html[data-lm=l]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o3{background:radial-gradient(closest-side,rgba(52,194,186,.30),transparent)}
+html[data-lm=l]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o4{background:radial-gradient(closest-side,rgba(120,170,255,.28),transparent)}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o1{background:radial-gradient(closest-side,rgba(70,110,235,.46),transparent)}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o2{background:radial-gradient(closest-side,rgba(124,100,235,.42),transparent)}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o3{background:radial-gradient(closest-side,rgba(30,170,170,.30),transparent)}
+html[data-lm=d]:root:root:not([data-adm]):not([data-mode=gm]) #htab.abg .o4{background:radial-gradient(closest-side,rgba(70,120,220,.30),transparent)}
+html[data-lm=l]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o1{background:radial-gradient(closest-side,rgba(236,96,60,.38),transparent)}
+html[data-lm=l]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o2{background:radial-gradient(closest-side,rgba(196,40,84,.28),transparent)}
+html[data-lm=l]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o3{background:radial-gradient(closest-side,rgba(246,168,60,.42),transparent)}
+html[data-lm=l]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o4{background:radial-gradient(closest-side,rgba(150,40,70,.24),transparent)}
+html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o1{background:radial-gradient(closest-side,rgba(236,90,52,.5),transparent)}
+html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o2{background:radial-gradient(closest-side,rgba(190,30,76,.46),transparent)}
+html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o3{background:radial-gradient(closest-side,rgba(235,140,40,.34),transparent)}
+html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o4{background:radial-gradient(closest-side,rgba(130,24,56,.4),transparent)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
@@ -12319,9 +12343,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.181';
+const APPV='00.01.182';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.180 a v00.01.181. La barra inferior deja de ser de cristal: fondo sólido, conservando el indicador deslizante.';
+const APPD='Actualiza de v00.01.181 a v00.01.182. Nuevo fondo por modo: Jugador en azules y turquesa con dados y cartas; Máster en rojos y ámbar con hexágonos y runas.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
