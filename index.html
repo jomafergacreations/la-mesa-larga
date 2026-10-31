@@ -11390,6 +11390,23 @@ html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
 .pgx .pgbar.ask .pgs1,.pgx .pgbar.ask .pgb1{display:none}
 .pgx .pgbar.ask .pgs2{display:block}
 .pgx .pgbar.ask .pgb2{display:flex}
+html .gvx .gvu{margin-top:10px}
+html .gvx .gvr{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;min-height:54px;padding:8px 14px;border-radius:16px;cursor:pointer;background:rgba(127,127,127,.12);border:1px solid rgba(127,127,127,.22);-webkit-tap-highlight-color:transparent;margin-bottom:6px}
+html .gvx .gvr.on{border-color:var(--ui-acc,#6d5ce7);background:rgba(127,127,127,.18)}
+html .gvx .gvr .gvn{flex:1;min-width:0;font-weight:800}
+html .gvx .gvr .gvm{display:flex;align-items:center;gap:8px;flex:none}
+html .gvx .gvr small{opacity:.7;font-weight:700}
+html .gvx .tag.ok{color:#5fd39a;border-color:rgba(95,211,154,.5)}
+html .gvx .gvk{margin:0 0 0 14px;padding-left:10px;border-left:2px solid rgba(127,127,127,.3)}
+html .gvx .gvr.sub{min-height:48px}
+html .gvx .gdp{margin:0 0 10px;padding:12px;border-radius:16px;background:rgba(127,127,127,.08);border:1px dashed rgba(127,127,127,.3)}
+html .gvx .gdh{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+html .gvx .pgh{display:block;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin:12px 0 6px}
+html .gvx .gvp{display:flex;align-items:center;gap:10px;padding:6px 0}
+html .gvx .gvp b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+html .gvx .gvp .btn.arm{outline:2px solid var(--ui-acc,#6d5ce7)}
+html .gvx .pgav{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ui-acc,#6d5ce7);color:#fff}
+html .gvx .gvd summary{cursor:pointer;font-weight:700;padding:6px 0}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -11892,6 +11909,29 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
  if(q&&q.status==='pending'){gmReqPend=true;h=`<p style="margin:0">Tu solicitud (<b>${T[q.type]||''}</b>) está <b>pendiente</b>: un administrador tiene que autorizarla. Te avisaremos cuando la apruebe.</p><div class="row"><button class="btn danger" data-act="gmcancel">Cancelar solicitud</button></div>`}
  else h=`<p style="margin:0">Para dirigir partidas como Game Master necesitas la autorización de un administrador.</p>${q&&q.status==='denied'?'<p class="warn-t" style="margin:0">Tu última solicitud fue denegada.</p>':''}${q&&q.status==='revoked'?'<p class="warn-t" style="margin:0">Se te retiró la licencia anterior.</p>':''}${q&&q.status==='approved'&&q.type==='tmp'?'<p class="warn-t" style="margin:0">Tu licencia temporal anterior se agotó al finalizar su partida. Solicita una nueva.</p>':''}<div class="row"><button class="btn pri" data-act="gmsend" data-t="tmp">Pedir licencia temporal</button><button class="btn" data-act="gmsend" data-t="perm">Pedir permanente</button></div><p class="hint" style="margin:0">La temporal sirve para dirigir <b>una sola partida</b> y se agota cuando esa partida finaliza; después tendrás que solicitar una nueva.</p>`;
  showDlg('Ser Game Master',h,true)}
+/* ===== Juegos y accesos (por universo) ===== */
+let pgOpen='';
+function gvUsers(){return (regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'))}
+function gvDetail(id){const U=gvUsers(),pub=gamePub(id),ad=u=>(u.role|0)>=2&&(u.prev|0)===1,has=U.filter(u=>pgHasU(u.id,id)),no=U.filter(u=>!pgHasU(u.id,id)),nm=(GAMES.find(g=>g[0]===id)||[0,id])[1];
+ const row=(u,op)=>`<div class="gvp"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><b>${esc(u.name||'Usuario')}</b>${ad(u)?'<span class="tag">Admin · acceso total</span>':`<button type="button" class="btn sm ${op==='rev'?'danger':'pri'}" data-act="pgg" data-op="${op}" data-u="${esc(u.id)}" data-g="${id}" data-l="${op==='rev'?'Quitar acceso':'Dar acceso'}">${op==='rev'?'Quitar acceso':'Dar acceso'}</button>`}</div>`;
+ const at=+gamesCfg[id+'At'];
+ const hasL=has.length?(pub&&has.length>5?`<details class="gvd"><summary>Ver los ${has.length} usuarios con acceso</summary>${has.map(u=>row(u,'rev')).join('')}</details>`:has.map(u=>row(u,'rev')).join('')):'<p class="hint" style="margin:0">Nadie tiene acceso todavía.</p>';
+ return `<div class="gdp"><div class="gdh"><span class="tag">${pub?'Publicado'+(at?' · '+rpDate(at):''):'Sin publicar'}</span>${pub?`<button type="button" class="btn sm danger" data-act="gret" data-g="${id}">Retirar a todos</button>`:`<button type="button" class="btn sm pri" data-act="gpub" data-g="${id}" data-v="1">Publicar para todos</button>`}</div>
+  <b class="pgh">Con acceso (${has.length})</b>${hasL}
+  <b class="pgh">Sin acceso (${no.length})</b>${no.length?no.map(u=>row(u,'gr')).join(''):'<p class="hint" style="margin:0">Todos los usuarios tienen acceso.</p>'}</div>`}
+function gvHtml(){const U=gvUsers(),open=pgOpen;
+ const row=(g,k)=>{const id=g[0],n=U.filter(u=>pgHasU(u.id,id)).length,pub=gamePub(id),o=open===id;return `<button type="button" class="gvr${k?' sub':''}${o?' on':''}" data-act="pgopen" data-g="${id}" aria-expanded="${o}"><span class="gvn">${esc(g[1])}</span><span class="gvm"><span class="tag${pub?' ok':''}">${pub?'Publicado':'Sin publicar'}</span><small>${n}/${U.length}</small></span></button>${o?gvDetail(id):''}`};
+ return `<div class="gmc gvx"><div class="gmh"><b>Juegos y accesos</b></div><p class="hint" style="margin:0">Toca un universo o un juego para ver quién tiene acceso, darle acceso a otros usuarios o publicarlo para todos. Al quitar un universo se quitan también sus juegos.</p>
+ ${GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return `<div class="gvu">${row(g,0)}${kids.length?`<div class="gvk">${kids.map(k=>row(k,1)).join('')}</div>`:''}</div>`}).join('')}</div>`}
+async function pgOp(op,uid,g){const r=(regCache||[]).find(x=>x.id===uid);if(!r||!GAMES.some(x=>x[0]===g))return;
+ const sp=new Set(pgList(r.prevG)),dn=new Set(pgDenyL(r.prevG)),gm=GAMES.find(x=>x[0]===g),all=[g].concat(GAMES.filter(x=>x[4]===g).map(x=>x[0]));
+ if(op==='gr'){all.forEach(i=>{dn.delete(i);if(!gamePub(i))sp.add(i)});if(gm[4]){dn.delete(gm[4]);if(!gamePub(gm[4]))sp.add(gm[4])}}
+ else all.forEach(i=>{sp.delete(i);if(gamePub(i))dn.add(i)});
+ const v=[...sp,...[...dn].map(x=>'-'+x)].join(',');
+ try{await fs('PATCH','users/'+uid,fbEnc({prevG:v,prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(op==='gr'?'Acceso concedido':'Acceso retirado');if(admLive())admView(true)}catch(e){toast('No se pudo guardar. Revisa las reglas del servidor.')}}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-act=pgg]');if(!b||!isAdmin())return;e.stopPropagation();
+ if(!b.classList.contains('arm')){document.querySelectorAll('[data-act=pgg].arm').forEach(x=>{x.classList.remove('arm');x.textContent=x.dataset.l});b.classList.add('arm');b.textContent='¿Seguro?';clearTimeout(b._t);b._t=setTimeout(()=>{b.classList.remove('arm');b.textContent=b.dataset.l},4000);return}
+ b.disabled=true;pgOp(b.dataset.op,b.dataset.u,b.dataset.g)},true);
 let pgSel='';
 function pgHasU(u,id){if(u==='*')return gamePub(id);const r=(regCache||[]).find(x=>x.id===u);if(!r)return false;if((r.role|0)>=2&&(r.prev|0)===1)return true;if(pgDenyL(r.prevG).includes(id))return false;return gamePub(id)||pgList(r.prevG).includes(id)}
 function pgDirty(f){const bar=document.getElementById('pgbar');if(!bar||!f)return;const u=f.elements.u.value,add=[],rem=[];
@@ -11925,7 +11965,7 @@ function gamesAdmHtml(){
   <div class="row"><button type="button" class="btn sm ghost" data-act="pgall">Activar todos</button></div>
   <div id="pgbar" class="pgbar" hidden><p class="pgs1"></p><p class="pgs2"></p><div class="row pgb1"><button type="button" class="btn pri sm" data-act="pgask">Guardar cambios</button><button type="button" class="btn sm ghost" data-act="pgrev">Descartar</button></div><div class="row pgb2"><button type="submit" class="btn pri sm">Sí, guardar</button><button type="button" class="btn sm" data-act="pgno">Volver</button></div></div><p id="pgmsg" class="msg" role="status"></p></form>
   <div class="pgus"><b class="pgh">Con ajustes especiales${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')+pgDenyL(u.prevG).map(x=>`<span class="tag pgno">Sin ${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Restablecer</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene ajustes especiales ahora mismo.</p>'}</div></div>`;
- return `<div class="grid"><p class="hint" style="margin:0">Un juego sin publicar solo muestra su animación y un aviso de «Próximamente». Elige «Todos los usuarios» para publicar o retirar un juego para todos, o elige un usuario para darle o quitarle acceso solo a él. Los juegos de Cosmere se gestionan por separado.</p>${pg}</div>`}
+ return `<div class="grid"><p class="hint" style="margin:0">Un juego sin publicar solo muestra su animación y un aviso de «Próximamente». Mientras no se publique, solo quien tenga acceso podrá entrar.</p>${gvHtml()}</div>`}
 function gmRefresh(){if(admTab==='rol'&&scr==='admin'){if(regCache)admView(true);else admLoad()}else admShow(gmAdmHtml())}
 function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(+(b.updated||b.created)||0)-(+(a.updated||a.created)||0)),by=x=>esc(x.by||'');
  const T={tmp:'Temporal · una partida',perm:'Permanente'},ST={pending:'Pendiente',approved:'Aprobada',denied:'Denegada',revoked:'Retirada'};
@@ -12368,9 +12408,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.173';
+const APPV='00.01.174';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.172 a v00.01.173. Juegos del panel: publicar o retirar para todos se hace ahora en Accesos por usuario, eligiendo «Todos los usuarios». Se eliminan las tarjetas sueltas de cada juego.';
+const APPD='Actualiza de v00.01.173 a v00.01.174. Juegos del panel reorganizado por universos y juegos: al tocar uno ves quién tiene acceso, a quién darle acceso y puedes publicarlo o retirarlo para todos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14060,6 +14100,9 @@ document.addEventListener('click',e=>{
   case 'gpub':{if(!isAdmin())break;const g=b.dataset.g,v=b.dataset.v==='1'?1:0,gn=(GAMES.find(x=>x[0]===g)||[0,'este juego'])[1];if(!GAMES.some(x=>x[0]===g))break;
    if(v){showDlg('¿Publicar '+esc(gn)+'?',`<p style="margin:0">Todos los usuarios podrán entrar a <b>${esc(gn)}</b> y recibirán una notificación avisándoles de que ya está publicado.</p><div class="row"><button class="btn pri" data-act="gpubok" data-g="${g}">Sí, publicar y avisar</button></div>`,true);break}
    b.disabled=true;fs('PATCH','ajustes/juegos',fbEnc({[g]:0}),maskQ({[g]:1})).then(async()=>{await loadGames();toast('Juego retirado: los usuarios ya no pueden entrar');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo cambiar. Revisa las reglas del servidor.')});break}
+  case 'pgopen':{pgOpen=pgOpen===b.dataset.g?'':b.dataset.g;if(admLive())admView(true);break}
+  case 'gret':{if(!isAdmin())break;const g=b.dataset.g,gn=(GAMES.find(x=>x[0]===g)||[0,'este juego'])[1];showDlg('¿Retirar '+esc(gn)+'?',`<p style="margin:0">Los usuarios dejarán de poder entrar a <b>${esc(gn)}</b>, salvo quienes tengan acceso especial.</p><div class="row"><button class="btn danger" data-act="gretok" data-g="${g}">Sí, retirar a todos</button><button class="btn ghost" data-act="closedlg">Cancelar</button></div>`,true);break}
+  case 'gretok':{if(!isAdmin())break;const g=b.dataset.g;if(!GAMES.some(x=>x[0]===g))break;b.disabled=true;fs('PATCH','ajustes/juegos',fbEnc({[g]:0}),maskQ({[g]:1})).then(async()=>{await loadGames();try{$('#dlg').close()}catch(x){}toast('Juego retirado');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo cambiar. Revisa las reglas del servidor.')});break}
   case 'gpubok':{if(!isAdmin())break;const g=b.dataset.g;if(!GAMES.some(x=>x[0]===g))break;b.disabled=true;const now=Date.now();fs('PATCH','ajustes/juegos',fbEnc({[g]:1,[g+'At']:now}),maskQ({[g]:1,[g+'At']:1})).then(async()=>{await loadGames();try{$('#dlg').close()}catch(x){}toast('Juego publicado: los usuarios recibirán la notificación');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo publicar. Revisa las reglas del servidor.')});break}
   case 'notifclr':{const rh=store.rpHide=store.rpHide||[];
    store.pubDel=Array.from(new Set((store.pubDel||[]).concat(pubList().map(x=>x.k)))).slice(-100);
