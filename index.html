@@ -11407,7 +11407,13 @@ html .gvx .gvp b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 html .gvx .gvp .btn.arm{outline:2px solid var(--ui-acc,#6d5ce7)}
 html .gvx .pgav{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ui-acc,#6d5ce7);color:#fff}
 html .gvx .gvd summary{cursor:pointer;font-weight:700;padding:6px 0}
-@keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+/* Sin fundidos desde transparente al cambiar de pantalla, pestaña o tema: solo movimiento */
+@keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
+@keyframes hEnter{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes pgf{from{opacity:1}to{opacity:1}}
+@keyframes uipg{from{opacity:1;transform:translateY(8px)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>:nth-child(2),html:root:root #app.go-enter .authhub>:nth-child(2){animation-delay:40ms}
@@ -11735,9 +11741,9 @@ function vPoll(){clearInterval(vT);let busy=0;vT=setInterval(async()=>{if(authTa
   if(ok){clearInterval(vT);await vContinue()}}catch(e){}finally{busy=0}},4000)}
 function authSwap(a,b){if(lfRM()||a===b)return;try{const E='cubic-bezier(.2,.8,.2,1)',ix=k=>k==='new'?1:0,tb=k=>k==='login'||k==='new',dir=tb(a)&&tb(b)?(ix(b)>ix(a)?1:-1):1;
  const pill=document.querySelector('.authhub .seg .pill');if(pill&&tb(a)&&tb(b)){const T=i=>i?'translateX(calc(100% + 4px))':'translateX(0)';pill.animate([{transform:T(ix(a))},{transform:T(ix(b))}],{duration:340,easing:E})}
- const f=document.querySelector('.authhub form,.authhub .grid');if(f){f.animate([{opacity:0,transform:'translateX('+dir*30+'px)'},{opacity:1,transform:'none'}],{duration:320,easing:E});
-  Array.from(f.children).forEach((c,i)=>c.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:300,delay:60+i*45,easing:E,fill:'backwards'}))}
- const h=document.querySelector('.lg .hs');if(h)h.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:300,easing:E})}catch(e){}}
+ const f=document.querySelector('.authhub form,.authhub .grid');if(f){f.animate([{opacity:1,transform:'translateX('+dir*30+'px)'},{opacity:1,transform:'none'}],{duration:320,easing:E});
+  Array.from(f.children).forEach((c,i)=>c.animate([{opacity:1,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:300,delay:60+i*45,easing:E,fill:'backwards'}))}
+ const h=document.querySelector('.lg .hs');if(h)h.animate([{opacity:1,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:300,easing:E})}catch(e){}}
 function authView(){
  const tabs=[['login','Entrar'],['new','Crear cuenta']].map(([k,n])=>`<button type="button" data-act="atab" data-v="${k}" aria-pressed="${authTab===k}"><b>${n}</b></button>`).join('');
  const pwf=(id,label,auto,nb)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required>${nb?'':'<button type="button" class="btn sm" data-act="showpw" aria-pressed="false" tabindex="-1" aria-label="Mostrar u ocultar las contraseñas">Ver</button>'}</span></label>`;
@@ -12243,7 +12249,7 @@ function delChar(id){
   if(red)return;
   document.querySelectorAll('.card[data-cid]').forEach(el=>{const o=before[el.dataset.cid];if(!o)return;const n=el.getBoundingClientRect();const dx=o.left-n.left,dy=o.top-n.top;
    if(dx||dy)el.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{duration:380,easing:'cubic-bezier(.2,.8,.2,1)'})});
-  const em=document.querySelector('.empty');if(em)em.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'})};
+  const em=document.querySelector('.empty');if(em)em.animate([{opacity:1,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'})};
  if(red||!card){done();return}
  const r=card.getBoundingClientRect();
  card.classList.add('deleting');
@@ -12408,9 +12414,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.174';
+const APPV='00.01.175';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.173 a v00.01.174. Juegos del panel reorganizado por universos y juegos: al tocar uno ves quién tiene acceso, a quién darle acceso y puedes publicarlo o retirarlo para todos.';
+const APPD='Actualiza de v00.01.174 a v00.01.175. Al cambiar de pestaña, de tema o de pantalla el contenido ya no se vuelve transparente y opaco: solo se desliza suavemente.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13508,7 +13514,7 @@ function findGo(tab){const d=document,pane=document.getElementById('ftpane');if(
  const h0=pane.offsetHeight;pane.style.overflow='hidden';pane.style.height=h0+'px';
  const out=pane.animate([{opacity:1,transform:'none'},{opacity:0,transform:`translateX(${-dir*18}px)`}],{duration:140,easing:'ease-in',fill:'forwards'});
  out.onfinish=()=>{apply();out.cancel();pane.style.height='auto';const h1=pane.offsetHeight;pane.style.height=h0+'px';
-  const a=pane.animate([{opacity:0,transform:`translateX(${dir*18}px)`,height:h0+'px'},{opacity:1,transform:'none',height:h1+'px'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
+  const a=pane.animate([{opacity:1,transform:`translateX(${dir*18}px)`,height:h0+'px'},{opacity:1,transform:'none',height:h1+'px'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
   a.onfinish=a.oncancel=()=>{pane.style.height='';pane.style.overflow=''}}}
 function socNotifHtml(){const S=[];
  if(soc.inq.length)S.push(`<h3 style="margin:0">Solicitudes de amistad</h3>${soc.inq.map(x=>`<article class="rpc nw"><div class="rph"><b>${esc(x.name)} quiere ser tu amigo</b></div><div class="row"><button class="btn pri sm" data-act="facc" data-id="${esc(x.id)}" data-n="1">Aceptar</button><button class="btn sm" data-act="fdel" data-id="${esc(x.id)}" data-n="1">Rechazar</button></div></article>`).join('')}`);
