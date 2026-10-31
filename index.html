@@ -5763,11 +5763,8 @@ html.uivt *,html.uivt *::before,html.uivt *::after{animation-play-state:paused!i
 .ug-pane[data-ug=dun] .ug-game p,.ug-pane[data-ug=dun] .ug-dlg p{font-family:var(--sans,system-ui);letter-spacing:0;text-transform:none}
 
 
-.glassrg{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:700}
 
-.glassrg input{flex:1;min-width:90px;accent-color:var(--ui-acc,#7C6CF0)}
 
-.glassrg output{min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
 
 
 
@@ -11325,6 +11322,8 @@ body.hubs>#htab.abg::after{content:'';position:absolute;left:0;right:0;top:0;hei
 html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){--bubr:var(--ui-r-xl);--bubp:12px}
 html:root:root .bubbles.hubmain .jgin>.bub .tt,html:root:root .bubbles.hubmain.gamesscr .bub .tt{border-radius:calc(var(--bubr) - var(--bubp))}
 html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){border-radius:var(--bubr)}
+/* v179b: sin desenfoque en elementos repetidos; fondo algo mas opaco como compensacion */
+html:root:root .glass,html:root:root #onl .onb,html:root:root #onl .onp,html:root:root body.hubs .hlp,html:root:root .hmx .go,html:root:root .hmx.bpb .go,html:root:root .bubbles.hubmain .jgin>.bub .ti,html:root:root .bubbles.hubmain .jgin>.bub .tt,html:root:root .adp .tile,html:root:root .adp .gmc,html:root:root .adp .arow,html:root:root .adp .ovp,html:root:root .adp .onp,html:root:root #vtag,html:root:root #updf .uf,html:root:root .dnpan,html:root:root body.authdark .lgt .thm,html:root:root .homeempty,html:root:root .ug-glass,html:root:root #uigal .ug-top{--ui-glass-bg:color-mix(in srgb,var(--ui-solid) 82%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
@@ -12249,13 +12248,6 @@ azSet();addEventListener('resize',azSet);addEventListener('orientationchange',az
 const PKEY='lm_perf';let perfOn=false;
 const perfGet=()=>{try{const v=localStorage.getItem(PKEY);return v==='on'||v==='off'?v:'auto'}catch(e){return 'auto'}};
 const perfAuto=()=>{try{return localStorage.getItem(PKEY+'_a')==='1'}catch(e){return false}};
-const GKEY='lm_glass';
-function glassGet(){try{const v=parseFloat(localStorage.getItem(GKEY));return v>=.4&&v<=1.6?v:1}catch(e){return 1}}
-function glassApply(v){document.documentElement.style.setProperty('--ui-op',String(v));document.querySelectorAll('input[data-glass]').forEach(i=>{if(+i.value!==v)i.value=v;const o=i.parentNode.querySelector('output');if(o)o.textContent=Math.round(v*100)+'%'})}
-function glassSet(v){v=Math.max(.4,Math.min(1.6,+v||1));try{if(v===1)localStorage.removeItem(GKEY);else localStorage.setItem(GKEY,String(v))}catch(e){}glassApply(v)}
-function glassSlider(){const v=glassGet();return `<label class="glassrg"><span>Transparente</span><input type="range" data-glass min="0.4" max="1.6" step="0.05" value="${v}" aria-label="Opacidad del cristal"><span>Opaco</span><output>${Math.round(v*100)}%</output></label>`}
-document.addEventListener('input',e=>{if(e.target&&e.target.dataset&&e.target.dataset.glass!==undefined)glassSet(e.target.value)});
-glassApply(glassGet());
 function perfApply(){const m=perfGet();perfOn=m==='on'||(m==='auto'&&perfAuto());document.documentElement.classList.toggle('perf',perfOn)}
 function perfSet(m){try{if(m==='auto'){localStorage.removeItem(PKEY);localStorage.removeItem(PKEY+'_a')}else localStorage.setItem(PKEY,m)}catch(e){}perfApply();perfMon()}
 function perfSeg(){const m=perfGet();return `<div class="thm" role="group" aria-label="Rendimiento">${[['auto','Auto'],['on','Ligero'],['off','Completo']].map(([k,n])=>`<button type="button" data-act="perf" data-v="${k}" aria-pressed="${m===k}">${n}</button>`).join('')}</div>`}
@@ -12294,7 +12286,7 @@ function uigInit(root){if(innerWidth<560)root.querySelectorAll('.ug-shell').forE
 function uigClose(){const g=document.getElementById('uigal');if(g)g.remove();if(UGR){document.documentElement.dataset.lm=UGR;UGR=''}try{if(location.hash==='#galeria-ui')history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
 let UGR='';
 function uigOpen(){if(document.getElementById('uigal'))return;const g=document.createElement('div');g.id='uigal';g.setAttribute('role','dialog');g.setAttribute('aria-label','Galería de interfaz');
- g.innerHTML=`<div class="ug-top"><h1>Galería de interfaz · claro y oscuro</h1><div class="ug-tabs ug-glass" role="group" aria-label="Acento"><span class="ug-ind" aria-hidden="true"></span>${[['neu','Neutro'],['cos','Cosmere'],['cyb','Cyberpunk'],['dun','Dune']].map(([k,n],i)=>`<button type="button" class="ug-tab" data-ugc="acc" data-k="${k}" aria-selected="${i===0}">${n}</button>`).join('')}</div>${glassSlider()}<button type="button" class="ug-btn sec" data-ugc="solid" aria-pressed="false">Probar modo sólido</button><button type="button" class="ug-btn pri" data-ugc="close">Cerrar</button></div><div class="ug-wrap">${uigPane('d')}${uigPane('l')}</div>`;
+ g.innerHTML=`<div class="ug-top"><h1>Galería de interfaz · claro y oscuro</h1><div class="ug-tabs ug-glass" role="group" aria-label="Acento"><span class="ug-ind" aria-hidden="true"></span>${[['neu','Neutro'],['cos','Cosmere'],['cyb','Cyberpunk'],['dun','Dune']].map(([k,n],i)=>`<button type="button" class="ug-tab" data-ugc="acc" data-k="${k}" aria-selected="${i===0}">${n}</button>`).join('')}</div><button type="button" class="ug-btn sec" data-ugc="solid" aria-pressed="false">Probar modo sólido</button><button type="button" class="ug-btn pri" data-ugc="close">Cerrar</button></div><div class="ug-wrap">${uigPane('d')}${uigPane('l')}</div>`;
  document.body.appendChild(g);requestAnimationFrame(()=>{uigInit(g);requestAnimationFrame(()=>uigInit(g))});
  g.addEventListener('click',uigClick);addEventListener('resize',()=>uigInit(g))}
 function uigMotion(){return !(lfRM()||perfOn)}
@@ -12323,9 +12315,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.179';
+const APPV='00.01.180';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.178 a v00.01.179. Limpieza interna: se elimina código y animaciones sin uso para que la app pese menos. No cambia nada visible.';
+const APPD='Actualiza de v00.01.179 a v00.01.180. Menos desenfoques (se mantienen en barras y ventanas) y se elimina el control de opacidad del cristal: ahora es fija.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12474,7 +12466,7 @@ function legalHtml(k){return `<div class="lgltabs" role="group" aria-label="Docu
 function legalDlg(k){const d=LEGAL[k];if(!d)return;showDlg(`<span class="lglic" aria-hidden="true">${LEG_IC[k]}</span><span id="lglt">${d[0]}</span>`,`<p class="lglmeta">Revisado el ${LEG_DATE}</p>`+legalHtml(k),true);const dl=$('#dlg');if(dl){dl.classList.add('lgld');dl.setAttribute('tabindex','-1');try{dl.focus({preventScroll:true})}catch(e){}}}
 function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contains('lgld'))return;const c=dl.querySelector('#lglc'),t=dl.querySelector('#lglt'),ic=dl.querySelector('h3 .lglic');if(!c)return;c.innerHTML=legalBody(k);if(t)t.textContent=LEGAL[k][0];if(ic)ic.innerHTML=LEG_IC[k];dl.querySelectorAll('.lgltabs button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===k)));dl.scrollTo&&dl.scrollTo({top:0,behavior:'smooth'})}
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
-function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Opacidad del cristal</b>${glassSlider()}<p class="hint" style="margin:0">Cuánto se ve a través de menús y paneles flotantes.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
+function ajustesDlg(){showDlg('Ajustes',`<div class="grid setdlg"><div class="grid" style="gap:8px"><b>Tema</b>${themeSeg()}</div><div class="grid" style="gap:8px"><b>Rendimiento</b>${perfSeg()}<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p></div><div class="grid" style="gap:8px"><b>Versión de la app</b><p class="hint" style="margin:0">Versión ${APPV}.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div></div><div class="grid" style="gap:8px"><b>Ayuda</b><p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?${isAdmin()&&rpOpenN()?` <i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:''}</button></div></div><div class="grid" style="gap:8px"><b>Legal</b><div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div></div></div>`,true)}
 function tbHtml(c){const w=welcome(),gm=store.mode==='gm',th=getTheme();
  return `<div class="tbin">${scr==='admin'&&isAdmin()?`<div class="tbwel" data-p="adm"><span class="wi">${SHLD}</span><div class="wt"><b>Administración</b><span>${esc(session.name)} · superusuario</span></div></div>`:`<div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>`}${isAdmin()&&scr==='admin'?`<button type="button" class="tbi tbpan" data-act="admgame" aria-label="Simular usuario" title="Simular usuario">${MODEI}<span>Simular</span></button>`:''}${isAdmin()&&scr!=='admin'?`<button type="button" class="tbi tbpan" data-act="admpanel" aria-label="Volver al panel" title="Volver al panel">${SHLD}<span>Panel</span></button>`:''}${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button>${document.documentElement.dataset.dev==='phone'?`<button type="button" class="tbi tbmenu" data-act="sbopen" aria-label="Menú" aria-haspopup="true" aria-expanded="false">${MENUI}</button>`:''}</div>`}
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
