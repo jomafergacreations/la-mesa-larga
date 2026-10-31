@@ -11411,6 +11411,10 @@ html .gvx .gvd summary{cursor:pointer;font-weight:700;padding:6px 0}
 html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n),html:root:root #app[class*="go-"] .bubbles.hubmain .jgin>.bub:nth-child(n){animation:none}
 @keyframes bubInflate{from{opacity:1;transform:scale(.92)}to{opacity:1;transform:none}}
 body.hubs>#htab.abg::after{content:'';position:absolute;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 96px);background:linear-gradient(180deg,var(--abg-base,#F6F0E8) 0,color-mix(in srgb,var(--abg-base,#F6F0E8) 60%,transparent) 40%,transparent 100%);pointer-events:none;z-index:3}
+/* radios concéntricos: el panel interior = radio de la burbuja menos su margen */
+html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){--bubr:var(--ui-r-xl);--bubp:12px}
+html:root:root .bubbles.hubmain .jgin>.bub .tt,html:root:root .bubbles.hubmain.gamesscr .bub .tt{border-radius:calc(var(--bubr) - var(--bubp))}
+html:root:root .bubbles.hubmain .jgin>.bub:nth-child(n){border-radius:var(--bubr)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
@@ -12417,9 +12421,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.176';
+const APPV='00.01.177';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.175 a v00.01.176. Los juegos de la pantalla Juegos ya no oscilan (ninguno se mueve), se retira el marco rojo lateral del modo GM y el borde superior se funde con el fondo sin corte.';
+const APPD='Actualiza de v00.01.176 a v00.01.177. Las esquinas del panel interior de cada burbuja de juego encajan ahora con las de la burbuja exterior.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
