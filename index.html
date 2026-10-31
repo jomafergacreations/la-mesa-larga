@@ -11367,6 +11367,8 @@ html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
 .pgx .pgsw input:checked~.sw{background:var(--ui-acc,#6d5ce7)}
 .pgx .pgsw input:checked~.sw::after{transform:translateX(19px)}
 .pgx .pgsw input:focus-visible~.sw{outline:2px solid var(--ui-acc,#6d5ce7);outline-offset:2px}
+.pgx .pgsw.pub{opacity:.7;cursor:default}
+.pgx .pgt small{display:block;font-weight:500;font-size:.72rem;opacity:.75;margin-top:1px}
 .pgx .pgkids{display:grid;gap:6px;margin:-2px 0 0 18px;padding-left:12px;border-left:2px solid rgba(127,127,127,.3)}
 .pgx .pgkids .pgsw{min-height:44px;background:rgba(127,127,127,.08)}
 .pgx .pgkids .pgt{font-weight:600;font-size:.95em}
@@ -11892,17 +11894,17 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
 let pgSel='';
 function pgHasU(u,id){const r=(regCache||[]).find(x=>x.id===u);return !!r&&(((r.role|0)>=2&&(r.prev|0)===1)||pgList(r.prevG).includes(id))}
 function pgDirty(f){const bar=document.getElementById('pgbar');if(!bar||!f)return;const u=f.elements.u.value,add=[],rem=[];
- f.querySelectorAll('input[name=g]').forEach(x=>{const was=pgHasU(u,x.value);if(x.checked&&!was)add.push(x.value);if(!x.checked&&was)rem.push(x.value)});
+ f.querySelectorAll('input[name=g]:not(:disabled)').forEach(x=>{const was=pgHasU(u,x.value);if(x.checked&&!was)add.push(x.value);if(!x.checked&&was)rem.push(x.value)});
  const nm=id=>esc((GAMES.find(g=>g[0]===id)||[0,id])[1]),L=a=>a.map(nm).join(', '),r=(regCache||[]).find(x=>x.id===u),un=r?esc(r.name||'este usuario'):'este usuario';
  const parts=[add.length?'<b>Activar:</b> '+L(add):'',rem.length?'<b>Quitar:</b> '+L(rem):''].filter(Boolean).join(' · ');
  bar.classList.remove('ask');bar.hidden=!u||!parts;
  bar.querySelector('.pgs1').innerHTML='Cambios sin guardar · '+parts;
  bar.querySelector('.pgs2').innerHTML='¿Seguro? A <b>'+un+'</b> se le aplicará: '+parts+'.'}
-function pgReset(f){const u=f.elements.u.value;f.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(u,x.value)});pgDirty(f)}
+function pgReset(f){const u=f.elements.u.value;f.querySelectorAll('input[name=g]').forEach(x=>{x.checked=x.disabled||pgHasU(u,x.value)});pgDirty(f)}
 async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elements.u.value;{const bar=document.getElementById('pgbar');if(!all&&bar&&!bar.classList.contains('ask'))return}
  const say=(t,k)=>{if(m){m.textContent=t;m.className='msg '+(k||'')}};
  if(!u){say('Elige primero un usuario.','err');return}
- let ids=all?GAMES.map(g=>g[0]):Array.from(f.querySelectorAll('input[name=g]:checked')).map(x=>x.value);
+ let ids=all?GAMES.map(g=>g[0]):Array.from(f.querySelectorAll('input[name=g]')).filter(x=>x.disabled?pgHasU(u,x.value):x.checked).map(x=>x.value);
  ids.slice().forEach(i=>{const p=GAMES.find(g=>g[0]===i);if(p&&p[4]&&!ids.includes(p[4]))ids.push(p[4])});
  pgSel=u;
  try{await fs('PATCH','users/'+u,fbEnc({prevG:ids.join(','),prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(all?'Ahora ve todos los juegos':ids.length?'Accesos guardados':'Accesos retirados');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas del servidor.','err')}}
@@ -11911,7 +11913,7 @@ function gamesAdmHtml(){
  const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
  const us=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),gl=us.filter(u=>pgList(u.prevG).length||((u.role|0)>=2&&(u.prev|0)===1));
  const nm=id=>(GAMES.find(g=>g[0]===id)||[0,id])[1];
- const sw=g=>`<label class="pgsw"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}</span><span class="sw" aria-hidden="true"></span></label>`;
+ const sw=g=>{const pb=gamePub(g[0]);return `<label class="pgsw${pb?' pub':''}"><input type="checkbox" name="g" value="${g[0]}"${pb?' checked disabled':pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}${pb?'<small>Publicado para todos</small>':''}</span><span class="sw" aria-hidden="true"></span></label>`};
  const tops=GAMES.filter(g=>!g[4]).map(g=>{const k=GAMES.filter(x=>x[4]===g[0]);return sw(g)+(k.length?`<div class="pgkids">${k.map(sw).join('')}</div>`:'')}).join('');
  const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario y activa los juegos que podrá ver aunque todavía no estén publicados. Al activar un juego de Cosmere, Cosmere se activa también.</p>
   <form id="pgform" class="pgf" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
@@ -12039,8 +12041,8 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
 document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='INPUT'||t.name!=='g'||!t.form||t.form.id!=='pgform')return;
  const F=t.form,gm=GAMES.find(g=>g[0]===t.value);if(!gm)return;
  if(gm[4]){if(t.checked){const p=F.querySelector('input[name=g][value="'+gm[4]+'"]');if(p)p.checked=true}}
- else if(!t.checked){GAMES.filter(g=>g[4]===gm[0]).forEach(g=>{const c=F.querySelector('input[name=g][value="'+g[0]+'"]');if(c)c.checked=false})}pgDirty(F)});
-document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(pgSel,x.value)});pgDirty(t.form);const m=document.getElementById('pgmsg');if(m)m.textContent=''});
+ else if(!t.checked){GAMES.filter(g=>g[4]===gm[0]).forEach(g=>{const c=F.querySelector('input[name=g][value="'+g[0]+'"]');if(c&&!c.disabled)c.checked=false})}pgDirty(F)});
+document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=x.disabled||pgHasU(pgSel,x.value)});pgDirty(t.form);const m=document.getElementById('pgmsg');if(m)m.textContent=''});
 document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('[data-act=showpw]'))e.preventDefault()});
 document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,pgform:f=>pgSave(f,false),linkform:doLink,authform:doAuth,pwform:doPw,chform:doCh,faddform:doFriendAdd,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
@@ -12362,9 +12364,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.170';
+const APPV='00.01.171';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.169 a v00.01.170. En Accesos por usuario, al elegir un usuario se marcan sus accesos; si cambias algo aparece «Guardar cambios» con doble confirmación y «Descartar».';
+const APPD='Actualiza de v00.01.170 a v00.01.171. En Accesos por usuario, los juegos ya publicados salen activados y bloqueados con «Publicado para todos»; solo se editan los accesos especiales.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
