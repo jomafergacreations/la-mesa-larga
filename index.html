@@ -11356,6 +11356,31 @@ html[data-dev=phone] .adp .acc.ac>:not(:first-child){display:none}
 html[data-dev=phone] .adp .acc.ac{padding-bottom:10px}
 html[data-dev=phone] .adp .ovsub>b{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin:12px 0 4px}
 html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
+.pgx .pgf{display:grid;gap:10px;margin-top:10px}
+.pgx .pgl{display:grid;gap:8px}
+.pgx .pgsw{position:relative;display:flex;align-items:center;gap:12px;min-height:50px;padding:6px 14px;border-radius:16px;cursor:pointer;background:rgba(127,127,127,.12);border:1px solid rgba(127,127,127,.22);-webkit-tap-highlight-color:transparent;transition:background .2s}
+.pgx .pgsw:active{background:rgba(127,127,127,.2)}
+.pgx .pgsw input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.pgx .pgt{font-weight:700;flex:1;min-width:0}
+.pgx .pgsw .sw{flex:none;width:48px;height:29px;border-radius:99px;background:rgba(127,127,127,.4);position:relative;transition:background .25s}
+.pgx .pgsw .sw::after{content:'';position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:transform .3s var(--ui-spring,ease)}
+.pgx .pgsw input:checked~.sw{background:var(--ui-acc,#6d5ce7)}
+.pgx .pgsw input:checked~.sw::after{transform:translateX(19px)}
+.pgx .pgsw input:focus-visible~.sw{outline:2px solid var(--ui-acc,#6d5ce7);outline-offset:2px}
+.pgx .pgkids{display:grid;gap:6px;margin:-2px 0 0 18px;padding-left:12px;border-left:2px solid rgba(127,127,127,.3)}
+.pgx .pgkids .pgsw{min-height:44px;background:rgba(127,127,127,.08)}
+.pgx .pgkids .pgt{font-weight:600;font-size:.95em}
+.pgx .msg:empty{display:none}
+.pgx .pgus{margin-top:14px;padding-top:12px;border-top:1px solid rgba(127,127,127,.25)}
+.pgx .pgh{display:block;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.pgx .pgu{display:flex;gap:10px;align-items:flex-start;padding:10px 8px;border-radius:14px}
+.pgx .pgu+.pgu{margin-top:2px}
+.pgx .pgu.on{background:rgba(127,127,127,.14)}
+.pgx .pgav{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ui-acc,#6d5ce7);color:#fff}
+.pgx .pgin{flex:1;min-width:0}
+.pgx .pgch{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.pgx .pgch .tag{font-size:.64rem;padding:2px 8px}
+.pgx .pgac{display:flex;flex-direction:column;gap:6px;flex:none}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -11871,11 +11896,13 @@ function gamesAdmHtml(){
  const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
  const us=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),gl=us.filter(u=>pgList(u.prevG).length||((u.role|0)>=2&&(u.prev|0)===1));
  const nm=id=>(GAMES.find(g=>g[0]===id)||[0,id])[1];
- const pg=`<div class="gmc"><div class="gmh"><b>Mostrar el progreso a usuarios concretos</b></div><p class="hint" style="margin:0">Elige un usuario: verás los juegos a los que tiene acceso. Marca o desmarca los que quieras y pulsa «Guardar accesos». Si marcas un juego de Cosmere, Cosmere se marca también.</p>
-  <form id="pgform" class="grid" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
-  <div class="row">${GAMES.map(g=>`<label class="chk"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span><b>${esc(g[1])}</b>${g[4]?' <small>(dentro de '+esc(nm(g[4]))+')</small>':''}</span></label>`).join('')}</div>
-  <div class="row"><button type="submit" class="btn pri sm">Guardar accesos</button><button type="button" class="btn sm" data-act="pgall">Mostrar todo</button></div><p id="pgmsg" class="msg" role="status"></p></form>
-  ${gl.length?`<div class="alist">${gl.map(u=>`<div class="gmh"><b>${esc(u.name)}</b>${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (acceso de administrador)</span>':''}${pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')}<button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Quitar todo</button></div>`).join('')}</div>`:'<p class="hint" style="margin:0">Ningún usuario tiene acceso especial ahora mismo.</p>'}</div>`;
+ const sw=g=>`<label class="pgsw"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}</span><span class="sw" aria-hidden="true"></span></label>`;
+ const tops=GAMES.filter(g=>!g[4]).map(g=>{const k=GAMES.filter(x=>x[4]===g[0]);return sw(g)+(k.length?`<div class="pgkids">${k.map(sw).join('')}</div>`:'')}).join('');
+ const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario y activa los juegos que podrá ver aunque todavía no estén publicados. Al activar un juego de Cosmere, Cosmere se activa también.</p>
+  <form id="pgform" class="pgf" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
+  <div class="pgl">${tops}</div>
+  <div class="row"><button type="submit" class="btn pri sm">Guardar accesos</button><button type="button" class="btn sm" data-act="pgall">Dar acceso a todo</button></div><p id="pgmsg" class="msg" role="status"></p></form>
+  <div class="pgus"><b class="pgh">Con acceso ahora${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Quitar</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene acceso especial ahora mismo.</p>'}</div></div>`;
  return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso en <b>Roles y permisos</b>, y cualquier usuario si se lo muestras aquí. Cada juego de dentro de Cosmere se puede publicar o retirar de forma independiente.</p>${pg}<div class="alist">${cards}</div></div>`}
 function gmRefresh(){if(admTab==='rol'&&scr==='admin'){if(regCache)admView(true);else admLoad()}else admShow(gmAdmHtml())}
 function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(+(b.updated||b.created)||0)-(+(a.updated||a.created)||0)),by=x=>esc(x.by||'');
@@ -12315,9 +12342,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.167';
+const APPV='00.01.168';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.166 a v00.01.167. En móvil, el Resumen del panel agrupa sus tarjetas por temas: Cuentas, Actividad, Partidas y juegos, y Servidor y app.';
+const APPD='Actualiza de v00.01.167 a v00.01.168. Rediseñado el apartado de accesos por usuario en Juegos del panel: interruptores por juego, Cosmere con sus juegos anidados y lista de usuarios con acceso más clara.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
