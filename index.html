@@ -11367,7 +11367,7 @@ html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
 .pgx .pgsw input:checked~.sw{background:var(--ui-acc,#6d5ce7)}
 .pgx .pgsw input:checked~.sw::after{transform:translateX(19px)}
 .pgx .pgsw input:focus-visible~.sw{outline:2px solid var(--ui-acc,#6d5ce7);outline-offset:2px}
-.pgx .pgsw.pub{opacity:.7;cursor:default}
+.pgx .pgch .tag.pgno{color:#ff8a8a;border-color:rgba(255,120,120,.5)}
 .pgx .pgt small{display:block;font-weight:500;font-size:.72rem;opacity:.75;margin-top:1px}
 .pgx .pgkids{display:grid;gap:6px;margin:-2px 0 0 18px;padding-left:12px;border-left:2px solid rgba(127,127,127,.3)}
 .pgx .pgkids .pgsw{min-height:44px;background:rgba(127,127,127,.08)}
@@ -11472,7 +11472,8 @@ const gParent=id=>((GAMES.find(x=>x[0]===id)||[])[4])||'';
 function gameUnp(id){return !gamePub(id)||(gParent(id)?gameUnp(gParent(id)):false)}
 const GSCR={cosmere:'cosmere',rol:'cosmere',nb:'nb',deck:'deck',arch:'arch',npc:'cosmere',part:'cosmere',ppart:'cosmere',pjview:'cosmere',cyber:'cyber',dune:'dune'};
 function gamePub(id){const v=gamesCfg[id];if(v===undefined||v===null||v==='')return !!(GAMES.find(g=>g[0]===id)||[])[3];return (+v)===1}
-function canSeeGame(id){const pr=gParent(id);if(pr&&!canSeeGame(pr))return false;if(gamePub(id))return true;if(!session)return false;if(isAdmin())return !simNoGM;if(pgHas(id))return true;return (session.role|0)>=2&&(session.prev|0)===1}
+function canSeeGame(id){const pr=gParent(id);if(pr&&!canSeeGame(pr))return false;if(session&&!isAdmin()&&pgDenyL(session.prevG).includes(id)&&!((session.role|0)>=2&&(session.prev|0)===1))return false;if(gamePub(id))return true;if(!session)return false;if(isAdmin())return !simNoGM;if(pgHas(id))return true;return (session.role|0)>=2&&(session.prev|0)===1}
+function pgDenyL(v){return String(v||'').split(',').filter(x=>x[0]==='-'&&GAMES.some(g=>g[0]===x.slice(1))).map(x=>x.slice(1))}
 function pgList(v){return String(v||'').split(',').filter(x=>x&&GAMES.some(g=>g[0]===x))}
 function pgHas(id){return !!session&&pgList(session.prevG).includes(id)}
 const pubList=()=>{const now=Date.now(),dl=(typeof store!=='undefined'&&store&&store.pubDel)||[];return GAMES.filter(g=>gamePub(g[0])&&(+gamesCfg[g[0]+'At']||0)>0&&now-(+gamesCfg[g[0]+'At'])<30*864e5).map(g=>{const at=+gamesCfg[g[0]+'At'];return{g:g[0],n:g[1],at,k:g[0]+':'+at}}).filter(x=>!dl.includes(x.k)).sort((a,b)=>b.at-a.at)};
@@ -11892,7 +11893,7 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
  else h=`<p style="margin:0">Para dirigir partidas como Game Master necesitas la autorización de un administrador.</p>${q&&q.status==='denied'?'<p class="warn-t" style="margin:0">Tu última solicitud fue denegada.</p>':''}${q&&q.status==='revoked'?'<p class="warn-t" style="margin:0">Se te retiró la licencia anterior.</p>':''}${q&&q.status==='approved'&&q.type==='tmp'?'<p class="warn-t" style="margin:0">Tu licencia temporal anterior se agotó al finalizar su partida. Solicita una nueva.</p>':''}<div class="row"><button class="btn pri" data-act="gmsend" data-t="tmp">Pedir licencia temporal</button><button class="btn" data-act="gmsend" data-t="perm">Pedir permanente</button></div><p class="hint" style="margin:0">La temporal sirve para dirigir <b>una sola partida</b> y se agota cuando esa partida finaliza; después tendrás que solicitar una nueva.</p>`;
  showDlg('Ser Game Master',h,true)}
 let pgSel='';
-function pgHasU(u,id){const r=(regCache||[]).find(x=>x.id===u);return !!r&&(((r.role|0)>=2&&(r.prev|0)===1)||pgList(r.prevG).includes(id))}
+function pgHasU(u,id){const r=(regCache||[]).find(x=>x.id===u);if(!r)return false;if((r.role|0)>=2&&(r.prev|0)===1)return true;if(pgDenyL(r.prevG).includes(id))return false;return gamePub(id)||pgList(r.prevG).includes(id)}
 function pgDirty(f){const bar=document.getElementById('pgbar');if(!bar||!f)return;const u=f.elements.u.value,add=[],rem=[];
  f.querySelectorAll('input[name=g]:not(:disabled)').forEach(x=>{const was=pgHasU(u,x.value);if(x.checked&&!was)add.push(x.value);if(!x.checked&&was)rem.push(x.value)});
  const nm=id=>esc((GAMES.find(g=>g[0]===id)||[0,id])[1]),L=a=>a.map(nm).join(', '),r=(regCache||[]).find(x=>x.id===u),un=r?esc(r.name||'este usuario'):'este usuario';
@@ -11904,23 +11905,24 @@ function pgReset(f){const u=f.elements.u.value;f.querySelectorAll('input[name=g]
 async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elements.u.value;{const bar=document.getElementById('pgbar');if(!all&&bar&&!bar.classList.contains('ask'))return}
  const say=(t,k)=>{if(m){m.textContent=t;m.className='msg '+(k||'')}};
  if(!u){say('Elige primero un usuario.','err');return}
- let ids=all?GAMES.map(g=>g[0]):Array.from(f.querySelectorAll('input[name=g]')).filter(x=>x.disabled?pgHasU(u,x.value):x.checked).map(x=>x.value);
- ids.slice().forEach(i=>{const p=GAMES.find(g=>g[0]===i);if(p&&p[4]&&!ids.includes(p[4]))ids.push(p[4])});
+ const rr=(regCache||[]).find(x=>x.id===u),sp=pgList(rr&&rr.prevG);let ids=[],deny=[];
+ if(all)ids=GAMES.map(g=>g[0]);else f.querySelectorAll('input[name=g]').forEach(x=>{const id=x.value;if(gamePub(id)){if(x.checked){if(sp.includes(id))ids.push(id)}else deny.push(id)}else if(x.checked)ids.push(id)});
+ ids.slice().forEach(i=>{const p=GAMES.find(g=>g[0]===i);if(p&&p[4]&&!ids.includes(p[4])&&!gamePub(p[4]))ids.push(p[4])});
  pgSel=u;
- try{await fs('PATCH','users/'+u,fbEnc({prevG:ids.join(','),prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(all?'Ahora ve todos los juegos':ids.length?'Accesos guardados':'Accesos retirados');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas del servidor.','err')}}
+ try{await fs('PATCH','users/'+u,fbEnc({prevG:ids.concat(deny.map(x=>'-'+x)).join(','),prev:0}),maskQ({prevG:1,prev:1}));try{regCache=await fsList('users')}catch(e){}toast(all?'Ahora ve todos los juegos':ids.length?'Accesos guardados':'Accesos retirados');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas del servidor.','err')}}
 function gamesAdmHtml(){
  const card=([id,n,d],sub)=>{const p=gamePub(id),blk=sub&&!gamePub(gParent(id));return `<div class="gmc ${p?'approved':'pending'}${sub?' sub':''}"><div class="gmh"><b>${esc(n)}</b><span class="tag">${p?'Publicado':'Sin publicar'}</span>${p&&+gamesCfg[id+'At']?`<span class="gms">Publicado el ${rpDate(gamesCfg[id+'At'])}</span>`:''}${p&&blk?'<span class="gms">Oculto: el juego principal no está publicado</span>':''}</div><p class="hint" style="margin:0">${esc(d)}</p><div class="row"><button class="btn sm ${p?'danger':'pri'}" data-act="gpub" data-g="${id}" data-v="${p?0:1}">${p?'Retirar a los usuarios':'Publicar juego'}</button></div></div>`};
  const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
- const us=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),gl=us.filter(u=>pgList(u.prevG).length||((u.role|0)>=2&&(u.prev|0)===1));
+ const us=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),gl=us.filter(u=>pgList(u.prevG).length||pgDenyL(u.prevG).length||((u.role|0)>=2&&(u.prev|0)===1));
  const nm=id=>(GAMES.find(g=>g[0]===id)||[0,id])[1];
- const sw=g=>{const pb=gamePub(g[0]);return `<label class="pgsw${pb?' pub':''}"><input type="checkbox" name="g" value="${g[0]}"${pb?' checked disabled':pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}${pb?'<small>Publicado para todos</small>':''}</span><span class="sw" aria-hidden="true"></span></label>`};
+ const sw=g=>{const pb=gamePub(g[0]);return `<label class="pgsw${pb?' pub':''}"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}${pb?'<small>Publicado para todos</small>':''}</span><span class="sw" aria-hidden="true"></span></label>`};
  const tops=GAMES.filter(g=>!g[4]).map(g=>{const k=GAMES.filter(x=>x[4]===g[0]);return sw(g)+(k.length?`<div class="pgkids">${k.map(sw).join('')}</div>`:'')}).join('');
- const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario y activa los juegos que podrá ver aunque todavía no estén publicados. Al activar un juego de Cosmere, Cosmere se activa también.</p>
+ const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario: verás a qué juegos accede. Activa uno para dárselo, aunque no esté publicado; apágalo para quitárselo, aunque esté publicado. Al apagar Cosmere se apagan sus juegos, y al activar uno de ellos se activa Cosmere.</p>
   <form id="pgform" class="pgf" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
   <div class="pgl">${tops}</div>
   <div class="row"><button type="button" class="btn sm ghost" data-act="pgall">Activar todos</button></div>
   <div id="pgbar" class="pgbar" hidden><p class="pgs1"></p><p class="pgs2"></p><div class="row pgb1"><button type="button" class="btn pri sm" data-act="pgask">Guardar cambios</button><button type="button" class="btn sm ghost" data-act="pgrev">Descartar</button></div><div class="row pgb2"><button type="submit" class="btn pri sm">Sí, guardar</button><button type="button" class="btn sm" data-act="pgno">Volver</button></div></div><p id="pgmsg" class="msg" role="status"></p></form>
-  <div class="pgus"><b class="pgh">Con acceso ahora${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Quitar</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene acceso especial ahora mismo.</p>'}</div></div>`;
+  <div class="pgus"><b class="pgh">Con ajustes especiales${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')+pgDenyL(u.prevG).map(x=>`<span class="tag pgno">Sin ${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Restablecer</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene ajustes especiales ahora mismo.</p>'}</div></div>`;
  return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso en <b>Roles y permisos</b>, y cualquier usuario si se lo muestras aquí. Cada juego de dentro de Cosmere se puede publicar o retirar de forma independiente.</p>${pg}<div class="alist">${cards}</div></div>`}
 function gmRefresh(){if(admTab==='rol'&&scr==='admin'){if(regCache)admView(true);else admLoad()}else admShow(gmAdmHtml())}
 function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(+(b.updated||b.created)||0)-(+(a.updated||a.created)||0)),by=x=>esc(x.by||'');
@@ -12364,9 +12366,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.171';
+const APPV='00.01.172';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.170 a v00.01.171. En Accesos por usuario, los juegos ya publicados salen activados y bloqueados con «Publicado para todos»; solo se editan los accesos especiales.';
+const APPD='Actualiza de v00.01.171 a v00.01.172. Accesos por usuario: los interruptores permiten también quitar a un usuario un juego ya publicado. El resto de usuarios sigue viéndolo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
