@@ -11893,18 +11893,20 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
  else h=`<p style="margin:0">Para dirigir partidas como Game Master necesitas la autorización de un administrador.</p>${q&&q.status==='denied'?'<p class="warn-t" style="margin:0">Tu última solicitud fue denegada.</p>':''}${q&&q.status==='revoked'?'<p class="warn-t" style="margin:0">Se te retiró la licencia anterior.</p>':''}${q&&q.status==='approved'&&q.type==='tmp'?'<p class="warn-t" style="margin:0">Tu licencia temporal anterior se agotó al finalizar su partida. Solicita una nueva.</p>':''}<div class="row"><button class="btn pri" data-act="gmsend" data-t="tmp">Pedir licencia temporal</button><button class="btn" data-act="gmsend" data-t="perm">Pedir permanente</button></div><p class="hint" style="margin:0">La temporal sirve para dirigir <b>una sola partida</b> y se agota cuando esa partida finaliza; después tendrás que solicitar una nueva.</p>`;
  showDlg('Ser Game Master',h,true)}
 let pgSel='';
-function pgHasU(u,id){const r=(regCache||[]).find(x=>x.id===u);if(!r)return false;if((r.role|0)>=2&&(r.prev|0)===1)return true;if(pgDenyL(r.prevG).includes(id))return false;return gamePub(id)||pgList(r.prevG).includes(id)}
+function pgHasU(u,id){if(u==='*')return gamePub(id);const r=(regCache||[]).find(x=>x.id===u);if(!r)return false;if((r.role|0)>=2&&(r.prev|0)===1)return true;if(pgDenyL(r.prevG).includes(id))return false;return gamePub(id)||pgList(r.prevG).includes(id)}
 function pgDirty(f){const bar=document.getElementById('pgbar');if(!bar||!f)return;const u=f.elements.u.value,add=[],rem=[];
  f.querySelectorAll('input[name=g]:not(:disabled)').forEach(x=>{const was=pgHasU(u,x.value);if(x.checked&&!was)add.push(x.value);if(!x.checked&&was)rem.push(x.value)});
- const nm=id=>esc((GAMES.find(g=>g[0]===id)||[0,id])[1]),L=a=>a.map(nm).join(', '),r=(regCache||[]).find(x=>x.id===u),un=r?esc(r.name||'este usuario'):'este usuario';
- const parts=[add.length?'<b>Activar:</b> '+L(add):'',rem.length?'<b>Quitar:</b> '+L(rem):''].filter(Boolean).join(' · ');
+ const nm=id=>esc((GAMES.find(g=>g[0]===id)||[0,id])[1]),L=a=>a.map(nm).join(', '),r=(regCache||[]).find(x=>x.id===u),un=u==='*'?'todos los usuarios':r?esc(r.name||'este usuario'):'este usuario';
+ const G=u==='*',parts=[add.length?'<b>'+(G?'Publicar':'Activar')+':</b> '+L(add):'',rem.length?'<b>'+(G?'Retirar':'Quitar')+':</b> '+L(rem):''].filter(Boolean).join(' · ');
  bar.classList.remove('ask');bar.hidden=!u||!parts;
  bar.querySelector('.pgs1').innerHTML='Cambios sin guardar · '+parts;
- bar.querySelector('.pgs2').innerHTML='¿Seguro? A <b>'+un+'</b> se le aplicará: '+parts+'.'}
+ bar.querySelector('.pgs2').innerHTML='¿Seguro? '+(u==='*'?'Se aplicará a <b>todos los usuarios</b>':'A <b>'+un+'</b> se le aplicará')+': '+parts+'.'}
 function pgReset(f){const u=f.elements.u.value;f.querySelectorAll('input[name=g]').forEach(x=>{x.checked=x.disabled||pgHasU(u,x.value)});pgDirty(f)}
 async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elements.u.value;{const bar=document.getElementById('pgbar');if(!all&&bar&&!bar.classList.contains('ask'))return}
  const say=(t,k)=>{if(m){m.textContent=t;m.className='msg '+(k||'')}};
- if(!u){say('Elige primero un usuario.','err');return}
+ if(!u){say('Elige primero a quién aplicar los cambios.','err');return}
+ if(u==='*'){if(!isAdmin())return;const o={},now=Date.now();f.querySelectorAll('input[name=g]').forEach(x=>{if(x.checked!==gamePub(x.value)){o[x.value]=x.checked?1:0;if(x.checked)o[x.value+'At']=now}});if(!Object.keys(o).length){pgDirty(f);return}
+  try{await fs('PATCH','ajustes/juegos',fbEnc(o),maskQ(Object.fromEntries(Object.keys(o).map(k=>[k,1]))));await loadGames();pgSel='*';toast('Publicación actualizada');if(admLive())admView(true)}catch(e){say('No se pudo guardar. Revisa las reglas del servidor.','err')}return}
  const rr=(regCache||[]).find(x=>x.id===u),sp=pgList(rr&&rr.prevG);let ids=[],deny=[];
  if(all)ids=GAMES.map(g=>g[0]);else f.querySelectorAll('input[name=g]').forEach(x=>{const id=x.value;if(gamePub(id)){if(x.checked){if(sp.includes(id))ids.push(id)}else deny.push(id)}else if(x.checked)ids.push(id)});
  ids.slice().forEach(i=>{const p=GAMES.find(g=>g[0]===i);if(p&&p[4]&&!ids.includes(p[4])&&!gamePub(p[4]))ids.push(p[4])});
@@ -11915,15 +11917,15 @@ function gamesAdmHtml(){
  const cards=GAMES.filter(g=>!g[4]).map(g=>{const kids=GAMES.filter(k=>k[4]===g[0]);return card(g,0)+(kids.length?`<div class="subg"><small>Dentro de ${esc(g[1])} · se publican por separado</small>${kids.map(k=>card(k,1)).join('')}</div>`:'')}).join('');
  const us=(regCache||[]).filter(x=>!x.deleted&&(x.role|0)<3).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es')),gl=us.filter(u=>pgList(u.prevG).length||pgDenyL(u.prevG).length||((u.role|0)>=2&&(u.prev|0)===1));
  const nm=id=>(GAMES.find(g=>g[0]===id)||[0,id])[1];
- const sw=g=>{const pb=gamePub(g[0]);return `<label class="pgsw${pb?' pub':''}"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}${pb?'<small>Publicado para todos</small>':''}</span><span class="sw" aria-hidden="true"></span></label>`};
+ const sw=g=>{const pb=gamePub(g[0]);return `<label class="pgsw${pb?' pub':''}"><input type="checkbox" name="g" value="${g[0]}"${pgHasU(pgSel,g[0])?' checked':''}><span class="pgt">${esc(g[1])}${pgSel==='*'?`<small>${pb?(+gamesCfg[g[0]+'At']?'Publicado el '+rpDate(gamesCfg[g[0]+'At']):'Publicado'):'Sin publicar'}</small>`:pb?'<small>Publicado para todos</small>':''}</span><span class="sw" aria-hidden="true"></span></label>`};
  const tops=GAMES.filter(g=>!g[4]).map(g=>{const k=GAMES.filter(x=>x[4]===g[0]);return sw(g)+(k.length?`<div class="pgkids">${k.map(sw).join('')}</div>`:'')}).join('');
- const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario: verás a qué juegos accede. Activa uno para dárselo, aunque no esté publicado; apágalo para quitárselo, aunque esté publicado. Al apagar Cosmere se apagan sus juegos, y al activar uno de ellos se activa Cosmere.</p>
-  <form id="pgform" class="pgf" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
+ const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos y publicación</b></div><p class="hint" style="margin:0">Elige un usuario: verás a qué juegos accede. Activa uno para dárselo, aunque no esté publicado; apágalo para quitárselo, aunque esté publicado. Al apagar Cosmere se apagan sus juegos, y al activar uno de ellos se activa Cosmere.</p>
+  <form id="pgform" class="pgf" novalidate><label class="f">Aplicar a<select name="u"><option value="">Elige a quién aplicar…</option><option value="*"${pgSel==='*'?' selected':''}>Todos los usuarios (publicación)</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
   <div class="pgl">${tops}</div>
   <div class="row"><button type="button" class="btn sm ghost" data-act="pgall">Activar todos</button></div>
   <div id="pgbar" class="pgbar" hidden><p class="pgs1"></p><p class="pgs2"></p><div class="row pgb1"><button type="button" class="btn pri sm" data-act="pgask">Guardar cambios</button><button type="button" class="btn sm ghost" data-act="pgrev">Descartar</button></div><div class="row pgb2"><button type="submit" class="btn pri sm">Sí, guardar</button><button type="button" class="btn sm" data-act="pgno">Volver</button></div></div><p id="pgmsg" class="msg" role="status"></p></form>
   <div class="pgus"><b class="pgh">Con ajustes especiales${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')+pgDenyL(u.prevG).map(x=>`<span class="tag pgno">Sin ${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Restablecer</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene ajustes especiales ahora mismo.</p>'}</div></div>`;
- return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso en <b>Roles y permisos</b>, y cualquier usuario si se lo muestras aquí. Cada juego de dentro de Cosmere se puede publicar o retirar de forma independiente.</p>${pg}<div class="alist">${cards}</div></div>`}
+ return `<div class="grid"><p class="hint" style="margin:0">Un juego sin publicar solo muestra su animación y un aviso de «Próximamente». Elige «Todos los usuarios» para publicar o retirar un juego para todos, o elige un usuario para darle o quitarle acceso solo a él. Los juegos de Cosmere se gestionan por separado.</p>${pg}</div>`}
 function gmRefresh(){if(admTab==='rol'&&scr==='admin'){if(regCache)admView(true);else admLoad()}else admShow(gmAdmHtml())}
 function gmAdmHtml(){const L=gmAll.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(+(b.updated||b.created)||0)-(+(a.updated||a.created)||0)),by=x=>esc(x.by||'');
  const T={tmp:'Temporal · una partida',perm:'Permanente'},ST={pending:'Pendiente',approved:'Aprobada',denied:'Denegada',revoked:'Retirada'};
@@ -12366,9 +12368,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.172';
+const APPV='00.01.173';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.171 a v00.01.172. Accesos por usuario: los interruptores permiten también quitar a un usuario un juego ya publicado. El resto de usuarios sigue viéndolo.';
+const APPD='Actualiza de v00.01.172 a v00.01.173. Juegos del panel: publicar o retirar para todos se hace ahora en Accesos por usuario, eligiendo «Todos los usuarios». Se eliminan las tarjetas sueltas de cada juego.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
