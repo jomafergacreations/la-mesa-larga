@@ -11316,8 +11316,8 @@ html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o2{background
 html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o3{background:radial-gradient(closest-side,rgba(235,140,40,.34),transparent)}
 html[data-lm=d]:root:root:not([data-adm])[data-mode=gm] #htab.abg .o4{background:radial-gradient(closest-side,rgba(130,24,56,.4),transparent)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-@keyframes hIn{from{opacity:1;transform:translateX(24px)}to{opacity:1;transform:none}}
-@keyframes hBack{from{opacity:1;transform:translateX(-24px)}to{opacity:1;transform:none}}
+@keyframes hIn{from{opacity:1;transform:none}to{opacity:1;transform:none}}
+@keyframes hBack{from{opacity:1;transform:none}to{opacity:1;transform:none}}
 @keyframes hEnter{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes pgf{from{opacity:1}to{opacity:1}}
 @keyframes uipg{from{opacity:1;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -12303,9 +12303,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.183';
+const APPV='00.01.184';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.182 a v00.01.183. Nueva animación de entrada y salida de Cosmere: portal circular de luz desde el punto pulsado.';
+const APPD='Actualiza de v00.01.183 a v00.01.184. Corrige el desplazamiento lateral que aparecía al volver a Juegos (y otras pantallas): la pantalla ya aparece en su sitio desde el primer instante.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
