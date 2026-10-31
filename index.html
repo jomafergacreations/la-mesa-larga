@@ -11354,6 +11354,8 @@ html[data-dev=phone] .adp .acc>:first-child.hasi::after{margin-left:10px}
 html[data-dev=phone] .adp .acc.ac>:first-child::after{transform:translateY(-2px) rotate(45deg)}
 html[data-dev=phone] .adp .acc.ac>:not(:first-child){display:none}
 html[data-dev=phone] .adp .acc.ac{padding-bottom:10px}
+html[data-dev=phone] .adp .ovsub>b{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin:12px 0 4px}
+html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -11826,6 +11828,13 @@ function admPhone(){try{
   const pv=p.previousElementSibling;
   if(pv&&pv.matches('b,h1,h2,h3,.gmh,.admh')){pv.appendChild(b);pv.classList.add('hasi')}
   else{const r=document.createElement('div');r.className='adirow';r.appendChild(b);p.before(r)}});
+ const og=R.querySelector('.admroot .ovg');
+ if(og&&!og.dataset.gr){og.dataset.gr='1';
+  const G=[['Cuentas',['Cuentas por rol','Game Masters','Últimas altas']],['Actividad',['En línea ahora','Incidencias recientes']],['Partidas y juegos',['Partidas','Juegos']],['Servidor y app',['Servidor y app']]];
+  const S=[...og.querySelectorAll(':scope>section.ovp')];
+  G.forEach(([t,ks])=>{const m=S.filter(x=>x.firstElementChild&&ks.some(k=>x.firstElementChild.textContent.startsWith(k)));if(!m.length)return;
+   const g=document.createElement('section');g.className='onl ovp ovgrp';const h=document.createElement('b');h.textContent=t;g.appendChild(h);
+   m.forEach(x=>{x.className='ovsub';if(m.length===1)x.firstElementChild.remove();g.appendChild(x)});og.appendChild(g)})}
  const tl=R.querySelector('.admroot .tiles');if(tl&&!tl.closest('.tilesec')){const sec=document.createElement('section');sec.className='onl tilesec';sec.innerHTML='<b>Resumen</b>';tl.before(sec);sec.appendChild(tl)}
  R.querySelectorAll('.admroot .onl,.admroot .gmc').forEach(el=>{if(el.dataset.ac)return;const h=el.firstElementChild;if(!h)return;
   if([...el.children].filter(c=>c!==h&&!c.classList.contains('adx')&&!c.classList.contains('adirow')).length<1)return;
@@ -12306,9 +12315,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.166';
+const APPV='00.01.167';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.165 a v00.01.166. En el panel de administración en móvil, los textos largos van tras un icono «i» y las tarjetas se pliegan y despliegan al pulsar su título.';
+const APPD='Actualiza de v00.01.166 a v00.01.167. En móvil, el Resumen del panel agrupa sus tarjetas por temas: Cuentas, Actividad, Partidas y juegos, y Servidor y app.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
