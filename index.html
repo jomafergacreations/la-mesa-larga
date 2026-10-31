@@ -11381,6 +11381,13 @@ html[data-dev=phone] .adp .ovgrp>.ovsub:first-of-type>b{margin-top:8px}
 .pgx .pgch{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .pgx .pgch .tag{font-size:.64rem;padding:2px 8px}
 .pgx .pgac{display:flex;flex-direction:column;gap:6px;flex:none}
+.pgx .pgbar[hidden]{display:none}
+.pgx .pgbar{position:sticky;bottom:8px;z-index:3;display:grid;gap:8px;padding:12px 14px;border-radius:18px;background:var(--ui-glass-bg-strong,rgba(40,40,60,.85));-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--ui-acc,#6d5ce7);box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}
+.pgx .pgbar p{margin:0;font-size:.9rem;line-height:1.35}
+.pgx .pgbar .pgs2,.pgx .pgbar .pgb2{display:none}
+.pgx .pgbar.ask .pgs1,.pgx .pgbar.ask .pgb1{display:none}
+.pgx .pgbar.ask .pgs2{display:block}
+.pgx .pgbar.ask .pgb2{display:flex}
 @keyframes uiauth{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 html:root:root #app.pg-t .authhub,html:root:root #app.go-enter .authhub{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
 html:root:root #app.pg-t .authhub>*,html:root:root #app.go-enter .authhub>*{animation:uiauth var(--ui-t-slow) var(--ui-spring) both}
@@ -11884,7 +11891,15 @@ async function gmReqDlg(){showDlg('Ser Game Master','<p class="hint" style="marg
  showDlg('Ser Game Master',h,true)}
 let pgSel='';
 function pgHasU(u,id){const r=(regCache||[]).find(x=>x.id===u);return !!r&&(((r.role|0)>=2&&(r.prev|0)===1)||pgList(r.prevG).includes(id))}
-async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elements.u.value;
+function pgDirty(f){const bar=document.getElementById('pgbar');if(!bar||!f)return;const u=f.elements.u.value,add=[],rem=[];
+ f.querySelectorAll('input[name=g]').forEach(x=>{const was=pgHasU(u,x.value);if(x.checked&&!was)add.push(x.value);if(!x.checked&&was)rem.push(x.value)});
+ const nm=id=>esc((GAMES.find(g=>g[0]===id)||[0,id])[1]),L=a=>a.map(nm).join(', '),r=(regCache||[]).find(x=>x.id===u),un=r?esc(r.name||'este usuario'):'este usuario';
+ const parts=[add.length?'<b>Activar:</b> '+L(add):'',rem.length?'<b>Quitar:</b> '+L(rem):''].filter(Boolean).join(' · ');
+ bar.classList.remove('ask');bar.hidden=!u||!parts;
+ bar.querySelector('.pgs1').innerHTML='Cambios sin guardar · '+parts;
+ bar.querySelector('.pgs2').innerHTML='¿Seguro? A <b>'+un+'</b> se le aplicará: '+parts+'.'}
+function pgReset(f){const u=f.elements.u.value;f.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(u,x.value)});pgDirty(f)}
+async function pgSave(f,all){const m=document.getElementById('pgmsg'),u=f.elements.u.value;{const bar=document.getElementById('pgbar');if(!all&&bar&&!bar.classList.contains('ask'))return}
  const say=(t,k)=>{if(m){m.textContent=t;m.className='msg '+(k||'')}};
  if(!u){say('Elige primero un usuario.','err');return}
  let ids=all?GAMES.map(g=>g[0]):Array.from(f.querySelectorAll('input[name=g]:checked')).map(x=>x.value);
@@ -11901,7 +11916,8 @@ function gamesAdmHtml(){
  const pg=`<div class="gmc pgx"><div class="gmh"><b>Accesos por usuario</b></div><p class="hint" style="margin:0">Elige un usuario y activa los juegos que podrá ver aunque todavía no estén publicados. Al activar un juego de Cosmere, Cosmere se activa también.</p>
   <form id="pgform" class="pgf" novalidate><label class="f">Usuario<select name="u"><option value="">Elige un usuario…</option>${us.map(u=>`<option value="${esc(u.id)}"${u.id===pgSel?' selected':''}>${esc(u.name)}${u.email?' · '+esc(u.id===session.uid?session.email:mailMask(u.email)):''}</option>`).join('')}</select></label>
   <div class="pgl">${tops}</div>
-  <div class="row"><button type="submit" class="btn pri sm">Guardar accesos</button><button type="button" class="btn sm" data-act="pgall">Dar acceso a todo</button></div><p id="pgmsg" class="msg" role="status"></p></form>
+  <div class="row"><button type="button" class="btn sm ghost" data-act="pgall">Activar todos</button></div>
+  <div id="pgbar" class="pgbar" hidden><p class="pgs1"></p><p class="pgs2"></p><div class="row pgb1"><button type="button" class="btn pri sm" data-act="pgask">Guardar cambios</button><button type="button" class="btn sm ghost" data-act="pgrev">Descartar</button></div><div class="row pgb2"><button type="submit" class="btn pri sm">Sí, guardar</button><button type="button" class="btn sm" data-act="pgno">Volver</button></div></div><p id="pgmsg" class="msg" role="status"></p></form>
   <div class="pgus"><b class="pgh">Con acceso ahora${gl.length?' ('+gl.length+')':''}</b>${gl.length?gl.map(u=>`<div class="pgu${u.id===pgSel?' on':''}"><span class="pgav" aria-hidden="true">${esc((u.name||'?')[0].toUpperCase())}</span><div class="pgin"><b>${esc(u.name)}</b><div class="pgch">${(u.role|0)>=2&&(u.prev|0)===1?'<span class="tag">Todos (administrador)</span>':pgList(u.prevG).map(x=>`<span class="tag">${esc(nm(x))}</span>`).join('')}</div></div><div class="pgac"><button type="button" class="btn sm" data-act="pgpick" data-u="${esc(u.id)}">Editar</button><button type="button" class="btn sm ghost" data-act="pgrm" data-u="${esc(u.id)}">Quitar</button></div></div>`).join(''):'<p class="hint" style="margin:0">Ningún usuario tiene acceso especial ahora mismo.</p>'}</div></div>`;
  return `<div class="grid"><p class="hint" style="margin:0">Mientras un juego no esté publicado, los usuarios solo ven su animación de entrada y un aviso de «Próximamente». Tú siempre puedes verlo; un administrador solo si le das acceso en <b>Roles y permisos</b>, y cualquier usuario si se lo muestras aquí. Cada juego de dentro de Cosmere se puede publicar o retirar de forma independiente.</p>${pg}<div class="alist">${cards}</div></div>`}
 function gmRefresh(){if(admTab==='rol'&&scr==='admin'){if(regCache)admView(true);else admLoad()}else admShow(gmAdmHtml())}
@@ -12023,8 +12039,8 @@ async function doImp(f){const m=$('#imsg');const set=(t,k)=>{m.textContent=t;m.c
 document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='INPUT'||t.name!=='g'||!t.form||t.form.id!=='pgform')return;
  const F=t.form,gm=GAMES.find(g=>g[0]===t.value);if(!gm)return;
  if(gm[4]){if(t.checked){const p=F.querySelector('input[name=g][value="'+gm[4]+'"]');if(p)p.checked=true}}
- else if(!t.checked){GAMES.filter(g=>g[4]===gm[0]).forEach(g=>{const c=F.querySelector('input[name=g][value="'+g[0]+'"]');if(c)c.checked=false})}});
-document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(pgSel,x.value)});const m=document.getElementById('pgmsg');if(m)m.textContent=''});
+ else if(!t.checked){GAMES.filter(g=>g[4]===gm[0]).forEach(g=>{const c=F.querySelector('input[name=g][value="'+g[0]+'"]');if(c)c.checked=false})}pgDirty(F)});
+document.addEventListener('change',e=>{const t=e.target;if(!t||t.tagName!=='SELECT'||t.name!=='u'||!t.form||t.form.id!=='pgform')return;pgSel=t.value;t.form.querySelectorAll('input[name=g]').forEach(x=>{x.checked=pgHasU(pgSel,x.value)});pgDirty(t.form);const m=document.getElementById('pgmsg');if(m)m.textContent=''});
 document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('[data-act=showpw]'))e.preventDefault()});
 document.addEventListener('submit',e=>{const f=e.target;if(!f||!f.id)return;e.preventDefault();const fn={partform:doPartNew,leaveform:doLeave,kickform:doKick,reqform:doReq,findform:doFind,pgform:f=>pgSave(f,false),linkform:doLink,authform:doAuth,pwform:doPw,chform:doCh,faddform:doFriendAdd,delform:doDel,impform:doImp,renform:doRen,npcrform:doNpcR,rptform:doRpt}[f.id];if(fn)fn(f)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
@@ -12346,9 +12362,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.169';
+const APPV='00.01.170';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.168 a v00.01.169. En Accesos por usuario, al quitar Cosmere se desactivan también sus juegos, y al activar uno de sus juegos se activa Cosmere.';
+const APPD='Actualiza de v00.01.169 a v00.01.170. En Accesos por usuario, al elegir un usuario se marcan sus accesos; si cambias algo aparece «Guardar cambios» con doble confirmación y «Descartar».';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14051,7 +14067,10 @@ document.addEventListener('click',e=>{
    const go=()=>{const t=document.querySelector('.bub[data-act="'+g+'"]');if(t)t.click();else{store.cur=null;scr=g;render()}};
    if(scr!=='menu'||store.mode==='gm'){store.cur=null;store.npcCur=null;if(store.mode==='gm'){store.mode='p'}scr='menu';render();setTimeout(go,120)}else go();break}
   case 'pgpick':{pgSel=b.dataset.u;if(admLive())admView(true);break}
-  case 'pgall':{if(!isAdmin())break;const f=document.getElementById('pgform');if(f)pgSave(f,true);break}
+  case 'pgall':{if(!isAdmin())break;const f=document.getElementById('pgform');if(f){if(!f.elements.u.value){const m=document.getElementById('pgmsg');if(m){m.textContent='Elige primero un usuario.';m.className='msg err'}break}f.querySelectorAll('input[name=g]').forEach(x=>{x.checked=true});pgDirty(f)}break}
+  case 'pgask':{const bar=document.getElementById('pgbar');if(bar)bar.classList.add('ask');break}
+  case 'pgno':{const bar=document.getElementById('pgbar');if(bar)bar.classList.remove('ask');break}
+  case 'pgrev':{const f=document.getElementById('pgform');if(f)pgReset(f);break}
   case 'pgrm':{if(!isAdmin())break;const u=b.dataset.u;pgSel=u;b.disabled=true;fs('PATCH','users/'+u,fbEnc({prevG:'',prev:0}),maskQ({prevG:1,prev:1})).then(async()=>{try{regCache=await fsList('users')}catch(e){}toast('Acceso retirado');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo retirar el acceso')});break}
   case 'gprev':{if(!isAdmin())break;const u=b.dataset.u,v=b.dataset.v==='1'?1:0;b.disabled=true;fs('PATCH','users/'+u,fbEnc({prev:v}),maskQ({prev:1})).then(async()=>{try{regCache=await fsList('users')}catch(e){}toast(v?'Acceso concedido':'Acceso retirado');if(admLive())admView(true)}).catch(()=>{b.disabled=false;toast('No se pudo cambiar el acceso')});break}
   case 'gmsend':{if(session.owner&&simNoGM){try{$('#dlg').close()}catch(x){}toast('Simulación: la solicitud no se envía');break}const t=b.dataset.t==='perm'?'perm':'tmp',ms='';b.disabled=true;
