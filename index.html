@@ -3279,6 +3279,12 @@ html[data-dev=phone] .bubbles{padding-bottom:90px}
 #stormfx canvas{position:absolute;inset:0}
 
 #stormfx.out{opacity:0;transition:opacity .45s}
+@keyframes stormIn{from{clip-path:circle(0% at 50% 58%)}to{clip-path:circle(150% at 50% 58%)}}
+@keyframes stormTx{from{opacity:0;transform:translateY(10px)}to{opacity:.95;transform:none}}
+#stormfx.in{animation:stormIn 1.1s cubic-bezier(.45,.05,.25,1) both}
+#stormfx.in b,#stormfx.in span,#stormfx.in .sooner{animation:stormTx .7s .6s ease-out both}
+#stormfx.in .sb{animation:stormTx .6s .8s ease-out both}
+@media (prefers-reduced-motion:reduce){#stormfx.in,#stormfx.in *{animation:none!important}}
 
 
 #stormfx .dr{position:absolute;top:-12vh;width:2px;height:12vh;background:linear-gradient(transparent,rgba(170,200,255,.8));transform:rotate(12deg)}
@@ -12421,9 +12427,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.177';
+const APPV='00.01.178';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.176 a v00.01.177. Las esquinas del panel interior de cada burbuja de juego encajan ahora con las de la burbuja exterior.';
+const APPD='Actualiza de v00.01.177 a v00.01.178. La entrada a «El archivo de las tormentas» es ahora gradual: la tormenta se expande desde el centro y el texto aparece después.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13172,6 +13178,7 @@ function diceFx(done){let red=false;try{red=matchMedia('(prefers-reduced-motion:
 function stormFx(done){const old=document.getElementById('stormfx');if(old)old.remove();
  const o=document.createElement('div');o.id='stormfx';o.setAttribute('aria-hidden','true');o.innerHTML='<canvas></canvas><b>El archivo de las tormentas</b><span>Se acerca la Tormenta Eterna…</span><em class="sooner">Próximamente</em><button type="button" class="btn sb" data-act="rol">‹ Volver</button>';document.body.appendChild(o);done();
  let red=false;try{red=matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){}
+ if(!red)o.classList.add('in');
  const cv=o.querySelector('canvas'),x=cv.getContext('2d');let W=0,H=0,dpr=Math.min(2,window.devicePixelRatio||1);
  const fit=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';x.setTransform(dpr,0,0,dpr,0,0)};fit();
  const L=[[.35,1.2,.22],[.6,2,.35],[1,3.2,.5]];const drops=[];for(let i=0;i<(W<600?140:260);i++){const l=L[i%3];drops.push({x:Math.random()*(W+200)-100,y:Math.random()*H,l,len:l[1]*7+Math.random()*8,sp:l[1]*(7+Math.random()*3)*60})}
