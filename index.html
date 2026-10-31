@@ -7866,42 +7866,19 @@ html[data-cos] body.hub .hs,html[data-cos] body.hub .hint,html[data-cos] body.hu
 }
 
 
-#warp{position:fixed;inset:0;z-index:99990;pointer-events:none;overflow:hidden;background:#04050F;opacity:0;animation:wpBg 1.4s ease-in-out forwards}
 
 
-#warp b{position:absolute;left:50%;top:50%;width:var(--l);height:var(--w);border-radius:2px;transform-origin:0 50%;background:linear-gradient(90deg,transparent,#fff 60%,#B8C4FF);transform:rotate(var(--a)) translateX(2vmax) scaleX(0);opacity:0;animation:wpStr 1.15s cubic-bezier(.5,0,.9,.45) var(--d) forwards}
 
 
-#warp .wcore{position:absolute;left:50%;top:50%;width:22vmax;height:22vmax;margin:-11vmax 0 0 -11vmax;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(150,130,255,.65) 42%,transparent);transform:scale(0);animation:wpCore 1.2s ease-in forwards}
 
 
-@keyframes wpBg{0%{opacity:0}
-
-28%{opacity:1}
-
-68%{opacity:1}
-
-100%{opacity:0}
-
-}
 
 
-@keyframes wpStr{0%{opacity:0;transform:rotate(var(--a)) translateX(2vmax) scaleX(0)}
-
-25%{opacity:1}
-
-100%{opacity:0;transform:rotate(var(--a)) translateX(10vmax) scaleX(1)}
-
-}
 
 
-@keyframes wpCore{0%{transform:scale(0);opacity:.9}
 
-50%{transform:scale(.5);opacity:1}
 
-100%{transform:scale(3.2);opacity:0}
 
-}
 
 
 @media(prefers-reduced-motion:reduce){#warp,#gx .gsh{display:none}
@@ -8007,28 +7984,14 @@ html[data-cos][data-mode=gm] .bub.t3{background:radial-gradient(circle at 30% 25
 html[data-mode=gm] .bub.gal .ti{box-shadow:0 0 0 1px rgba(255,190,160,.45)}
 
 
-#warp.wo b{animation-name:wpStrO;animation-timing-function:cubic-bezier(.15,.55,.5,1)}
 
 
-#warp.wo .wcore{animation-name:wpCoreO;animation-timing-function:ease-out}
 
 
-@keyframes wpStrO{0%{opacity:0;transform:rotate(var(--a)) translateX(10vmax) scaleX(1)}
-
-35%{opacity:1}
-
-100%{opacity:0;transform:rotate(var(--a)) translateX(2vmax) scaleX(0)}
-
-}
 
 
-@keyframes wpCoreO{0%{transform:scale(3.2);opacity:0}
 
-55%{transform:scale(.5);opacity:1}
 
-100%{transform:scale(0);opacity:0}
-
-}
 
 
 
@@ -12141,9 +12104,6 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
   ar+=`<path d="M${pt(r,a0)}A${r} ${r} 0 0 1 ${pt(r,a1)}" style="--o:${off?.7:1}"/>`;dt+=`<circle cx="${(r*Math.cos(am)).toFixed(1)}" cy="${(r*Math.sin(am)).toFixed(1)}" r="${off?1.5:2}" fill="hsl(${k*22.5+20} 70% 68%)"/>`}
  g.innerHTML='<i class="gn n1"></i><i class="gn n2"></i><i class="gn n3"></i>'+L(46,1,['rgba(255,255,255,.8)','rgba(205,215,240,.65)'])+L(20,2,['rgba(255,244,214,.95)','rgba(190,205,255,.85)'])+L(7,3,['rgba(255,236,190,1)','rgba(180,200,255,1)'])+`<svg class="rg" viewBox="-100 -100 200 200"><g fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round">${ar}</g>${dt}<circle r="3.2" fill="currentColor" opacity=".7"/></svg><i class="ms"></i>`;
  document.body.appendChild(g)}
-function warpIntro(out){if(lfRM()||document.getElementById('warp'))return;const o=document.createElement('div');o.id='warp';if(out)o.className='wo';o.setAttribute('aria-hidden','true');
- let h='<i class="wcore"></i>';for(let i=0;i<54;i++)h+=`<b style="--a:${(i*(360/54)+Math.random()*4).toFixed(1)}deg;--l:${(45+Math.random()*60).toFixed(0)}vmax;--d:${(Math.random()*.25).toFixed(2)}s;--w:${(1+Math.random()*2.2).toFixed(1)}px"></b>`;
- o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
 function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);scadFx(!!(session&&(c||scr==='nb'||scr==='deck')));cyberFx(!!(session&&!c&&scr==='cyber'));duneFx(!!(session&&!c&&scr==='dune'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'&&scr!=='cyber'&&scr!=='dune'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
  lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d)a.classList.add('go-'+d);
@@ -12343,9 +12303,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.182';
+const APPV='00.01.183';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.181 a v00.01.182. Nuevo fondo por modo: Jugador en azules y turquesa con dados y cartas; Máster en rojos y ámbar con hexágonos y runas.';
+const APPD='Actualiza de v00.01.182 a v00.01.183. Nueva animación de entrada y salida de Cosmere: portal circular de luz desde el punto pulsado.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12660,7 +12620,7 @@ function cyberOut(then){if(lfRM()||document.getElementById('cyout')){then();retu
  o.innerHTML='<div class="cyot"><div class="cyol" style="--d:.15s">&gt; cerrando sesión…</div><div class="cyol" style="--d:.45s">&gt; descargando módulo… <em>[ OK ]</em></div><div class="cyol wn" style="--d:.75s">&gt; desconectando</div><div class="cypb"><i></i></div></div>';
  document.body.appendChild(o);setTimeout(then,1000);setTimeout(()=>o.remove(),1400)}
 /* salida propia de cada universo al pulsar Inicio / volver */
-function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&(scr==='nb'||scr==='deck')){mistOut(then);return}if(session&&document.documentElement.dataset.cos){warpIntro(true);setTimeout(then,420);return}}then()}
+function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&(scr==='nb'||scr==='deck')){mistOut(then);return}if(session&&document.documentElement.dataset.cos&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#9A8CFF');return}}then()}
 function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
  if(!on){if(f)f.remove();delete r.dataset.cyb;return}
  r.dataset.cyb='1';if(f)return;
@@ -14078,7 +14038,7 @@ document.addEventListener('click',e=>{
   case 'selok':{const ids=new Set(selIds);try{$('#dlg').close()}catch(x){$('#dlg').removeAttribute('open')}store.chars.filter(o=>ids.has(o.id)&&o.pid).forEach(o=>{fs('DELETE','pjs/'+o.pid+'_'+session.uid).catch(()=>{})});store.chars=store.chars.filter(x=>!ids.has(x.id));selIds.clear();selMode=false;save();render(1);toast(ids.size===1?'Ficha borrada':ids.size+' fichas borradas');break}
   case 'home':{const c0=cur();if(c0&&c0._pj){const pid=c0._pj.pid;pjDirty.add(c0._pj.pid+'_'+c0._pj.uid);flush();store.cur=null;scr='part';partId=pid;render();loadPart(pid);break}store.cur=null;scr='nb';render();break}
   case 'menu':exitFx(()=>{scr='menu';render()});break;
-  case 'cosmere':if(scr==='menu'&&!lfRM()){warpIntro();setTimeout(()=>{store.cur=null;scr='cosmere';render()},380)}else{const go=()=>{store.cur=null;scr='cosmere';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go()}break;
+  case 'cosmere':if(scr!=='nb'&&scr!=='deck'&&scr!=='cosmere'&&uiMotionOk()&&document.startViewTransition){uiReveal(()=>{store.cur=null;scr='cosmere';render()},'#9A8CFF')}else{const go=()=>{store.cur=null;scr='cosmere';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go()}break;
   case 'cyber':cyReset();if(lfRM()){store.cur=null;scr='cyber';render()}else{cyberIntro();setTimeout(()=>{store.cur=null;scr='cyber';render()},420)}break;
   case 'dune':if(lfRM()){store.cur=null;scr='dune';render()}else{duneIntro();setTimeout(()=>{requestAnimationFrame(()=>{store.cur=null;scr='dune';render()})},470)}break;
   case 'rol':{const go=()=>{store.cur=null;scr='rol';render()};if(session&&(scr==='nb'||scr==='deck'))mistOut(go);else go();break}
