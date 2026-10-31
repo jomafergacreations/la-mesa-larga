@@ -12116,7 +12116,7 @@ function galaxyBg(on){let g=document.getElementById('gx');if(!on){if(g)g.remove(
 let animTok=0;
 function anim(c){const a=$('#app');if(!a||booting)return;{const cos=!!(session&&store&&(c||COS_SCR.includes(scr)));if(cos)document.documentElement.dataset.cos='1';else delete document.documentElement.dataset.cos;galaxyBg(cos)}const nbm=!!(session&&(c||scr==='nb'||scr==='deck'));ambient(nbm);scadFx(!!(session&&(c||scr==='nb'||scr==='deck')));cyberFx(!!(session&&!c&&scr==='cyber'));duneFx(!!(session&&!c&&scr==='dune'));fdockUpdate(c);hubbg(!!(session&&!c&&scr!=='nb'&&scr!=='deck'&&scr!=='cyber'&&scr!=='dune'));const key=!session?'auth':c?'ed':scr;let d='';
  if(key!==lastKey&&lastKey!==null){d=lastKey==='auth'?'enter':!session?'enter':DEPTH[key]>=DEPTH[lastKey]?'fwd':'back'}
- lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if(d==='fwd'||d==='back'){a.classList.add('go-pre');const tk=++animTok;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(tk!==animTok)return;a.classList.remove('go-pre');a.classList.add('go-'+d)}))}else if(d)a.classList.add('go-'+d);
+ lastKey=key;a.classList.remove('go-fwd','go-back','go-enter','pg-f','pg-b','pg-t');if(pg==='t')a.classList.add('pg-t');if((d==='fwd'||d==='back')&&!uiVT){a.classList.add('go-pre');const tk=++animTok;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(tk!==animTok)return;a.classList.remove('go-pre');a.classList.add('go-'+d)}))}else if(d&&!(uiVT&&(d==='fwd'||d==='back')))a.classList.add('go-'+d);
  if(c){if(pg)a.classList.add('pg-'+pg);
   const pi=document.querySelector('.prog i');if(pi&&prevPct!==null&&pg){const w=pi.style.width;pi.style.width=prevPct;void pi.offsetWidth;pi.style.width=w}
   if(popSel){let el=null;try{el=document.querySelector(popSel+'[aria-pressed="true"]')||document.querySelector(popSel)}catch(x){}
@@ -12313,9 +12313,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.186';
+const APPV='00.01.187';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.185 a v00.01.186. La animación de cambio de pantalla arranca después de construir la pantalla y solo mueve en vertical, para que vaya más fluida.';
+const APPD='Actualiza de v00.01.186 a v00.01.187. Los cambios de pestaña de la barra inferior usan un revelado circular desde el icono pulsado: sin tirones ni cortes, porque la pantalla anterior se mantiene hasta que la nueva está lista.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12630,6 +12630,7 @@ function cyberOut(then){if(lfRM()||document.getElementById('cyout')){then();retu
  o.innerHTML='<div class="cyot"><div class="cyol" style="--d:.15s">&gt; cerrando sesión…</div><div class="cyol" style="--d:.45s">&gt; descargando módulo… <em>[ OK ]</em></div><div class="cyol wn" style="--d:.75s">&gt; desconectando</div><div class="cypb"><i></i></div></div>';
  document.body.appendChild(o);setTimeout(then,1000);setTimeout(()=>o.remove(),1400)}
 /* salida propia de cada universo al pulsar Inicio / volver */
+function tabFx(then){if(session&&!document.documentElement.dataset.cos&&scr!=='cyber'&&scr!=='dune'&&scr!=='nb'&&scr!=='deck'&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#8F7CFF');return}exitFx(then)}
 function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&(scr==='nb'||scr==='deck')){mistOut(then);return}if(session&&document.documentElement.dataset.cos&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#9A8CFF');return}}then()}
 function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
  if(!on){if(f)f.remove();delete r.dataset.cyb;return}
@@ -13362,7 +13363,7 @@ function friendsHtml(){
  ${soc.inq.length?`<h3 style="margin:0">Solicitudes recibidas</h3>${soc.inq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b></span><span class="row" style="gap:6px"><button class="btn pri sm" data-act="facc" data-id="${esc(x.id)}">Aceptar</button><button class="btn sm" data-act="fdel" data-id="${esc(x.id)}">Rechazar</button></span></div>`).join('')}`:''}
  ${soc.outq.length?`<h3 style="margin:0">Solicitudes enviadas</h3>${soc.outq.map(x=>`<div class="frr"><span><b>${esc(x.name)}</b><small>Pendiente</small></span><button class="btn sm ghost" data-act="fdel" data-id="${esc(x.id)}">Cancelar</button></div>`).join('')}`:''}
  <h3 style="margin:0">Mis amigos (${soc.fr.length})</h3>${fr||'<p class="hint" style="margin:0">Todavía no tienes amigos. Comparte tu código o escribe el de otra persona.</p>'}</div>`}
-function friendsDlg(){socRe=null;try{const D=$('#dlg');if(D&&D.open)D.close()}catch(e){}if(scr==='friends'){render();return}exitFx(()=>{store.cur=null;store.npcCur=null;scr='friends';try{save()}catch(x){}render()})}
+function friendsDlg(){socRe=null;try{const D=$('#dlg');if(D&&D.open)D.close()}catch(e){}if(scr==='friends'){render();return}tabFx(()=>{store.cur=null;store.npcCur=null;scr='friends';try{save()}catch(x){}render()})}
 async function doFriendAdd(f){const m=$('#fmsg2'),set=(t,k)=>{m.textContent=t;m.className='msg '+(k||'')};const c=fcNorm(f.elements.fc.value);
  if(c.length<8&&c!=='ALPHA'){set('El código de amigo tiene 8 caracteres.','err');return}if(c===soc.code){set('Ese es tu propio código.','err');return}
  try{set('Buscando…');const r=(await fsQuery('codigos','code',c))[0];if(!r){set('No existe ningún usuario con ese código.','err');return}
@@ -13958,8 +13959,8 @@ document.addEventListener('click',e=>{
   case 'incid':if(!canInc()){toast('No tienes permiso para gestionar incidencias');break}if(isAdmin()){goAdmin('rp');break}incDlg();break;
   case 'incid_old':admDlg();admTab='rp';admShow(rpAdmHtml());rpLoad().then(()=>{if(admTab==='rp'&&admLive())admShow(rpAdmHtml())});break;
   case 'admon':admF='on';admDlg();break;
-  case 'gofind':case 'gogames':if(scr===(b.dataset.act==='gofind'?'find':'games'))break;exitFx(()=>{store.cur=null;store.npcCur=null;scr=b.dataset.act==='gofind'?'find':'games';try{save()}catch(x){}render()});break;
-  case 'gohome':exitFx(()=>{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render()});break;
+  case 'gofind':case 'gogames':if(scr===(b.dataset.act==='gofind'?'find':'games'))break;tabFx(()=>{store.cur=null;store.npcCur=null;scr=b.dataset.act==='gofind'?'find':'games';try{save()}catch(x){}render()});break;
+  case 'gohome':tabFx(()=>{store.cur=null;store.npcCur=null;gmStag=store.mode==='gm';scr='menu';try{save()}catch(x){}render()});break;
   case 'avset':avSet(b.dataset.id,'');{const m=$('#avmsg');if(m){m.textContent='Avatar actualizado.';m.className='msg ok'}}break;
   case 'avcol':avSet('',b.dataset.c);break;
   case 'avpick':{const f=$('#avfile');if(f)f.click();break}
