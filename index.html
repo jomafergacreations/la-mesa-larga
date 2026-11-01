@@ -12374,9 +12374,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.193';
+const APPV='00.01.194';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.192 a v00.01.193. Los fondos de pantalla tienen ahora su propia versión clara (misma escena con paleta de día, sin capa blanca) y la pantalla de carga usa el logo nuevo.';
+const APPD='Actualiza de v00.01.193 a v00.01.194. Corrige las esquinas del indicador de los selectores (Por código, Tema, etc.): ahora encajan con el botón seleccionado.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12647,7 +12647,7 @@ addEventListener('resize',()=>setTimeout(mbInd,200));
 function uiSegInd(){document.querySelectorAll('.thm,.seg').forEach(g=>{const on=g.querySelector('button[aria-pressed="true"]');let i=g.querySelector(':scope>.sgi');
  if(!on){if(i)i.style.opacity='0';return}
  if(!i){i=document.createElement('span');i.className='sgi';i.setAttribute('aria-hidden','true');g.prepend(i);g.classList.add('hasgi')}
- const a=g.getBoundingClientRect(),b=on.getBoundingClientRect();if(!a.width)return;i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left-g.clientLeft)+'px,'+(b.top-a.top-g.clientTop)+'px)'})}
+ const a=g.getBoundingClientRect(),b=on.getBoundingClientRect();if(!a.width)return;i.style.opacity='1';try{const br=getComputedStyle(on).borderRadius;if(i.style.borderRadius!==br)i.style.borderRadius=br}catch(x){}i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left-g.clientLeft)+'px,'+(b.top-a.top-g.clientTop)+'px)'})}
 {let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(uiSegInd)};new MutationObserver(go).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['aria-pressed']});addEventListener('resize',go)}
 {const d=document.getElementById('dlg');if(d){new MutationObserver(()=>{if(document.documentElement.dataset.dev!=='phone')return;const c=d.querySelector(':scope>.cbub');if(c&&d.firstElementChild!==c)d.prepend(c)}).observe(d,{childList:true});
  d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom){try{d.close()}catch(x){}}});
