@@ -11421,6 +11421,9 @@ html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.dun .tt{background:linear-
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.dun .ti{background:rgba(255,248,225,.8);border-color:rgba(160,100,40,.5);color:#8A3F18}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.dun .go{background:linear-gradient(135deg,#E9A957,#B8651F);color:#fff}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.dun{background:radial-gradient(circle at 78% 22%,#FFF6DA 0 3%,rgba(255,226,160,.55) 9%,rgba(255,226,160,0) 30%),linear-gradient(180deg,#070B26 0%,#1D1B4A 38%,#6A3A3A 66%,#C9772F 88%,#F0B263 100%)}
+
+/* v201 auth card solid */
+html:root:root:root body.hub.authdark .authhub{--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:color-mix(in srgb,var(--ui-ink) 8%,var(--ui-solid));-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--ui-solid)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12410,9 +12413,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.200';
+const APPV='00.01.201';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.199 a v00.01.200. Corrige la esquina del marco de la burbuja de Cyberpunk en modo claro.';
+const APPD='Actualiza de v00.01.200 a v00.01.201. La tarjeta de acceso es opaca y ya no se transparenta al cambiar entre modo claro y oscuro.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
