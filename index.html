@@ -11460,6 +11460,18 @@ html[data-dev=phone] dialog#dlg.dmsg.dclosing:not(#updf){animation:uipopout 160m
 html[data-dev=phone] dialog#dlg.dmsg>.grid{text-align:left}
 @keyframes uipop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
 @keyframes uipopout{to{opacity:0;transform:scale(.94)}}
+html[data-dev=phone]:root:root dialog#dlg.dtop:not(#updf),html[data-dev=phone]:root:root dialog#dlg.dbot:not(#updf){margin:0;left:12px;right:12px;width:auto;max-width:none;border-radius:28px;border:1px solid var(--ui-glass-bd,rgba(255,255,255,.3));box-shadow:0 24px 60px -18px rgba(0,0,0,.55);padding:20px 20px 20px;transition:none;transform:none}
+html[data-dev=phone]:root:root dialog#dlg.dtop:not(#updf){top:var(--dy);bottom:auto;height:fit-content;max-height:calc(100dvh - var(--dy) - 14px);transform-origin:top center}
+html[data-dev=phone]:root:root dialog#dlg.dbot:not(#updf){bottom:var(--dy);top:auto;height:fit-content;max-height:calc(100dvh - var(--dy) - 60px);transform-origin:bottom center}
+html[data-dev=phone] dialog#dlg.dtop:not(#updf)::before,html[data-dev=phone] dialog#dlg.dbot:not(#updf)::before{display:none}
+html[data-dev=phone] dialog#dlg[open].dtop:not(#updf){animation:uidtop 460ms cubic-bezier(.2,.8,.2,1) both}
+html[data-dev=phone] dialog#dlg[open].dbot:not(#updf){animation:uidbot 460ms cubic-bezier(.2,.8,.2,1) both}
+html[data-dev=phone] dialog#dlg.dtop.dclosing:not(#updf){animation:uidtop 200ms cubic-bezier(.4,0,1,1) reverse both!important}
+html[data-dev=phone] dialog#dlg.dbot.dclosing:not(#updf){animation:uidbot 200ms cubic-bezier(.4,0,1,1) reverse both!important}
+html[data-dev=phone] dialog#dlg[open].dtop:not(#updf)>.grid,html[data-dev=phone] dialog#dlg[open].dbot:not(#updf)>.grid{animation:uidin 320ms ease 120ms both}
+@keyframes uidtop{from{clip-path:inset(0 var(--cr) calc(100% - var(--ch)) var(--cl) round 999px);opacity:.6}to{clip-path:inset(0 0 0 0 round 28px);opacity:1}}
+@keyframes uidbot{from{clip-path:inset(calc(100% - var(--ch)) var(--cr) 0 var(--cl) round 999px);opacity:.6}to{clip-path:inset(0 0 0 0 round 28px);opacity:1}}
+@keyframes uidin{from{opacity:0}to{opacity:1}}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12448,9 +12460,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.210';
+const APPV='00.01.211';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.209 a v00.01.210. Los mensajes cortos (sesión cerrada, avisos, confirmaciones) ahora salen como una burbuja en el centro de la pantalla en lugar de una hoja inferior.';
+const APPD='Actualiza de v00.01.210 a v00.01.211. Los menús que se abren desde la barra superior se despliegan hacia abajo desde la propia barra, y los de la barra inferior hacia arriba desde ella.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14034,7 +14046,7 @@ document.addEventListener('click',e=>{
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
   case 'rpt':rptDlg();break;
   case 'ajustes':ajustesDlg();break;
-  case 'onlist':{const L=(onlL||[]).slice();showDlg('En línea ahora',L.length?'<div class="grid" style="gap:8px">'+L.map(r=>`<div class="row" style="align-items:center;gap:10px"><i class="ond" style="width:9px;height:9px;border-radius:50%;background:#3FBF7F;flex:none"></i><b>${esc(r.name||'Usuario')}</b></div>`).join('')+'</div>':'<p class="hint" style="margin:0">Ahora mismo no hay nadie más conectado.</p>');break}
+  case 'onlist':{const L=(onlL||[]).slice();showDlg('En línea ahora',L.length?'<div class="grid" style="gap:8px">'+L.map(r=>`<div class="row" style="align-items:center;gap:10px"><i class="ond" style="width:9px;height:9px;border-radius:50%;background:#3FBF7F;flex:none"></i><b>${esc(r.name||'Usuario')}</b></div>`).join('')+'</div>':'<p class="hint" style="margin:0">Ahora mismo no hay nadie más conectado.</p>',true);break}
   case 'legala':legalDlg('aviso');break;
   case 'legald':legalDlg('datos');break;
   case 'legalt':legalSwap(b.dataset.v);break;
@@ -14323,7 +14335,9 @@ var oc=HTMLDialogElement.prototype.close,os=HTMLDialogElement.prototype.showModa
 function fin(d){var t=tm.get(d);if(t){clearTimeout(t);tm.delete(d)}d.classList.remove('dclosing');try{oc.call(d)}catch(e){}}
 HTMLDialogElement.prototype.close=function(v){var d=this;if(!d.open||rm()||d.classList.contains('hlp')||tm.has(d)){if(tm.has(d)&&!d.open)tm.delete(d);return oc.call(d,v)}
 d.classList.add('dclosing');tm.set(d,setTimeout(function(){tm.delete(d);d.classList.remove('dclosing');try{oc.call(d,v)}catch(e){}},180))};
-HTMLDialogElement.prototype.showModal=function(){if(tm.has(this))fin(this);const d=this;if(d.id==='dlg'){d.classList.remove('dmsg');if(document.documentElement.dataset.dev==='phone'&&!/\b(lgld|acctd|rptd)\b/.test(d.className)&&!d.querySelector('.setdlg')){d.classList.add('dmeas');const r=os.call(d);try{const h=d.scrollHeight;d.classList.remove('dmeas');if(h<=innerHeight*.5)d.classList.add('dmsg')}catch(e){d.classList.remove('dmeas')}return r}}return os.call(this)};
+(function(){const f=e=>{const t=e.target&&e.target.closest?e.target:null;if(!t)return;window.__dsrc={k:t.closest('#topbar,#sidebar,#sbscrim')?'top':t.closest('#mbar')?'bot':'',ts:Date.now()}};document.addEventListener('click',f,true);document.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')f(e)},true)})();
+function dlgOrigin(d){d.classList.remove('dtop','dbot');['--cl','--cr','--ch','--dy','--dx'].forEach(k=>d.style.removeProperty(k));const H=document.documentElement;if(H.dataset.dev!=='phone'||d.id!=='dlg'||/\b(updf)\b/.test(d.id))return false;const s=window.__dsrc;if(!s||!s.k||Date.now()-s.ts>900)return false;window.__dsrc=null;const el=document.querySelector(s.k==='top'?'#topbar .tbin':'#mbar');if(!el)return false;const r=el.getBoundingClientRect();if(!r.width)return false;const W=innerWidth-24;d.classList.add(s.k==='top'?'dtop':'dbot');d.style.setProperty('--cl',Math.max(0,r.left-12)+'px');d.style.setProperty('--cr',Math.max(0,12+W-r.right)+'px');d.style.setProperty('--ch',r.height+'px');if(s.k==='top')d.style.setProperty('--dy',Math.max(6,r.top)+'px');else d.style.setProperty('--dy',Math.max(6,innerHeight-r.bottom)+'px');return true}
+HTMLDialogElement.prototype.showModal=function(){if(tm.has(this))fin(this);const d=this;if(d.id==='dlg'){d.classList.remove('dmsg');if(dlgOrigin(d))return os.call(d);if(document.documentElement.dataset.dev==='phone'&&!/\b(lgld|acctd|rptd)\b/.test(d.className)&&!d.querySelector('.setdlg')){d.classList.add('dmeas');const r=os.call(d);try{const h=d.scrollHeight;d.classList.remove('dmeas');if(h<=innerHeight*.5)d.classList.add('dmsg')}catch(e){d.classList.remove('dmeas')}return r}}return os.call(this)};
 function fx(el,c,ms){if(rm()||!el)return;el.classList.remove(c);void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},ms||500)}
 document.addEventListener('change',function(e){var t=e.target;if(!t||!t.tagName)return;
 if(t.type==='checkbox'||t.type==='radio')fx(t,t.checked?'fx-on':'fx-off',400);
