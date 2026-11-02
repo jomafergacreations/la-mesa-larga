@@ -11385,6 +11385,12 @@ html[data-lm=l] [data-wpb=mesa3]{background:repeating-linear-gradient(90deg,rgba
 html:root:root dialog#dlg:has(.setdlg){height:min(80dvh,720px)}
 /* v193: pantalla de carga con el logo nuevo */
 html:root:root .bootl svg{width:92px;height:92px;padding:0;border-radius:0;background:none;box-shadow:none;filter:drop-shadow(0 14px 22px rgba(155,44,63,.35))}
+
+/* v195 mbar glide */
+#mbar{view-transition-name:mbar}
+::view-transition-old(mbar){display:none}
+::view-transition-new(mbar){animation:none}
+html.notr #mbar .mbind{transition:transform var(--ui-t-base) var(--ui-spring),width var(--ui-t-base) var(--ui-spring),opacity var(--ui-t-fast)!important}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12374,9 +12380,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.194';
+const APPV='00.01.195';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.193 a v00.01.194. Corrige las esquinas del indicador de los selectores (Por código, Tema, etc.): ahora encajan con el botón seleccionado.';
+const APPD='Actualiza de v00.01.194 a v00.01.195. El selector de la barra inferior ahora se desliza suavemente hasta el botón pulsado en lugar de saltar.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12605,6 +12611,7 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
  if(!on){if(m)m.remove();const x=document.getElementById('mmore');if(x)x.remove();document.body.classList.remove('has-mb');mbSigV='';return}
  document.body.classList.add('has-mb');
  const adm=!!(scr==='admin'&&isAdmin()),home=(scr==='menu'&&!c),sig=[scr,home,adm?admTab+rpOpenN()+'/'+gmPendN():'',store.mode,session.uid,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),notifN(),socN(),canAdm()?1:0,isAdmin()?1:0,dev].join('|');
+ let pv=null;{const o=m&&m.querySelector('.mbind');if(o&&o.style.opacity==='1'){const cs=getComputedStyle(o);pv={t:cs.transform,w:cs.width,h:cs.height}}}
  const first=!m;if(first){m=document.createElement('nav');m.id='mbar';m.setAttribute('aria-label','Navegación');document.body.appendChild(m)}
  if(sig===mbSigV&&!first)return;mbSigV=sig;
  const t=(act,ic,l,cur,bd)=>`<button type="button" class="mbi${cur?' cur':''}" data-act="${act}" ${cur?'aria-current="page"':''} aria-label="${l}">${ic}<span>${l}</span>${bd?`<i class="bdg">${bd}</i>`:''}</button>`;
@@ -12612,6 +12619,7 @@ function mbSync(c){const H=document.documentElement,dev=H.dataset.dev;let m=docu
   m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${ai('ov','Resumen')}${ai('acc','Cuentas')}${ai('rol','Roles')}${ai('jg','Juegos')}${ai('rp','Incidencias')}`;m.classList.add('adm')}
  else{m.classList.remove('adm');
  m.innerHTML=`<span class="mbind" aria-hidden="true"></span>${t('gohome',HOUSE,'Inicio',home)}${t('friends',FRII,'Amigos',scr==='friends',socN()||'')}<button type="button" class="mbi mbmode${store.mode==='gm'?' gm':''}" data-act="mode" aria-label="${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}">${MODEI}<span>${store.mode==='gm'?'GM':'Jugador'}</span></button>${t('gofind',LUPA,'Buscar',scr==='find')}${t('gogames',DIEI,'Juegos',scr==='games')}`;}
+ if(pv){const n=m.querySelector('.mbind');if(n){n.style.transition='none';n.style.opacity='1';n.style.transform=pv.t;n.style.width=pv.w;n.style.height=pv.h;void n.offsetWidth;n.style.transition=''}}
  let x=document.getElementById('mmore');if(!x){x=document.createElement('div');x.id='mmore';x.setAttribute('role','menu');document.body.appendChild(x)}
  x.classList.remove('open');
  x.innerHTML=`<button type="button" role="menuitem" data-act="acct">Mi cuenta</button><button type="button" role="menuitem" data-act="mode">${store.mode==='gm'?'Pasar a modo jugador':'Pasar a modo Game Master'}</button>${canAdm()?`<button type="button" role="menuitem" data-act="adm">${isAdmin()?'Panel de administración':'Administración'}</button>`:''}<button type="button" role="menuitem" data-act="logout" class="dng">Cerrar sesión</button>`;
@@ -12620,7 +12628,7 @@ let mbSel=null;
 function mbInd(el){const m=document.getElementById('mbar');if(!m)return;const i=m.querySelector('.mbind');if(!i)return;m.querySelectorAll(':scope > .mbi.sel').forEach(x=>x.classList.remove('sel'));const st=mbSel?m.querySelector(':scope > .mbi[data-act="'+mbSel+'"]'):null;if(st)st.classList.add('sel');m.classList.toggle('hassel',!!st);const t=el||st||m.querySelector(':scope > .mbi.cur');
  if(!t){i.style.opacity='0';return}const a=m.getBoundingClientRect(),b=t.getBoundingClientRect();i.style.opacity='1';i.style.width=b.width+'px';i.style.height=b.height+'px';i.style.transform='translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px)'}
 function mbClose(){const x=document.getElementById('mmore'),a=document.querySelector('#mbar .mbacc');if(x)x.classList.remove('open');if(a)a.setAttribute('aria-expanded','false')}
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='admtab'||a==='admgame'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd()});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#mbar .mbi');if(!b)return;const a=b.dataset.act;mbSel=(a==='gohome'||a==='admtab'||a==='admgame'||a==='friends'||a==='mode'||a==='gofind'||a==='gogames')?null:a;mbInd(!mbSel&&a!=='mode'&&!b.classList.contains('mbmode')?b:undefined)});
 document.addEventListener('close',()=>{if(mbSel&&mbSel!=='sbopen'){mbSel=null;mbInd()}},true);
 (function(){let st=null,sup=0;
 const items=m=>[...m.querySelectorAll(':scope > .mbi:not(.mbmode)')];
