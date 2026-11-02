@@ -11371,7 +11371,7 @@ html[data-lm=l] [data-wpb=mesa3]{background:repeating-linear-gradient(90deg,rgba
 .setsec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:12px 2px;font-weight:700;font-size:1.02rem;-webkit-tap-highlight-color:transparent}
 .setsec>summary::-webkit-details-marker{display:none}
 .setsec>summary>span{flex:1}
-.setsec>summary::after{content:"";flex:none;width:18px;height:18px;background:currentColor;opacity:.65;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .2s}
+.setsec>summary::after{transition:transform .3s cubic-bezier(.2,.8,.2,1);content:"";flex:none;width:18px;height:18px;background:currentColor;opacity:.65;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .2s}
 .setsec[open]>summary::after{transform:rotate(180deg)}
 .setsec>summary:focus-visible{outline:2px solid var(--ui-acc,#7C6CF0);outline-offset:2px;border-radius:8px}
 .setbody{gap:10px;padding:0 0 14px}
@@ -12460,9 +12460,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.212';
+const APPV='00.01.213';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.211 a v00.01.212. En Ajustes solo hay una sección abierta a la vez, y al volver a abrir Ajustes aparecen todas plegadas.';
+const APPD='Actualiza de v00.01.212 a v00.01.213. Las secciones plegables de Ajustes y del aviso legal se abren y se cierran con una animación suave.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12625,7 +12625,21 @@ function legalSwap(k){const dl=$('#dlg');if(!dl||!LEGAL[k]||!dl.classList.contai
 function legalLinks(acc){const l=`<button type="button" data-act="legala">Aviso legal y protección de datos</button>`;return `<p class="lglegal">${acc?'Al crear tu cuenta aceptas el '+l+'.':l}</p>`}
 const SETK='lm_setopen';
 function setOpenGet(k,d){return window.__setOpen===k}
-document.addEventListener('toggle',e=>{const t=e.target;if(!t||!t.classList||!(t.classList.contains('setsec')||t.classList.contains('lglsec'))||!t.open)return;const cl=t.classList.contains('setsec')?'setsec':'lglsec';t.parentNode.querySelectorAll(':scope>details.'+cl+'[open]').forEach(o=>{if(o!==t)o.open=false})},true);
+(function(){const sel='details.setsec>summary,details.lglsec>summary';
+function run(d,open){if(d._an){try{d._an.cancel()}catch(x){}d._an=null}
+ const sm=d.querySelector(':scope>summary'),calm=document.documentElement.classList.contains('perf')||matchMedia('(prefers-reduced-motion:reduce)').matches;
+ if(calm||!d.animate){d.open=open;return}
+ const h0=d.getBoundingClientRect().height;let h1;
+ if(open){d.open=true;h1=d.getBoundingClientRect().height}else h1=sm.getBoundingClientRect().height+(d.offsetHeight-d.clientHeight);
+ const ov=d.style.overflow,bs=d.style.boxSizing;d.style.overflow='hidden';d.style.boxSizing='border-box';
+ const kids=[...d.children].filter(c=>c!==sm);
+ const fin=()=>{d._an=null;d.style.overflow=ov;d.style.boxSizing=bs;if(!open)d.open=false};
+ const a=d.animate([{height:h0+'px'},{height:h1+'px'}],{duration:open?380:300,easing:open?'cubic-bezier(.2,.8,.2,1)':'cubic-bezier(.4,0,.2,1)'});
+ kids.forEach(k=>k.animate(open?[{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}]:[{opacity:1},{opacity:0}],{duration:open?320:180,delay:open?60:0,easing:'ease',fill:'backwards'}));
+ d._an=a;a.onfinish=fin;a.oncancel=()=>{d.style.overflow=ov;d.style.boxSizing=bs}}
+document.addEventListener('click',e=>{const sm=e.target.closest&&e.target.closest(sel);if(!sm)return;e.preventDefault();const d=sm.parentNode,o=!d.open||d._closing;
+ if(o){d.parentNode.querySelectorAll(':scope>details.'+(d.classList.contains('setsec')?'setsec':'lglsec')+'[open]').forEach(x=>{if(x!==d)run(x,false)})}
+ d._closing=!o;run(d,o)},true)})();
 function setSec(k,title,body,def,extra){return `<details class="setsec" data-k="${k}"${setOpenGet(k,def)?' open':''}><summary><span>${title}</span>${extra||''}</summary><div class="grid setbody">${body}</div></details>`}
 function avBlock(){return `<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Tu imagen</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
 function ajustesDlg(){const rb=isAdmin()&&rpOpenN()?`<i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:'';showDlg('Ajustes',`<div class="grid setdlg">${setSec('tema','Tema',themeSeg(),1)}${setSec('pers','Personalización','<div class="grid" style="gap:10px"><b class="wpch">Imagen de perfil</b>'+avBlock()+'</div><div class="grid" style="gap:10px"><b class="wpch">Fondo de pantalla</b><p class="hint" style="margin:0">Se aplica en las pantallas de inicio, amigos, buscar y juegos. Son diseños propios de la app, inspirados en la ambientación de cada juego.</p>'+wpSeg()+'</div>',0)}${setSec('perf','Rendimiento',perfSeg()+'<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p>',0)}${setSec('ver','Versión de la app','<p class="hint" style="margin:0">Versión '+APPV+'.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div>',0)}${setSec('ayuda','Ayuda','<p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?'+rb+'</button></div>',0,rb)}${setSec('legal','Legal','<div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div>',0)}</div>`,true);window.__setOpen=null}
