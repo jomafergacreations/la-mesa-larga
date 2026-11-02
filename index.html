@@ -12471,9 +12471,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.219';
+const APPV='00.01.220';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.218 a v00.01.219. Nueva animación al cambiar entre modo Jugador y Game Master: una onda de energía desde el botón revela el nuevo modo mientras el anterior se aleja, aparece un aviso con el nombre del modo y el botón y la barra superior reaccionan.';
+const APPD='Actualiza de v00.01.219 a v00.01.220. Corrige que la animación de cambio de modo desapareciera al repetirla y alarga el tiempo que se ve el mensaje del modo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13261,7 +13261,7 @@ function stormFx(done){const old=document.getElementById('stormfx');if(old)old.r
  window.addEventListener('resize',fit)}
 function stormOff(){const o=document.getElementById('stormfx');if(o){o.classList.add('out');setTimeout(()=>o.remove(),480)}}
 /* v00.01.219 · cambio de modo Jugador ⇄ Game Master (la única animación elaborada de la pantalla principal) */
-function modeShift(m,apply){const r=document.documentElement;if(uiVT){apply();return}
+function modeShift(m,apply){const r=document.documentElement;if(uiVT){apply();return}document.querySelectorAll('.mdfx').forEach(z=>{try{z.getAnimations({subtree:true}).forEach(q=>q.cancel())}catch(e){}z.remove()});
  const bt=document.querySelector('#mbar .mbmode');let x,y;if(bt&&bt.getBoundingClientRect().width){const b=bt.getBoundingClientRect();x=b.left+b.width/2;y=b.top+b.height/2}else{const o=uiOrigin();x=o.x;y=o.y}
  const rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=860,gm=m==='gm',t1=gm?'#FF8A63':'#8FB0FF',t2=gm?'#FFC98A':'#C4D5FF',E='cubic-bezier(.55,.05,.2,1)';
  const fx=document.createElement('div');fx.className='mdfx';fx.setAttribute('aria-hidden','true');fx.style.setProperty('--mt',t1);fx.style.setProperty('--mt2',t2);
@@ -13274,10 +13274,10 @@ function modeShift(m,apply){const r=document.documentElement;if(uiVT){apply();re
    r.animate([{transform:'none',filter:'none'},{transform:'scale(.93)',filter:'brightness(.5) saturate(.6) blur(2px)'}],{duration:D,easing:E,fill:'forwards',pseudoElement:'::view-transition-old(root)'});
    fx.querySelector('.mfrg').animate([{transform:'scale(.002)',opacity:1,offset:0},{opacity:1,offset:.8},{transform:'scale(1)',opacity:0,offset:1}],{duration:D,easing:E,fill:'both'});
    fx.querySelector('.mfl').animate([{opacity:0},{opacity:.6,offset:.18},{opacity:0}],{duration:D*.9,easing:'ease-out',fill:'both'});
-   const em=fx.querySelector('.mfem');em.animate([{opacity:0,transform:'translate(-50%,-44%) scale(.84)',filter:'blur(8px)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)',filter:'blur(0)',offset:.2},{opacity:1,transform:'translate(-50%,-50%) scale(1)',filter:'blur(0)',offset:.72},{opacity:0,transform:'translate(-50%,-56%) scale(1.04)',filter:'blur(4px)'}],{duration:1700,delay:D*.38,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'}).onfinish=done;
+   const em=fx.querySelector('.mfem');em.animate([{opacity:0,transform:'translate(-50%,-44%) scale(.84)',filter:'blur(8px)',easing:'cubic-bezier(.2,.8,.2,1)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)',filter:'blur(0)',offset:.1},{opacity:1,transform:'translate(-50%,-50%) scale(1)',filter:'blur(0)',offset:.86},{opacity:0,transform:'translate(-50%,-56%) scale(1.04)',filter:'blur(4px)'}],{duration:3300,delay:D*.38,easing:'linear',fill:'both'}).onfinish=done;
    const mb=document.querySelector('#mbar .mbmode');if(mb){const sv=mb.querySelector('svg');if(sv)sv.animate([{transform:'rotate(-200deg) scale(.6)'},{transform:'rotate(0) scale(1.18)',offset:.7},{transform:'rotate(0) scale(1)'}],{duration:760,delay:D*.25,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});mb.animate([{boxShadow:'0 0 0 0 '+t1},{boxShadow:'0 0 0 14px transparent'}],{duration:760,delay:D*.4,easing:'ease-out'})}
    const ti=document.querySelector('#topbar .tbin');if(ti)ti.animate([{boxShadow:'0 0 0 0 '+t1},{boxShadow:'0 0 28px 6px '+t1,offset:.4},{boxShadow:'0 0 0 0 transparent'}],{duration:1100,delay:D*.5,easing:'ease-out'});
-  }).catch(()=>{});vt.finished.then(end,end);setTimeout(()=>{done();end()},3200)})}
+  }).catch(()=>{});vt.finished.then(end,end);setTimeout(()=>{done();end()},5000)})}
 function setMode(m){if(m===store.mode)return;if(m==='gm'&&!canGM()){gmReqDlg();return}const apply=()=>{loadParts();store.mode=m;store.cur=null;store.npcCur=null;scr='menu';gmStag=true;save();render();if(m==='p')fetchRevealed()};
  if(!uiMotionOk()||!document.startViewTransition){apply();return}
  modeShift(m,apply)}
