@@ -11749,6 +11749,7 @@ async function vContinue(){const p=pend;if(!p)return;const a=await aCall('signIn
 function vPoll(){clearInterval(vT);let busy=0;vT=setInterval(async()=>{if(authTab!=='verify'||!pend||session||busy){if(authTab!=='verify'||session)clearInterval(vT);return}busy=1;
  try{let ok=false;try{const lk=await aCall('lookup',{idToken:pend.idToken});ok=!!((lk.users||[])[0]||{}).emailVerified}catch(e){if(e.code!=='NET'){const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken}}
   if(ok){clearInterval(vT);await vContinue()}}catch(e){}finally{busy=0}},4000)}
+function authPatch(){try{if(session||booting)return false;const A=document.querySelector('#app .authhub'),H=document.querySelector('#app .lg .hs');if(!A||!H)return false;const t=document.createElement('div');t.innerHTML=authView();const a=t.querySelector('.authhub'),h=t.querySelector('.lg .hs');if(!a||!h)return false;A.replaceWith(a);H.replaceWith(h);window.scrollTo(0,0);return true}catch(e){return false}}
 function authSwap(a,b){if(lfRM()||a===b)return;try{const E='cubic-bezier(.2,.8,.2,1)',ix=k=>k==='new'?1:0,tb=k=>k==='login'||k==='new',dir=tb(a)&&tb(b)?(ix(b)>ix(a)?1:-1):1;
  const pill=document.querySelector('.authhub .seg .pill');if(pill&&tb(a)&&tb(b)){const T=i=>i?'translateX(calc(100% + 4px))':'translateX(0)';pill.animate([{transform:T(ix(a))},{transform:T(ix(b))}],{duration:340,easing:E})}
  const f=document.querySelector('.authhub form,.authhub .grid');if(f){f.animate([{opacity:1,transform:'translateX('+dir*30+'px)'},{opacity:1,transform:'none'}],{duration:320,easing:E});
@@ -12413,9 +12414,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.201';
+const APPV='00.01.202';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.200 a v00.01.201. La tarjeta de acceso es opaca y ya no se transparenta al cambiar entre modo claro y oscuro.';
+const APPD='Actualiza de v00.01.201 a v00.01.202. Al pulsar Has olvidado tu contraseña (y al cambiar entre Entrar y Crear cuenta) solo se redibuja la tarjeta, no toda la pantalla, para evitar tirones.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13955,7 +13956,7 @@ document.addEventListener('click',e=>{
    if(a==='pjhp'&&b.dataset.u===session.uid&&!parts.some(x=>x.id===b.dataset.p)&&pjDead(store.chars.find(x=>x.pid===b.dataset.p))){return}}
  {const GB=['kick','pjap','pjdeny','pjreq','partleave','npcrand','npcnew','npcrev','npcdel','pjrq'];if(GB.includes(a)&&isEnd(b.dataset.p||b.dataset.pid||partId)){toast('La partida ha finalizado: no se puede modificar');return}}
  switch(a){
-  case 'atab':{const from=authTab;authTab=v;render();authSwap(from,v);break}
+  case 'atab':{const from=authTab;authTab=v;if(!authPatch())render();authSwap(from,v);break}
   case 'showpw':{const f=b.closest('form');const on=b.getAttribute('aria-pressed')!=='true';f.querySelectorAll('input[data-pw]').forEach(i=>i.type=on?'text':'password');f.querySelectorAll('[data-act=showpw]').forEach(x=>{x.setAttribute('aria-pressed',on);x.textContent=on?'Ocultar':'Ver'});break}
   case 'wp':wpSet(v);break;
   case 'pers':try{const o=JSON.parse(localStorage.getItem(SETK)||'{}');o.pers=1;localStorage.setItem(SETK,JSON.stringify(o))}catch(x){}ajustesDlg();break;
