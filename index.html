@@ -12461,9 +12461,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.216';
+const APPV='00.01.217';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.215 a v00.01.216. El color de la barra de estado de iOS se fija al abrir la app con el último color del tema, y se refresca al cambiar de modo.';
+const APPD='Actualiza de v00.01.216 a v00.01.217. Al cambiar de modo, la barra de estado de iOS se refresca de nuevo.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14346,7 +14346,7 @@ loadAccounts();cfmInit();render();(cfm?Promise.resolve(false):restoreSession()).
 (function(){const H=document.documentElement;let q=0,last='';
 function top(){const b=document.body;if(!b)return '';const cs=getComputedStyle(b);let c=(cs.getPropertyValue('--abg-base')||'').trim();const ok=v=>v&&!/^(transparent|rgba\(0,\s*0,\s*0,\s*0\))$/.test(v);if(!ok(c)||!b.classList.contains('hubs')){const bg=cs.backgroundColor;if(ok(bg))c=bg}
  if(!ok(c)){const hb=getComputedStyle(H).backgroundColor;c=ok(hb)?hb:''}return c}
-function sync(){q=0;const c=top();if(!c||c===last)return;last=c;H.style.backgroundColor=c;const m=document.createElement('meta');m.name='theme-color';m.content=c;const old=document.querySelector('meta[name=theme-color]');if(old)old.replaceWith(m);else document.head.appendChild(m);try{localStorage.setItem('lm_topc',c)}catch(e){}}
+function sync(){q=0;const c=top();if(!c||c===last)return;last=c;H.style.backgroundColor=c;try{localStorage.setItem('lm_topc',c)}catch(e){}document.querySelectorAll('meta[name=theme-color]').forEach(x=>x.remove());H.style.backgroundColor=c;void H.offsetHeight;setTimeout(()=>{const m=document.createElement('meta');m.name='theme-color';m.content=c;document.head.appendChild(m)},60)}
 function sch(){if(!q)q=requestAnimationFrame(sync)}
 const mo=new MutationObserver(sch);mo.observe(H,{attributes:true});
 const go=()=>{if(document.body){mo.observe(document.body,{attributes:true,attributeFilter:['class','style']});sch()}};
