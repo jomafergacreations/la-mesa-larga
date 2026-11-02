@@ -11749,12 +11749,11 @@ async function vContinue(){const p=pend;if(!p)return;const a=await aCall('signIn
 function vPoll(){clearInterval(vT);let busy=0;vT=setInterval(async()=>{if(authTab!=='verify'||!pend||session||busy){if(authTab!=='verify'||session)clearInterval(vT);return}busy=1;
  try{let ok=false;try{const lk=await aCall('lookup',{idToken:pend.idToken});ok=!!((lk.users||[])[0]||{}).emailVerified}catch(e){if(e.code!=='NET'){const a=await aCall('signInWithPassword',{email:pend.email,password:pend.pw,returnSecureToken:true});pend.idToken=a.idToken}}
   if(ok){clearInterval(vT);await vContinue()}}catch(e){}finally{busy=0}},4000)}
-function authPatch(){try{if(session||booting)return false;const A=document.querySelector('#app .authhub'),H=document.querySelector('#app .lg .hs');if(!A||!H)return false;const t=document.createElement('div');t.innerHTML=authView();const a=t.querySelector('.authhub'),h=t.querySelector('.lg .hs');if(!a||!h)return false;A.replaceWith(a);H.replaceWith(h);window.scrollTo(0,0);return true}catch(e){return false}}
+function authPatch(){try{if(session||booting)return false;const A=document.querySelector('#app .authhub'),H=document.querySelector('#app .lg .hs');if(!A||!H)return false;const h0=A.getBoundingClientRect().height;const t=document.createElement('div');t.innerHTML=authView();const a=t.querySelector('.authhub'),h=t.querySelector('.lg .hs');if(!a||!h)return false;A.replaceWith(a);H.replaceWith(h);window.scrollTo(0,0);a.style.animation='none';const cs=getComputedStyle(a),h1=a.getBoundingClientRect().height;if(!lfRM()&&Math.abs(h1-h0)>1){const pad=cs.boxSizing==='content-box'?parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)+parseFloat(cs.borderBottomWidth):0;a.style.overflow='hidden';const an=a.animate([{height:(h0-pad)+'px'},{height:(h1-pad)+'px'}],{duration:340,easing:'cubic-bezier(.2,.8,.2,1)'});an.onfinish=an.oncancel=()=>{a.style.overflow=''}}return true}catch(e){return false}}
 function authSwap(a,b){if(lfRM()||a===b)return;try{const E='cubic-bezier(.2,.8,.2,1)',ix=k=>k==='new'?1:0,tb=k=>k==='login'||k==='new',dir=tb(a)&&tb(b)?(ix(b)>ix(a)?1:-1):1;
  const pill=document.querySelector('.authhub .seg .pill');if(pill&&tb(a)&&tb(b)){const T=i=>i?'translateX(calc(100% + 4px))':'translateX(0)';pill.animate([{transform:T(ix(a))},{transform:T(ix(b))}],{duration:340,easing:E})}
- const f=document.querySelector('.authhub form,.authhub .grid');if(f){f.animate([{opacity:1,transform:'translateX('+dir*30+'px)'},{opacity:1,transform:'none'}],{duration:320,easing:E});
-  Array.from(f.children).forEach((c,i)=>c.animate([{opacity:1,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:300,delay:60+i*45,easing:E,fill:'backwards'}))}
- const h=document.querySelector('.lg .hs');if(h)h.animate([{opacity:1,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:300,easing:E})}catch(e){}}
+ const f=document.querySelector('.authhub form,.authhub .grid');if(f)f.animate([{opacity:0},{opacity:1}],{duration:260,easing:E});
+ const h=document.querySelector('.lg .hs');if(h)h.animate([{opacity:0},{opacity:1}],{duration:260,easing:E})}catch(e){}}
 function authView(){
  const tabs=[['login','Entrar'],['new','Crear cuenta']].map(([k,n])=>`<button type="button" data-act="atab" data-v="${k}" aria-pressed="${authTab===k}"><b>${n}</b></button>`).join('');
  const pwf=(id,label,auto,nb)=>`<label class="f">${label}<span class="pw"><input type="password" id="${id}" name="${id}" data-pw="1" autocomplete="${auto}" required>${nb?'':'<button type="button" class="btn sm" data-act="showpw" aria-pressed="false" tabindex="-1" aria-label="Mostrar u ocultar las contraseñas">Ver</button>'}</span></label>`;
@@ -12414,9 +12413,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.202';
+const APPV='00.01.203';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.201 a v00.01.202. Al pulsar Has olvidado tu contraseña (y al cambiar entre Entrar y Crear cuenta) solo se redibuja la tarjeta, no toda la pantalla, para evitar tirones.';
+const APPD='Actualiza de v00.01.202 a v00.01.203. La tarjeta de acceso cambia de altura de forma suave y el contenido aparece con un fundido, sin saltos.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
