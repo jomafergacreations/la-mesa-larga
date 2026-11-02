@@ -11393,7 +11393,6 @@ html:root:root .bootl svg{width:92px;height:92px;padding:0;border-radius:0;backg
 html.notr #mbar .mbind{transition:transform 520ms cubic-bezier(.22,.8,.26,1),width 520ms cubic-bezier(.22,.8,.26,1),opacity var(--ui-t-fast)!important}
 
 /* v197 tab fade */
-html.uivtf::view-transition-old(root),html.uivtf::view-transition-new(root){animation-duration:380ms;animation-timing-function:ease}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12383,9 +12382,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.197';
+const APPV='00.01.198';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.196 a v00.01.197. Al cambiar de pantalla desde la barra inferior se quita el efecto de onda y se usa un desvanecimiento suave.';
+const APPD='Actualiza de v00.01.197 a v00.01.198. Corrige el desvanecimiento al cambiar de pantalla, que no se veía: ahora dura unos 0,45 s.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12423,7 +12422,7 @@ function uiOrigin(){const fresh=performance.now()-uiPtrT<1500;if(fresh)return ui
 function uiReveal(run,tint,fade){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
  uiVT=true;r.classList.add('uivt');if(fade)r.classList.add('uivtf');const end=()=>{uiVT=false;r.classList.remove('uivt','uivtf')};const t0=performance.now();if(!fade)uiRing(x,y,rad,D,tint);
  requestAnimationFrame(()=>{let vt;try{vt=document.startViewTransition(()=>{r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}})}catch(e){try{run()}catch(x){}end();return}
-  vt.ready.then(()=>{if(fade)return;const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
+  vt.ready.then(()=>{if(fade){r.animate({opacity:[0,1]},{duration:460,easing:'cubic-bezier(.4,0,.2,1)',pseudoElement:'::view-transition-new(root)'});return}const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
 function themeFade(run){const r=document.documentElement;if(document.startViewTransition&&uiMotionOk()){uiReveal(run);return}r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}}
 function setTheme(v){try{if(v==='auto')localStorage.removeItem(TKEY);else localStorage.setItem(TKEY,v)}catch(e){}themeFade(()=>applyTheme(v))}
 
