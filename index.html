@@ -11391,6 +11391,9 @@ html:root:root .bootl svg{width:92px;height:92px;padding:0;border-radius:0;backg
 ::view-transition-old(mbar){display:none}
 ::view-transition-new(mbar){animation:none}
 html.notr #mbar .mbind{transition:transform 520ms cubic-bezier(.22,.8,.26,1),width 520ms cubic-bezier(.22,.8,.26,1),opacity var(--ui-t-fast)!important}
+
+/* v197 tab fade */
+html.uivtf::view-transition-old(root),html.uivtf::view-transition-new(root){animation-duration:380ms;animation-timing-function:ease}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12380,9 +12383,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.196';
+const APPV='00.01.197';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.195 a v00.01.196. El selector de la barra inferior se desliza más despacio y sin rebote, con un movimiento más suave.';
+const APPD='Actualiza de v00.01.196 a v00.01.197. Al cambiar de pantalla desde la barra inferior se quita el efecto de onda y se usa un desvanecimiento suave.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12417,10 +12420,10 @@ addEventListener('touchmove',e=>{if(e.touches.length!==1||!e.cancelable)return;c
  e.preventDefault()},{passive:false})}
 function uiRing(x,y,rad,D,tint){const g=document.createElement('div');g.className='ug-ring';const d=rad*2;g.style.cssText='left:'+(x-rad)+'px;top:'+(y-rad)+'px;width:'+d+'px;height:'+d+'px;will-change:transform,opacity';if(tint){g.style.borderColor=tint;g.style.boxShadow='0 0 26px 6px '+tint+',inset 0 0 20px '+tint;g.style.background='radial-gradient(closest-side,transparent 60%,color-mix(in srgb,'+tint+' 30%,transparent) 97%,transparent)'}document.body.appendChild(g);const a=g.animate([{transform:'scale(0)',opacity:.95},{transform:'scale(1)',opacity:0}],{duration:D,easing:'cubic-bezier(.3,.7,.2,1)'});a.onfinish=a.oncancel=()=>g.remove()}
 function uiOrigin(){const fresh=performance.now()-uiPtrT<1500;if(fresh)return uiPtr;const e=document.querySelector('#topbar .tbgm,#topbar .tbth,#topbar');if(e){const b=e.getBoundingClientRect();if(b.width)return{x:b.left+b.width/2,y:b.top+b.height/2}}return{x:innerWidth/2,y:innerHeight/2}}
-function uiReveal(run,tint){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
- uiVT=true;r.classList.add('uivt');const end=()=>{uiVT=false;r.classList.remove('uivt')};const t0=performance.now();uiRing(x,y,rad,D,tint);
+function uiReveal(run,tint,fade){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
+ uiVT=true;r.classList.add('uivt');if(fade)r.classList.add('uivtf');const end=()=>{uiVT=false;r.classList.remove('uivt','uivtf')};const t0=performance.now();if(!fade)uiRing(x,y,rad,D,tint);
  requestAnimationFrame(()=>{let vt;try{vt=document.startViewTransition(()=>{r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}})}catch(e){try{run()}catch(x){}end();return}
-  vt.ready.then(()=>{const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
+  vt.ready.then(()=>{if(fade)return;const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
 function themeFade(run){const r=document.documentElement;if(document.startViewTransition&&uiMotionOk()){uiReveal(run);return}r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}}
 function setTheme(v){try{if(v==='auto')localStorage.removeItem(TKEY);else localStorage.setItem(TKEY,v)}catch(e){}themeFade(()=>applyTheme(v))}
 
@@ -12716,7 +12719,7 @@ function cyberOut(then){if(lfRM()||document.getElementById('cyout')){then();retu
  o.innerHTML='<div class="cyot"><div class="cyol" style="--d:.15s">&gt; cerrando sesión…</div><div class="cyol" style="--d:.45s">&gt; descargando módulo… <em>[ OK ]</em></div><div class="cyol wn" style="--d:.75s">&gt; desconectando</div><div class="cypb"><i></i></div></div>';
  document.body.appendChild(o);setTimeout(then,1000);setTimeout(()=>o.remove(),1400)}
 /* salida propia de cada universo al pulsar Inicio / volver */
-function tabFx(then){if(session&&!document.documentElement.dataset.cos&&scr!=='cyber'&&scr!=='dune'&&scr!=='nb'&&scr!=='deck'&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#8F7CFF');return}exitFx(then)}
+function tabFx(then){if(session&&!document.documentElement.dataset.cos&&scr!=='cyber'&&scr!=='dune'&&scr!=='nb'&&scr!=='deck'&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#8F7CFF',true);return}exitFx(then)}
 function exitFx(then){if(!lfRM()){if(scr==='cyber'){cyberOut(then);return}if(scr==='dune'){duneOut(then);return}if(session&&(scr==='nb'||scr==='deck')){mistOut(then);return}if(session&&document.documentElement.dataset.cos&&uiMotionOk()&&document.startViewTransition){uiReveal(then,'#9A8CFF');return}}then()}
 function cyberFx(on){const r=document.documentElement;let f=document.getElementById('cyfx');
  if(!on){if(f)f.remove();delete r.dataset.cyb;return}
