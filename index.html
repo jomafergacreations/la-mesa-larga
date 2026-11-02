@@ -11402,7 +11402,7 @@ html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.gal .tt em{}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.gal .ti{background:rgba(26,16,80,.7);border-color:rgba(242,212,139,.55);color:#F2D48B}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.gal .go{background:linear-gradient(135deg,#8E7BFF,#5B45E0);color:#fff;box-shadow:0 0 16px rgba(130,110,255,.7)}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb::before{background:repeating-linear-gradient(0deg,rgba(252,238,10,.06) 0 1px,transparent 1px 3px);height:100%;mix-blend-mode:normal}
-html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb::after{border-radius:6px 28px 6px 28px;box-shadow:inset 0 0 0 2px #FCEE0A,inset 0 0 22px rgba(252,238,10,.22),inset 0 -26px 40px -22px rgba(255,0,110,.35)}
+html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb::after{border-radius:inherit;box-shadow:inset 0 0 0 2px #FCEE0A,inset 0 0 22px rgba(252,238,10,.22),inset 0 -26px 40px -22px rgba(255,0,110,.35)}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb .tt{background:rgba(6,6,8,.86);border:1px solid #FCEE0A;border-radius:3px 20px 3px 20px;color:#FCEE0A;box-shadow:0 0 14px rgba(252,238,10,.28),inset 0 0 0 1px rgba(255,0,110,.3)}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb .tt em{background:#FCEE0A;color:#0A0A0C;border-color:#FCEE0A}
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.cyb .ti{background:#FCEE0A;color:#0A0A0C;border-color:#0A0A0C;border-radius:8px}
@@ -11413,7 +11413,7 @@ html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.dun .ti{background:rgba(8,
 html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.dun .go{background:linear-gradient(135deg,#F6C25F,#D9803A);color:#2A1204;box-shadow:0 0 16px rgba(233,169,87,.6)}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.gal .tt{background:linear-gradient(160deg,rgba(255,255,255,.82),rgba(226,216,255,.72));border-color:rgba(120,95,230,.4);color:#1E1458}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.gal .ti{background:rgba(255,255,255,.8);border-color:rgba(120,95,230,.45);color:#4B36C8}
-html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.cyb::after{border-radius:6px 28px 6px 28px;box-shadow:inset 0 0 0 2px #0A0A0C,inset 0 -26px 40px -22px rgba(255,0,110,.3)}
+html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.cyb::after{border-radius:inherit;box-shadow:inset 0 0 0 2px #0A0A0C,inset 0 -26px 40px -22px rgba(255,0,110,.3)}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.cyb .tt{background:rgba(10,10,12,.9);border:1px solid #0A0A0C;border-radius:3px 20px 3px 20px;color:#FCEE0A;box-shadow:4px 4px 0 rgba(10,10,12,.35)}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.cyb .tt em{background:#FCEE0A;color:#0A0A0C;border-color:#FCEE0A}
 html[data-lm=l]:root:root .bubbles.hubmain .jgin>.bub.cyb .ti{background:#0A0A0C;color:#FCEE0A;border-color:#0A0A0C;border-radius:8px}
@@ -12410,9 +12410,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.199';
+const APPV='00.01.200';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.198 a v00.01.199. Rediseña las burbujas de juego para que cada una tenga su propio estilo en modo oscuro y claro.';
+const APPD='Actualiza de v00.01.199 a v00.01.200. Corrige la esquina del marco de la burbuja de Cyberpunk en modo claro.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
