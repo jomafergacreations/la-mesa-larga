@@ -12431,15 +12431,14 @@ function uigClick(e){const b=e.target.closest('[data-ugc]');const g=document.get
 function uigTheme(btn){const r=btn.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
  const flip=()=>{const d=document.documentElement;if(!UGR)UGR=d.dataset.lm;d.dataset.lm=d.dataset.lm==='d'?'l':'d'};
  if(!uigMotion()||!document.startViewTransition){const g=document.getElementById('uigal');if(g&&uigMotion()){g.style.transition='opacity .22s';g.style.opacity='.0';setTimeout(()=>{flip();g.style.opacity='1'},230)}else flip();return}
- const vt=document.startViewTransition(flip);vt.ready.then(()=>{document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:560,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});
-  uiRing(x,y,rad,560)}).catch(()=>{})}
+ const vt=document.startViewTransition(flip);vt.ready.then(()=>{document.documentElement.animate({opacity:[0,1]},{duration:460,easing:'cubic-bezier(.4,0,.2,1)',pseudoElement:'::view-transition-new(root)'})}).catch(()=>{})}
 function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&canAdm())uigOpen()}catch(e){}}
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.207';
+const APPV='00.01.208';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.206 a v00.01.207. Se quita el botón de ajustes de la isla superior; Ajustes sigue en el menú del avatar.';
+const APPD='Actualiza de v00.01.207 a v00.01.208. Se sustituyen los efectos de onda circular (cambio de tema, de modo, simular usuario y entrada a Cosmere) por un desvanecimiento suave acorde al diseño.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12474,7 +12473,7 @@ addEventListener('touchmove',e=>{if(e.touches.length!==1||!e.cancelable)return;c
  e.preventDefault()},{passive:false})}
 function uiRing(x,y,rad,D,tint){const g=document.createElement('div');g.className='ug-ring';const d=rad*2;g.style.cssText='left:'+(x-rad)+'px;top:'+(y-rad)+'px;width:'+d+'px;height:'+d+'px;will-change:transform,opacity';if(tint){g.style.borderColor=tint;g.style.boxShadow='0 0 26px 6px '+tint+',inset 0 0 20px '+tint;g.style.background='radial-gradient(closest-side,transparent 60%,color-mix(in srgb,'+tint+' 30%,transparent) 97%,transparent)'}document.body.appendChild(g);const a=g.animate([{transform:'scale(0)',opacity:.95},{transform:'scale(1)',opacity:0}],{duration:D,easing:'cubic-bezier(.3,.7,.2,1)'});a.onfinish=a.oncancel=()=>g.remove()}
 function uiOrigin(){const fresh=performance.now()-uiPtrT<1500;if(fresh)return uiPtr;const e=document.querySelector('#topbar .tbgm,#topbar .tbth,#topbar');if(e){const b=e.getBoundingClientRect();if(b.width)return{x:b.left+b.width/2,y:b.top+b.height/2}}return{x:innerWidth/2,y:innerHeight/2}}
-function uiReveal(run,tint,fade){if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
+function uiReveal(run,tint,fade){fade=true;if(uiVT){run();return}const r=document.documentElement,{x,y}=uiOrigin(),rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=600;
  uiVT=true;r.classList.add('uivt');if(fade)r.classList.add('uivtf');const end=()=>{uiVT=false;r.classList.remove('uivt','uivtf')};const t0=performance.now();if(!fade)uiRing(x,y,rad,D,tint);
  requestAnimationFrame(()=>{let vt;try{vt=document.startViewTransition(()=>{r.classList.add('notr');try{run()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}})}catch(e){try{run()}catch(x){}end();return}
   vt.ready.then(()=>{if(fade){r.animate({opacity:[0,1]},{duration:460,easing:'cubic-bezier(.4,0,.2,1)',pseudoElement:'::view-transition-new(root)'});return}const a=r.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${rad}px at ${x}px ${y}px)`]},{duration:D,easing:'cubic-bezier(.3,.7,.2,1)',pseudoElement:'::view-transition-new(root)'});const el=performance.now()-t0;if(el>0&&el<D-60)try{a.currentTime=el}catch(e){}}).catch(()=>{});vt.finished.then(end,end)})}
