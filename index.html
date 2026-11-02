@@ -12461,9 +12461,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.214';
+const APPV='00.01.215';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.213 a v00.01.214. Nueva pantalla de arranque más limpia (solo el icono, sin textos) que enlaza sin saltos con la de iOS y se desvanece hacia la app. Para ver las imágenes de arranque nuevas de iOS, quita la app de la pantalla de inicio y vuelve a añadirla.';
+const APPD='Actualiza de v00.01.214 a v00.01.215. La zona de la hora y la cobertura de iOS toma ahora el color superior del tema activo (claro, oscuro y juegos), para que no se note el corte con la app.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14342,6 +14342,16 @@ loadAccounts();cfmInit();render();(cfm?Promise.resolve(false):restoreSession()).
  document.addEventListener('visibilitychange',()=>{hid=document.hidden;try{for(const a of document.getAnimations()){const t=a.effect&&a.effect.target;if(t&&inf(a))sync(t)}}catch(x){}if(!hid)scan()});
  setInterval(()=>{if(!hid)scan()},4000);setTimeout(scan,800);
 })();
+/* v00.01.215 · la zona de la barra de estado de iOS toma el color superior del tema */
+(function(){const H=document.documentElement;let q=0,last='';
+function top(){const b=document.body;if(!b)return '';const cs=getComputedStyle(b);let c=(cs.getPropertyValue('--abg-base')||'').trim();const ok=v=>v&&!/^(transparent|rgba\(0,\s*0,\s*0,\s*0\))$/.test(v);if(!ok(c)||!b.classList.contains('hubs')){const bg=cs.backgroundColor;if(ok(bg))c=bg}
+ if(!ok(c)){const hb=getComputedStyle(H).backgroundColor;c=ok(hb)?hb:''}return c}
+function sync(){q=0;const c=top();if(!c||c===last)return;last=c;H.style.backgroundColor=c;let m=document.querySelector('meta[name=theme-color]');if(!m){m=document.createElement('meta');m.name='theme-color';document.head.appendChild(m)}m.setAttribute('content',c)}
+function sch(){if(!q)q=requestAnimationFrame(sync)}
+const mo=new MutationObserver(sch);mo.observe(H,{attributes:true});
+const go=()=>{if(document.body){mo.observe(document.body,{attributes:true,attributeFilter:['class','style']});sch()}};
+if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+addEventListener('load',sch);setInterval(sch,1500)})();
 (function(){try{if(!('serviceWorker' in navigator))return;const h=location.hostname;if(!(h.endsWith('github.io')||h==='localhost'))return;setTimeout(()=>{navigator.serviceWorker.register('sw.js?v=177',{scope:'./'}).catch(()=>{})},1500)}catch(e){}})();
 
 /* v00.01.42 · animaciones de interacción */
