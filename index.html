@@ -3778,7 +3778,6 @@ body.pjdead .chapter{opacity:.8}
  select.fx-sel,input.fx-sel{animation:fxSel .35s ease-out}
 
 
- .fx-ring{animation:fxRing .5s ease-out}
 
 
  summary{cursor:pointer}
@@ -3828,11 +3827,6 @@ details[open]>*:not(summary){animation:tabin .26s cubic-bezier(.2,.8,.2,1) both}
 }
 
 
-@keyframes fxRing{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent,#C59E57) 45%,transparent)}
-
-100%{box-shadow:0 0 0 12px transparent}
-
-}
 
 
 @keyframes dlgout{to{opacity:0;transform:translateY(10px) scale(.97)}
@@ -11448,6 +11442,14 @@ html[data-dev=phone] #topbar .tbin.isl .tbon.none .ond{background:#E5484D}
 html[data-dev=phone] #topbar .tbin.isl .tbpan{width:auto;min-width:38px;padding:0 10px;border-radius:999px}
 html[data-dev=phone] #topbar .tbin.isl .tbgm{padding:7px}
 html[data-dev=phone] #onl{display:none!important}
+
+/* v209 pulsaciones neutras en la barra superior (sin halos azules) */
+html:root:root:root #topbar .tbi:hover{background:color-mix(in srgb,var(--ui-ink,#222) 9%,transparent);transform:none;box-shadow:none}
+@media (hover:none){html:root:root:root #topbar .tbi:hover{background:transparent}}
+html:root:root:root #topbar .tbi:active{background:color-mix(in srgb,var(--ui-ink,#222) 14%,transparent);transform:scale(.92);transition-duration:90ms}
+html[data-dev=phone]:root:root #topbar .tbi:focus,html[data-dev=phone]:root:root #topbar .tbi:focus-visible{outline:none;box-shadow:none}
+html:root:root:root #topbar .tbin.isl .tbon:hover,html:root:root:root #topbar .tbin.isl .tbon:active{background:color-mix(in srgb,#3FBF7F 26%,transparent)}
+html:root:root:root #topbar .tbin.isl .tbon.none:hover,html:root:root:root #topbar .tbin.isl .tbon.none:active{background:color-mix(in srgb,#E5484D 28%,transparent)}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12436,9 +12438,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.208';
+const APPV='00.01.209';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.207 a v00.01.208. Se sustituyen los efectos de onda circular (cambio de tema, de modo, simular usuario y entrada a Cosmere) por un desvanecimiento suave acorde al diseño.';
+const APPD='Actualiza de v00.01.208 a v00.01.209. Se elimina el halo azul que aparecía al pulsar cualquier botón y los resaltes azules de la barra superior; la pulsación queda como un tono neutro y un ligero encogimiento.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14316,7 +14318,5 @@ function fx(el,c,ms){if(rm()||!el)return;el.classList.remove(c);void el.offsetWi
 document.addEventListener('change',function(e){var t=e.target;if(!t||!t.tagName)return;
 if(t.type==='checkbox'||t.type==='radio')fx(t,t.checked?'fx-on':'fx-off',400);
 else if(t.tagName==='SELECT')fx(t,'fx-sel',400)},true);
-document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button,.btn,.chip,.seg button,summary');
-if(b&&!b.disabled&&!b.closest('dialog.hlp'))fx(b,'fx-ring',520)},true);
 })();
 </script>
