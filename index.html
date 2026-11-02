@@ -11424,6 +11424,30 @@ html[data-lm=d]:root:root .bubbles.hubmain .jgin>.bub.dun{background:radial-grad
 
 /* v201 auth card solid */
 html:root:root:root body.hub.authdark .authhub{--ui-glass-bg:var(--ui-solid);--ui-glass-bg-strong:color-mix(in srgb,var(--ui-ink) 8%,var(--ui-solid));-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--ui-solid)}
+
+/* v206 barra superior: isla flotante (móvil) */
+html[data-dev=phone] #topbar{display:flex;justify-content:center;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 6px}
+html[data-dev=phone]:root:root #topbar .tbin.isl{width:fit-content;max-width:100%;min-width:0;margin:0 auto;gap:4px;padding:5px;border-radius:999px;min-height:0;align-items:center;box-shadow:0 12px 28px -14px rgba(0,0,0,.5),0 2px 6px -2px rgba(0,0,0,.18);transition:padding .35s var(--ui-spring),gap .35s var(--ui-spring)}
+html[data-dev=phone] #topbar .tbin.isl .tbwel{min-width:0;flex:0 1 auto;padding:0 8px 0 6px;gap:0;overflow:hidden;max-width:230px;opacity:1;transition:max-width .4s var(--ui-spring),opacity .25s ease,padding .4s var(--ui-spring)}
+html[data-dev=phone] #topbar .tbin.isl .tbwel .wi{display:none}
+html[data-dev=phone] #topbar .tbin.isl .tbwel .wt{min-width:0}
+html[data-dev=phone] #topbar .tbin.isl .tbwel .wt b{display:block;font-size:.98rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[data-dev=phone] #topbar .tbin.isl .tbwel .wt span{display:block;font-size:.72rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.75}
+html[data-dev=phone] #topbar.tbmini .tbin.isl .tbwel{max-width:0;opacity:0;padding:0}
+html[data-dev=phone] #topbar .tbin.isl .tbi{display:grid;place-items:center;position:relative;width:38px;height:38px;min-height:0;padding:0;border-radius:50%;flex:none;background:transparent;border:0;box-shadow:none}
+html[data-dev=phone] #topbar .tbin.isl .tbi svg{width:21px;height:21px}
+html[data-dev=phone] #topbar .tbin.isl .tbav{width:42px;height:42px;padding:0;overflow:hidden}
+html[data-dev=phone] #topbar .tbin.isl .tbav .avs{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;overflow:hidden}
+html[data-dev=phone] #topbar .tbin.isl .tbav .avs img{width:100%;height:100%;object-fit:cover;display:block}
+html[data-dev=phone] #topbar .tbin.isl .tbbell .bdg{position:absolute;top:1px;right:0;min-width:16px;height:16px;padding:0 4px;border-radius:999px;font-size:.66rem;line-height:16px;font-style:normal;font-weight:800;text-align:center;background:#E5484D;color:#fff;box-shadow:0 0 0 2px var(--ui-solid,#fff)}
+html[data-dev=phone] #topbar .tbin.isl .tbon{width:auto;min-width:38px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:color-mix(in srgb,#3FBF7F 18%,transparent)}
+html[data-dev=phone] #topbar .tbin.isl .tbon b{font-size:.86rem;line-height:1}
+html[data-dev=phone] #topbar .tbin.isl .tbon .ond{width:9px;height:9px;border-radius:50%;background:#3FBF7F;flex:none}
+html[data-dev=phone] #topbar .tbin.isl .tbon.none{background:color-mix(in srgb,#E5484D 20%,transparent)}
+html[data-dev=phone] #topbar .tbin.isl .tbon.none .ond{background:#E5484D}
+html[data-dev=phone] #topbar .tbin.isl .tbpan{width:auto;min-width:38px;padding:0 10px;border-radius:999px}
+html[data-dev=phone] #topbar .tbin.isl .tbgm{padding:7px}
+html[data-dev=phone] #onl{display:none!important}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -11649,7 +11673,7 @@ const ONL_MS=150000;
 const isOn=r=>!!r&&(r.role|0)<3&&Date.now()-(+r.ping||0)<ONL_MS;
 let onlL=[],onlOpen=false,onlBusy=false,onlT=0;
 async function beat(){if(!session||session.owner||document.hidden||Date.now()<fsCool)return;const n=Date.now();try{await fs('PATCH','users/'+session.uid,fbEnc({ping:n}))}catch(e){}try{await fs('PATCH','presencia/'+session.uid,fbEnc({uid:session.uid,ping:n}))}catch(e){}}
-async function onlRefresh(){if(onlBusy||!canInc()||document.hidden||Date.now()<fsCool)return;onlBusy=true;onlT=Date.now();try{const L=await fsList('users');onlL=L.filter(r=>!r.deleted&&isOn(r)&&r.id!==session.uid).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));onlDraw()}catch(e){}finally{onlBusy=false}}
+async function onlRefresh(){if(onlBusy||!canInc()||document.hidden||Date.now()<fsCool)return;onlBusy=true;onlT=Date.now();try{const L=await fsList('users');onlL=L.filter(r=>!r.deleted&&isOn(r)&&r.id!==session.uid).sort((a,b)=>String(a.name).localeCompare(String(b.name),'es'));onlDraw();try{if(document.getElementById('topbar'))topbarUpdate(cur())}catch(e){}}catch(e){}finally{onlBusy=false}}
 function onlDraw(){try{const b=document.body;const on=!!(canInc()&&session&&!booting&&(scr==='menu'&&(document.querySelector('#app .bubbles')||store.mode==='gm')));let e=document.getElementById('onl');
  if(!on){if(e)e.remove();return}
  if(Date.now()-onlT>4500&&!onlBusy)onlRefresh()
@@ -12413,9 +12437,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.205';
+const APPV='00.01.206';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.204 a v00.01.205. Corrige que los botones Entrar y Crear cuenta se agrandaran al cambiar de vista, y limpia CSS que no se usaba.';
+const APPD='Actualiza de v00.01.205 a v00.01.206. Nueva barra superior en el móvil: una isla flotante con tu avatar, saludo, usuarios en línea, avisos, tema y ajustes que se encoge al bajar.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -12582,11 +12606,15 @@ document.addEventListener('toggle',e=>{const t=e.target;if(!t||!t.classList||!t.
 function setSec(k,title,body,def,extra){return `<details class="setsec" data-k="${k}"${setOpenGet(k,def)?' open':''}><summary><span>${title}</span>${extra||''}</summary><div class="grid setbody">${body}</div></details>`}
 function avBlock(){return `<div class="avrow"><button type="button" class="avbtn" data-act="avpick" aria-label="Cambiar imagen de usuario"><span id="avbox">${avBig()}</span><span class="cam">${CAM}</span></button><div class="grid" style="gap:6px"><b>Tu imagen</b><p class="hint" style="margin:0">Sube una foto o elige un avatar. Se guarda con tu cuenta.</p><div class="row"><button class="btn sm" data-act="avpick">Elegir imagen</button><button class="btn sm ghost" data-act="avdel" id="avdelb"${store.avatar?'':' hidden'}>Quitar</button></div><div id="avmsg" class="msg" role="status"></div></div><input type="file" id="avfile" accept="image/*" hidden></div><div class="avpk"><b>O elige un avatar</b><div id="avgal">${avGalHtml()}</div></div>`}
 function ajustesDlg(){const rb=isAdmin()&&rpOpenN()?`<i class="bdg" style="position:static;display:inline-block;margin-left:6px">${rpOpenN()}</i>`:'';showDlg('Ajustes',`<div class="grid setdlg">${setSec('tema','Tema',themeSeg(),1)}${setSec('pers','Personalización','<div class="grid" style="gap:10px"><b class="wpch">Imagen de perfil</b>'+avBlock()+'</div><div class="grid" style="gap:10px"><b class="wpch">Fondo de pantalla</b><p class="hint" style="margin:0">Se aplica en las pantallas de inicio, amigos, buscar y juegos. Son diseños propios de la app, inspirados en la ambientación de cada juego.</p>'+wpSeg()+'</div>',0)}${setSec('perf','Rendimiento',perfSeg()+'<p class="hint" style="margin:0">Auto lo activa si la app va lenta. Ligero quita desenfoques, sombras y animaciones.</p>',0)}${setSec('ver','Versión de la app','<p class="hint" style="margin:0">Versión '+APPV+'.</p><div class="row"><button type="button" class="btn" data-act="chkupd">Buscar actualizaciones</button></div><div id="umsg" class="msg" role="status"></div>',0)}${setSec('ayuda','Ayuda','<p class="hint" style="margin:0">Cuéntanos si algo ha fallado o tienes una sugerencia.</p><div class="row"><button type="button" class="btn" data-act="rpt">¿Algo no funciona?'+rb+'</button></div>',0,rb)}${setSec('legal','Legal','<div class="row"><button type="button" class="btn" data-act="legala">Aviso legal y protección de datos</button></div>',0)}</div>`,true)}
-function tbHtml(c){const w=welcome(),gm=store.mode==='gm',th=getTheme();
+function tbIsland(c){const w=welcome(),gm=store.mode==='gm',th=getTheme(),adm=scr==='admin'&&isAdmin(),nn=notifN(),on=canInc()&&onlT?onlL.length:-1;
+ const ttl=adm?'Admin':esc(session.name),sub=adm?'Superusuario':esc(w.title);
+ return `<div class="tbin isl"><button type="button" class="tbi tbav tbmenu" data-act="sbopen" aria-label="Menú y cuenta" aria-haspopup="true" aria-expanded="false">${avSmall()}</button><div class="tbwel isl-w" data-p="${adm?'adm':w.k}"><div class="wt"><span>${sub}</span><b>${ttl}</b></div></div>${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}${on>=0?`<button type="button" class="tbi tbon${on?'':' none'}" data-act="onlist" aria-label="Usuarios en línea: ${on}" title="Usuarios en línea"><i class="ond" aria-hidden="true"></i><b>${on}</b></button>`:''}<button type="button" class="tbi tbbell" data-act="notif" aria-label="Avisos${nn?': '+nn:''}" title="Avisos">${BELL}${nn?`<i class="bdg">${nn>9?'9+':nn}</i>`:''}</button><button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button><button type="button" class="tbi tbgear" data-act="ajustes" aria-label="Ajustes" title="Ajustes">${SETI}</button></div>`}
+function tbHtml(c){if(document.documentElement.dataset.dev==='phone')return tbIsland(c);const w=welcome(),gm=store.mode==='gm',th=getTheme();
  return `<div class="tbin">${scr==='admin'&&isAdmin()?`<div class="tbwel" data-p="adm"><span class="wi">${SHLD}</span><div class="wt"><b>Administración</b><span>${esc(session.name)} · superusuario</span></div></div>`:`<div class="tbwel" data-p="${w.k}"><span class="wi">${w.icon}</span><div class="wt"><b>${w.title}, ${esc(session.name)}</b><span>${esc(w.sub)}</span></div></div>`}${isAdmin()&&scr==='admin'?`<button type="button" class="tbi tbpan" data-act="admgame" aria-label="Simular usuario" title="Simular usuario">${MODEI}<span>Simular</span></button>`:''}${isAdmin()&&scr!=='admin'?`<button type="button" class="tbi tbpan" data-act="admpanel" aria-label="Volver al panel" title="Volver al panel">${SHLD}<span>Panel</span></button>`:''}${gm?`<span class="tbgm" title="Modo Game Master">${PENI}<span>Game Master</span></span>`:''}<button type="button" class="tbi tbth" data-act="themecyc" aria-label="Tema: ${th==='light'?'claro':th==='dark'?'oscuro':'automático'}. Pulsa para cambiar" title="Tema: ${th==='light'?'Claro':th==='dark'?'Oscuro':'Automático'}">${TI[th]}</button>${document.documentElement.dataset.dev==='phone'?`<button type="button" class="tbi tbmenu" data-act="sbopen" aria-label="Menú" aria-haspopup="true" aria-expanded="false">${MENUI}</button>`:''}</div>`}
+(function(){let q=0;const f=()=>{q=0;const t=document.getElementById('topbar');if(t)t.classList.toggle('tbmini',window.scrollY>28)};addEventListener('scroll',()=>{if(!q)q=requestAnimationFrame(f)},{passive:true})})();
 function topbarUpdate(c){let t=document.getElementById('topbar');const first=!t;if(first){t=document.createElement('header');t.id='topbar';document.body.appendChild(t)}
  document.body.classList.add('has-tb');
- const sig=['tb',document.documentElement.dataset.dev,!!(c&&!c.done),sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,simU,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0].join('|');
+ const sig=['tb',document.documentElement.dataset.dev,!!(c&&!c.done),sbSig(),welcome().k+welcome().sub,socN(),!!session.owner,simU,scr,store.mode,c?(c.done?'d':'e'):'',session.uid,session.name,(store.avatar?store.avatar.length+store.avatar.slice(-10):0),getTheme(),myRole(),notifN(),canGM()?1:0,gmReqPend?1:0,(canInc()&&onlT)?onlL.length:-1].join('|');
  if(t.dataset.sig===sig)return;t.dataset.sig=sig;sidebarUpdate(c);
 if(scr==='admin'&&isAdmin()){const it2=(act,label)=>`<button type="button" role="menuitem" data-act="${act}">${label}</button>`;
   t.innerHTML=tbHtml(c);
@@ -12635,7 +12663,7 @@ document.addEventListener('pointerout',e=>{const n=e.target.closest&&e.target.cl
 addEventListener('resize',()=>setTimeout(sbInd,200));
 
 
-{let ly=0;addEventListener('scroll',()=>{const t=document.getElementById('topbar');if(!t)return;const y=scrollY;if(y>90&&y>ly+4&&1)t.classList.add('hide');else if(y<ly-4||y<=90)t.classList.remove('hide');ly=y},{passive:true})}
+{let ly=0;addEventListener('scroll',()=>{const t=document.getElementById('topbar');if(!t)return;const y=scrollY;if(y>90&&y>ly+4&&document.documentElement.dataset.dev!=='phone')t.classList.add('hide');else if(y<ly-4||y<=90)t.classList.remove('hide');ly=y},{passive:true})}
 
 /* ===== Barra inferior de cristal (paso 4: móvil y tablet) ===== */
 let mbSigV='';
@@ -13367,6 +13395,7 @@ async function doLink(f){const pid=f.dataset.p,accept=f.dataset.accept==='1',inv
 /* ¿Algo no funciona? */
 let rpMine=[],rpAll=[],rpImg='',rpTab='open';const RPCAT=[['ui','Fallo en la interfaz'],['rules','Normas de un juego'],['params','Parámetros o fichas'],['other','Otro']];
 const rpOpenN=()=>rpAll.filter(r=>r.status!=='done').length;
+const SETI='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>';
 const BELL='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function exPend(){try{return (typeof exits!=='undefined'&&exits||[]).filter(x=>!exAck(x.id))}catch(e){return[]}}
 function notifN(){const rd=store.rpRead||[];return (rpMine||[]).filter(r=>r.status==='done'&&!rd.includes(r.id)).length+(canInc()?rpOpenN():0)+((typeof invs!=='undefined'&&invs)||[]).length+exPend().length+pubUnread().length+(gmUnread()?1:0)+(typeof soc!=='undefined'?socN():0)}
@@ -13994,6 +14023,7 @@ document.addEventListener('click',e=>{
   case 'partopen':partId=b.dataset.id;scr='part';gmStag=true;render();loadPart(partId);break
   case 'rpt':rptDlg();break;
   case 'ajustes':ajustesDlg();break;
+  case 'onlist':{const L=(onlL||[]).slice();showDlg('En línea ahora',L.length?'<div class="grid" style="gap:8px">'+L.map(r=>`<div class="row" style="align-items:center;gap:10px"><i class="ond" style="width:9px;height:9px;border-radius:50%;background:#3FBF7F;flex:none"></i><b>${esc(r.name||'Usuario')}</b></div>`).join('')+'</div>':'<p class="hint" style="margin:0">Ahora mismo no hay nadie más conectado.</p>');break}
   case 'legala':legalDlg('aviso');break;
   case 'legald':legalDlg('datos');break;
   case 'legalt':legalSwap(b.dataset.v);break;
