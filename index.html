@@ -11450,6 +11450,16 @@ html:root:root:root #topbar .tbi:active{background:color-mix(in srgb,var(--ui-in
 html[data-dev=phone]:root:root #topbar .tbi:focus,html[data-dev=phone]:root:root #topbar .tbi:focus-visible{outline:none;box-shadow:none}
 html:root:root:root #topbar .tbin.isl .tbon:hover,html:root:root:root #topbar .tbin.isl .tbon:active{background:color-mix(in srgb,#3FBF7F 26%,transparent)}
 html:root:root:root #topbar .tbin.isl .tbon.none:hover,html:root:root:root #topbar .tbin.isl .tbon.none:active{background:color-mix(in srgb,#E5484D 28%,transparent)}
+
+/* v210 mensajes cortos: burbuja centrada en lugar de hoja inferior (móvil) */
+html[data-dev=phone] dialog#dlg.dmeas{animation:none!important;visibility:hidden}
+html[data-dev=phone]:root:root dialog#dlg.dmsg:not(#updf){inset:0;margin:auto;width:min(calc(100vw - 40px),380px);height:fit-content;max-height:80dvh;border-radius:var(--ui-r-xl);padding:24px 20px 20px;border:1px solid var(--ui-glass-bd,rgba(255,255,255,.3));transform-origin:center;box-shadow:0 24px 60px -18px rgba(0,0,0,.55)}
+html[data-dev=phone] dialog#dlg.dmsg:not(#updf)::before{display:none}
+html[data-dev=phone] dialog#dlg[open].dmsg:not(#updf){animation:uipop var(--ui-t-base) var(--ui-spring) both}
+html[data-dev=phone] dialog#dlg.dmsg.dclosing:not(#updf){animation:uipopout 160ms cubic-bezier(.4,0,1,1) both!important}
+html[data-dev=phone] dialog#dlg.dmsg>.grid{text-align:left}
+@keyframes uipop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes uipopout{to{opacity:0;transform:scale(.94)}}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12438,9 +12448,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.209';
+const APPV='00.01.210';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.208 a v00.01.209. Se elimina el halo azul que aparecía al pulsar cualquier botón y los resaltes azules de la barra superior; la pulsación queda como un tono neutro y un ligero encogimiento.';
+const APPD='Actualiza de v00.01.209 a v00.01.210. Los mensajes cortos (sesión cerrada, avisos, confirmaciones) ahora salen como una burbuja en el centro de la pantalla en lugar de una hoja inferior.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -14313,7 +14323,7 @@ var oc=HTMLDialogElement.prototype.close,os=HTMLDialogElement.prototype.showModa
 function fin(d){var t=tm.get(d);if(t){clearTimeout(t);tm.delete(d)}d.classList.remove('dclosing');try{oc.call(d)}catch(e){}}
 HTMLDialogElement.prototype.close=function(v){var d=this;if(!d.open||rm()||d.classList.contains('hlp')||tm.has(d)){if(tm.has(d)&&!d.open)tm.delete(d);return oc.call(d,v)}
 d.classList.add('dclosing');tm.set(d,setTimeout(function(){tm.delete(d);d.classList.remove('dclosing');try{oc.call(d,v)}catch(e){}},180))};
-HTMLDialogElement.prototype.showModal=function(){if(tm.has(this))fin(this);return os.call(this)};
+HTMLDialogElement.prototype.showModal=function(){if(tm.has(this))fin(this);const d=this;if(d.id==='dlg'){d.classList.remove('dmsg');if(document.documentElement.dataset.dev==='phone'&&!/\b(lgld|acctd|rptd)\b/.test(d.className)&&!d.querySelector('.setdlg')){d.classList.add('dmeas');const r=os.call(d);try{const h=d.scrollHeight;d.classList.remove('dmeas');if(h<=innerHeight*.5)d.classList.add('dmsg')}catch(e){d.classList.remove('dmeas')}return r}}return os.call(this)};
 function fx(el,c,ms){if(rm()||!el)return;el.classList.remove(c);void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},ms||500)}
 document.addEventListener('change',function(e){var t=e.target;if(!t||!t.tagName)return;
 if(t.type==='checkbox'||t.type==='radio')fx(t,t.checked?'fx-on':'fx-off',400);
