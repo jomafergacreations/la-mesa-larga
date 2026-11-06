@@ -11493,6 +11493,7 @@ html[data-mode=gm][data-lm=l]:root:root body.hubs .abg .o3{background:radial-gra
 html[data-mode=gm][data-lm=l]:root:root body.hubs .abg .o4{background:radial-gradient(closest-side,rgba(210,50,80,.22),transparent)}
 html[data-mode=gm][data-lm=d]:root:root body.hubs{--abg-base:#1A070C}
 html[data-mode=gm][data-lm=l]:root:root body.hubs{--abg-base:#FFE9EB}
+html[data-dev=desktop] .abg .o,html[data-dev=desktop] .abg .gl,html[data-dev=tablet] .abg .o,html[data-dev=tablet] .abg .gl{animation:none!important;will-change:auto}
 @keyframes uiauth{from{opacity:1;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes hIn{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes hBack{from{opacity:1;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
@@ -12483,9 +12484,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.222';
+const APPV='00.01.223';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.221 a v00.01.222. Al dar o quitar accesos y roles, si el servidor lo rechaza o no guarda el cambio, ahora se muestra el motivo exacto en lugar de un aviso genérico.';
+const APPD='Actualiza de v00.01.222 a v00.01.223. Mejora el rendimiento en PC y tablet: el fondo de manchas de color deja de animarse constantemente, lo que obligaba a redibujar todo el cristal en cada fotograma.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
