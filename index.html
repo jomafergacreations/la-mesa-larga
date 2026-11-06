@@ -12485,9 +12485,9 @@ function uigCheck(){try{if(location.hash==='#galeria-ui'&&session&&!booting&&can
 addEventListener('hashchange',()=>{if(location.hash!=='#galeria-ui'){const g=document.getElementById('uigal');if(g)uigClose()}else uigCheck()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('uigal')&&!document.querySelector('#uigal .ug-dwrap')&&!document.querySelector('#uigal .ug-menu'))uigClose()});
 setInterval(uigCheck,1500);
-const APPV='00.01.224';
+const APPV='00.01.225';
 const APPN='Actualización grande.';
-const APPD='Actualiza de v00.01.223 a v00.01.224. El cambio de modo Jugador/GM va mucho más fluido en PC: el borde luminoso se dibuja de forma mucho más ligera.';
+const APPD='Actualiza de v00.01.224 a v00.01.225. En PC y tablet el cambio de modo Jugador/GM usa una versión mucho más ligera (destello de color y aviso), sin capturas de pantalla completas.';
 const updAdm=()=>{try{return !!session&&(isAdmin()||myRole()>=2)}catch(e){return false}};
 let updInfo=null,updBusy=false;
 function updBase(){return location.origin+location.pathname}
@@ -13280,6 +13280,13 @@ function modeShift(m,apply){const r=document.documentElement;if(uiVT){apply();re
  const rad=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y)),D=860,gm=m==='gm',t1=gm?'#FF4F5E':'#8FB0FF',t2=gm?'#FFC98A':'#C4D5FF',E='cubic-bezier(.55,.05,.2,1)';
  const fx=document.createElement('div');fx.className='mdfx';fx.setAttribute('aria-hidden','true');fx.style.setProperty('--mt',t1);fx.style.setProperty('--mt2',t2);fx.style.setProperty('--cx',x+'px');fx.style.setProperty('--cy',y+'px');
  fx.innerHTML='<i class="mfl" style="background:radial-gradient(circle at '+x+'px '+y+'px,'+t2+' 0,'+t1+' 22%,transparent 62%)"></i><i class="mfrg"></i><div class="mfem"><span class="mfei">'+(gm?PENI:MODEI)+'</span><b>'+(gm?'Modo Game Master':'Modo Jugador')+'</b><small>'+(gm?'Tú diriges la mesa':'A tomar asiento')+'</small></div>';
+ if(r.dataset.dev!=='phone'){const fl=fx.querySelector('.mfl'),rg=fx.querySelector('.mfrg');rg.remove();fl.style.background='radial-gradient(circle at '+x+'px '+y+'px,'+t2+' 0,'+t1+' 30%,color-mix(in srgb,'+t1+' 55%,#120608) 100%)';document.body.appendChild(fx);uiVT=true;r.classList.add('uivt');
+ const end2=()=>{uiVT=false;r.classList.remove('uivt')};
+ fl.animate([{opacity:0},{opacity:.96,offset:.3},{opacity:.96,offset:.4},{opacity:0}],{duration:1000,easing:'linear',fill:'both'});
+ setTimeout(()=>{r.classList.add('notr');try{apply()}catch(e){}requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))},300);
+ setTimeout(end2,1000);
+ const em2=fx.querySelector('.mfem');em2.animate([{opacity:0,transform:'translate(-50%,-44%) scale(.84)',easing:'cubic-bezier(.2,.8,.2,1)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)',offset:.1},{opacity:1,transform:'translate(-50%,-50%) scale(1)',offset:.86},{opacity:0,transform:'translate(-50%,-56%) scale(1.03)'}],{duration:3300,delay:260,easing:'linear',fill:'both'}).onfinish=()=>fx.remove();
+ setTimeout(()=>{fx.remove();end2()},5000);return}
  document.body.appendChild(fx);uiVT=true;r.classList.add('uivt');
  const end=()=>{uiVT=false;r.classList.remove('uivt')},done=()=>{fx.remove()};
  requestAnimationFrame(()=>{let vt;try{vt=document.startViewTransition(()=>{r.classList.add('notr');try{apply()}finally{requestAnimationFrame(()=>requestAnimationFrame(()=>r.classList.remove('notr')))}})}catch(e){try{apply()}catch(z){}end();done();return}
